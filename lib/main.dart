@@ -43,8 +43,8 @@ class UserInput extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         // padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Column(children: [
-          Counter(),
-          Counter(),
+          Counter('Balls shot'),
+          Counter('Balls in traget'),
         ]),
       ),
       //   children: <Widget>[
@@ -70,6 +70,10 @@ class UserInput extends StatelessWidget {
 }
 
 class Counter extends StatelessWidget {
+  String rowText = "";
+  Counter(String rowText) {
+    this.rowText = rowText;
+  }
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -85,7 +89,7 @@ class Counter extends StatelessWidget {
           ),
         ),
         // Text('data'),
-        Expanded(child: Text('Balls shot')),
+        Expanded(child: Text(rowText)),
         Expanded(
           child: SpinBox(
             min: 1,
