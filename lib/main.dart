@@ -41,24 +41,12 @@ class UserInput extends StatelessWidget {
       body: Container(
         // width: 150,
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-        child: Row(
-          children: [
-            // Text('data'),
-            Expanded(child: Text('Balls shot')),
-            Expanded(
-              child: SpinBox(
-                min: 1,
-                max: 100,
-                value: 0,
-                onChanged: (value) => print(value),
-              ),
-            ),
-          ],
-        ),
+        // padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        child: Column(children: [
+          Counter(),
+          Counter(),
+        ]),
       ),
-
-      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       //   children: <Widget>[
       //     Text('data'),
       //     SpinBox(
@@ -78,5 +66,35 @@ class UserInput extends StatelessWidget {
       //   child: Icon(Icons.add),
       // ),
     ); // This trailing comma makes auto-formatting nicer for build methods.
+  }
+}
+
+class Counter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          width: 50,
+          child: Icon(
+            Icons.animation,
+            color: Colors.blue,
+            size: 24.0,
+            semanticLabel: 'Text to announce in accessibility modes',
+          ),
+        ),
+        // Text('data'),
+        Expanded(child: Text('Balls shot')),
+        Expanded(
+          child: SpinBox(
+            min: 1,
+            max: 100,
+            value: 0,
+            onChanged: (value) => print(value),
+          ),
+        ),
+      ],
+    );
   }
 }
