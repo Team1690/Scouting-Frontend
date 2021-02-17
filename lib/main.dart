@@ -39,10 +39,15 @@ class UserInput extends StatelessWidget {
       ),
       body: Container(
         width: 150,
+        margin: EdgeInsets.fromLTRB(20, 10, 0, 0),
+        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
         child: Column(
           children: [
             TextFormField(
               decoration: InputDecoration(labelText: 'Enter final score'),
+            ),
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Enter Name'),
             ),
           ],
         ),
