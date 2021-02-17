@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,25 +39,44 @@ class UserInput extends StatelessWidget {
         title: Text('Scouting System'),
       ),
       body: Container(
-        width: 150,
-        margin: EdgeInsets.fromLTRB(20, 10, 0, 0),
+        // width: 150,
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-        child: Column(
+        child: Row(
           children: [
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Enter final score'),
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Enter Name'),
+            // Text('data'),
+            Expanded(child: Text('Balls shot')),
+            Expanded(
+              child: SpinBox(
+                min: 1,
+                max: 100,
+                value: 0,
+                onChanged: (value) => print(value),
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+
+      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //   children: <Widget>[
+      //     Text('data'),
+      //     SpinBox(
+      //       min: 1,
+      //       max: 100,
+      //       value: 0,
+      //       onChanged: (value) => print(value),
+      //     ),
+      //     TextFormField(
+      //       decoration: InputDecoration(labelText: 'Enter final score'),
+      //     ),
+      //   ],
+      // ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: null,
+      //   tooltip: 'Increment',
+      //   child: Icon(Icons.add),
+      // ),
     ); // This trailing comma makes auto-formatting nicer for build methods.
   }
 }
