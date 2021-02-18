@@ -21,10 +21,9 @@ class Counter extends StatelessWidget {
         //     semanticLabel: 'Text to announce in accessibility modes',
         //   ),
         // ),
-        // // Text('data'),
-        // Expanded(
-        //   child: label,
-        // ),
+        Expanded(
+          child: label,
+        ),
         Expanded(
           child: StepperSwipe(
             initialValue: 0,

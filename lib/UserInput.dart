@@ -1,4 +1,5 @@
 import 'package:ScoutingFrontend/Counter.dart';
+import 'package:ScoutingFrontend/EndGame.dart';
 import 'package:flutter/material.dart';
 
 class UserInput extends StatelessWidget {
@@ -16,10 +17,19 @@ class UserInput extends StatelessWidget {
         child: Column(
           children: [
             Counter(
-              label: Text('Balls shot'),
+              label: Text('Missed:'),
             ),
             Counter(
-              label: Text('Balls in traget'),
+              label: Text('Bottom Goal:'),
+            ),
+            Counter(
+              label: Text('Upper Goal:'),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
+              child: EndGame(
+                options: ['Climbed', 'Faild', 'No attemtp'],
+              ),
             ),
           ],
         ),
