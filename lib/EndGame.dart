@@ -15,7 +15,8 @@ class EndGame extends StatelessWidget {
       minWidth: 120,
       minHeight: 50,
       cornerRadius: 20.0,
-      activeBgColors: [Colors.blue, Colors.pink, Colors.purple],
+      inactiveBgColor: Colors.grey[300],
+      activeBgColors: [Colors.blue, Colors.pink, Colors.amber],
     );
   }
 }
