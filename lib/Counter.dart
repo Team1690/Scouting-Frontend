@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinbox/flutter_spinbox.dart';
+import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 
 class Counter extends StatelessWidget {
   final Text label;
@@ -12,25 +12,30 @@ class Counter extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(
-          width: 50,
-          child: Icon(
-            Icons.animation,
-            color: Colors.blue,
-            size: 24,
-            semanticLabel: 'Text to announce in accessibility modes',
-          ),
-        ),
-        // Text('data'),
+        // SizedBox(
+        //   width: 50,
+        //   child: Icon(
+        //     Icons.animation,
+        //     color: Colors.blue,
+        //     size: 24,
+        //     semanticLabel: 'Text to announce in accessibility modes',
+        //   ),
+        // ),
+        // // Text('data'),
+        // Expanded(
+        //   child: label,
+        // ),
         Expanded(
-          child: label,
-        ),
-        Expanded(
-          child: SpinBox(
-            min: 0,
-            max: 100,
-            value: 0,
-            onChanged: print,
+          child: StepperSwipe(
+            initialValue: 0,
+            stepperValue: 1,
+            minValue: 0,
+            direction: Axis.horizontal,
+            dragButtonColor: Colors.blueAccent,
+            iconsColor: Colors.blueAccent,
+            withPlusMinus: true,
+            withSpring: true,
+            onChanged: null,
           ),
         ),
       ],
