@@ -3,10 +3,9 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:flutter/material.dart';
 
 class EndGame extends StatelessWidget {
-  List<String> options = [];
-  EndGame({
-    final this.options,
-  });
+  final List<String> options;
+  
+  EndGame({@required final this.options});
 
   @override
   Widget build(final BuildContext context) {
