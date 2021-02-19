@@ -4,7 +4,10 @@ import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 class Counter extends StatelessWidget {
   final Text label;
   final IconData icon;
-  Counter({final this.label, final this.icon});
+  Counter({
+    @required final this.label,
+    @required final this.icon,
+  });
 
   @override
   Widget build(final BuildContext context) {
