@@ -12,10 +12,7 @@ class App extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(100),
-          child: TabSwitcher(),
-        ),
+        appBar: TabSwitcher(),
         body: UserInput(),
       ),
     );

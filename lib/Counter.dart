@@ -3,9 +3,8 @@ import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 
 class Counter extends StatelessWidget {
   final Text label;
-  Counter({
-    final this.label,
-  });
+  final IconData icon;
+  Counter({final this.label, final this.icon});
 
   @override
   Widget build(final BuildContext context) {
@@ -15,7 +14,7 @@ class Counter extends StatelessWidget {
         SizedBox(
           width: 50,
           child: Icon(
-            Icons.animation,
+            icon,
             color: Colors.blue,
             size: 30,
             semanticLabel: 'Text to announce in accessibility modes',

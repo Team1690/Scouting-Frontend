@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-class TabSwitcher extends StatelessWidget {
+class TabSwitcher extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  Size get preferredSize => const Size.fromHeight(100);
+
   @override
   Widget build(final BuildContext context) {
     return DefaultTabController(
@@ -11,7 +14,6 @@ class TabSwitcher extends StatelessWidget {
           tabs: [
             Tab(
               // icon: Icon(Icons.flash_on),
-
               text: 'Input',
             ),
             Tab(
