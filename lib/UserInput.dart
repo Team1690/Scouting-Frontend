@@ -44,7 +44,7 @@ class UserInput extends StatelessWidget {
           ),
           // SectionDivider(label: 'Endgame'),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 25, 0, 25),
+            padding: const EdgeInsets.symmetric(vertical: 25),
             child: EndGame(
               options: ['Climbed', 'Faild', 'No attemtp'],
             ),
