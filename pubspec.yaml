@@ -23,7 +23,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_spinbox: ^0.3.1+2
   stepper_counter_swipe: ^1.0.0
   toggle_switch: ^0.1.8
 
