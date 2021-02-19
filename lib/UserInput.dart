@@ -9,7 +9,7 @@ class UserInput extends StatelessWidget {
     // This method is rerun every time setState is called, for instance as done
     return Container(
       // width: 150,
-      margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       // padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: Column(
         children: [
