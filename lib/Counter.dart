@@ -12,22 +12,22 @@ class Counter extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // SizedBox(
-        //   width: 50,
-        //   child: Icon(
-        //     Icons.animation,
-        //     color: Colors.blue,
-        //     size: 24,
-        //     semanticLabel: 'Text to announce in accessibility modes',
-        //   ),
-        // ),
+        SizedBox(
+          width: 50,
+          child: Icon(
+            Icons.animation,
+            color: Colors.blue,
+            size: 30,
+            semanticLabel: 'Text to announce in accessibility modes',
+          ),
+        ),
         Expanded(
           child: label,
         ),
         Expanded(
           child: StepperSwipe(
             initialValue: 0,
-            stepperValue: 1,
+            stepperValue: 0,
             minValue: 0,
             direction: Axis.horizontal,
             dragButtonColor: Colors.blueAccent,
