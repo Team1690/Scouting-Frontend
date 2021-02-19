@@ -15,24 +15,24 @@ class UserInput extends StatelessWidget {
         children: [
           SectionDivider(label: 'Auto'),
           Counter(
-            label: const Text('Upper Goal:'),
+            label: 'Upper Goal:',
             icon: Icons.precision_manufacturing_outlined,
           ),
           Counter(
-            label: const Text('Bottom Goal:'),
+            label: 'Bottom Goal:',
             icon: Icons.precision_manufacturing_outlined,
           ),
           Counter(
-            label: const Text('Missed:'),
+            label: 'Missed:',
             icon: Icons.precision_manufacturing_outlined,
           ),
           SectionDivider(label: 'Teleop'),
           Counter(
-            label: const Text('Upper Goal:'),
+            label: 'Upper Goal:',
             icon: Icons.gamepad,
           ),
           Counter(
-            label: const Text('Missed:'),
+            label: 'Missed:',
             icon: Icons.gamepad,
           ),
           // SectionDivider(label: 'Endgame'),
