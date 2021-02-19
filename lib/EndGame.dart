@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class EndGame extends StatelessWidget {
   final List<String> options;
-  
+
   EndGame({@required final this.options});
 
   @override

@@ -39,7 +39,7 @@ class UserInput extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 25),
             child: EndGame(
-              options: ['Climbed', 'Faild', 'No attemtp'],
+              options: ['Climbed', 'Failed', 'No attempts'],
             ),
           ),
         ],
