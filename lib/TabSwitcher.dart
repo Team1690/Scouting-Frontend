@@ -9,8 +9,8 @@ class TabSwitcher extends StatelessWidget implements PreferredSizeWidget {
     return DefaultTabController(
       length: 2,
       child: AppBar(
-        title: Text('Orbit Scouting'),
-        bottom: TabBar(
+        title: const Text('Orbit Scouting'),
+        bottom: const TabBar(
           tabs: [
             Tab(
               // icon: Icon(Icons.flash_on),
