@@ -24,6 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_spinbox: ^0.3.1+2
+  stepper_counter_swipe: ^1.0.0
+  toggle_switch: ^0.1.8
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

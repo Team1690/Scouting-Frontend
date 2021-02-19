@@ -1,3 +1,4 @@
+import 'package:ScoutingFrontend/TabSwitcher.dart';
 import 'package:ScoutingFrontend/UserInput.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,10 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      home: UserInput(),
+      home: Scaffold(
+        appBar: TabSwitcher(),
+        body: UserInput(),
+      ),
     );
   }
 }
