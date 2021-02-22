@@ -1,6 +1,7 @@
 import 'package:ScoutingFrontend/Counter.dart';
 import 'package:ScoutingFrontend/EndGame.dart';
 import 'package:ScoutingFrontend/SectionDivider.dart';
+import 'package:ScoutingFrontend/Switcher.dart';
 import 'package:flutter/material.dart';
 
 class UserInput extends StatelessWidget {
@@ -36,12 +37,23 @@ class UserInput extends StatelessWidget {
             icon: Icons.gamepad,
           ),
           // SectionDivider(label: 'Endgame'),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: 25),
+          //   child: EndGame(
+          //     labels: ['Climbed', 'Failed', 'No attemtpt'],
+          //   ),
+          // ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25),
-            child: EndGame(
+            padding: const EdgeInsets.only(top: 25),
+            child: Switcher(
               labels: ['Climbed', 'Failed', 'No attemtpt'],
+              colors: [
+                Colors.green,
+                Colors.pink,
+                Colors.amber,
+              ],
             ),
-          ),
+          )
         ],
       ),
     );
