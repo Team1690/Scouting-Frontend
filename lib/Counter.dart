@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 
 class Counter extends StatelessWidget {
-  final Text label;
+  final String label;
   final IconData icon;
   Counter({
     @required final this.label,
@@ -14,8 +14,8 @@ class Counter extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(
-          width: 50,
+        Expanded(
+          flex: 2,
           child: Icon(
             icon,
             color: Colors.blue,
@@ -24,9 +24,14 @@ class Counter extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: label,
+          flex: 4,
+          child: Text(
+            label,
+            textScaleFactor: 1.5,
+          ),
         ),
         Expanded(
+          flex: 4,
           child: StepperSwipe(
             initialValue: 0,
             stepperValue: 0,
