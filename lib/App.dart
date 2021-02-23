@@ -11,9 +11,15 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: TabSwitcher(),
-        body: UserInput(),
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: TabSwitcher(),
+          body: TabBarView(children: [
+            UserInput(),
+            Text('TEST'),
+          ]),
+        ),
       ),
     );
   }
