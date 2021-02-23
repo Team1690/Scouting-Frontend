@@ -6,17 +6,19 @@ class Switcher extends StatefulWidget {
 
   final List<String> labels;
   final List<Color> colors;
-  final Function(String) onChange;
+  final Function(String, bool) onChange;
+  final double height;
 
   Switcher({
     @required final this.labels,
     @required final this.colors,
+    final this.height = 70,
     final this.onChange,
   });
 }
 
 class _SwitcherState extends State<Switcher> {
-  List<bool> pressed;
+  List<bool> _pressed;
 
   @override
   void initState() {
@@ -24,11 +26,8 @@ class _SwitcherState extends State<Switcher> {
     resetPressed();
   }
 
-  void resetPressed() {
-    this.setState(() {
-      this.pressed = List<bool>.filled(widget.labels.length, false);
-    });
-  }
+  void resetPressed() =>
+      setState(() => _pressed = List<bool>.filled(widget.labels.length, false));
 
   @override
   Widget build(final BuildContext context) {
@@ -37,39 +36,44 @@ class _SwitcherState extends State<Switcher> {
         borderRadius: BorderRadius.all(Radius.circular(20)),
         border: Border.all(color: Colors.grey, width: 1),
       ),
-      width: 347,
-      height: 50,
+      width: MediaQuery.of(context).size.width,
+      height: widget.height,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           for (int i = 0; i < widget.labels.length; i++)
-            Container(
-              width: 115,
-              height: 50,
-              child: OutlineButton(
-                child: Text(widget.labels[i]),
-                textColor: this.pressed[i] ? widget.colors[i] : Colors.black,
-                splashColor: !this.pressed[i] ? widget.colors[i] : Colors.grey,
-                shape: RoundedRectangleBorder(
-                  borderRadius: i == 0
-                      ? BorderRadius.horizontal(
-                          left: Radius.circular(20),
-                        )
-                      : i == widget.labels.length - 1
-                          ? BorderRadius.horizontal(
-                              right: Radius.circular(20),
-                            )
-                          : BorderRadius.zero,
-                ),
-                borderSide: BorderSide(color: Colors.transparent),
-                highlightedBorderColor: Colors.transparent,
-                onPressed: () {
-                  final bool wasPressed = pressed[i];
-                  resetPressed();
-                  if (!wasPressed) this.setState(() => this.pressed[i] = true);
+            Expanded(
+              child: SizedBox(
+                height: widget.height,
+                child: OutlineButton(
+                  child: Text(
+                    widget.labels[i],
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  textColor: _pressed[i] ? widget.colors[i] : Colors.black,
+                  splashColor: !_pressed[i] ? widget.colors[i] : Colors.grey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: i == 0
+                        ? BorderRadius.horizontal(
+                            left: Radius.circular(20),
+                          )
+                        : i == widget.labels.length - 1
+                            ? BorderRadius.horizontal(
+                                right: Radius.circular(20),
+                              )
+                            : BorderRadius.zero,
+                  ),
+                  borderSide: BorderSide(color: Colors.transparent),
+                  highlightedBorderColor: Colors.transparent,
+                  onPressed: () {
+                    final bool wasPressed = _pressed[i];
+                    resetPressed();
+                    if (!wasPressed) setState(() => _pressed[i] = true);
 
-                  if (widget.onChange != null)
-                    widget.onChange(widget.labels[i]);
-                },
+                    if (widget.onChange != null)
+                      widget.onChange(widget.labels[i], !wasPressed);
+                  },
+                ),
               ),
             ),
         ],
