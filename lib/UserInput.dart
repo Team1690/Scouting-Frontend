@@ -47,8 +47,6 @@ class UserInput extends StatelessWidget {
                 Colors.green,
                 Colors.pink,
                 Colors.amber,
-                Colors.blue,
-                Colors.purple,
               ],
             ),
           )
