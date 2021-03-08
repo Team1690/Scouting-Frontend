@@ -49,7 +49,7 @@ class UserInput extends StatelessWidget {
                 Colors.amber,
               ],
             ),
-          )
+          ),
         ],
       ),
     );
