@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:ScoutingFrontend/TeamData.dart';
 import 'package:flutter/material.dart';
 
 class Rank extends StatefulWidget {
@@ -30,24 +33,32 @@ class _RankState extends State<Rank> {
         rows: List<DataRow>.generate(
           10,
           (index) => DataRow(
-            color: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-              if (states.contains(MaterialState.selected))
-                return Theme.of(context).colorScheme.primary.withOpacity(0.05);
-            }),
-            cells: [
-              DataCell(Text('$index')),
-              DataCell(Text('23597')),
-              DataCell(Text('23597')),
-              DataCell(Text('23597')),
-            ],
-            selected: index == selectedIndex,
-            onSelectChanged: (value) {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-          ),
+              color: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                if (states.contains(MaterialState.selected))
+                  return Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withOpacity(0.05);
+              }),
+              cells: [
+                DataCell(Text('$index')),
+                DataCell(Text('2459')),
+                DataCell(Text('23597')),
+                DataCell(Text('23597')),
+              ],
+              selected: index == selectedIndex,
+              onSelectChanged: (value) {
+                setState(() {
+                  selectedIndex = index;
+                });
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return TeamData();
+                  },
+                );
+              }),
         ),
         // rows: [
         //   DataRow(cells: [
