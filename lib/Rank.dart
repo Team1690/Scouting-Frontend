@@ -11,6 +11,12 @@ class Rank extends StatefulWidget {
 class _RankState extends State<Rank> {
   static const int numItems = 10;
   int selectedIndex = -1;
+  List<String> teamNum = List<String>.generate(
+      numItems, (index) => Random().nextInt(5000).toString());
+  List<String> prop1 = List<String>.generate(
+      numItems, (index) => Random().nextInt(100).toString());
+  List<String> prop2 = List<String>.generate(
+      numItems, (index) => Random().nextInt(100).toString());
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +49,9 @@ class _RankState extends State<Rank> {
               }),
               cells: [
                 DataCell(Text('$index')),
-                DataCell(Text('2459')),
-                DataCell(Text('23597')),
-                DataCell(Text('23597')),
+                DataCell(Text(teamNum[index])),
+                DataCell(Text(prop1[index])),
+                DataCell(Text(prop2[index])),
               ],
               selected: index == selectedIndex,
               onSelectChanged: (value) {
@@ -55,7 +61,10 @@ class _RankState extends State<Rank> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return TeamData();
+                    return TeamData(
+                      teamNumber: teamNum[index],
+                      content: prop1[index],
+                    );
                   },
                 );
               }),
