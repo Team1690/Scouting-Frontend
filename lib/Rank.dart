@@ -11,12 +11,18 @@ class Rank extends StatefulWidget {
 class _RankState extends State<Rank> {
   static const int numItems = 10;
   int selectedIndex = -1;
-  List<String> teamNum = List<String>.generate(
-      numItems, (index) => Random().nextInt(5000).toString());
-  List<String> prop1 = List<String>.generate(
-      numItems, (index) => Random().nextInt(100).toString());
-  List<String> prop2 = List<String>.generate(
-      numItems, (index) => Random().nextInt(100).toString());
+
+  //Demo data for card
+  List<int> teamNumber =
+      List<int>.generate(numItems, (index) => Random().nextInt(5000));
+  List<int> shotsInTarget =
+      List<int>.generate(numItems, (index) => Random().nextInt(100));
+  List<int> successfulClimbs =
+      List<int>.generate(numItems, (index) => Random().nextInt(100));
+  List<double> shotsInTargetPrecentage =
+      List<double>.generate(numItems, (index) => Random().nextDouble());
+  List<double> successfulClimbsPrecentage =
+      List<double>.generate(numItems, (index) => Random().nextDouble());
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +55,9 @@ class _RankState extends State<Rank> {
               }),
               cells: [
                 DataCell(Text('$index')),
-                DataCell(Text(teamNum[index])),
-                DataCell(Text(prop1[index])),
-                DataCell(Text(prop2[index])),
+                DataCell(Text(teamNumber[index].toString())),
+                DataCell(Text(shotsInTarget[index].toString())),
+                DataCell(Text(successfulClimbs[index].toString())),
               ],
               selected: index == selectedIndex,
               onSelectChanged: (value) {
@@ -62,8 +68,12 @@ class _RankState extends State<Rank> {
                   context: context,
                   builder: (BuildContext context) {
                     return TeamData(
-                      teamNumber: teamNum[index],
-                      content: prop1[index],
+                      teamNumber: teamNumber[index],
+                      shostInTarget: shotsInTarget[index],
+                      successfulClimbs: successfulClimbs[index],
+                      shotsInTargetPrecent: shotsInTargetPrecentage[index],
+                      successfulClimbsPrecent:
+                          successfulClimbsPrecentage[index],
                     );
                   },
                 );
