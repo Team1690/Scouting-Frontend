@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:ScoutingFrontend/CircularProgressBar.Dart';
 
 class TeamData extends StatelessWidget {
   final int teamNumber;
@@ -19,32 +19,25 @@ class TeamData extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Team number: ' + teamNumber.toString()),
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          CircularPercentIndicator(
-            radius: 80,
-            lineWidth: 8.0,
-            percent: shotsInTargetPrecent,
-            center: Text((shotsInTargetPrecent * 100).toStringAsFixed(1) + '%'),
-            progressColor: Colors.green,
-            animation: true,
-            animationDuration: 1200,
-            circularStrokeCap: CircularStrokeCap.round,
-            footer: Text('Shots'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CircularProgressBar(
+                precentage: shotsInTargetPrecent,
+                fraction: '15/50',
+                color: Colors.green,
+              ),
+              CircularProgressBar(
+                precentage: successfulClimbsPrecent,
+                fraction: '34/50',
+                color: Colors.purple,
+              ),
+            ],
           ),
-          CircularPercentIndicator(
-            radius: 80,
-            lineWidth: 8.0,
-            percent: successfulClimbsPrecent,
-            center:
-                Text((successfulClimbsPrecent * 100).toStringAsFixed(1) + '%'),
-            progressColor: Colors.purple,
-            animation: true,
-            animationDuration: 1200,
-            circularStrokeCap: CircularStrokeCap.round,
-            footer: Text('Climbs'),
-          ),
+          // Text('Avarage shots in target per game'),
         ],
       ),
     );

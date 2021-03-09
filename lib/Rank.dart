@@ -43,18 +43,17 @@ class _RankState extends State<Rank> {
           DataColumn(label: Text('climbs')),
         ],
         rows: List<DataRow>.generate(
-          10,
+          numItems,
           (index) => DataRow(
-              color: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                if (states.contains(MaterialState.selected))
-                  return Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withOpacity(0.05);
+              color: MaterialStateProperty.resolveWith<Color>((Set states) {
+                if (states.contains(MaterialState.selected)) return;
+                // Theme.of(context)
+                //     .colorScheme
+                //     .primary
+                //     .withOpacity(0.05);
               }),
               cells: [
-                DataCell(Text('$index')),
+                DataCell(Text((index + 1).toString())),
                 DataCell(Text(teamNumber[index].toString())),
                 DataCell(Text(shotsInTarget[index].toString())),
                 DataCell(Text(successfulClimbs[index].toString())),
@@ -79,26 +78,6 @@ class _RankState extends State<Rank> {
                 );
               }),
         ),
-        // rows: [
-        //   DataRow(cells: [
-        //     DataCell(Text('1')),
-        //     DataCell(Text('1690')),
-        //     DataCell(Text('47')),
-        //     DataCell(Text('5')),
-        //   ]),
-        //   DataRow(cells: [
-        //     DataCell(Text('2')),
-        //     DataCell(Text('3339')),
-        //     DataCell(Text('0')),
-        //     DataCell(Text('3')),
-        //   ]),
-        //   DataRow(cells: [
-        //     DataCell(Text('3')),
-        //     DataCell(Text('1574')),
-        //     DataCell(Text('15')),
-        //     DataCell(Text('10')),
-        //   ]),
-        // ],
       ),
     );
   }
