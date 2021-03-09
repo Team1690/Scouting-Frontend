@@ -88,6 +88,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.1"
+<<<<<<< HEAD
   progress_state_button:
     dependency: "direct main"
     description:
@@ -95,6 +96,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+=======
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.9+1"
+>>>>>>> df97a02dc497c6c9f437535e846cb029409802cc
   sky_engine:
     dependency: transitive
     description: flutter
