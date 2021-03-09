@@ -30,19 +30,11 @@ class _CircularProgressBarState extends State<CircularProgressBar> {
         duration: const Duration(milliseconds: 200),
         firstChild: GestureDetector(
           child: Text((widget.precentage * 100).toStringAsFixed(1) + '%'),
-          onTap: () {
-            setState(() {
-              switchText = !switchText;
-            });
-          },
+          onTap: () => setState(() => switchText = !switchText),
         ),
         secondChild: GestureDetector(
           child: Text(widget.fraction),
-          onTap: () {
-            setState(() {
-              switchText = !switchText;
-            });
-          },
+          onTap: () => setState(() => switchText = !switchText),
         ),
       ),
       progressColor: widget.color,

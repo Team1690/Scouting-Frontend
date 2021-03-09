@@ -25,7 +25,7 @@ class _RankState extends State<Rank> {
       List<double>.generate(numItems, (index) => Random().nextDouble());
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 20,
@@ -45,39 +45,28 @@ class _RankState extends State<Rank> {
         rows: List<DataRow>.generate(
           numItems,
           (index) => DataRow(
-              color: MaterialStateProperty.resolveWith<Color>((Set states) {
-                if (states.contains(MaterialState.selected)) return;
-                // Theme.of(context)
-                //     .colorScheme
-                //     .primary
-                //     .withOpacity(0.05);
-              }),
-              cells: [
-                DataCell(Text((index + 1).toString())),
-                DataCell(Text(teamNumber[index].toString())),
-                DataCell(Text(shotsInTarget[index].toString())),
-                DataCell(Text(successfulClimbs[index].toString())),
-              ],
-              selected: index == selectedIndex,
-              onSelectChanged: (value) {
-                setState(() {
-                  selectedIndex = index;
-                });
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return TeamData(
-                      teamNumber: teamNumber[index],
-                      teamName: 'ORBIT',
-                      shostInTarget: shotsInTarget[index],
-                      successfulClimbs: successfulClimbs[index],
-                      shotsInTargetPrecent: shotsInTargetPrecentage[index],
-                      successfulClimbsPrecent:
-                          successfulClimbsPrecentage[index],
-                    );
-                  },
-                );
-              }),
+            cells: [
+              DataCell(Text((index + 1).toString())),
+              DataCell(Text(teamNumber[index].toString())),
+              DataCell(Text(shotsInTarget[index].toString())),
+              DataCell(Text(successfulClimbs[index].toString())),
+            ],
+            selected: index == selectedIndex,
+            onSelectChanged: (value) {
+              setState(() => selectedIndex = index);
+              showDialog(
+                context: context,
+                builder: (context) => TeamData(
+                  teamNumber: teamNumber[index],
+                  teamName: 'ORBIT',
+                  shostInTarget: shotsInTarget[index],
+                  successfulClimbs: successfulClimbs[index],
+                  shotsInTargetPrecent: shotsInTargetPrecentage[index],
+                  successfulClimbsPrecent: successfulClimbsPrecentage[index],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
