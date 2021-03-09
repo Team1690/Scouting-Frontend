@@ -6,10 +6,11 @@ class CircularProgressBar extends StatefulWidget {
   final String fraction;
   final Color color;
 
-  CircularProgressBar(
-      {@required this.precentage,
-      @required this.fraction,
-      @required this.color});
+  CircularProgressBar({
+    @required this.precentage,
+    @required this.fraction,
+    @required this.color,
+  });
 
   @override
   _CircularProgressBarState createState() => _CircularProgressBarState();
@@ -48,7 +49,7 @@ class _CircularProgressBarState extends State<CircularProgressBar> {
       animation: true,
       animationDuration: 1200,
       circularStrokeCap: CircularStrokeCap.round,
-      footer: Text('Climbs'),
+      // footer: Text(widget.footer),
     );
   }
 }

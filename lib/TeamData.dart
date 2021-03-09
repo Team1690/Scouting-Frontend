@@ -3,12 +3,14 @@ import 'package:ScoutingFrontend/CircularProgressBar.Dart';
 
 class TeamData extends StatelessWidget {
   final int teamNumber;
+  final String teamName;
   final int shostInTarget;
   final int successfulClimbs;
   final double shotsInTargetPrecent;
   final double successfulClimbsPrecent;
   TeamData({
     @required final this.teamNumber,
+    @required final this.teamName,
     @required final this.shostInTarget,
     @required final this.successfulClimbs,
     @required final this.shotsInTargetPrecent,
@@ -18,7 +20,10 @@ class TeamData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Team number: ' + teamNumber.toString()),
+      title: Text(
+        '$teamNumber - $teamName',
+        textAlign: TextAlign.center,
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

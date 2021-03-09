@@ -68,6 +68,7 @@ class _RankState extends State<Rank> {
                   builder: (BuildContext context) {
                     return TeamData(
                       teamNumber: teamNumber[index],
+                      teamName: 'ORBIT',
                       shostInTarget: shotsInTarget[index],
                       successfulClimbs: successfulClimbs[index],
                       shotsInTargetPrecent: shotsInTargetPrecentage[index],
