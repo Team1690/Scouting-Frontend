@@ -45,7 +45,7 @@ class _SwitcherState extends State<Switcher> {
             Expanded(
               child: SizedBox(
                 height: widget.height,
-                child: OutlineButton(
+                child: FlatButton(
                   child: Text(
                     widget.labels[i],
                     style: TextStyle(fontSize: 15),
@@ -63,8 +63,6 @@ class _SwitcherState extends State<Switcher> {
                               )
                             : BorderRadius.zero,
                   ),
-                  borderSide: BorderSide(color: Colors.transparent),
-                  highlightedBorderColor: Colors.transparent,
                   onPressed: () {
                     final bool wasPressed = _pressed[i];
                     resetPressed();

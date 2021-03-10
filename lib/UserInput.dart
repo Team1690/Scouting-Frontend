@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+
 import 'package:ScoutingFrontend/Counter.dart';
 import 'package:ScoutingFrontend/SectionDivider.dart';
 import 'package:ScoutingFrontend/Switcher.dart';
-import 'package:flutter/material.dart';
+import 'package:ScoutingFrontend/submit_button.dart';
 
 class UserInput extends StatelessWidget {
   @override
@@ -50,6 +52,8 @@ class UserInput extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: 20),
+          const SubmitButton(),
         ],
       ),
     );
