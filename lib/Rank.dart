@@ -1,6 +1,5 @@
 import 'dart:math';
-
-import 'package:ScoutingFrontend/TeamData.dart';
+import 'package:ScoutingFrontend/TeamCard.dart';
 import 'package:flutter/material.dart';
 
 class Rank extends StatefulWidget {
@@ -56,7 +55,7 @@ class _RankState extends State<Rank> {
               setState(() => selectedIndex = index);
               showDialog(
                 context: context,
-                builder: (context) => TeamData(
+                builder: (context) => TeamCard(
                   teamNumber: teamNumber[index],
                   teamName: 'ORBIT',
                   shostInTarget: shotsInTarget[index],

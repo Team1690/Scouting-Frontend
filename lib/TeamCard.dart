@@ -2,14 +2,14 @@ import 'package:ScoutingFrontend/SegmentControl.dart';
 import 'package:flutter/material.dart';
 import 'package:ScoutingFrontend/CircularProgressBar.Dart';
 
-class TeamData extends StatefulWidget {
+class TeamCard extends StatefulWidget {
   final int teamNumber;
   final String teamName;
   final int shostInTarget;
   final int successfulClimbs;
   final double shotsInTargetPrecent;
   final double successfulClimbsPrecent;
-  TeamData({
+  TeamCard({
     @required final this.teamNumber,
     @required final this.teamName,
     @required final this.shostInTarget,
@@ -19,10 +19,10 @@ class TeamData extends StatefulWidget {
   });
 
   @override
-  _TeamDataState createState() => _TeamDataState();
+  _TeamCardState createState() => _TeamCardState();
 }
 
-class _TeamDataState extends State<TeamData> {
+class _TeamCardState extends State<TeamCard> {
   // bool tab = true;
   @override
   Widget build(final BuildContext context) {
