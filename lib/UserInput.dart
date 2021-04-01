@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:ScoutingFrontend/Counter.dart';
@@ -6,6 +8,8 @@ import 'package:ScoutingFrontend/Switcher.dart';
 import 'package:ScoutingFrontend/submit_button.dart';
 
 class UserInput extends StatelessWidget {
+  List<String> teams =
+      List<String>.generate(10, (index) => Random().nextInt(5000).toString());
   @override
   Widget build(final BuildContext context) {
     return Container(
@@ -15,6 +19,16 @@ class UserInput extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // DropDownField(
+          //     // value: accountname,
+          //     required: false,
+          //     strict: true,
+          //     labelText: 'Team Number',
+          //     // icon: Icon(Icons.format_list_numbered),
+          //     items: teams,
+          //     setter: (dynamic newValue) {
+          //       // accountname = newValue;
+          //     }),
           SectionDivider(label: 'Auto'),
           Counter(
             label: 'Upper Goal:',

@@ -1,7 +1,8 @@
+import 'package:ScoutingFrontend/SegmentControl.dart';
 import 'package:flutter/material.dart';
 import 'package:ScoutingFrontend/CircularProgressBar.Dart';
 
-class TeamData extends StatelessWidget {
+class TeamData extends StatefulWidget {
   final int teamNumber;
   final String teamName;
   final int shostInTarget;
@@ -18,31 +19,74 @@ class TeamData extends StatelessWidget {
   });
 
   @override
+  _TeamDataState createState() => _TeamDataState();
+}
+
+class _TeamDataState extends State<TeamData> {
+  // bool tab = true;
+  @override
   Widget build(final BuildContext context) {
     return AlertDialog(
-      title: Text(
-        '$teamNumber - $teamName',
-        textAlign: TextAlign.center,
+      title: Column(
+        children: [
+          Text(
+            '${widget.teamNumber} - ${widget.teamName}',
+            textAlign: TextAlign.center,
+          ),
+          // Divider(
+          //   color: Colors.black,
+          //   height: 10,
+          // ),
+        ],
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          SegmentControl(
+            headers: ['Auto', 'Tele'],
             children: [
-              CircularProgressBar(
-                precentage: shotsInTargetPrecent,
-                fraction: '15/50',
-                color: Colors.green,
-              ),
-              CircularProgressBar(
-                precentage: successfulClimbsPrecent,
-                fraction: '34/50',
-                color: Colors.purple,
-              ),
+              AutoData(
+                  shotsInTargetPrecent: widget.shotsInTargetPrecent,
+                  successfulClimbsPrecent: widget.successfulClimbsPrecent),
+              Container(
+                height: 150,
+                color: Colors.orange,
+              )
             ],
           ),
-          // Text('Avarage shots in target per game'),
+        ],
+      ),
+    );
+  }
+}
+
+class AutoData extends StatelessWidget {
+  const AutoData({
+    Key key,
+    @required this.shotsInTargetPrecent,
+    @required this.successfulClimbsPrecent,
+  }) : super(key: key);
+
+  final double shotsInTargetPrecent;
+  final double successfulClimbsPrecent;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CircularProgressBar(
+            precentage: shotsInTargetPrecent,
+            fraction: '15/50',
+            color: Colors.green,
+          ),
+          CircularProgressBar(
+            precentage: successfulClimbsPrecent,
+            fraction: '34/50',
+            color: Colors.purple,
+          ),
         ],
       ),
     );
