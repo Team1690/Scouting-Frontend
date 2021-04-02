@@ -18,18 +18,24 @@ class _SegmentControlState extends State<SegmentControl> {
     // currentSegemnt = widget.controller;
     return Column(
       children: [
-        CupertinoSlidingSegmentedControl(
-            children: {
-              0: Text(widget.headers[0]),
-              1: Text(widget.headers[1]),
-            },
-            groupValue: currentSegemnt,
-            onValueChanged: (newValue) {
-              setState(() {
-                currentSegemnt = newValue;
-                currentWidget = widget.children[currentSegemnt];
-              });
-            }),
+        Container(
+          width: 230,
+          child: CupertinoSlidingSegmentedControl(
+              children: {
+                0: Text(widget.headers[0]),
+                1: Text(widget.headers[1]),
+              },
+              groupValue: currentSegemnt,
+              onValueChanged: (newValue) {
+                setState(() {
+                  currentSegemnt = newValue;
+                  currentWidget = widget.children[currentSegemnt];
+                });
+              }),
+        ),
+        SizedBox(
+          height: 20,
+        ),
         AnimatedSwitcher(
           child: currentWidget,
           duration: Duration(milliseconds: 300),

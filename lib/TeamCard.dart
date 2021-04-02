@@ -23,7 +23,6 @@ class TeamCard extends StatefulWidget {
 }
 
 class _TeamCardState extends State<TeamCard> {
-  // bool tab = true;
   @override
   Widget build(final BuildContext context) {
     return AlertDialog(
@@ -42,17 +41,21 @@ class _TeamCardState extends State<TeamCard> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SegmentControl(
-            headers: ['Auto', 'Tele'],
-            children: [
-              AutoData(
+          Container(
+            height: 180,
+            child: SegmentControl(
+              headers: ['Auto', 'Tele'],
+              children: [
+                AutoData(
+                    // shotsInTargetPrecent: widget.shotsInTargetPrecent,
+                    // successfulClimbsPrecent: widget.successfulClimbsPrecent
+                    ),
+                TeleData(
                   shotsInTargetPrecent: widget.shotsInTargetPrecent,
-                  successfulClimbsPrecent: widget.successfulClimbsPrecent),
-              Container(
-                height: 150,
-                color: Colors.orange,
-              )
-            ],
+                  successfulClimbsPrecent: widget.successfulClimbsPrecent,
+                )
+              ],
+            ),
           ),
         ],
       ),
@@ -61,7 +64,45 @@ class _TeamCardState extends State<TeamCard> {
 }
 
 class AutoData extends StatelessWidget {
-  const AutoData({
+  double bottomGoalAvarage = 31.5;
+  double bottomGoalPersistent = 23.5;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Bottom Gaol Avarage: $bottomGoalAvarage',
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'Bottom Gaol Persistent: $bottomGoalPersistent',
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Text(
+          'Upper Gaol Avarage: $bottomGoalAvarage',
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'Upper Gaol Persistent: $bottomGoalPersistent',
+        ),
+        // Icon(
+        //   Icons.surround_sound_outlined,
+        //   size: 50,
+        // ),
+      ],
+    );
+  }
+}
+
+class TeleData extends StatelessWidget {
+  const TeleData({
     Key key,
     @required this.shotsInTargetPrecent,
     @required this.successfulClimbsPrecent,
@@ -73,7 +114,7 @@ class AutoData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
