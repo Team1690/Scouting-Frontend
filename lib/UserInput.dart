@@ -44,9 +44,6 @@ class UserInput extends StatelessWidget {
               // icon: Icon(Icons.format_list_numbered),
               items: teams,
               onValueChanged: (value) => (print(value)),
-              // setter: (dynamic newValue) {
-              //   selectedTeam = newValue;
-              // }
             ),
             SectionDivider(label: 'Auto'),
             Counter(
