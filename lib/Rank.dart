@@ -62,7 +62,6 @@ class _RankState extends State<Rank> {
         future: http.get(url),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            // print('Has Data - $teamsList');
             return Container(
               margin: const EdgeInsets.symmetric(
                 horizontal: 20,
@@ -112,7 +111,7 @@ class _RankState extends State<Rank> {
               ),
             );
           } else {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
         });
   }
