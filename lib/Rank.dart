@@ -1,8 +1,6 @@
 import 'dart:math';
 import 'package:ScoutingFrontend/TeamCard.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
 
 class Rank extends StatefulWidget {
   @override
@@ -13,17 +11,7 @@ class _RankState extends State<Rank> {
   static const int numItems = 10;
   int selectedIndex = -1;
 
-  void dataFetch() async {
-    var url = Uri.parse(
-        'https://scouting-system.herokuapp.com/graphql?query={teams{name}}');
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      print(jsonResponse['teams ']);
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-    }
-  }
+  String currentName = "";
 
   //Demo data for card
   List<int> teamNumber =
@@ -68,7 +56,6 @@ class _RankState extends State<Rank> {
             onSelectChanged: (value) {
               setState(() {
                 selectedIndex = index;
-                dataFetch();
               });
               showDialog(
                 context: context,
