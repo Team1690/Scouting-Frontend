@@ -1,6 +1,5 @@
 import 'package:ScoutingFrontend/Rank.dart';
 import 'package:ScoutingFrontend/TabSwitcher.dart';
-import 'package:ScoutingFrontend/TeamData.dart';
 import 'package:ScoutingFrontend/UserInput.dart';
 import 'package:flutter/material.dart';
 

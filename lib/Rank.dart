@@ -5,11 +5,11 @@ import 'TeamData.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+// TODO: add failed http request screen
+
 class Rank extends StatefulWidget {
   @override
   _RankState createState() => _RankState();
-  @override
-  void initState() {}
 }
 
 class _RankState extends State<Rank> {
@@ -95,9 +95,10 @@ class _RankState extends State<Rank> {
                       showDialog(
                         context: context,
                         builder: (context) => TeamCard(
+                          selectedTeam: teamsList[index],
+
+                          //TODO: remove this
                           teamNumber: teamNumber[index],
-                          // teamName: widget.data[index].teamName.toString(),
-                          teamName: teamsList[index].teamName.toString(),
                           shostInTarget: shotsInTarget[index],
                           successfulClimbs: successfulClimbs[index],
                           shotsInTargetPrecent: shotsInTargetPrecentage[index],
