@@ -62,6 +62,27 @@ class _RankState extends State<Rank> {
         future: http.get(url),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            if (snapshot.data.statusCode == 503) {
+              // 503 - Service Unavailable
+              return Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Opps',
+                    style: TextStyle(fontSize: 100),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Image.network(
+                    'https://lh3.googleusercontent.com/pw/ACtC-3cSLdYL7W8v0ZQGWY3veprH4al6C3vbj51oqX7wsfDmyIn1ySwEbg16WbKPRF-Uje06p-uBWOSynTwNnqtuFQx0OfmaoAhaKPwmlsaQOKRxB50g0lIRD5gCBPB0tV7ByY-ScjVgjQ_swedZsCDyBvKb8Q=w516-h915-no',
+                    height: 500,
+                  ),
+                ],
+              );
+            }
             return Container(
               margin: const EdgeInsets.symmetric(
                 horizontal: 20,
