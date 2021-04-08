@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dropdownfield/dropdownfield.dart';
-import 'package:ScoutingFrontend/Counter.dart';
-import 'package:ScoutingFrontend/SectionDivider.dart';
-import 'package:ScoutingFrontend/Switcher.dart';
-import 'package:ScoutingFrontend/submit_button.dart';
+import 'package:scouting_frontend/Counter.dart';
+import 'package:scouting_frontend/SectionDivider.dart';
+import 'package:scouting_frontend/Switcher.dart';
+import 'package:scouting_frontend/submit_button.dart';
 
 class UserInput extends StatelessWidget {
   List<String> teams =

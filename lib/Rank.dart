@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:ScoutingFrontend/TeamCard.dart';
+import 'package:scouting_frontend/TeamCard.dart';
 import 'package:flutter/material.dart';
 import 'TeamData.dart';
 import 'package:http/http.dart' as http;
