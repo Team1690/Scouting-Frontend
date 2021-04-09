@@ -33,7 +33,7 @@ class _TeamCardState extends State<TeamCard> {
       title: Column(
         children: [
           Text(
-            '${widget.selectedTeam.teamName} - ${widget.selectedTeam.teamName}',
+            '${widget.selectedTeam.teamNumber} - ${widget.selectedTeam.teamName}',
             textAlign: TextAlign.center,
           ),
         ],

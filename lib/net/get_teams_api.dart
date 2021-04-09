@@ -6,7 +6,7 @@ import 'package:scouting_frontend/models/team_model.dart';
 class GetTeamsApi {
   GetTeamsApi();
   var url = Uri.parse(
-      'https://scouting-system.herokuapp.com/graphql?query={teams{name}}');
+      'https://scouting-system.herokuapp.com/graphql?query={teams{number,name}}');
 
   static List<Team> teamsList = [];
   int statusCode;
@@ -21,8 +21,8 @@ class GetTeamsApi {
       var jsonResponse = convert.jsonDecode(response.body)['data']['teams'];
       assert(jsonResponse is List);
       for (var item in jsonResponse) teamsList.add(Team.fromJson(item));
-      teamsList = teamsList;
-      print('Done fetching - ${teamsList[0].teamName}');
+      print(
+          'Done fetching - ${teamsList[0].teamName} - ${teamsList[0].teamNumber}');
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
