@@ -14,7 +14,7 @@ class RankingTable extends StatefulWidget {
     // @required this.successfulClimbsPrecentage,
   }) : super(key: key);
 
-  List<Team> teams;
+  final List<Team> teams;
   // List<int> teamNumber;
   // List<int> shotsInTarget;
   // List<int> successfulClimbs;
@@ -59,7 +59,7 @@ class _RankingTableState extends State<RankingTable> {
         (index) => DataRow(
           cells: [
             DataCell(Text((index + 1).toString())),
-            DataCell(Text(teamNumber[index].toString())),
+            DataCell(Text(widget.teams[index].teamNumber.toString())),
             DataCell(Text(shotsInTarget[index].toString())),
             DataCell(Text(successfulClimbs[index].toString())),
           ],
