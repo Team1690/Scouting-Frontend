@@ -1,7 +1,7 @@
-import 'package:scouting_frontend/segment_control.dart';
-import 'package:scouting_frontend/team_data.dart';
+import 'package:scouting_frontend/views/widgets/segment_control.dart';
+import 'package:scouting_frontend/models/team_model.dart';
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/circular_progress_bar.Dart';
+import 'package:scouting_frontend/views/widgets/circular_progress_bar.Dart';
 
 //TODO: Add teamData variables
 

@@ -1,6 +1,6 @@
-import 'package:scouting_frontend/rank.dart';
-import 'package:scouting_frontend/tab_switcher.dart';
-import 'package:scouting_frontend/user_input.dart';
+import 'package:scouting_frontend/views/rank_view.dart';
+import 'package:scouting_frontend/views/widgets/tab_switcher.dart';
+import 'package:scouting_frontend/views/input_view.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
