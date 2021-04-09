@@ -17,6 +17,7 @@ class GetTeamsApi {
     statusCode = response.statusCode;
 
     if (statusCode == 200) {
+      teamsList.clear();
       //converts respone to an array of teams. type: <Team>
       var jsonResponse = convert.jsonDecode(response.body)['data']['teams'];
       assert(jsonResponse is List);

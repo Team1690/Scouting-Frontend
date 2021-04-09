@@ -7,9 +7,9 @@ import 'package:scouting_frontend/views/widgets/switcher.dart';
 import 'package:scouting_frontend/views/widgets/submit_button.dart';
 
 class UserInput extends StatelessWidget {
-  List<String> teams =
+  final List<String> teams =
       List<String>.generate(10, (index) => Random().nextInt(5000).toString());
-  String selectedTeam = '';
+  final String selectedTeam = '';
 
   @override
   Widget build(final BuildContext context) {
