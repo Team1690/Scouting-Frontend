@@ -4,6 +4,7 @@ import 'dart:convert' as convert;
 import 'package:scouting_frontend/models/team_model.dart';
 
 class GetTeamsApi {
+  GetTeamsApi();
   var url = Uri.parse(
       'https://scouting-system.herokuapp.com/graphql?query={teams{name}}');
 
