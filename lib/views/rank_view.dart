@@ -12,6 +12,7 @@ class Rank extends StatefulWidget {
 
 class _RankState extends State<Rank> {
   Future<http.Response> futureTeams;
+  List teams;
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class _RankState extends State<Rank> {
                     height: 10,
                   ),
                   Text(
-                    'Opps',
+                    'Opps5',
                     style: TextStyle(fontSize: 100),
                   ),
                   SizedBox(
@@ -52,7 +53,7 @@ class _RankState extends State<Rank> {
                 // vertical: 20,
               ),
               child: RankingTable(
-                teams: GetTeamsApi().teamsList,
+                teams: GetTeamsApi.teamsList,
                 // numItems: numItems,
                 // teamNumber: teamNumber,
                 // shotsInTarget: shotsInTarget,
