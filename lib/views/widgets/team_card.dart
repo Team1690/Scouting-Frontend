@@ -1,17 +1,21 @@
-import 'package:ScoutingFrontend/SegmentControl.dart';
+import 'package:scouting_frontend/views/widgets/segment_control.dart';
+import 'package:scouting_frontend/models/team_model.dart';
 import 'package:flutter/material.dart';
-import 'package:ScoutingFrontend/CircularProgressBar.Dart';
+import 'package:scouting_frontend/views/widgets/circular_progress_bar.Dart';
+
+//TODO: Add teamData variables
 
 class TeamCard extends StatefulWidget {
+  final Team selectedTeam;
+
   final int teamNumber;
-  final String teamName;
   final int shostInTarget;
   final int successfulClimbs;
   final double shotsInTargetPrecent;
   final double successfulClimbsPrecent;
   TeamCard({
+    @required final this.selectedTeam,
     @required final this.teamNumber,
-    @required final this.teamName,
     @required final this.shostInTarget,
     @required final this.successfulClimbs,
     @required final this.shotsInTargetPrecent,
@@ -29,13 +33,9 @@ class _TeamCardState extends State<TeamCard> {
       title: Column(
         children: [
           Text(
-            '${widget.teamNumber} - ${widget.teamName}',
+            '${widget.selectedTeam.teamName} - ${widget.selectedTeam.teamName}',
             textAlign: TextAlign.center,
           ),
-          // Divider(
-          //   color: Colors.black,
-          //   height: 10,
-          // ),
         ],
       ),
       content: Column(
@@ -47,10 +47,13 @@ class _TeamCardState extends State<TeamCard> {
               headers: ['Auto', 'Tele'],
               children: [
                 AutoData(
+                    //TODO: add TeamData variables
                     // shotsInTargetPrecent: widget.shotsInTargetPrecent,
                     // successfulClimbsPrecent: widget.successfulClimbsPrecent
                     ),
                 TeleData(
+                  //TODO: add TeamData variables
+
                   shotsInTargetPrecent: widget.shotsInTargetPrecent,
                   successfulClimbsPrecent: widget.successfulClimbsPrecent,
                 )

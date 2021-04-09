@@ -1,6 +1,6 @@
-import 'package:ScoutingFrontend/Rank.dart';
-import 'package:ScoutingFrontend/TabSwitcher.dart';
-import 'package:ScoutingFrontend/UserInput.dart';
+import 'package:scouting_frontend/views/rank_view.dart';
+import 'package:scouting_frontend/views/widgets/tab_switcher.dart';
+import 'package:scouting_frontend/views/input_view.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -16,10 +16,12 @@ class App extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: TabSwitcher(),
-          body: TabBarView(children: [
-            UserInput(),
-            Rank(),
-          ]),
+          body: TabBarView(
+            children: [
+              UserInput(),
+              Rank(),
+            ],
+          ),
         ),
       ),
     );
