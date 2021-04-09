@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:scouting_frontend/TeamCard.dart';
+import 'package:scouting_frontend/team_card.dart';
 import 'package:flutter/material.dart';
-import 'TeamData.dart';
+import 'team_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
@@ -20,6 +20,7 @@ class _RankState extends State<Rank> {
   void fetchData() async {
     //http rerquest
     var response = await http.get(url);
+
     if (response.statusCode == 200) {
       //converts respone to an array of teams <TeamData>
       var jsonResponse = convert.jsonDecode(response.body);

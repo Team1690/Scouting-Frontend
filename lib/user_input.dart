@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dropdownfield/dropdownfield.dart';
-import 'package:scouting_frontend/Counter.dart';
-import 'package:scouting_frontend/SectionDivider.dart';
-import 'package:scouting_frontend/Switcher.dart';
+import 'package:scouting_frontend/counter.dart';
+import 'package:scouting_frontend/section_divider.dart';
+import 'package:scouting_frontend/switcher.dart';
 import 'package:scouting_frontend/submit_button.dart';
 
 class UserInput extends StatelessWidget {
