@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:scouting_frontend/views/widgets/team_card.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
@@ -13,28 +14,28 @@ class Rank extends StatefulWidget {
 }
 
 class _RankState extends State<Rank> {
-  List<TeamData> teamsList = [];
-  var url = Uri.parse(
-      'https://scouting-system.herokuapp.com/graphql?query={teams{name}}');
+  // List<Team> teamsList = [];
+  // var url = Uri.parse(
+  //     'https://scouting-system.herokuapp.com/graphql?query={teams{name}}');
 
-  void fetchData() async {
-    //http rerquest
-    var response = await http.get(url);
+  // void fetchData() async {
+  //   //http rerquest
+  //   var response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      //converts respone to an array of teams <TeamData>
-      var jsonResponse = convert.jsonDecode(response.body);
-      var foramatedJson = jsonResponse['data']['teams'];
-      assert(foramatedJson is List);
-      for (var item in foramatedJson) {
-        teamsList.add(TeamData.fromJson(item));
-      }
+  //   if (response.statusCode == 200) {
+  //     //converts respone to an array of teams <TeamData>
+  //     var jsonResponse = convert.jsonDecode(response.body);
+  //     var foramatedJson = jsonResponse['data']['teams'];
+  //     assert(foramatedJson is List);
+  //     for (var item in foramatedJson) {
+  //       teamsList.add(Team.fromJson(item));
+  //     }
 
-      print('Done fetching  - ${teamsList[0].teamName}');
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-    }
-  }
+  //     print('Done fetching  - ${teamsList[0].teamName}');
+  //   } else {
+  //     print('Request failed with status: ${response.statusCode}.');
+  //   }
+  // }
 
   static const int numItems = 10;
   int selectedIndex = -1;
@@ -51,16 +52,18 @@ class _RankState extends State<Rank> {
   List<double> successfulClimbsPrecentage =
       List<double>.generate(numItems, (index) => Random().nextDouble());
 
+  Future<http.Response> futureTeams;
+
   @override
   void initState() {
     super.initState();
-    fetchData();
+    futureTeams = GetTeamsApi().fetchData();
   }
 
   @override
   Widget build(final BuildContext context) {
     return FutureBuilder(
-        future: http.get(url),
+        future: futureTeams,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.statusCode == 503) {
@@ -117,7 +120,7 @@ class _RankState extends State<Rank> {
                       showDialog(
                         context: context,
                         builder: (context) => TeamCard(
-                          selectedTeam: teamsList[index],
+                          selectedTeam: GetTeamsApi().teamsList[index],
 
                           //TODO: remove this
                           teamNumber: teamNumber[index],

@@ -6,7 +6,7 @@ import 'package:scouting_frontend/views/widgets/circular_progress_bar.Dart';
 //TODO: Add teamData variables
 
 class TeamCard extends StatefulWidget {
-  final TeamData selectedTeam;
+  final Team selectedTeam;
 
   final int teamNumber;
   final int shostInTarget;
