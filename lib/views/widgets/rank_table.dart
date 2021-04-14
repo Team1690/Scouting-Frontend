@@ -30,12 +30,6 @@ class RankingTable extends StatefulWidget {
 class _RankingTableState extends State<RankingTable> {
   int selectedIndex = -1;
 
-  List<int> teamNumber = List<int>.generate(
-      RankingTable.numItems, (index) => Random().nextInt(5000));
-  List<int> shotsInTarget = List<int>.generate(
-      RankingTable.numItems, (index) => Random().nextInt(100));
-  List<int> successfulClimbs = List<int>.generate(
-      RankingTable.numItems, (index) => Random().nextInt(100));
   List<double> shotsInTargetPrecentage = List<double>.generate(
       RankingTable.numItems, (index) => Random().nextDouble());
   List<double> successfulClimbsPrecentage = List<double>.generate(
@@ -45,7 +39,7 @@ class _RankingTableState extends State<RankingTable> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: DataTable(
-        sortColumnIndex: 1,
+        sortColumnIndex: 0,
         sortAscending: true,
         columnSpacing: 10,
         showCheckboxColumn: false,
@@ -61,8 +55,8 @@ class _RankingTableState extends State<RankingTable> {
             cells: [
               DataCell(Text((index + 1).toString())),
               DataCell(Text(widget.teams[index].teamNumber.toString())),
-              DataCell(Text(shotsInTarget[index].toString())),
-              DataCell(Text(successfulClimbs[index].toString())),
+              DataCell(Text(widget.teams[index].shotsInTarget.toString())),
+              DataCell(Text(widget.teams[index].successfulClimbs.toString())),
             ],
             selected: index == selectedIndex,
             onSelectChanged: (value) {
@@ -75,9 +69,9 @@ class _RankingTableState extends State<RankingTable> {
                   selectedTeam: widget.teams[index],
 
                   // TODO: remove this
-                  teamNumber: teamNumber[index],
-                  shostInTarget: shotsInTarget[index],
-                  successfulClimbs: successfulClimbs[index],
+                  teamNumber: widget.teams[index].teamNumber,
+                  shostInTarget: widget.teams[index].shotsInTarget,
+                  successfulClimbs: widget.teams[index].successfulClimbs,
                   shotsInTargetPrecent: shotsInTargetPrecentage[index],
                   successfulClimbsPrecent: successfulClimbsPrecentage[index],
                 ),

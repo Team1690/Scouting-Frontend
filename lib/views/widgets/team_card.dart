@@ -73,25 +73,25 @@ class AutoData extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Bottom Gaol Avarage: $bottomGoalAvarage',
+          'Bottom Goal Avarage: $bottomGoalAvarage',
         ),
         SizedBox(
           height: 10,
         ),
         Text(
-          'Bottom Gaol Persistent: $bottomGoalPersistent',
+          'Bottom Goal Persistent: $bottomGoalPersistent',
         ),
         SizedBox(
           height: 20,
         ),
         Text(
-          'Upper Gaol Avarage: $bottomGoalAvarage',
+          'Upper Goal Avarage: $bottomGoalAvarage',
         ),
         SizedBox(
           height: 10,
         ),
         Text(
-          'Upper Gaol Persistent: $bottomGoalPersistent',
+          'Upper Goal Persistent: $bottomGoalPersistent',
         ),
         // Icon(
         //   Icons.surround_sound_outlined,
