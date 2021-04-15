@@ -35,12 +35,6 @@ class _RankState extends State<Rank> {
               ),
               child: RankingTable(
                 teams: GetTeamsApi.teamsList,
-                // numItems: numItems,
-                // teamNumber: teamNumber,
-                // shotsInTarget: shotsInTarget,
-                // successfulClimbs: successfulClimbs,
-                // shotsInTargetPrecentage: shotsInTargetPrecentage,
-                // successfulClimbsPrecentage: successfulClimbsPrecentage,
               ),
             );
           }
