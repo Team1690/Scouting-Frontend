@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:scouting_frontend/views/widgets/rank_table.dart';
 
+// class Rank extends StatefulWidget{
+//   @override
+//   _RankState createState() => _RankState();
+// }
 class Rank extends StatefulWidget {
   @override
   _RankState createState() => _RankState();

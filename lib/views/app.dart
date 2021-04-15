@@ -12,18 +12,23 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: TabSwitcher(),
-          body: TabBarView(
-            children: [
-              UserInput(),
-              Rank(),
-            ],
-          ),
-        ),
+      home:
+          // DefaultTabController(
+          //   length: 2,
+          //   child:
+          Scaffold(
+        appBar:
+            // AppBar(Text)
+            TabSwitcher(),
+        body:
+            // TabBarView(
+            // children: [
+            UserInput(),
+        //   Rank(),
+        // ],
+        // ),
       ),
+      // ),
     );
   }
 }
