@@ -7,21 +7,9 @@ class RankingTable extends StatefulWidget {
   RankingTable({
     Key key,
     @required this.teams,
-    // @required this.teamNumber,
-    // @required this.shotsInTarget,
-    // @required this.successfulClimbs,
-    // @required this.shotsInTargetPrecentage,
-    // @required this.successfulClimbsPrecentage,
   }) : super(key: key);
 
   final List<Team> teams;
-  // List<int> teamNumber;
-  // List<int> shotsInTarget;
-  // List<int> successfulClimbs;
-  // List<double> shotsInTargetPrecentage;
-  // List<double> successfulClimbsPrecentage;
-
-  static const int numItems = 50;
 
   @override
   _RankingTableState createState() => _RankingTableState();
@@ -29,11 +17,6 @@ class RankingTable extends StatefulWidget {
 
 class _RankingTableState extends State<RankingTable> {
   int selectedIndex = -1;
-
-  List<double> shotsInTargetPrecentage = List<double>.generate(
-      RankingTable.numItems, (index) => Random().nextDouble());
-  List<double> successfulClimbsPrecentage = List<double>.generate(
-      RankingTable.numItems, (index) => Random().nextDouble());
 
   @override
   Widget build(BuildContext context) {
@@ -67,13 +50,6 @@ class _RankingTableState extends State<RankingTable> {
                 context: context,
                 builder: (context) => TeamCard(
                   selectedTeam: widget.teams[index],
-
-                  // TODO: remove this
-                  teamNumber: widget.teams[index].teamNumber,
-                  shostInTarget: widget.teams[index].shotsInTarget,
-                  successfulClimbs: widget.teams[index].successfulClimbs,
-                  shotsInTargetPrecent: shotsInTargetPrecentage[index],
-                  successfulClimbsPrecent: successfulClimbsPrecentage[index],
                 ),
               );
             },

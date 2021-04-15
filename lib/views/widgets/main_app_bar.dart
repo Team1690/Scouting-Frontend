@@ -8,7 +8,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(final BuildContext context) {
     return AppBar(
-      elevation: 10,
+      elevation: 5,
       title: Row(
         children: [
           GestureDetector(

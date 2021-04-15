@@ -6,18 +6,8 @@ import 'package:scouting_frontend/views/widgets/circular_progress_bar.Dart';
 class TeamCard extends StatefulWidget {
   final Team selectedTeam;
 
-  final int teamNumber;
-  final int shostInTarget;
-  final int successfulClimbs;
-  final double shotsInTargetPrecent;
-  final double successfulClimbsPrecent;
   TeamCard({
     @required final this.selectedTeam,
-    @required final this.teamNumber,
-    @required final this.shostInTarget,
-    @required final this.successfulClimbs,
-    @required final this.shotsInTargetPrecent,
-    @required final this.successfulClimbsPrecent,
   });
 
   @override
@@ -50,10 +40,10 @@ class _TeamCardState extends State<TeamCard> {
                     // successfulClimbsPrecent: widget.successfulClimbsPrecent
                     ),
                 TeleData(
-                  //TODO: add TeamData variables
-
-                  shotsInTargetPrecent: widget.shotsInTargetPrecent,
-                  successfulClimbsPrecent: widget.successfulClimbsPrecent,
+                  shotsInTargetPrecent:
+                      widget.selectedTeam.shotsInTargetPrecent,
+                  successfulClimbsPrecent:
+                      widget.selectedTeam.shotsInTargetPrecent,
                 )
               ],
             ),

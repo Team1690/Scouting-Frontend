@@ -19,6 +19,10 @@ class Team {
   final int shotsInTarget;
   final int successfulClimbs;
 
+  //demo use
+  final double shotsInTargetPrecent;
+  final double successfulClimbsPrecent;
+
   Team({
     this.teamNumber,
     this.teamName,
@@ -33,6 +37,10 @@ class Team {
     //table use
     this.shotsInTarget,
     this.successfulClimbs,
+
+    //demo use
+    this.shotsInTargetPrecent,
+    this.successfulClimbsPrecent,
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {
@@ -43,6 +51,10 @@ class Team {
       //table use
       shotsInTarget: Random().nextInt(100),
       successfulClimbs: Random().nextInt(15),
+
+      //demo use
+      shotsInTargetPrecent: Random().nextDouble(),
+      successfulClimbsPrecent: Random().nextDouble(),
     );
   }
 }
