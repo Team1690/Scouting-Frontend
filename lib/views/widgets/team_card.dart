@@ -3,23 +3,11 @@ import 'package:scouting_frontend/models/team_model.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/widgets/circular_progress_bar.Dart';
 
-//TODO: Add teamData variables
-
 class TeamCard extends StatefulWidget {
   final Team selectedTeam;
 
-  final int teamNumber;
-  final int shostInTarget;
-  final int successfulClimbs;
-  final double shotsInTargetPrecent;
-  final double successfulClimbsPrecent;
   TeamCard({
     @required final this.selectedTeam,
-    @required final this.teamNumber,
-    @required final this.shostInTarget,
-    @required final this.successfulClimbs,
-    @required final this.shotsInTargetPrecent,
-    @required final this.successfulClimbsPrecent,
   });
 
   @override
@@ -33,7 +21,7 @@ class _TeamCardState extends State<TeamCard> {
       title: Column(
         children: [
           Text(
-            '${widget.selectedTeam.teamName} - ${widget.selectedTeam.teamName}',
+            '${widget.selectedTeam.teamNumber} - ${widget.selectedTeam.teamName}',
             textAlign: TextAlign.center,
           ),
         ],
@@ -52,10 +40,10 @@ class _TeamCardState extends State<TeamCard> {
                     // successfulClimbsPrecent: widget.successfulClimbsPrecent
                     ),
                 TeleData(
-                  //TODO: add TeamData variables
-
-                  shotsInTargetPrecent: widget.shotsInTargetPrecent,
-                  successfulClimbsPrecent: widget.successfulClimbsPrecent,
+                  shotsInTargetPrecent:
+                      widget.selectedTeam.shotsInTargetPrecent,
+                  successfulClimbsPrecent:
+                      widget.selectedTeam.shotsInTargetPrecent,
                 )
               ],
             ),
@@ -67,33 +55,33 @@ class _TeamCardState extends State<TeamCard> {
 }
 
 class AutoData extends StatelessWidget {
-  double bottomGoalAvarage = 31.5;
-  double bottomGoalPersistent = 23.5;
+  final double bottomGoalAvarage = 31.5;
+  final double bottomGoalPersistent = 23.5;
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Bottom Gaol Avarage: $bottomGoalAvarage',
+          'Bottom Goal Avarage: $bottomGoalAvarage',
         ),
         SizedBox(
           height: 10,
         ),
         Text(
-          'Bottom Gaol Persistent: $bottomGoalPersistent',
+          'Bottom Goal Persistent: $bottomGoalPersistent',
         ),
         SizedBox(
           height: 20,
         ),
         Text(
-          'Upper Gaol Avarage: $bottomGoalAvarage',
+          'Upper Goal Avarage: $bottomGoalAvarage',
         ),
         SizedBox(
           height: 10,
         ),
         Text(
-          'Upper Gaol Persistent: $bottomGoalPersistent',
+          'Upper Goal Persistent: $bottomGoalPersistent',
         ),
         // Icon(
         //   Icons.surround_sound_outlined,

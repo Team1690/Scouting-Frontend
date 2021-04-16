@@ -7,18 +7,18 @@ import 'package:scouting_frontend/views/widgets/switcher.dart';
 import 'package:scouting_frontend/views/widgets/submit_button.dart';
 
 class UserInput extends StatelessWidget {
-  List<String> teams =
+  final List<String> teams =
       List<String>.generate(10, (index) => Random().nextInt(5000).toString());
-  String selectedTeam = '';
+  final String selectedTeam = '';
 
   @override
   Widget build(final BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 10,
-      ),
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 10,
+        ),
         child: Column(
           children: [
             SectionDivider(label: 'Match Details'),
@@ -67,22 +67,21 @@ class UserInput extends StatelessWidget {
               label: 'Missed:',
               icon: Icons.clear_rounded,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 25),
-              child: Switcher(
-                labels: [
-                  'Climbed',
-                  'Failed',
-                  'No attempt',
-                ],
-                colors: [
-                  Colors.green,
-                  Colors.pink,
-                  Colors.amber,
-                ],
-              ),
+            SectionDivider(label: 'End Game'),
+            Switcher(
+              labels: [
+                'Climbed',
+                'Failed',
+                'No attempt',
+              ],
+              colors: [
+                Colors.green,
+                Colors.pink,
+                Colors.amber,
+              ],
             ),
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
+            SectionDivider(label: 'Send Data'),
             const SubmitButton(),
             const SizedBox(height: 20),
           ],

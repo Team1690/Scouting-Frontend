@@ -4,7 +4,10 @@ class SegmentControl extends StatefulWidget {
   List<Widget> children = const <Widget>[];
   List<String> headers = const <String>[];
 
-  SegmentControl({@required this.children, @required this.headers});
+  SegmentControl({
+    @required final this.children,
+    @required final this.headers,
+  });
   @override
   _SegmentControlState createState() => _SegmentControlState();
 }

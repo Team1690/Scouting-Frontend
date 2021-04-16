@@ -1,5 +1,4 @@
-import 'package:scouting_frontend/views/rank_view.dart';
-import 'package:scouting_frontend/views/widgets/tab_switcher.dart';
+import 'package:scouting_frontend/views/widgets/main_app_bar.dart';
 import 'package:scouting_frontend/views/input_view.dart';
 import 'package:flutter/material.dart';
 
@@ -12,17 +11,9 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: TabSwitcher(),
-          body: TabBarView(
-            children: [
-              UserInput(),
-              Rank(),
-            ],
-          ),
-        ),
+      home: Scaffold(
+        appBar: MainAppBar(),
+        body: UserInput(),
       ),
     );
   }
