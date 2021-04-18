@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/widgets/team_card.dart';
