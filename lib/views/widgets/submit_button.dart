@@ -6,7 +6,9 @@ import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class SubmitButton extends StatefulWidget {
-  const SubmitButton({Key key}) : super(key: key);
+  final Function onPressed;
+
+  const SubmitButton({this.onPressed, Key key}) : super(key: key);
 
   @override
   _SubmitButtonState createState() => _SubmitButtonState();
@@ -43,6 +45,7 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () {
+        widget.onPressed();
         switch (_state) {
           case ButtonState.idle:
             setState(() {

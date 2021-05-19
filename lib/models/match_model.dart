@@ -5,28 +5,33 @@ enum climbOptions {
 }
 
 class Match {
-  final int teamNumber;
-  final int matchNumber;
+  int teamNumber;
+  int matchNumber;
 
-  final int autoUpperGoal;
-  final int autoBottomGoal;
-  final int autoMissed;
+  int autoUpperGoal = 0;
+  int autoBottomGoal = 0;
+  int autoMissed = 0;
 
-  final int teleUpperGoal;
-  final int teleMissed;
+  int teleUpperGoal = 0;
+  int teleMissed = 0;
 
-  final climbOptions climbStatus;
+  climbOptions climbStatus;
 
   Match({
-    this.teamNumber,
-    this.matchNumber,
-    this.autoUpperGoal,
-    this.autoBottomGoal,
-    this.autoMissed,
-    this.teleUpperGoal,
-    this.teleMissed,
+    this.teamNumber = 0,
+    this.matchNumber = 0,
+    this.autoUpperGoal = 0,
+    this.autoBottomGoal = 0,
+    this.autoMissed = 0,
+    this.teleUpperGoal = 0,
+    this.teleMissed = 0,
     this.climbStatus,
   });
+
+  Map<String, dynamic> toJson() => {
+        'teamNumber': teamNumber,
+        'matchNumber': matchNumber,
+      };
 
   // factory Team.fromJson(Map<String, dynamic> json) {
   //   return Team(

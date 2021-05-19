@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/models/match_model.dart';
 
 class Switcher extends StatefulWidget {
   @override
@@ -8,12 +9,14 @@ class Switcher extends StatefulWidget {
   final List<Color> colors;
   final Function(String, bool) onChange;
   final double height;
+  final Function(climbOptions) onValueChanged;
 
   Switcher({
     @required final this.labels,
     @required final this.colors,
     final this.height = 70,
     final this.onChange,
+    this.onValueChanged,
   });
 }
 
@@ -70,6 +73,19 @@ class _SwitcherState extends State<Switcher> {
 
                     if (widget.onChange != null)
                       widget.onChange(widget.labels[i], !wasPressed);
+
+                    switch (i) {
+                      case 0:
+                        widget.onValueChanged(climbOptions.climbed);
+                        break;
+                      case 1:
+                        widget.onValueChanged(climbOptions.faild);
+                        break;
+                      case 2:
+                        widget.onValueChanged(climbOptions.notAttempted);
+                        break;
+                      default:
+                    }
                   },
                 ),
               ),

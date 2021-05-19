@@ -4,9 +4,15 @@ import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 class Counter extends StatelessWidget {
   final String label;
   final IconData icon;
+
+  int count;
+  Function(int) onChange;
+
   Counter({
     @required final this.label,
     @required final this.icon,
+    this.count,
+    this.onChange,
   });
 
   @override
@@ -33,16 +39,17 @@ class Counter extends StatelessWidget {
         Expanded(
           flex: 4,
           child: StepperSwipe(
-            initialValue: 0,
-            stepperValue: 0,
-            minValue: 0,
-            direction: Axis.horizontal,
-            dragButtonColor: Colors.blueAccent,
-            iconsColor: Colors.blueAccent,
-            withPlusMinus: true,
-            withSpring: true,
-            onChanged: null,
-          ),
+              initialValue: 0,
+              stepperValue: 0,
+              minValue: 0,
+              direction: Axis.horizontal,
+              dragButtonColor: Colors.blueAccent,
+              iconsColor: Colors.blueAccent,
+              withPlusMinus: true,
+              withSpring: true,
+              onChanged: (int count) {
+                onChange(count);
+              }),
         ),
       ],
     );
