@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dropdownfield/dropdownfield.dart';
-import 'package:scouting_frontend/models/team_model.dart';
+import 'package:scouting_frontend/net/send_match_api.dart';
 import 'package:scouting_frontend/views/widgets/counter.dart';
 import 'package:scouting_frontend/views/widgets/section_divider.dart';
 import 'package:scouting_frontend/views/widgets/switcher.dart';
@@ -15,8 +15,6 @@ class UserInput extends StatelessWidget {
   final String selectedTeam = '';
 
   Match match = Match();
-
-  void updateMatch(Match match) {}
 
   @override
   Widget build(final BuildContext context) {
@@ -93,7 +91,7 @@ class UserInput extends StatelessWidget {
             // const SizedBox(height: 20),
             SectionDivider(label: 'Send Data'),
             SubmitButton(
-              onPressed: () => inspect(match),
+              onPressed: () => SendMatchApi().sendData(match),
             ),
             const SizedBox(height: 20),
           ],

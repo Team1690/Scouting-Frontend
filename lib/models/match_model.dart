@@ -17,6 +17,8 @@ class Match {
 
   climbOptions climbStatus;
 
+  String matchJson;
+
   Match({
     this.teamNumber = 0,
     this.matchNumber = 0,
@@ -25,26 +27,28 @@ class Match {
     this.autoMissed = 0,
     this.teleUpperGoal = 0,
     this.teleMissed = 0,
-    this.climbStatus,
+    this.climbStatus = climbOptions.notAttempted,
   });
 
   Map<String, dynamic> toJson() => {
-        'teamNumber': teamNumber,
-        'matchNumber': matchNumber,
+        'number': matchNumber + 50,
+        'team': teamNumber,
+        'autoData': {
+          'upperGoal': autoUpperGoal,
+          'bottomGoal': autoBottomGoal,
+          // 'missed': autoMissed,
+        },
+        'teleopData': {
+          'upperGoal': teleUpperGoal,
+          'missed': teleMissed,
+          'climbed': climbStatus
+                  .toString()
+                  .substring(climbStatus.toString().indexOf('.') + 1)[0]
+                  .toUpperCase() +
+              climbStatus
+                  .toString()
+                  .substring(climbStatus.toString().indexOf('.') + 1)
+                  .substring(1),
+        }
       };
-
-  // factory Team.fromJson(Map<String, dynamic> json) {
-  //   return Team(
-  //     teamNumber: json['number'],
-  //     teamName: json['name'],
-
-  //     //table use
-  //     shotsInTarget: Random().nextInt(100),
-  //     successfulClimbs: Random().nextInt(15),
-
-  //     //demo use
-  //     shotsInTargetPrecent: Random().nextDouble(),
-  //     successfulClimbsPrecent: Random().nextDouble(),
-  //   );
-  // }
 }
