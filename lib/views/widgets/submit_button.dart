@@ -7,8 +7,10 @@ import 'package:progress_state_button/progress_button.dart';
 
 class SubmitButton extends StatefulWidget {
   final Function onPressed;
+  final Future<int> statusCode;
 
-  const SubmitButton({@required this.onPressed, Key key}) : super(key: key);
+  const SubmitButton({@required this.onPressed, this.statusCode, Key key})
+      : super(key: key);
 
   @override
   _SubmitButtonState createState() => _SubmitButtonState();
@@ -51,6 +53,7 @@ class _SubmitButtonState extends State<SubmitButton> {
             setState(() {
               _state = ButtonState.loading;
             });
+
             Future.delayed(
               Duration(seconds: 1),
               () => setState(

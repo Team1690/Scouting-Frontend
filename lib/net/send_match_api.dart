@@ -9,7 +9,7 @@ class SendMatchApi {
   var url = Uri.parse('http://scouting-system.herokuapp.com/graphql');
   int statusCode;
 
-  Future<http.Response> sendData(Match match) async {
+  Future<int> sendData(Match match) async {
     var jsonMatchData = match.toJson();
     var postRequest =
         '{\"query\": \"mutation{createMatch(match: $jsonMatchData){_id}}\"}';
@@ -34,6 +34,6 @@ class SendMatchApi {
       print(response.body);
     }
 
-    return response;
+    return response.statusCode;
   }
 }

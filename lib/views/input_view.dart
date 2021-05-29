@@ -8,6 +8,7 @@ import 'package:scouting_frontend/views/widgets/section_divider.dart';
 import 'package:scouting_frontend/views/widgets/switcher.dart';
 import 'package:scouting_frontend/views/widgets/submit_button.dart';
 import 'package:scouting_frontend/models/match_model.dart';
+import 'package:scouting_frontend/views/widgets/teams_dropdown.dart';
 
 class UserInput extends StatelessWidget {
   final List<String> teams =
@@ -15,6 +16,7 @@ class UserInput extends StatelessWidget {
   final String selectedTeam = '';
 
   Match match = Match();
+  Future<int> response;
 
   @override
   Widget build(final BuildContext context) {
@@ -46,6 +48,12 @@ class UserInput extends StatelessWidget {
                 items: teams,
                 onValueChanged: (value) =>
                     match.matchNumber = int.parse(value)),
+            SizedBox(
+              height: 15,
+            ),
+            TeamsDropdown(
+              onChange: (value) => match.teamNumber = value,
+            ),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Upper Goal:',
@@ -92,6 +100,7 @@ class UserInput extends StatelessWidget {
             SectionDivider(label: 'Send Data'),
             SubmitButton(
               onPressed: () => SendMatchApi().sendData(match),
+              // statusCode: SendMatchApi().statusCode,
             ),
             const SizedBox(height: 20),
           ],
