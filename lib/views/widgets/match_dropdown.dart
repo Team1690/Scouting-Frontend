@@ -12,7 +12,8 @@ class MatchDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onChanged: (value) => onChange(int.parse(value)),
+      onChanged: (value) =>
+          value.isNotEmpty ? onChange(int.parse(value)) : onChange(100),
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly
       ],
