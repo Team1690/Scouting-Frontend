@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdownfield/dropdownfield.dart';
 import 'package:scouting_frontend/net/send_match_api.dart';
 import 'package:scouting_frontend/views/widgets/counter.dart';
+import 'package:scouting_frontend/views/widgets/match_dropdown.dart';
 import 'package:scouting_frontend/views/widgets/section_divider.dart';
 import 'package:scouting_frontend/views/widgets/switcher.dart';
 import 'package:scouting_frontend/views/widgets/submit_button.dart';
@@ -29,31 +30,11 @@ class UserInput extends StatelessWidget {
         child: Column(
           children: [
             SectionDivider(label: 'Match Details'),
-            DropDownField(
-                // value: selectedTeam,
-                required: false,
-                strict: true,
-                labelText: 'Team Number',
-                // icon: Icon(Icons.format_list_numbered),
-                items: teams,
-                onValueChanged: (value) => match.teamNumber = int.parse(value)),
+            MatchDropdown(onChange: (value) => match.matchNumber = value),
             SizedBox(
               height: 15,
             ),
-            DropDownField(
-                required: false,
-                strict: true,
-                labelText: 'Match',
-                // icon: Icon(Icons.format_list_numbered),
-                items: teams,
-                onValueChanged: (value) =>
-                    match.matchNumber = int.parse(value)),
-            SizedBox(
-              height: 15,
-            ),
-            TeamsDropdown(
-              onChange: (value) => match.teamNumber = value,
-            ),
+            TeamsDropdown(onChange: (value) => match.teamNumber = value),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Upper Goal:',
