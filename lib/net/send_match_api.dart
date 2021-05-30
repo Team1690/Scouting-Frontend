@@ -14,7 +14,7 @@ class SendMatchApi {
     var postRequest =
         '{\"query\": \"mutation{createMatch(match: $jsonMatchData){_id}}\"}';
 
-    print(postRequest);
+    // print(postRequest);
 // {"query": "mutation{createMatch(match: {number: 0, team: 0}){_id}}"}
     //http rerquest
     var response = await http.post(url,
@@ -31,6 +31,8 @@ class SendMatchApi {
     } else {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
+      print('oops');
+      print(response.statusCode);
       print(response.body);
     }
 
