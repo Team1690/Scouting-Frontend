@@ -13,7 +13,7 @@ class Team {
   final int autobottomGoal;
   final int telpUpperGoal;
   final int teleMissed;
-  final int climb;
+  final climbOptions climb;
 
   //table use
   final int shotsInTarget;
