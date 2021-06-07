@@ -10,7 +10,6 @@ class Match {
 
   int autoUpperGoal = 0;
   int autoBottomGoal = 0;
-  int autoMissed = 0;
 
   int teleUpperGoal = 0;
   int teleMissed = 0;
@@ -24,7 +23,6 @@ class Match {
     this.matchNumber = 0,
     this.autoUpperGoal = 0,
     this.autoBottomGoal = 0,
-    this.autoMissed = 0,
     this.teleUpperGoal = 0,
     this.teleMissed = 0,
     this.climbStatus = climbOptions.notAttempted,
@@ -36,7 +34,6 @@ class Match {
         'autoData': {
           'upperGoal': autoUpperGoal,
           'bottomGoal': autoBottomGoal,
-          // 'missed': autoMissed,
         },
         'teleopData': {
           'upperGoal': teleUpperGoal,

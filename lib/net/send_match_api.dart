@@ -24,15 +24,13 @@ class SendMatchApi {
         body: postRequest);
     statusCode = response.statusCode;
 
-    if (response.statusCode == 201) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
+    if (response.statusCode == 200) {
+
       print('yeyy');
-    } else {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
-      print('oops');
       print(response.statusCode);
+    } else {
+      
+      print('oops');
       print(response.body);
     }
 

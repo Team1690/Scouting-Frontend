@@ -46,11 +46,6 @@ class UserInput extends StatelessWidget {
               icon: Icons.surround_sound_outlined,
               onChange: (int count) => match.autoBottomGoal = count,
             ),
-            Counter(
-              label: 'Missed:',
-              icon: Icons.clear_rounded,
-              onChange: (int count) => match.autoMissed = count,
-            ),
             SectionDivider(label: 'Teleop'),
             Counter(
               label: 'Upper Goal:',
