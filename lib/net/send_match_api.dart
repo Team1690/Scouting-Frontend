@@ -12,7 +12,7 @@ class SendMatchApi {
   Future<int> sendData(Match match) async {
     var jsonMatchData = match.toJson();
     var postRequest =
-        '{\"query\": \"mutation{createMatch(match: $jsonMatchData){_id}}\"}';
+        '{\"query\": \"mutation{createMatch(match: $jsonMatchData){statusCode, error}}\"}';
 
     // print(postRequest);
 // {"query": "mutation{createMatch(match: {number: 0, team: 0}){_id}}"}
@@ -25,11 +25,9 @@ class SendMatchApi {
     statusCode = response.statusCode;
 
     if (response.statusCode == 200) {
-
       print('yeyy');
       print(response.statusCode);
     } else {
-      
       print('oops');
       print(response.body);
     }

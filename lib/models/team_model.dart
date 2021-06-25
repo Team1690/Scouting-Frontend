@@ -51,19 +51,22 @@ class Team {
 
   factory Team.fromJson(Map<String, dynamic> json) {
     if (json['analytic'] != null) {
+      print(json['analytic']);
       return Team(
         teamNumber: json['number'],
         teamName: json['name'],
         autoBottomGoalTotal: json['analytic']['auto']['bottomGoalTotal'],
         autoBottomGoalSD: json['analytic']['auto']['bottomGoalSD'],
-        autoUpperGoalTotal: json['analytic']['auto']['UpperGoalTotal'],
-        autoUpperGoalSD: json['analytic']['auto']['UpperGoalSD'],
+        autoUpperGoalTotal: json['analytic']['auto']['upperGoalTotal'],
+        autoUpperGoalSD: json['analytic']['auto']['upperGoalSD'],
         telpUpperGoalTotal: json['analytic']['teleop']['upperGoalTotal'],
         telpUpperSD: json['analytic']['teleop']['upperGoalSD'],
         climb: json['analytic']['teleop']['climbPrecentage'],
 
         //table use
-        shotsInTarget: Random().nextInt(100),
+        // shotsInTarget: Random().nextInt(15),
+        shotsInTarget: json['analytic']['auto']['upperGoalTotal'] +
+            json['analytic']['teleop']['upperGoalTotal'],
         successfulClimbs: Random().nextInt(15),
 
         //demo use

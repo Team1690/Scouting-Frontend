@@ -43,13 +43,13 @@ class GetTeamsApi {
 
   static Future<List<Team>> getTeamsSuggestion(String query) async {
     final url = Uri.parse(
-        'https://scouting-system.herokuapp.com/graphql?query={getCurrentComp{teams{name,number}}}');
+        'https://scouting-system.herokuapp.com/graphql?query={getCurrentComp{teams{number}}}');
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
       List teams =
           convert.jsonDecode(response.body)['data']['getCurrentComp']['teams'];
-      print(teams);
+      // print(teams);
       return teams.map((json) => Team.fromJson(json)).where((user) {
         final number = user.teamNumber;
         return number.toString().contains(query);
