@@ -19,7 +19,7 @@ class _RankState extends State<Rank> {
   @override
   void initState() {
     super.initState();
-    futureTeams = GetTeamsApi().fetchData();
+    futureTeams = GetTeamsApi().fetchAnalytics();
   }
 
   @override
@@ -27,7 +27,7 @@ class _RankState extends State<Rank> {
     return FutureBuilder(
         future: futureTeams,
         builder: (context, snapshot) {
-          print(snapshot.data);
+          print('snap ${snapshot.data}');
           if (snapshot.hasData) {
             return Container(
               margin: const EdgeInsets.symmetric(
@@ -54,16 +54,17 @@ class _RankState extends State<Rank> {
                   height: 10,
                 ),
                 Text(
-                  'status code - ${snapshot.data.statusCode}',
+                  // 'status code - ${snapshot.data.statusCode}',
+                  'status code - ${snapshot.data}',
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                Image.network(
-                  'https://lh3.googleusercontent.com/pw/ACtC-3cSLdYL7W8v0ZQGWY3veprH4al6C3vbj51oqX7wsfDmyIn1ySwEbg16WbKPRF-Uje06p-uBWOSynTwNnqtuFQx0OfmaoAhaKPwmlsaQOKRxB50g0lIRD5gCBPB0tV7ByY-ScjVgjQ_swedZsCDyBvKb8Q=w516-h915-no',
-                  height: 450,
-                ),
+                // Image.network(
+                //   'https://lh3.googleusercontent.com/pw/ACtC-3cSLdYL7W8v0ZQGWY3veprH4al6C3vbj51oqX7wsfDmyIn1ySwEbg16WbKPRF-Uje06p-uBWOSynTwNnqtuFQx0OfmaoAhaKPwmlsaQOKRxB50g0lIRD5gCBPB0tV7ByY-ScjVgjQ_swedZsCDyBvKb8Q=w516-h915-no',
+                //   height: 450,
+                // ),
               ],
             );
           } else {
