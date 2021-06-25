@@ -30,6 +30,7 @@ class GetTeamsApi {
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
+    print(statusCode);
     return response;
   }
 

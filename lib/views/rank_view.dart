@@ -27,6 +27,7 @@ class _RankState extends State<Rank> {
     return FutureBuilder(
         future: futureTeams,
         builder: (context, snapshot) {
+          print(snapshot.data);
           if (snapshot.hasData) {
             return Container(
               margin: const EdgeInsets.symmetric(
@@ -38,7 +39,7 @@ class _RankState extends State<Rank> {
               ),
             );
           }
-          if (snapshot.hasError) {
+          if (snapshot.hasError || snapshot.data == null) {
             // 503 - Service Unavailable
             return Column(
               children: [

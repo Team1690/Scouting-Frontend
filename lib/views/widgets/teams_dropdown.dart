@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/get_teams_api.dart';
@@ -25,6 +26,9 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
         textFieldConfiguration: TextFieldConfiguration(
           onChanged: (value) => setState(() => _validate = value.isEmpty),
           controller: _typeAheadController,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.search),
             border: OutlineInputBorder(),
