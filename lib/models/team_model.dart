@@ -75,4 +75,11 @@ class Team {
       );
     }
   }
+
+  factory Team.fromJsonLite(Map<String, dynamic> json) {
+    return Team(
+      teamNumber: json['number'],
+      teamName: json['name'],
+    );
+  }
 }

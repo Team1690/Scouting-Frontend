@@ -49,8 +49,7 @@ class GetTeamsApi {
     if (response.statusCode == 200) {
       List teams =
           convert.jsonDecode(response.body)['data']['getCurrentComp']['teams'];
-      // print(teams);
-      return teams.map((json) => Team.fromJson(json)).where((user) {
+      return teams.map((json) => Team.fromJsonLite(json)).where((user) {
         final number = user.teamNumber;
         return number.toString().contains(query);
       }).toList();

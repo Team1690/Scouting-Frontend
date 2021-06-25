@@ -56,13 +56,11 @@ class _SubmitButtonState extends State<SubmitButton> {
 
             Future.delayed(
               Duration(seconds: 1),
-              () => setState(
-                () => 
-                  _state = ButtonState.success
-                    // _state = Random.secure().nextDouble() < 0.65 // 65% seccuss
-                    //     ? ButtonState.success
-                    //     : ButtonState.fail,
-              ),
+              () => setState(() => _state = ButtonState.success
+                  // _state = Random.secure().nextDouble() < 0.65 // 65% seccuss
+                  //     ? ButtonState.success
+                  //     : ButtonState.fail,
+                  ),
             );
             break;
 
