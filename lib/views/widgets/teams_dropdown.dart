@@ -39,7 +39,6 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
         suggestionsCallback: GetTeamsApi.getTeamsSuggestion,
         itemBuilder: (context, Team suggestion) {
           final user = suggestion;
-          print(user.teamNumber.toString());
           return ListTile(
             title: Text(user.teamNumber.toString()),
           );

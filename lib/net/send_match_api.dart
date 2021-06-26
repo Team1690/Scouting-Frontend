@@ -6,15 +6,14 @@ class SendMatchApi {
   Match match;
 
   SendMatchApi();
-  var url = Uri.parse('http://scouting-system.herokuapp.com/graphql');
-  int statusCode;
+  static int statusCode;
 
-  Future<int> sendData(Match match) async {
+  static Future<http.Response> sendData(Match match) async {
+    final url = Uri.parse('http://scouting-system.herokuapp.com/graphql');
     var jsonMatchData = match.toJson();
     var postRequest =
         '{\"query\": \"mutation{createMatch(match: $jsonMatchData){statusCode, error}}\"}';
 
-    // print(postRequest);
 // {"query": "mutation{createMatch(match: {number: 0, team: 0}){_id}}"}
     //http rerquest
     var response = await http.post(url,
@@ -25,13 +24,12 @@ class SendMatchApi {
     statusCode = response.statusCode;
 
     if (response.statusCode == 200) {
-      print('yeyy');
-      print(response.statusCode);
+      print('yeyy ${response.statusCode}');
     } else {
       print('oops');
       print(response.body);
     }
 
-    return response.statusCode;
+    return response;
   }
 }

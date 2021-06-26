@@ -17,7 +17,6 @@ class GetTeamsApi {
         'https://scouting-system.herokuapp.com/graphql?query={getCurrentComp{teams{number,name,analytics{auto{bottomGoalTotal,bottomGoalSD,upperGoalTotal,upperGoalSD}teleop{upperGoalTotal,upperGoalSD,seccessClimb,climbPrecentage}}}}}');
     //http rerquest
     var response = await http.get(url);
-    // print('response is ${response.body}');
     statusCode = response.statusCode;
 
     if (statusCode == 200) {
@@ -34,7 +33,7 @@ class GetTeamsApi {
         if (item['analytic'] != null) {
           teamsList.add(Team.fromJson(item));
         } else {
-          print('Analytics were null');
+          print('Missing team analytics (null)');
         }
       }
       print(statusCode);
