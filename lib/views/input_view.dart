@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:dropdownfield/dropdownfield.dart';
 import 'package:scouting_frontend/net/send_match_api.dart';
 import 'package:scouting_frontend/views/widgets/counter.dart';
 import 'package:scouting_frontend/views/widgets/match_dropdown.dart';
@@ -75,7 +74,7 @@ class UserInput extends StatelessWidget {
             // const SizedBox(height: 20),
             SectionDivider(label: 'Send Data'),
             SubmitButton(
-              onPressed: () => SendMatchApi().sendData(match),
+              onPressed: () => SendMatchApi.sendData(match),
               // statusCode: SendMatchApi().statusCode,
             ),
             const SizedBox(height: 20),

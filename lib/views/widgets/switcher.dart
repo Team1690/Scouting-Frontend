@@ -79,7 +79,7 @@ class _SwitcherState extends State<Switcher> {
                         widget.onValueChanged(climbOptions.climbed);
                         break;
                       case 1:
-                        widget.onValueChanged(climbOptions.faild);
+                        widget.onValueChanged(climbOptions.failed);
                         break;
                       case 2:
                         widget.onValueChanged(climbOptions.notAttempted);

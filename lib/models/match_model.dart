@@ -1,6 +1,6 @@
 enum climbOptions {
   climbed,
-  faild,
+  failed,
   notAttempted,
 }
 
@@ -31,11 +31,12 @@ class Match {
   Map<String, dynamic> toJson() => {
         'number': matchNumber + 50,
         'team': teamNumber,
-        'autoData': {
+        'auto': {
           'upperGoal': autoUpperGoal,
           'bottomGoal': autoBottomGoal,
+          'missed': 0,
         },
-        'teleopData': {
+        'teleop': {
           'upperGoal': teleUpperGoal,
           'missed': teleMissed,
           'climbed': climbStatus
