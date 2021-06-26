@@ -10,11 +10,11 @@ class GetTeamsApi {
   GetTeamsApi();
 
   static List<Team> teamsList = [];
-  int statusCode;
+  static int statusCode;
 
   Future<http.Response> fetchAnalytics() async {
     final url = Uri.parse(
-        'https://scouting-system.herokuapp.com/graphql?query={getCurrentComp{teams{number,name,analytic{auto{bottomGoalTotal,bottomGoalSD,upperGoalTotal,upperGoalSD}teleop{upperGoalTotal,upperGoalSD,climbPrecentage}}}}}');
+        'https://scouting-system.herokuapp.com/graphql?query={getCurrentComp{teams{number,name,analytics{auto{bottomGoalTotal,bottomGoalSD,upperGoalTotal,upperGoalSD}teleop{upperGoalTotal,upperGoalSD,seccessClimb,climbPrecentage}}}}}');
     //http rerquest
     var response = await http.get(url);
     // print('response is ${response.body}');
@@ -26,6 +26,10 @@ class GetTeamsApi {
       var jsonResponse =
           convert.jsonDecode(response.body)['data']['getCurrentComp']['teams'];
       assert(jsonResponse is List);
+
+      if (jsonResponse.any((e) => e['analytic'] == null))
+        statusCode = 204; //checks is no data is available
+
       for (var item in jsonResponse) {
         if (item['analytic'] != null) {
           teamsList.add(Team.fromJson(item));
@@ -33,6 +37,7 @@ class GetTeamsApi {
           print('Analytics were null');
         }
       }
+      print(statusCode);
       print(
           'Done fetching - ${teamsList[0].teamName} - ${teamsList[0].teamNumber}');
     } else {

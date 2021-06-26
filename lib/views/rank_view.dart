@@ -2,6 +2,7 @@ import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:scouting_frontend/views/widgets/rank_table.dart';
+import 'package:scouting_frontend/views/widgets/response_code_screens.dart';
 
 // class Rank extends StatefulWidget{
 //   @override
@@ -27,37 +28,14 @@ class _RankState extends State<Rank> {
     return FutureBuilder(
         future: futureTeams,
         builder: (context, snapshot) {
-          // print('snap ${snapshot.data}');
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              snapshot.connectionState == ConnectionState.none)
+            return Center(child: CircularProgressIndicator());
+
+          if (snapshot.hasError)
+            return ResponseCodeScreens(statusCode: GetTeamsApi.statusCode);
+
           if (snapshot.hasData) {
-            if (snapshot.data == null) {
-              // 503 - Service Unavailable
-              return Column(
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Opps5',
-                    style: TextStyle(fontSize: 100),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    // 'status code - ${snapshot.data.statusCode}',
-                    'status code - ${snapshot.data}',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Image.network(
-                    'https://lh3.googleusercontent.com/pw/ACtC-3cSLdYL7W8v0ZQGWY3veprH4al6C3vbj51oqX7wsfDmyIn1ySwEbg16WbKPRF-Uje06p-uBWOSynTwNnqtuFQx0OfmaoAhaKPwmlsaQOKRxB50g0lIRD5gCBPB0tV7ByY-ScjVgjQ_swedZsCDyBvKb8Q=w516-h915-no',
-                    height: 450,
-                  ),
-                ],
-              );
-            }
             return Container(
               margin: const EdgeInsets.symmetric(
                 horizontal: 20,
@@ -67,9 +45,27 @@ class _RankState extends State<Rank> {
                 teams: GetTeamsApi.teamsList,
               ),
             );
-          } else {
-            return Center(child: CircularProgressIndicator());
           }
+
+          // if (snapshot.hasError)
+          //   return ResponseCodeScreens(statusCode: snapshot.error);
+          // if (snapshot.hasData) {
+          //   if (snapshot.data == null) {
+          //     // 503 - Service Unavailable
+          //     return ResponseCodeScreens(statusCode: snapshot.error);
+          //   }
+          //   return Container(
+          //     margin: const EdgeInsets.symmetric(
+          //       horizontal: 20,
+          //       // vertical: 20,
+          //     ),
+          //     child: RankingTable(
+          //       teams: GetTeamsApi.teamsList,
+          //     ),
+          //   );
+          // } else {
+          //   return Center(child: CircularProgressIndicator());
+          // }
         });
   }
 }
