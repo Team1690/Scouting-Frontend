@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/views/widgets/stepper.dart';
 import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 
 class Counter extends StatelessWidget {
@@ -38,19 +39,30 @@ class Counter extends StatelessWidget {
         ),
         Expanded(
           flex: 4,
-          child: StepperSwipe(
-              initialValue: 0,
-              stepperValue: 0,
-              minValue: 0,
-              direction: Axis.horizontal,
-              dragButtonColor: Colors.blueAccent,
-              iconsColor: Colors.blueAccent,
-              withPlusMinus: true,
-              withSpring: true,
-              onChanged: (int count) {
+          child: CustomStepper(
+              iconSize: 30,
+              lowerLimit: 0,
+              upperLimit: 100,
+              value: 0,
+              stepValue: 1,
+              longPressStepValue: 5,
+              onPress: (int count) {
                 onChange(count);
               }),
-        ),
+        )
+        // child: StepperSwipe(
+        //     initialValue: 0,
+        //     stepperValue: 0,
+        //     minValue: 0,
+        //     direction: Axis.horizontal,
+        //     dragButtonColor: Colors.blueAccent,
+        //     iconsColor: Colors.blueAccent,
+        //     withPlusMinus: true,
+        //     withSpring: true,
+        //     onChanged: (int count) {
+        //       onChange(count);
+        //     }),
+        // ),
       ],
     );
   }
