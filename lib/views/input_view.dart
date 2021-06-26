@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:dropdownfield/dropdownfield.dart';
-import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:scouting_frontend/net/send_match_api.dart';
 import 'package:scouting_frontend/views/widgets/counter.dart';
 import 'package:scouting_frontend/views/widgets/match_dropdown.dart';

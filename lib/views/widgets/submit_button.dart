@@ -1,8 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 

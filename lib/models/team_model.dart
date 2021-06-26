@@ -51,7 +51,6 @@ class Team {
 
   factory Team.fromJson(Map<String, dynamic> json) {
     if (json['analytic'] != null) {
-      print(json['analytic']);
       return Team(
         teamNumber: json['number'],
         teamName: json['name'],

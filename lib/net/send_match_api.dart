@@ -1,5 +1,4 @@
 import 'package:http/http.dart' as http;
-
 import 'package:scouting_frontend/models/match_model.dart';
 
 class SendMatchApi {
