@@ -51,7 +51,7 @@ class _CustomStepperState extends State<CustomStepper> {
           },
         ),
         Container(
-          width: widget.iconSize,
+          width: widget.iconSize * 1.5,
           child: Text(
             '${widget.value}',
             style: TextStyle(

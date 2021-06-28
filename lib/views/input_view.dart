@@ -51,11 +51,6 @@ class UserInput extends StatelessWidget {
               icon: Icons.adjust,
               onChange: (int count) => match.teleUpperGoal = count,
             ),
-            Counter(
-              label: 'Missed:',
-              icon: Icons.clear_rounded,
-              onChange: (int count) => match.teleMissed = count,
-            ),
             SectionDivider(label: 'End Game'),
             Switcher(
               labels: [
