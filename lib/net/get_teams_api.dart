@@ -10,6 +10,7 @@ class GetTeamsApi {
   static int statusCode;
 
   Future<http.Response> fetchAnalytics() async {
+    int nullTeams = 0;
     final url = Uri.parse(
         'https://scouting-system.herokuapp.com/graphql?query={getCurrentComp{teams{number,name,analytics{auto{bottomGoalTotal,bottomGoalSD,upperGoalTotal,upperGoalSD}teleop{upperGoalTotal,upperGoalSD,seccessClimb,climbPrecentage}}}}}');
     //http rerquest
@@ -22,17 +23,13 @@ class GetTeamsApi {
       var jsonResponse =
           convert.jsonDecode(response.body)['data']['getCurrentComp']['teams'];
       assert(jsonResponse is List);
-
-      if (jsonResponse.any((e) => e['analytic'] == null))
-        statusCode = 204; //checks is no data is available
-
       for (var item in jsonResponse) {
-        if (item['analytic'] != null) {
-          teamsList.add(Team.fromJson(item));
-        } else {
-          print('Missing team analytics (null)');
-        }
+        item['analytics'] != null
+            ? teamsList.add(Team.fromJson(item))
+            : nullTeams += 1;
       }
+      //checks is no data is available
+      nullTeams == jsonResponse.length ? statusCode = 200 : statusCode = 204;
       print(statusCode);
       print(
           'Done fetching - ${teamsList[0].teamName} - ${teamsList[0].teamNumber}');

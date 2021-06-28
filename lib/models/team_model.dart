@@ -31,7 +31,7 @@ class Team {
     this.teamNumber,
     this.teamName,
 
-    //Analytics
+    //analyticss
     this.autoBottomGoalTotal,
     this.autoBottomGoalSD,
     this.autoUpperGoalTotal,
@@ -50,22 +50,22 @@ class Team {
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {
-    if (json['analytic'] != null) {
+    if (json['analytics'] != null) {
       return Team(
         teamNumber: json['number'],
         teamName: json['name'],
-        autoBottomGoalTotal: json['analytic']['auto']['bottomGoalTotal'],
-        autoBottomGoalSD: json['analytic']['auto']['bottomGoalSD'],
-        autoUpperGoalTotal: json['analytic']['auto']['upperGoalTotal'],
-        autoUpperGoalSD: json['analytic']['auto']['upperGoalSD'],
-        telpUpperGoalTotal: json['analytic']['teleop']['upperGoalTotal'],
-        telpUpperSD: json['analytic']['teleop']['upperGoalSD'],
-        climb: json['analytic']['teleop']['climbPrecentage'],
+        autoBottomGoalTotal: json['analytics']['auto']['bottomGoalTotal'],
+        autoBottomGoalSD: json['analytics']['auto']['bottomGoalSD'],
+        autoUpperGoalTotal: json['analytics']['auto']['upperGoalTotal'],
+        autoUpperGoalSD: json['analytics']['auto']['upperGoalSD'],
+        telpUpperGoalTotal: json['analytics']['teleop']['upperGoalTotal'],
+        telpUpperSD: json['analytics']['teleop']['upperGoalSD'],
+        climb: json['analytics']['teleop']['climbPrecentage'],
 
         //table use
         // shotsInTarget: Random().nextInt(15),
-        shotsInTarget: json['analytic']['auto']['upperGoalTotal'] +
-            json['analytic']['teleop']['upperGoalTotal'],
+        shotsInTarget: json['analytics']['auto']['upperGoalTotal'] +
+            json['analytics']['teleop']['upperGoalTotal'],
         successfulClimbs: Random().nextInt(15),
 
         //demo use
