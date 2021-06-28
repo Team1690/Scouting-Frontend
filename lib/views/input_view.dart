@@ -74,8 +74,7 @@ class UserInput extends StatelessWidget {
             // const SizedBox(height: 20),
             SectionDivider(label: 'Send Data'),
             SubmitButton(
-              onPressed: () => SendMatchApi.sendData(match),
-              // statusCode: SendMatchApi().statusCode,
+              uploadData: () async => await SendMatchApi.sendData(match),
             ),
             const SizedBox(height: 20),
           ],
