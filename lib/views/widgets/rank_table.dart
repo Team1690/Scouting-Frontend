@@ -40,8 +40,10 @@ class _RankingTableState extends State<RankingTable> {
             cells: [
               DataCell(Text((index + 1).toString())),
               DataCell(Text(widget.teams[index].teamNumber.toString())),
-              DataCell(Text(widget.teams[index].shotsInTarget.toString())),
-              DataCell(Text(widget.teams[index].successfulClimbs.toString())),
+              DataCell(
+                  Text(widget.teams[index].avarageShots.toStringAsFixed(2))),
+              DataCell(Text(
+                  widget.teams[index].climbsPerMatches.toStringAsFixed(2))),
               DataCell(Text('${Random().nextInt(10)}')),
             ],
             selected: index == selectedIndex,

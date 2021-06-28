@@ -29,7 +29,7 @@ class GetTeamsApi {
             : nullTeams += 1;
       }
       //checks is no data is available
-      nullTeams == jsonResponse.length ? statusCode = 200 : statusCode = 204;
+      nullTeams == jsonResponse.length ? statusCode = 204 : statusCode = 200;
       print(statusCode);
       print(
           'Done fetching - ${teamsList[0].teamName} - ${teamsList[0].teamNumber}');
