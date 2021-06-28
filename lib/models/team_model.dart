@@ -66,7 +66,7 @@ class Team {
         // shotsInTarget: Random().nextInt(15),
         shotsInTarget: json['analytics']['auto']['upperGoalTotal'] +
             json['analytics']['teleop']['upperGoalTotal'],
-        successfulClimbs: Random().nextInt(15),
+        successfulClimbs: json['analytics']['teleop']['seccessClimb'],
 
         //demo use
         shotsInTargetPrecent: Random().nextDouble(),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/widgets/team_card.dart';
@@ -27,9 +29,10 @@ class _RankingTableState extends State<RankingTable> {
         showCheckboxColumn: false,
         columns: [
           DataColumn(label: Text('Rank')),
-          DataColumn(label: Text('Team Number'), numeric: false),
-          DataColumn(label: Text('Shots in target')),
+          DataColumn(label: Text('Team'), numeric: false),
+          DataColumn(label: Text('AVG Shots')),
           DataColumn(label: Text('climbs')),
+          DataColumn(label: Text('Played')),
         ],
         rows: List<DataRow>.generate(
           widget.teams.length,
@@ -39,6 +42,7 @@ class _RankingTableState extends State<RankingTable> {
               DataCell(Text(widget.teams[index].teamNumber.toString())),
               DataCell(Text(widget.teams[index].shotsInTarget.toString())),
               DataCell(Text(widget.teams[index].successfulClimbs.toString())),
+              DataCell(Text('${Random().nextInt(10)}')),
             ],
             selected: index == selectedIndex,
             onSelectChanged: (value) {

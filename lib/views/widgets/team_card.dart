@@ -30,7 +30,8 @@ class _TeamCardState extends State<TeamCard> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            height: 180,
+            height: 270,
+            width: 200,
             child: SegmentControl(
               headers: ['Auto', 'Tele'],
               children: [
@@ -56,7 +57,7 @@ class _TeamCardState extends State<TeamCard> {
 
 class AutoData extends StatelessWidget {
   final double bottomGoalAvarage = 31.5;
-  final double bottomGoalPersistent = 23.5;
+  final double upperGoalAvarage = 31.5;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,19 +70,7 @@ class AutoData extends StatelessWidget {
           height: 10,
         ),
         Text(
-          'Bottom Goal Persistent: $bottomGoalPersistent',
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          'Upper Goal Avarage: $bottomGoalAvarage',
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          'Upper Goal Persistent: $bottomGoalPersistent',
+          'Upper Goal Avarage: $upperGoalAvarage',
         ),
         // Icon(
         //   Icons.surround_sound_outlined,
@@ -106,18 +95,36 @@ class TeleData extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Column(
         children: [
-          CircularProgressBar(
-            precentage: shotsInTargetPrecent,
-            fraction: '15/50',
-            color: Colors.green,
+          Text(
+            'Shots Avarage: 15',
           ),
-          CircularProgressBar(
-            precentage: successfulClimbsPrecent,
-            fraction: '34/50',
-            color: Colors.purple,
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Shots SD Avarage: 0.3',
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CircularProgressBar(
+                precentage: shotsInTargetPrecent,
+                fraction: '15/50',
+                color: Colors.green,
+                footer: '/Matches',
+              ),
+              CircularProgressBar(
+                precentage: successfulClimbsPrecent,
+                fraction: '34/50',
+                color: Colors.purple,
+                footer: '/Attempts',
+              ),
+            ],
           ),
         ],
       ),
