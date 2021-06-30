@@ -22,10 +22,27 @@ class _RankingTableState extends State<RankingTable> {
   bool isAscending = false;
 
   void onSort(int columnIndex, bool ascending) {
-    if (columnIndex == 2) {
-      widget.teams.sort((team1, team2) => ascending
-          ? team1.averageShots.compareTo(team2.averageShots)
-          : team2.averageShots.compareTo(team1.averageShots));
+    switch (columnIndex) {
+      case 1:
+        widget.teams.sort((team1, team2) => ascending
+            ? team1.teamNumber.compareTo(team2.teamNumber)
+            : team2.teamNumber.compareTo(team1.teamNumber));
+        break;
+      case 2:
+        widget.teams.sort((team1, team2) => ascending
+            ? team1.averageShots.compareTo(team2.averageShots)
+            : team2.averageShots.compareTo(team1.averageShots));
+        break;
+      case 3:
+        widget.teams.sort((team1, team2) => ascending
+            ? team1.climbsPerMatches.compareTo(team2.climbsPerMatches)
+            : team2.climbsPerMatches.compareTo(team1.climbsPerMatches));
+        break;
+      case 4:
+        widget.teams.sort((team1, team2) => ascending
+            ? team1.matchesPlayed.compareTo(team2.matchesPlayed)
+            : team2.matchesPlayed.compareTo(team1.matchesPlayed));
+        break;
     }
     setState(() {
       this.sortColumnIndex = columnIndex;
@@ -39,7 +56,7 @@ class _RankingTableState extends State<RankingTable> {
       child: DataTable(
         sortColumnIndex: sortColumnIndex,
         sortAscending: isAscending,
-        // columnSpacing: 10,
+        columnSpacing: 15,
         showCheckboxColumn: false,
         columns: [
           DataColumn(label: Text('Rank'), onSort: onSort),
