@@ -59,7 +59,7 @@ class _RankingTableState extends State<RankingTable> {
         columnSpacing: 15,
         showCheckboxColumn: false,
         columns: [
-          DataColumn(label: Text('Rank'), onSort: onSort),
+          DataColumn(label: Text('Rank')),
           DataColumn(label: Text('Team'), numeric: false, onSort: onSort),
           DataColumn(label: Text('Shots'), onSort: onSort),
           DataColumn(label: Text('climbs'), onSort: onSort),

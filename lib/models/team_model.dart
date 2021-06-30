@@ -48,23 +48,6 @@ class Team {
     this.totalShotsSD = 0,
     this.climbsPerMatches = 0,
     this.climbsPerAttempts = 0,
-
-    // //analytics
-    // this.autoBottomGoalTotal,
-    // this.autoBottomGoalSD,
-    // this.autoUpperGoalTotal,
-    // this.autoUpperGoalSD,
-    // this.telpUpperGoalTotal,
-    // this.telpUpperSD,
-    // this.climb,
-
-    // //table use
-    // this.shotsInTarget,
-    // this.successfulClimbs,
-
-    // //demo use
-    // this.shotsInTargetPrecent,
-    // this.successfulClimbsPrecent,
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {
@@ -75,31 +58,17 @@ class Team {
 
         //NEW
         matchesPlayed: json['analytics']['matchesPlayed'],
-        autoUpperGoalAverage: json['analytics']['auto']['upperAverage'],
-        autoBottomGoalAverage: json['analytics']['auto']['bottomAverage'],
-        averageShots: json['analytics']['teleop']['averageShotsInTarget'],
-        totalShotsSD: json['analytics']['teleop']['shotsSD'],
-        climbsPerMatches: json['analytics']['teleop']['climbPerMatches'],
-        climbsPerAttempts: json['analytics']['teleop']['climbPerAttempts'],
-
-        //!! OLD OLD
-        // autoBottomGoalTotal: json['analytics']['auto']['bottomGoalTotal'],
-        // autoBottomGoalSD: json['analytics']['auto']['bottomGoalSD'],
-        // autoUpperGoalTotal: json['analytics']['auto']['upperGoalTotal'],
-        // autoUpperGoalSD: json['analytics']['auto']['upperGoalSD'],
-        // telpUpperGoalTotal: json['analytics']['teleop']['upperGoalTotal'],
-        // telpUpperSD: json['analytics']['teleop']['upperGoalSD'],
-        // climb: json['analytics']['teleop']['climbPrecentage'],
-
-        //table use
-        // shotsInTarget: Random().nextInt(15),
-        // shotsInTarget: json['analytics']['auto']['upperGoalTotal'] +
-        //     json['analytics']['teleop']['upperGoalTotal'],
-        // successfulClimbs: json['analytics']['teleop']['seccessClimb'],
-
-        //demo use
-        // shotsInTargetPrecent: Random().nextDouble(),
-        // successfulClimbsPrecent: Random().nextDouble(),
+        autoUpperGoalAverage:
+            json['analytics']['auto']['upperAverage'].toDouble(),
+        autoBottomGoalAverage:
+            json['analytics']['auto']['bottomAverage'].toDouble(),
+        averageShots:
+            json['analytics']['teleop']['averageShotsInTarget'].toDouble(),
+        totalShotsSD: json['analytics']['teleop']['shotsSD'].toDouble(),
+        climbsPerMatches:
+            json['analytics']['teleop']['climbPerMatches'].toDouble(),
+        climbsPerAttempts:
+            json['analytics']['teleop']['climbPerAttempts'].toDouble(),
       );
     }
   }
