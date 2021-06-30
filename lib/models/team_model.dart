@@ -13,9 +13,9 @@ class Team {
 
   // NEW PARAMS:
   final int matchesPlayed;
-  final double autoUpperGoalAvarage;
-  final double autoBottomGoalAvarage;
-  final double avarageShots;
+  final double autoUpperGoalAverage;
+  final double autoBottomGoalAverage;
+  final double averageShots;
   final double totalShotsSD;
   final double climbsPerMatches;
   final double climbsPerAttempts;
@@ -42,9 +42,9 @@ class Team {
 
     //NEW ANALYTICS!!!!
     this.matchesPlayed = 0,
-    this.autoUpperGoalAvarage = 0,
-    this.autoBottomGoalAvarage = 0,
-    this.avarageShots = 0,
+    this.autoUpperGoalAverage = 0,
+    this.autoBottomGoalAverage = 0,
+    this.averageShots = 0,
     this.totalShotsSD = 0,
     this.climbsPerMatches = 0,
     this.climbsPerAttempts = 0,
@@ -75,9 +75,9 @@ class Team {
 
         //NEW
         matchesPlayed: json['analytics']['matchesPlayed'],
-        autoUpperGoalAvarage: json['analytics']['auto']['upperAverage'],
-        autoBottomGoalAvarage: json['analytics']['auto']['bottomAverage'],
-        avarageShots: json['analytics']['teleop']['averageShotsInTarget'],
+        autoUpperGoalAverage: json['analytics']['auto']['upperAverage'],
+        autoBottomGoalAverage: json['analytics']['auto']['bottomAverage'],
+        averageShots: json['analytics']['teleop']['averageShotsInTarget'],
         totalShotsSD: json['analytics']['teleop']['shotsSD'],
         climbsPerMatches: json['analytics']['teleop']['climbPerMatches'],
         climbsPerAttempts: json['analytics']['teleop']['climbPerAttempts'],
