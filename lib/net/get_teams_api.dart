@@ -12,7 +12,7 @@ class GetTeamsApi {
   Future<http.Response> fetchAnalytics() async {
     int nullTeams = 0;
     final url = Uri.parse(
-        'https://scouting-system.herokuapp.com/graphql?query={getCurrentComp{teams{number,name,analytics{auto{bottomGoalTotal,bottomGoalSD,upperGoalTotal,upperGoalSD}teleop{upperGoalTotal,upperGoalSD,seccessClimb,climbPrecentage}}}}}');
+        'https://scouting-system.herokuapp.com/graphql?query={getCurrentComp{teams{number,name,analytics{matchesPlayed,auto{bottomAverage,upperAverage}teleop{averageShotsInTarget,shotsSD,climbPerMatches,climbPerAttempts}}}}}');
     //http rerquest
     var response = await http.get(url);
     statusCode = response.statusCode;

@@ -12,7 +12,7 @@ class Team {
   final String teamName;
 
   // NEW PARAMS:
-  final int matchesPlayd;
+  final int matchesPlayed;
   final double autoUpperGoalAvarage;
   final double autoBottomGoalAvarage;
   final double avarageShots;
@@ -41,13 +41,13 @@ class Team {
     this.teamName,
 
     //NEW ANALYTICS!!!!
-    this.matchesPlayd,
-    this.autoUpperGoalAvarage,
-    this.autoBottomGoalAvarage,
-    this.avarageShots,
-    this.totalShotsSD,
-    this.climbsPerMatches,
-    this.climbsPerAttempts,
+    this.matchesPlayed = 0,
+    this.autoUpperGoalAvarage = 0,
+    this.autoBottomGoalAvarage = 0,
+    this.avarageShots = 0,
+    this.totalShotsSD = 0,
+    this.climbsPerMatches = 0,
+    this.climbsPerAttempts = 0,
 
     // //analytics
     // this.autoBottomGoalTotal,
@@ -74,13 +74,13 @@ class Team {
         teamName: json['name'],
 
         //NEW
-        matchesPlayd: Random().nextInt(10),
-        autoUpperGoalAvarage: Random().nextDouble(),
-        autoBottomGoalAvarage: Random().nextDouble(),
-        avarageShots: Random().nextDouble(),
-        totalShotsSD: Random().nextDouble(),
-        climbsPerMatches: Random().nextDouble(),
-        climbsPerAttempts: Random().nextDouble(),
+        matchesPlayed: json['analytics']['matchesPlayed'],
+        autoUpperGoalAvarage: json['analytics']['auto']['upperAverage'],
+        autoBottomGoalAvarage: json['analytics']['auto']['bottomAverage'],
+        avarageShots: json['analytics']['teleop']['averageShotsInTarget'],
+        totalShotsSD: json['analytics']['teleop']['shotsSD'],
+        climbsPerMatches: json['analytics']['teleop']['climbPerMatches'],
+        climbsPerAttempts: json['analytics']['teleop']['climbPerAttempts'],
 
         //!! OLD OLD
         // autoBottomGoalTotal: json['analytics']['auto']['bottomGoalTotal'],

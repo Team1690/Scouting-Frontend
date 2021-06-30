@@ -32,11 +32,9 @@ class Match {
         'auto': {
           'upperGoal': autoUpperGoal,
           'bottomGoal': autoBottomGoal,
-          'missed': 0,
         },
         'teleop': {
           'upperGoal': teleUpperGoal,
-          'missed': 0,
           'climbed': climbStatus
                   .toString()
                   .substring(climbStatus.toString().indexOf('.') + 1)[0]

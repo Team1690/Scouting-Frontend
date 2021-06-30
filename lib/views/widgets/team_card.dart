@@ -67,13 +67,13 @@ class AutoData extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Bottom Goal Avarage: ${bottomGoalAvarage.toStringAsFixed(2)}',
+          'Bottom Goal Avarage: ${bottomGoalAvarage}',
         ),
         SizedBox(
           height: 10,
         ),
         Text(
-          'Upper Goal Avarage: ${upperGoalAvarage.toStringAsFixed(2)}',
+          'Upper Goal Avarage: ${upperGoalAvarage}',
         ),
         // Icon(
         //   Icons.surround_sound_outlined,
