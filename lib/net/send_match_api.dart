@@ -8,7 +8,7 @@ class SendMatchApi {
   static int statusCode;
 
   static Future<http.Response> sendData(Match match) async {
-    final url = Uri.parse('http://scouting-system.herokuapp.com/graphql');
+    final url = Uri.parse('https://scouting-system.herokuapp.com/graphql');
     var jsonMatchData = match.toJson();
     var postRequest =
         '{\"query\": \"mutation{createMatch(match: $jsonMatchData){statusCode, error}}\"}';
