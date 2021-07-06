@@ -54,6 +54,11 @@ class _SubmitButtonState extends State<SubmitButton> {
 
             final response = await widget.uploadData();
             setState(() => _state = getResponseState(response));
+            Future.delayed(
+                Duration(seconds: 2),
+                () => setState(() {
+                      _state = ButtonState.idle;
+                    }));
             break;
 
           case ButtonState.fail:
