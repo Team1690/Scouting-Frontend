@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/net/send_match_api.dart';
@@ -17,6 +16,7 @@ class UserInput extends StatelessWidget {
 
   Match match = Match();
   Future<int> response;
+  TextEditingController _controller;
 
   @override
   Widget build(final BuildContext context) {
@@ -29,7 +29,10 @@ class UserInput extends StatelessWidget {
         child: Column(
           children: [
             SectionDivider(label: 'Match Details'),
-            MatchDropdown(onChange: (value) => match.matchNumber = value),
+            MatchTextBox(
+              onChange: (value) => match.matchNumber = value,
+              controller: _controller,
+            ),
             SizedBox(
               height: 15,
             ),
@@ -69,7 +72,10 @@ class UserInput extends StatelessWidget {
             // const SizedBox(height: 20),
             SectionDivider(label: 'Send Data'),
             SubmitButton(
-              uploadData: () async => await SendMatchApi.sendData(match),
+              uploadData: () async =>
+                  // _controller.clear();
+                  // print(match.matchNumber);
+                  await SendMatchApi.sendData(match),
             ),
             const SizedBox(height: 20),
           ],

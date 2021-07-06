@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/widgets/team_card.dart';
@@ -19,7 +17,7 @@ class RankingTable extends StatefulWidget {
 class _RankingTableState extends State<RankingTable> {
   int selectedIndex = -1;
   int sortColumnIndex;
-  bool isAscending = false;
+  bool isAscending = true;
 
   void onSort(int columnIndex, bool ascending) {
     switch (columnIndex) {

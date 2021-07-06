@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MatchDropdown extends StatefulWidget {
-  MatchDropdown({
-    Key key,
-    @required this.onChange,
-  }) : super(key: key);
+class MatchTextBox extends StatefulWidget {
+  MatchTextBox({Key key, @required this.onChange, @required this.controller})
+      : super(key: key);
 
   Function(int) onChange;
+  TextEditingController controller;
 
   @override
-  _MatchDropdownState createState() => _MatchDropdownState();
+  _MatchTextBoxState createState() => _MatchTextBoxState();
 }
 
-class _MatchDropdownState extends State<MatchDropdown> {
+class _MatchTextBoxState extends State<MatchTextBox> {
   bool _validate = false;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       onChanged: (value) => {
         setState(() => _validate = value.isEmpty),
         value.isNotEmpty
