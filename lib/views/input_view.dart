@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/net/send_match_api.dart';
@@ -16,10 +17,12 @@ class UserInput extends StatelessWidget {
 
   Match match = Match();
   Future<int> response;
-  TextEditingController _controller;
+  TextEditingController _controller = TextEditingController();
+  TextEditingController _controller2 = TextEditingController();
 
   @override
   Widget build(final BuildContext context) {
+    void clearForm() => {_controller.clear(), _controller2.clear()};
     return SingleChildScrollView(
       child: Container(
         margin: const EdgeInsets.symmetric(
@@ -36,7 +39,10 @@ class UserInput extends StatelessWidget {
             SizedBox(
               height: 15,
             ),
-            TeamsDropdown(onChange: (value) => match.teamNumber = value),
+            TeamsDropdown(
+              onChange: (value) => match.teamNumber = value,
+              typeAheadController: _controller2,
+            ),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Upper Goal:',
@@ -72,10 +78,10 @@ class UserInput extends StatelessWidget {
             // const SizedBox(height: 20),
             SectionDivider(label: 'Send Data'),
             SubmitButton(
-              uploadData: () async =>
-                  // _controller.clear();
-                  // print(match.matchNumber);
-                  await SendMatchApi.sendData(match),
+              uploadData: () async => await SendMatchApi.sendData(match),
+              onPressed: clearForm,
+
+              // print(match.matchNumber);
             ),
             const SizedBox(height: 20),
           ],
