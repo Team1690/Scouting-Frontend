@@ -19,6 +19,7 @@ class _MatchTextBoxState extends State<MatchTextBox> {
   Widget build(BuildContext context) {
     return TextField(
       controller: widget.controller,
+      keyboardType: TextInputType.number,
       onChanged: (value) => {
         setState(() => _validate = value.isEmpty),
         value.isNotEmpty

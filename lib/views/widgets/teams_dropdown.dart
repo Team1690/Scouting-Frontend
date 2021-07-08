@@ -31,6 +31,7 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.digitsOnly
           ],
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.search),
             border: OutlineInputBorder(),
