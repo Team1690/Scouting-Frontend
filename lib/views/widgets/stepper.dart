@@ -8,7 +8,7 @@ class CustomStepper extends StatefulWidget {
     @required this.longPressStepValue,
     @required this.iconSize,
     @required this.value,
-    @required this.onPress,
+    @required this.onChanged,
   });
 
   final int lowerLimit;
@@ -17,7 +17,7 @@ class CustomStepper extends StatefulWidget {
   final int longPressStepValue;
   final double iconSize;
   int value;
-  final Function onPress;
+  final Function onChanged;
 
   @override
   _CustomStepperState createState() => _CustomStepperState();
@@ -38,6 +38,7 @@ class _CustomStepperState extends State<CustomStepper> {
                   ? widget.lowerLimit
                   : widget.value -= widget.stepValue;
             });
+            widget.onChanged(widget.value);
           },
           onLongPress: () {
             setState(() {
@@ -46,10 +47,11 @@ class _CustomStepperState extends State<CustomStepper> {
                       ? widget.lowerLimit
                       : widget.value -= widget.longPressStepValue;
             });
+            widget.onChanged(widget.value);
           },
         ),
         Container(
-          width: widget.iconSize,
+          width: widget.iconSize * 1.5,
           child: Text(
             '${widget.value}',
             style: TextStyle(
@@ -67,6 +69,7 @@ class _CustomStepperState extends State<CustomStepper> {
                   ? widget.upperLimit
                   : widget.value += widget.stepValue;
             });
+            widget.onChanged(widget.value);
           },
           onLongPress: () {
             setState(() {
@@ -75,6 +78,7 @@ class _CustomStepperState extends State<CustomStepper> {
                       ? widget.upperLimit
                       : widget.value += widget.longPressStepValue;
             });
+            widget.onChanged(widget.value);
           },
         ),
       ],

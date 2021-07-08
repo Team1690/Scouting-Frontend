@@ -5,15 +5,18 @@ import 'package:progress_state_button/progress_button.dart';
 
 class SubmitButton extends StatefulWidget {
   final Future<http.Response> Function() uploadData;
+  final Function onPressed;
 
-  const SubmitButton({this.uploadData, Key key}) : super(key: key);
+  const SubmitButton({this.uploadData, this.onPressed, Key key})
+      : super(key: key);
 
   @override
   _SubmitButtonState createState() => _SubmitButtonState();
 }
 
 ButtonState getResponseState(final http.Response response) =>
-    response.statusCode == 200 ? ButtonState.success : ButtonState.fail;
+  200 == response.statusCode ? ButtonState.success : ButtonState.fail;
+
 
 class _SubmitButtonState extends State<SubmitButton> {
   ButtonState _state = ButtonState.idle;
@@ -54,6 +57,13 @@ class _SubmitButtonState extends State<SubmitButton> {
 
             final response = await widget.uploadData();
             setState(() => _state = getResponseState(response));
+            Future.delayed(
+                Duration(seconds: 2),
+                () => setState(() {
+                      _state = ButtonState.idle;
+                    }));
+            widget.onPressed();
+
             break;
 
           case ButtonState.fail:

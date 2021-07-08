@@ -45,7 +45,7 @@ class Counter extends StatelessWidget {
               value: 0,
               stepValue: 1,
               longPressStepValue: 5,
-              onPress: (int count) {
+              onChanged: (int count) {
                 onChange(count);
               }),
         )

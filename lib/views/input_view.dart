@@ -17,9 +17,12 @@ class UserInput extends StatelessWidget {
 
   Match match = Match();
   Future<int> response;
+  TextEditingController _controller = TextEditingController();
+  TextEditingController _controller2 = TextEditingController();
 
   @override
   Widget build(final BuildContext context) {
+    void clearForm() => {_controller.clear(), _controller2.clear()};
     return SingleChildScrollView(
       child: Container(
         margin: const EdgeInsets.symmetric(
@@ -29,11 +32,17 @@ class UserInput extends StatelessWidget {
         child: Column(
           children: [
             SectionDivider(label: 'Match Details'),
-            MatchDropdown(onChange: (value) => match.matchNumber = value),
+            MatchTextBox(
+              onChange: (value) => match.matchNumber = value,
+              controller: _controller,
+            ),
             SizedBox(
               height: 15,
             ),
-            TeamsDropdown(onChange: (value) => match.teamNumber = value),
+            TeamsDropdown(
+              onChange: (value) => match.teamNumber = value,
+              typeAheadController: _controller2,
+            ),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Upper Goal:',
@@ -50,11 +59,6 @@ class UserInput extends StatelessWidget {
               label: 'Upper Goal:',
               icon: Icons.adjust,
               onChange: (int count) => match.teleUpperGoal = count,
-            ),
-            Counter(
-              label: 'Missed:',
-              icon: Icons.clear_rounded,
-              onChange: (int count) => match.teleMissed = count,
             ),
             SectionDivider(label: 'End Game'),
             Switcher(
@@ -75,6 +79,9 @@ class UserInput extends StatelessWidget {
             SectionDivider(label: 'Send Data'),
             SubmitButton(
               uploadData: () async => await SendMatchApi.sendData(match),
+              onPressed: clearForm,
+
+              // print(match.matchNumber);
             ),
             const SizedBox(height: 20),
           ],

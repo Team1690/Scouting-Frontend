@@ -8,16 +8,18 @@ class TeamsDropdown extends StatefulWidget {
   TeamsDropdown({
     Key key,
     @required this.onChange,
+    @required this.typeAheadController,
   }) : super(key: key);
 
   Function(int) onChange;
+  TextEditingController typeAheadController;
 
   @override
   _TeamsDropdownState createState() => _TeamsDropdownState();
 }
 
 class _TeamsDropdownState extends State<TeamsDropdown> {
-  final TextEditingController _typeAheadController = TextEditingController();
+  // final TextEditingController _typeAheadController = TextEditingController();
   bool _validate = false;
 
   @override
@@ -25,10 +27,11 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
     return TypeAheadField(
         textFieldConfiguration: TextFieldConfiguration(
           onChanged: (value) => setState(() => _validate = value.isEmpty),
-          controller: _typeAheadController,
+          controller: widget.typeAheadController,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.digitsOnly
           ],
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.search),
             border: OutlineInputBorder(),
@@ -54,7 +57,7 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
             ),
         onSuggestionSelected: (Team suggestion) {
           final user = suggestion;
-          _typeAheadController.text = suggestion.teamNumber.toString();
+          widget.typeAheadController.text = suggestion.teamNumber.toString();
           widget.onChange(suggestion.teamNumber);
 
           ScaffoldMessenger.of(context)

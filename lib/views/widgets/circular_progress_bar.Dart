@@ -4,12 +4,14 @@ import 'package:percent_indicator/percent_indicator.dart';
 class CircularProgressBar extends StatefulWidget {
   final double precentage;
   final String fraction;
+  final String footer;
   final Color color;
 
   CircularProgressBar({
     @required this.precentage,
     @required this.fraction,
     @required this.color,
+    this.footer,
   });
 
   @override
@@ -41,7 +43,7 @@ class _CircularProgressBarState extends State<CircularProgressBar> {
       animation: true,
       animationDuration: 1200,
       circularStrokeCap: CircularStrokeCap.round,
-      // footer: Text(widget.footer),
+      footer: Text(widget.footer),
     );
   }
 }

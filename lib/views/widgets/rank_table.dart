@@ -16,20 +16,52 @@ class RankingTable extends StatefulWidget {
 
 class _RankingTableState extends State<RankingTable> {
   int selectedIndex = -1;
+  int sortColumnIndex;
+  bool isAscending = true;
+
+  void onSort(int columnIndex, bool ascending) {
+    switch (columnIndex) {
+      case 1:
+        widget.teams.sort((team1, team2) => ascending
+            ? team1.teamNumber.compareTo(team2.teamNumber)
+            : team2.teamNumber.compareTo(team1.teamNumber));
+        break;
+      case 2:
+        widget.teams.sort((team1, team2) => ascending
+            ? team1.averageShots.compareTo(team2.averageShots)
+            : team2.averageShots.compareTo(team1.averageShots));
+        break;
+      case 3:
+        widget.teams.sort((team1, team2) => ascending
+            ? team1.climbsPerMatches.compareTo(team2.climbsPerMatches)
+            : team2.climbsPerMatches.compareTo(team1.climbsPerMatches));
+        break;
+      case 4:
+        widget.teams.sort((team1, team2) => ascending
+            ? team1.matchesPlayed.compareTo(team2.matchesPlayed)
+            : team2.matchesPlayed.compareTo(team1.matchesPlayed));
+        break;
+    }
+    setState(() {
+      this.sortColumnIndex = columnIndex;
+      this.isAscending = ascending;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: DataTable(
-        sortColumnIndex: 0,
-        sortAscending: true,
-        columnSpacing: 10,
+        sortColumnIndex: sortColumnIndex,
+        sortAscending: isAscending,
+        columnSpacing: 15,
         showCheckboxColumn: false,
         columns: [
           DataColumn(label: Text('Rank')),
-          DataColumn(label: Text('Team Number'), numeric: false),
-          DataColumn(label: Text('Shots in target')),
-          DataColumn(label: Text('climbs')),
+          DataColumn(label: Text('Team'), numeric: false, onSort: onSort),
+          DataColumn(label: Text('Shots'), onSort: onSort),
+          DataColumn(label: Text('climbs'), onSort: onSort),
+          DataColumn(label: Text('Played'), onSort: onSort),
         ],
         rows: List<DataRow>.generate(
           widget.teams.length,
@@ -37,8 +69,11 @@ class _RankingTableState extends State<RankingTable> {
             cells: [
               DataCell(Text((index + 1).toString())),
               DataCell(Text(widget.teams[index].teamNumber.toString())),
-              DataCell(Text(widget.teams[index].shotsInTarget.toString())),
-              DataCell(Text(widget.teams[index].successfulClimbs.toString())),
+              DataCell(
+                  Text(widget.teams[index].averageShots.toStringAsFixed(2))),
+              DataCell(Text(
+                  widget.teams[index].climbsPerMatches.toStringAsFixed(2))),
+              DataCell(Text('${widget.teams[index].matchesPlayed}')),
             ],
             selected: index == selectedIndex,
             onSelectChanged: (value) {

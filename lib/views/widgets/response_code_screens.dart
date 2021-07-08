@@ -38,7 +38,7 @@ class ResponseCodeScreens extends StatelessWidget {
           height: 20,
         ),
         Text(
-          message,
+          '$message',
           style: TextStyle(fontSize: 20),
         ),
         Expanded(
