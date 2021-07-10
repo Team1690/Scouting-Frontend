@@ -1,4 +1,4 @@
-enum climbOptions {
+enum ClimbOptions {
   climbed,
   failed,
   notAttempted,
@@ -13,7 +13,7 @@ class Match {
 
   int teleUpperGoal = 0;
 
-  climbOptions climbStatus;
+  ClimbOptions climbStatus;
 
   String matchJson;
 
@@ -23,7 +23,7 @@ class Match {
     this.autoUpperGoal = 0,
     this.autoBottomGoal = 0,
     this.teleUpperGoal = 0,
-    this.climbStatus = climbOptions.notAttempted,
+    this.climbStatus = ClimbOptions.notAttempted,
   });
 
   Map<String, dynamic> toJson() => {

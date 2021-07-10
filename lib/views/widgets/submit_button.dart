@@ -15,8 +15,7 @@ class SubmitButton extends StatefulWidget {
 }
 
 ButtonState getResponseState(final http.Response response) =>
-  200 == response.statusCode ? ButtonState.success : ButtonState.fail;
-
+    200 == response.statusCode ? ButtonState.success : ButtonState.fail;
 
 class _SubmitButtonState extends State<SubmitButton> {
   ButtonState _state = ButtonState.idle;
@@ -57,12 +56,14 @@ class _SubmitButtonState extends State<SubmitButton> {
 
             final response = await widget.uploadData();
             setState(() => _state = getResponseState(response));
+
             Future.delayed(
-                Duration(seconds: 2),
-                () => setState(() {
-                      _state = ButtonState.idle;
-                    }));
-            widget.onPressed();
+              Duration(seconds: 2),
+              () {
+                setState(() => _state = ButtonState.idle);
+                widget.onPressed();
+              },
+            );
 
             break;
 

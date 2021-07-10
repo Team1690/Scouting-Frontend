@@ -5,14 +5,15 @@ class Counter extends StatelessWidget {
   final String label;
   final IconData icon;
 
-  int count;
-  Function(int) onChange;
+  final Function(int) onChange;
+
+  final int count;
 
   Counter({
     @required final this.label,
     @required final this.icon,
-    this.count,
-    this.onChange,
+    @required final this.count,
+    final this.onChange,
   });
 
   @override
@@ -39,29 +40,15 @@ class Counter extends StatelessWidget {
         Expanded(
           flex: 4,
           child: CustomStepper(
-              iconSize: 30,
-              lowerLimit: 0,
-              upperLimit: 100,
-              value: 0,
-              stepValue: 1,
-              longPressStepValue: 5,
-              onChanged: (int count) {
-                onChange(count);
-              }),
+            iconSize: 30,
+            lowerLimit: 0,
+            upperLimit: 100,
+            value: this.count,
+            stepValue: 1,
+            longPressStepValue: 5,
+            onChanged: this.onChange,
+          ),
         )
-        // child: StepperSwipe(
-        //     initialValue: 0,
-        //     stepperValue: 0,
-        //     minValue: 0,
-        //     direction: Axis.horizontal,
-        //     dragButtonColor: Colors.blueAccent,
-        //     iconsColor: Colors.blueAccent,
-        //     withPlusMinus: true,
-        //     withSpring: true,
-        //     onChanged: (int count) {
-        //       onChange(count);
-        //     }),
-        // ),
       ],
     );
   }

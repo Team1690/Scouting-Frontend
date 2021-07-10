@@ -9,11 +9,13 @@ class Switcher extends StatefulWidget {
   final List<Color> colors;
   final Function(String, bool) onChange;
   final double height;
-  final Function(climbOptions) onValueChanged;
+  final Function(ClimbOptions) onValueChanged;
+  final int selected;
 
   Switcher({
     @required final this.labels,
     @required final this.colors,
+    @required final this.selected,
     final this.height = 70,
     final this.onChange,
     this.onValueChanged,
@@ -76,13 +78,13 @@ class _SwitcherState extends State<Switcher> {
 
                     switch (i) {
                       case 0:
-                        widget.onValueChanged(climbOptions.climbed);
+                        widget.onValueChanged(ClimbOptions.climbed);
                         break;
                       case 1:
-                        widget.onValueChanged(climbOptions.failed);
+                        widget.onValueChanged(ClimbOptions.failed);
                         break;
                       case 2:
-                        widget.onValueChanged(climbOptions.notAttempted);
+                        widget.onValueChanged(ClimbOptions.notAttempted);
                         break;
                       default:
                     }
