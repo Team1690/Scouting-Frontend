@@ -1,7 +1,31 @@
-enum climbOptions {
+enum ClimbOptions {
   climbed,
   failed,
   notAttempted,
+}
+
+int climbOptionToInt(final ClimbOptions option) {
+  switch (option) {
+    case ClimbOptions.climbed:
+      return 0;
+    case ClimbOptions.failed:
+      return 1;
+    case ClimbOptions.notAttempted:
+    default:
+      return 2;
+  }
+}
+
+ClimbOptions intToClimbOption(final int i) {
+  switch (i) {
+    case 0:
+      return ClimbOptions.climbed;
+    case 1:
+      return ClimbOptions.failed;
+    case 2:
+    default:
+      return ClimbOptions.notAttempted;
+  }
 }
 
 class Match {
@@ -13,7 +37,7 @@ class Match {
 
   int teleUpperGoal = 0;
 
-  climbOptions climbStatus;
+  ClimbOptions climbStatus;
 
   String matchJson;
 
@@ -23,7 +47,7 @@ class Match {
     this.autoUpperGoal = 0,
     this.autoBottomGoal = 0,
     this.teleUpperGoal = 0,
-    this.climbStatus = climbOptions.notAttempted,
+    this.climbStatus = ClimbOptions.notAttempted,
   });
 
   Map<String, dynamic> toJson() => {
