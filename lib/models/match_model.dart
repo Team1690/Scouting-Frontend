@@ -4,6 +4,30 @@ enum ClimbOptions {
   notAttempted,
 }
 
+int climbOptionToInt(final ClimbOptions option) {
+  switch (option) {
+    case ClimbOptions.climbed:
+      return 0;
+    case ClimbOptions.failed:
+      return 1;
+    case ClimbOptions.notAttempted:
+    default:
+      return 2;
+  }
+}
+
+ClimbOptions intToClimbOption(final int i) {
+  switch (i) {
+    case 0:
+      return ClimbOptions.climbed;
+    case 1:
+      return ClimbOptions.failed;
+    case 2:
+    default:
+      return ClimbOptions.notAttempted;
+  }
+}
+
 class Match {
   int teamNumber;
   int matchNumber;

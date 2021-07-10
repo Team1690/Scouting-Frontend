@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/models/match_model.dart';
 
-class Switcher extends StatefulWidget {
-  @override
-  _SwitcherState createState() => _SwitcherState();
-
+class Switcher extends StatelessWidget {
   final List<String> labels;
   final List<Color> colors;
-  final Function(String, bool) onChange;
+  final Function(int) onChange;
   final double height;
-  final Function(ClimbOptions) onValueChanged;
   final int selected;
 
   Switcher({
@@ -18,21 +13,21 @@ class Switcher extends StatefulWidget {
     @required final this.selected,
     final this.height = 70,
     final this.onChange,
-    this.onValueChanged,
   });
-}
 
-class _SwitcherState extends State<Switcher> {
-  List<bool> _pressed;
-
-  @override
-  void initState() {
-    super.initState();
-    resetPressed();
+  RoundedRectangleBorder getBorder(final int index) {
+    return RoundedRectangleBorder(
+      borderRadius: index == 0
+          ? BorderRadius.horizontal(
+              left: Radius.circular(20),
+            )
+          : index == labels.length - 1
+              ? BorderRadius.horizontal(
+                  right: Radius.circular(20),
+                )
+              : BorderRadius.zero,
+    );
   }
-
-  void resetPressed() =>
-      setState(() => _pressed = List<bool>.filled(widget.labels.length, false));
 
   @override
   Widget build(final BuildContext context) {
@@ -42,53 +37,23 @@ class _SwitcherState extends State<Switcher> {
         border: Border.all(color: Colors.grey, width: 1),
       ),
       width: MediaQuery.of(context).size.width,
-      height: widget.height,
+      height: height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          for (int i = 0; i < widget.labels.length; i++)
+          for (int i = 0; i < labels.length; i++)
             Expanded(
               child: SizedBox(
-                height: widget.height,
+                height: height,
                 child: FlatButton(
                   child: Text(
-                    widget.labels[i],
-                    style: TextStyle(fontSize: 15),
+                    labels[i],
+                    style: const TextStyle(fontSize: 15),
                   ),
-                  textColor: _pressed[i] ? widget.colors[i] : Colors.black,
-                  splashColor: !_pressed[i] ? widget.colors[i] : Colors.grey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: i == 0
-                        ? BorderRadius.horizontal(
-                            left: Radius.circular(20),
-                          )
-                        : i == widget.labels.length - 1
-                            ? BorderRadius.horizontal(
-                                right: Radius.circular(20),
-                              )
-                            : BorderRadius.zero,
-                  ),
-                  onPressed: () {
-                    final bool wasPressed = _pressed[i];
-                    resetPressed();
-                    if (!wasPressed) setState(() => _pressed[i] = true);
-
-                    if (widget.onChange != null)
-                      widget.onChange(widget.labels[i], !wasPressed);
-
-                    switch (i) {
-                      case 0:
-                        widget.onValueChanged(ClimbOptions.climbed);
-                        break;
-                      case 1:
-                        widget.onValueChanged(ClimbOptions.failed);
-                        break;
-                      case 2:
-                        widget.onValueChanged(ClimbOptions.notAttempted);
-                        break;
-                      default:
-                    }
-                  },
+                  textColor: selected == i ? colors[i] : Colors.black,
+                  splashColor: selected == i ? colors[i] : Colors.grey,
+                  shape: getBorder(i),
+                  onPressed: () => this.onChange(i),
                 ),
               ),
             ),

@@ -19,10 +19,12 @@ class UserInput extends StatefulWidget {
 
 class _UserInputState extends State<UserInput> {
   Match match = Match();
+  int selectedClimbIndex = -1; // -1 means nothing
 
   void clearForm() {
     setState(() {
       match = new Match();
+      selectedClimbIndex = -1;
 
       widget.matchNumberController.clear();
       widget.teamNumberController.clear();
@@ -88,8 +90,11 @@ class _UserInputState extends State<UserInput> {
                 Colors.pink,
                 Colors.amber,
               ],
-              onValueChanged: (climbOptions) =>
-                  setState(() => match.climbStatus = climbOptions),
+              selected: selectedClimbIndex,
+              onChange: (final int index) => setState(() {
+                selectedClimbIndex = index == selectedClimbIndex ? -1 : index;
+                match.climbStatus = intToClimbOption(selectedClimbIndex);
+              }),
             ),
             // const SizedBox(height: 20),
             SectionDivider(label: 'Send Data'),
