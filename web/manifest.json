@@ -1,6 +1,6 @@
 {
-    "name": "scouting_frontend",
-    "short_name": "scouting_frontend",
+    "name": "Orbit Scouting",
+    "short_name": "Orbit Scouting",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
