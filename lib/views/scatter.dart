@@ -12,6 +12,7 @@ class Scatter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String tooltip = '';
     return Container(
       height: 250,
       width: 350,
@@ -27,30 +28,18 @@ class Scatter extends StatelessWidget {
               .toList(),
 
           scatterTouchData: ScatterTouchData(
+            touchCallback: (p0) => {
+              p0.touchedSpot != null
+                  ? tooltip =
+                      teams[p0.touchedSpot.spotIndex].teamNumber.toString()
+                  : tooltip = '',
+            },
             enabled: true,
-            handleBuiltInTouches: false,
+            handleBuiltInTouches: true,
             touchTooltipData: ScatterTouchTooltipData(
-              tooltipBgColor: Colors.black,
+              tooltipBgColor: Colors.grey[400],
               getTooltipItems: (ScatterSpot touchedBarSpot) {
-                return ScatterTooltipItem(
-                  'X: ',
-                  TextStyle(
-                    height: 1.2,
-                    color: Colors.grey[100],
-                    fontStyle: FontStyle.italic,
-                  ),
-                  10,
-                  children: [
-                    TextSpan(
-                      text: '${touchedBarSpot.x.toInt()} \n',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                );
+                return ScatterTooltipItem(tooltip, TextStyle(), 10);
               },
             ),
           ),
