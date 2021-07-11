@@ -36,14 +36,10 @@ class _TeamCardState extends State<TeamCard> {
               headers: ['Auto', 'Tele'],
               children: [
                 AutoData(
-                  bottomGoalAverage: widget.selectedTeam.autoBottomGoalAverage,
-                  upperGoalAverage: widget.selectedTeam.autoUpperGoalAverage,
+                  team: widget.selectedTeam,
                 ),
                 TeleData(
-                  averageShots: widget.selectedTeam.averageShots,
-                  shotsSD: widget.selectedTeam.totalShotsSD,
-                  climbsPerMatches: widget.selectedTeam.climbsPerMatches,
-                  climbsPerAttempts: widget.selectedTeam.climbsPerAttempts,
+                  team: widget.selectedTeam,
                 )
               ],
             ),
@@ -56,24 +52,26 @@ class _TeamCardState extends State<TeamCard> {
 
 class AutoData extends StatelessWidget {
   AutoData({
-    @required this.bottomGoalAverage,
-    @required this.upperGoalAverage,
+    @required this.team,
   });
-  final double bottomGoalAverage;
-  final double upperGoalAverage;
+
+  final Team team;
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        SizedBox(
+          height: 60,
+        ),
         Text(
-          'Bottom Goal Average: ${bottomGoalAverage}',
+          'Bottom Goal Average: ${team.autoBottomGoalAverage.toStringAsFixed(2)}',
         ),
         SizedBox(
           height: 10,
         ),
         Text(
-          'Upper Goal Average: ${upperGoalAverage}',
+          'Upper Goal Average: ${team.autoUpperGoalAverage.toStringAsFixed(2)}',
         ),
         // Icon(
         //   Icons.surround_sound_outlined,
@@ -87,16 +85,10 @@ class AutoData extends StatelessWidget {
 class TeleData extends StatelessWidget {
   const TeleData({
     Key key,
-    @required this.averageShots,
-    @required this.shotsSD,
-    @required this.climbsPerMatches,
-    @required this.climbsPerAttempts,
+    @required this.team,
   }) : super(key: key);
 
-  final double averageShots;
-  final double shotsSD;
-  final double climbsPerMatches;
-  final double climbsPerAttempts;
+  final Team team;
 
   @override
   Widget build(BuildContext context) {
@@ -105,13 +97,13 @@ class TeleData extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Shots Average: ${averageShots.toStringAsFixed(2)}',
+            'Shots Average: ${team.averageShots.toStringAsFixed(2)}',
           ),
           SizedBox(
             height: 10,
           ),
           Text(
-            'Shots SD: ${shotsSD.toStringAsFixed(2)}',
+            'Shots SD: ${team.totalShotsSD.toStringAsFixed(2)}',
           ),
           SizedBox(
             height: 30,
@@ -120,14 +112,14 @@ class TeleData extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CircularProgressBar(
-                precentage: climbsPerMatches,
-                fraction: '15/50',
+                precentage: team.climbsPerMatches,
+                fraction: '??/??',
                 color: Colors.green,
                 footer: '/Matches',
               ),
               CircularProgressBar(
-                precentage: climbsPerAttempts,
-                fraction: '34/50',
+                precentage: team.climbsPerAttempts,
+                fraction: '??/??',
                 color: Colors.purple,
                 footer: '/Attempts',
               ),

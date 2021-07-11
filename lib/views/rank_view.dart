@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:scouting_frontend/views/scatter.dart';
 import 'package:scouting_frontend/views/widgets/rank_table.dart';
 import 'package:scouting_frontend/views/widgets/response_code_screens.dart';
+import 'package:scouting_frontend/views/widgets/section_divider.dart';
 
 // class Rank extends StatefulWidget{
 //   @override
@@ -49,6 +50,7 @@ class _RankState extends State<Rank> {
                       height: 50,
                     ),
                     Scatter(teams: GetTeamsApi.teamsList),
+                    SectionDivider(label: 'Team Specific'),
                     RankingTable(
                       teams: GetTeamsApi.teamsList,
                     ),
@@ -57,26 +59,6 @@ class _RankState extends State<Rank> {
               ),
             );
           }
-
-          // if (snapshot.hasError)
-          //   return ResponseCodeScreens(statusCode: snapshot.error);
-          // if (snapshot.hasData) {
-          //   if (snapshot.data == null) {
-          //     // 503 - Service Unavailable
-          //     return ResponseCodeScreens(statusCode: snapshot.error);
-          //   }
-          //   return Container(
-          //     margin: const EdgeInsets.symmetric(
-          //       horizontal: 20,
-          //       // vertical: 20,
-          //     ),
-          //     child: RankingTable(
-          //       teams: GetTeamsApi.teamsList,
-          //     ),
-          //   );
-          // } else {
-          //   return Center(child: CircularProgressIndicator());
-          // }
         });
   }
 }
