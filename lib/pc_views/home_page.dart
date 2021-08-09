@@ -1,10 +1,12 @@
+import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/pc_views/Lists.dart';
 import 'package:scouting_frontend/pc_views/Settings.dart';
 import 'package:scouting_frontend/pc_views/Stats.dart';
-import 'package:scouting_frontend/pc_views/Lists.dart';
+import 'package:scouting_frontend/pc_views/second_robot_List.dart';
 import 'package:scouting_frontend/pc_views/Settings.dart';
+import 'package:scouting_frontend/pc_views/third_robot_list.dart';
 
 class PcHomeView extends StatefulWidget {
   @override
@@ -16,9 +18,6 @@ class PcHomeViewState extends State<PcHomeView> {
   Widget build(final BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('Orbit Scouting')),
-        body: const Center(
-          child: Text('Home Page!'),
-        ),
         drawer: Drawer(
             child: ListView(
           padding: EdgeInsets.zero,
@@ -45,11 +44,20 @@ class PcHomeViewState extends State<PcHomeView> {
               },
             ),
             ListTile(
-              title: const Text('Lists'),
+              title: const Text('second robot list'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ListsView()),
+                  MaterialPageRoute(builder: (context) => Second_robot_list()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('third robot list'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => third_robot_list()),
                 );
               },
             ),
