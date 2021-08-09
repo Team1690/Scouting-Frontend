@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:scouting_frontend/pc_views/Settings.dart';
 import 'package:scouting_frontend/pc_views/Stats.dart';
 import 'package:scouting_frontend/pc_views/second_robot_List.dart';
-import 'package:scouting_frontend/pc_views/Settings.dart';
 import 'package:scouting_frontend/pc_views/third_robot_list.dart';
 
 class PcHomeView extends StatefulWidget {
@@ -26,7 +25,10 @@ class PcHomeViewState extends State<PcHomeView> {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text('menu'),
+              child: Text(
+                'menu',
+                textScaleFactor: 2,
+              ),
             ),
             ListTile(
               title: const Text('Home'),
@@ -48,7 +50,7 @@ class PcHomeViewState extends State<PcHomeView> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Second_robot_list()),
+                  MaterialPageRoute(builder: (context) => SecondRobotList()),
                 );
               },
             ),

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
-class Second_robot_list extends StatefulWidget {
-  List<String> teams = ['1', '2', '3', '4', '5', '6'];
+class SecondRobotList extends StatefulWidget {
   @override
-  _Second_robot_listState createState() => _Second_robot_listState();
+  _SecondRobotListState createState() => _SecondRobotListState();
 }
 
-class _Second_robot_listState extends State<Second_robot_list> {
-  void reorderData(int oldindex, int newindex) {
+class _SecondRobotListState extends State<SecondRobotList> {
+  List<String> teams = ['1', '2', '3', '4', '5', '6'];
+
+  void reorderData(final int oldindex, int newindex) {
     setState(() {
       if (newindex > oldindex) {
         newindex -= 1;
       }
-      final items = widget.teams.removeAt(oldindex);
-      widget.teams.insert(newindex, items);
+      final String item = teams.removeAt(oldindex);
+      teams.insert(newindex, item);
     });
   }
 
@@ -31,13 +32,13 @@ class _Second_robot_listState extends State<Second_robot_list> {
       ),
       body: ReorderableListView(
         children: <Widget>[
-          for (final items in widget.teams)
+          for (final item in teams)
             Card(
               color: Colors.blueGrey,
-              key: ValueKey(items),
+              key: ValueKey(item),
               elevation: 2,
               child: ListTile(
-                title: Text(items),
+                title: Text(item),
                 leading: Icon(
                   Icons.adb,
                   color: Colors.black,
