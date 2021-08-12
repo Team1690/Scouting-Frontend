@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/views/globals.dart' as globals;
 
 class SecondRobotList extends StatefulWidget {
   @override
@@ -6,15 +7,13 @@ class SecondRobotList extends StatefulWidget {
 }
 
 class _SecondRobotListState extends State<SecondRobotList> {
-  List<String> teams = ['1', '2', '3', '4', '5', '6'];
-
   void reorderData(final int oldindex, int newindex) {
     setState(() {
       if (newindex > oldindex) {
         newindex -= 1;
       }
-      final String item = teams.removeAt(oldindex);
-      teams.insert(newindex, item);
+      final String item = globals.secondList.removeAt(oldindex);
+      globals.secondList.insert(newindex, item);
     });
   }
 
@@ -32,7 +31,7 @@ class _SecondRobotListState extends State<SecondRobotList> {
       ),
       body: ReorderableListView(
         children: <Widget>[
-          for (final item in teams)
+          for (final item in globals.secondList)
             Card(
               color: Colors.blueGrey,
               key: ValueKey(item),

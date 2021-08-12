@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/views/globals.dart' as globals;
 
-class third_robot_list extends StatefulWidget {
-  List<String> teams = ['1', '2', '3', '4', '5', '6'];
+class ThirdRobotList extends StatefulWidget {
   @override
-  _third_robot_listState createState() => _third_robot_listState();
+  _ThirdRobotListState createState() => _ThirdRobotListState();
 }
 
-class _third_robot_listState extends State<third_robot_list> {
-  void reorderData(int oldindex, int newindex) {
+class _ThirdRobotListState extends State<ThirdRobotList> {
+  void reorderData(final int oldindex, int newindex) {
     setState(() {
       if (newindex > oldindex) {
         newindex -= 1;
       }
-      final items = widget.teams.removeAt(oldindex);
-      widget.teams.insert(newindex, items);
+      final String item = globals.thirdList.removeAt(oldindex);
+      globals.thirdList.insert(newindex, item);
     });
   }
 
@@ -31,13 +31,13 @@ class _third_robot_listState extends State<third_robot_list> {
       ),
       body: ReorderableListView(
         children: <Widget>[
-          for (final items in widget.teams)
+          for (final item in globals.thirdList)
             Card(
               color: Colors.blueGrey,
-              key: ValueKey(items),
+              key: ValueKey(item),
               elevation: 2,
               child: ListTile(
-                title: Text(items),
+                title: Text(item),
                 leading: Icon(
                   Icons.adb,
                   color: Colors.black,

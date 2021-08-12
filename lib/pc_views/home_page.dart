@@ -59,7 +59,7 @@ class PcHomeViewState extends State<PcHomeView> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => third_robot_list()),
+                  MaterialPageRoute(builder: (context) => ThirdRobotList()),
                 );
               },
             ),
