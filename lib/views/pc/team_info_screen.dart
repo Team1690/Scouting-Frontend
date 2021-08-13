@@ -18,6 +18,7 @@ class TeamInfoScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
+                    flex: 2,
                     child: TextField(
                         decoration: InputDecoration(
                             hintText: 'Search Team Number',
@@ -27,6 +28,17 @@ class TeamInfoScreen extends StatelessWidget {
                             fillColor: primaryWhite,
                             border: OutlineInputBorder())),
                   ),
+                  SizedBox(width: defaultPadding),
+                  Expanded(
+                      flex: 2,
+                      child: ToggleButtons(
+                        children: [
+                          Text('data'),
+                          Icon(Icons.accessibility_new_sharp),
+                          Icon(Icons.add_circle_outline_outlined)
+                        ],
+                        isSelected: [true, false, false],
+                      )),
                 ],
               ),
             ),
