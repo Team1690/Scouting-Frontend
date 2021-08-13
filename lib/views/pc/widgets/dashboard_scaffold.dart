@@ -9,7 +9,7 @@ class DashboardScaffold extends StatelessWidget {
     @required this.body,
   });
 
-  Widget body;
+  final Widget body;
 
   @override
   Widget build(BuildContext context) {
