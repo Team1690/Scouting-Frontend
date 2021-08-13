@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/pc/Settings.dart';
 import 'package:scouting_frontend/views/pc/Stats.dart';
 import 'package:scouting_frontend/views/pc/second_robot_List.dart';
+import 'package:scouting_frontend/views/pc/team_info_screen.dart';
 import 'package:scouting_frontend/views/pc/third_robot_list.dart';
 
 class NavigationTab extends StatefulWidget {
@@ -26,9 +27,12 @@ class _NavigationTab extends State<NavigationTab> {
           ),
         ),
         ListTile(
-          title: const Text('Home'),
+          title: const Text('Team Info'),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TeamInfoScreen()),
+            );
           },
         ),
         ListTile(
