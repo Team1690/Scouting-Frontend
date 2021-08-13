@@ -1,6 +1,6 @@
-import 'package:scouting_frontend/views/widgets/main_app_bar.dart';
-import 'package:scouting_frontend/views/input_view.dart';
-import 'package:scouting_frontend/pc_views/home_page.dart';
+import 'package:scouting_frontend/views/mobile/main_app_bar.dart';
+import 'package:scouting_frontend/views/mobile/screens/input_view.dart';
+import 'package:scouting_frontend/views/pc/home_page.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 

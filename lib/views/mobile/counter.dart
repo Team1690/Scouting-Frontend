@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/views/widgets/stepper.dart';
+import 'package:scouting_frontend/views/mobile/stepper.dart';
 
 class Counter extends StatelessWidget {
   final String label;

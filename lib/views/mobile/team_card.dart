@@ -1,7 +1,7 @@
-import 'package:scouting_frontend/views/widgets/segment_control.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/views/widgets/circular_progress_bar.Dart';
+import 'package:scouting_frontend/views/mobile/segment_control.dart';
+import 'package:scouting_frontend/views/mobile/circular_progress_bar.Dart';
 
 class TeamCard extends StatefulWidget {
   final Team selectedTeam;

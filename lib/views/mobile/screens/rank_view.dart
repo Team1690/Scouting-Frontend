@@ -1,10 +1,10 @@
 import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:scouting_frontend/views/mobile/rank_table.dart';
+import 'package:scouting_frontend/views/mobile/response_code_screens.dart';
+import 'package:scouting_frontend/views/mobile/section_divider.dart';
 import 'package:scouting_frontend/views/scatter.dart';
-import 'package:scouting_frontend/views/widgets/rank_table.dart';
-import 'package:scouting_frontend/views/widgets/response_code_screens.dart';
-import 'package:scouting_frontend/views/widgets/section_divider.dart';
 
 // class Rank extends StatefulWidget{
 //   @override

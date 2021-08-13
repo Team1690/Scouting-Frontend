@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/pc_views/Settings.dart';
-import 'package:scouting_frontend/pc_views/Stats.dart';
-import 'package:scouting_frontend/pc_views/second_robot_List.dart';
-import 'package:scouting_frontend/pc_views/third_robot_list.dart';
+import 'package:scouting_frontend/views/pc/Settings.dart';
+import 'package:scouting_frontend/views/pc/Stats.dart';
+import 'package:scouting_frontend/views/pc/second_robot_List.dart';
+import 'package:scouting_frontend/views/pc/third_robot_list.dart';
 
 class NavigationTab extends StatefulWidget {
   @override
