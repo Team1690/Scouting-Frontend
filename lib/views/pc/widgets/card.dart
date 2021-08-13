@@ -29,7 +29,7 @@ class DashboardCard extends StatelessWidget {
             SizedBox(
               height: defaultPadding,
             ),
-            body
+            Expanded(child: body),
           ],
         ),
       ),
