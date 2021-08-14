@@ -13,35 +13,30 @@ class TeamInfoScreen extends StatelessWidget {
         padding: const EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            Expanded(
-              flex: 1,
+            Container(
               child: Row(
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: 1,
                     child: TextField(
-                        decoration: InputDecoration(
-                            hintText: 'Search Team Number',
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: primaryWhite),
-                            ),
-                            fillColor: primaryWhite,
-                            border: OutlineInputBorder())),
+                        decoration:
+                            InputDecoration(hintText: 'Search Team Number')),
                   ),
                   SizedBox(width: defaultPadding),
                   Expanded(
                       flex: 2,
                       child: ToggleButtons(
                         children: [
-                          Text('data'),
-                          Icon(Icons.accessibility_new_sharp),
-                          Icon(Icons.add_circle_outline_outlined)
+                          Icon(Icons.shield_rounded),
+                          Icon(Icons.remove_moderator_outlined),
                         ],
-                        isSelected: [true, false, false],
+                        isSelected: [false, false],
+                        onPressed: (int index) {},
                       )),
                 ],
               ),
             ),
+            SizedBox(height: defaultPadding),
             Expanded(
               flex: 5,
               child: Row(
@@ -98,7 +93,7 @@ class TeamInfoScreen extends StatelessWidget {
                   Expanded(
                       flex: 2,
                       child: DashboardCard(
-                        title: 'Scouting Spesific',
+                        title: 'Scouting Specific',
                         body: Container(),
                       ))
                 ],
