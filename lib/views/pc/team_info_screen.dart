@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
@@ -9,8 +6,6 @@ import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scouting_frontend/views/pc/widgets/spider_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:multi_charts/multi_charts.dart';
 
 class TeamInfoScreen extends StatelessWidget {
   @override
@@ -59,20 +54,21 @@ class TeamInfoScreen extends StatelessWidget {
                               Expanded(
                                 // flex: 2,
                                 child: DashboardCard(
-                                    title: 'Quick Data',
-                                    body: SpiderChart(values: [
-                                      9,
-                                      8,
-                                      6,
-                                      5,
-                                      2,
-                                    ], labels: [
-                                      "Points per Game",
-                                      "Balls per Game",
-                                      "Auto points",
-                                      "Climbs %",
-                                      "Total climbs",
-                                    ], maxValue: 10)),
+                                  title: 'Quick Data',
+                                  body: SpiderChart(values: [
+                                    9,
+                                    8,
+                                    6,
+                                    5,
+                                    2,
+                                  ], labels: [
+                                    "Points per Game",
+                                    "Balls per Game",
+                                    "Auto points",
+                                    "Climbs %",
+                                    "Total climbs",
+                                  ], maxValue: 10),
+                                ),
                               ),
                               SizedBox(width: defaultPadding),
                               Expanded(
