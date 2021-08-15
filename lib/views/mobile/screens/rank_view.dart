@@ -1,8 +1,10 @@
 import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:scouting_frontend/views/widgets/rank_table.dart';
-import 'package:scouting_frontend/views/widgets/response_code_screens.dart';
+import 'package:scouting_frontend/views/mobile/rank_table.dart';
+import 'package:scouting_frontend/views/mobile/response_code_screens.dart';
+import 'package:scouting_frontend/views/mobile/section_divider.dart';
+import 'package:scouting_frontend/views/scatter.dart';
 
 // class Rank extends StatefulWidget{
 //   @override
@@ -41,31 +43,22 @@ class _RankState extends State<Rank> {
                 horizontal: 20,
                 // vertical: 20,
               ),
-              child: RankingTable(
-                teams: GetTeamsApi.teamsList,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Scatter(teams: GetTeamsApi.teamsList),
+                    SectionDivider(label: 'Team Specific'),
+                    RankingTable(
+                      teams: GetTeamsApi.teamsList,
+                    ),
+                  ],
+                ),
               ),
             );
           }
-
-          // if (snapshot.hasError)
-          //   return ResponseCodeScreens(statusCode: snapshot.error);
-          // if (snapshot.hasData) {
-          //   if (snapshot.data == null) {
-          //     // 503 - Service Unavailable
-          //     return ResponseCodeScreens(statusCode: snapshot.error);
-          //   }
-          //   return Container(
-          //     margin: const EdgeInsets.symmetric(
-          //       horizontal: 20,
-          //       // vertical: 20,
-          //     ),
-          //     child: RankingTable(
-          //       teams: GetTeamsApi.teamsList,
-          //     ),
-          //   );
-          // } else {
-          //   return Center(child: CircularProgressIndicator());
-          // }
         });
   }
 }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/globals.dart' as globals;
+import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 
-class SecondRobotList extends StatefulWidget {
+class PickListScreen extends StatefulWidget {
   @override
-  _SecondRobotListState createState() => _SecondRobotListState();
+  _PickListScreenState createState() => _PickListScreenState();
 }
 
-class _SecondRobotListState extends State<SecondRobotList> {
+class _PickListScreenState extends State<PickListScreen> {
   void reorderData(final int oldindex, int newindex) {
     setState(() {
       if (newindex > oldindex) {
@@ -19,16 +20,7 @@ class _SecondRobotListState extends State<SecondRobotList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[400],
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          "second robot list",
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
+    return DashboardScaffold(
       body: ReorderableListView(
         children: <Widget>[
           for (final item in globals.secondList)

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/pc_views/Settings.dart';
-import 'package:scouting_frontend/pc_views/Stats.dart';
-import 'package:scouting_frontend/pc_views/second_robot_List.dart';
-import 'package:scouting_frontend/pc_views/third_robot_list.dart';
+import 'package:scouting_frontend/views/pc/scatters_screen.dart';
+import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
+import 'package:scouting_frontend/views/pc/team_info_screen.dart';
+import 'package:scouting_frontend/views/pc/compare_screen.dart';
 
 class NavigationTab extends StatefulWidget {
   @override
@@ -26,44 +26,38 @@ class _NavigationTab extends State<NavigationTab> {
           ),
         ),
         ListTile(
-          title: const Text('Home'),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-        ListTile(
-          title: const Text('Stats'),
+          title: const Text('Team Info'),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => StatsView()),
+              MaterialPageRoute(builder: (context) => TeamInfoScreen()),
             );
           },
         ),
         ListTile(
-          title: const Text('second robot list'),
+          title: const Text('Pick List'),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SecondRobotList()),
+              MaterialPageRoute(builder: (context) => PickListScreen()),
             );
           },
         ),
         ListTile(
-          title: const Text('third robot list'),
+          title: const Text('Compare'),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ThirdRobotList()),
+              MaterialPageRoute(builder: (context) => CompareScreen()),
             );
           },
         ),
         ListTile(
-          title: const Text('Settings'),
+          title: const Text('General Scatter'),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SettingsView()),
+              MaterialPageRoute(builder: (context) => ScattersScreen()),
             );
           },
         ),

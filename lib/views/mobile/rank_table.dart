@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/views/widgets/team_card.dart';
+import 'package:scouting_frontend/views/mobile/team_card.dart';
 
 class RankingTable extends StatefulWidget {
   RankingTable({

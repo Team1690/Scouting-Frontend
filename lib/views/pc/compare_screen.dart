@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/globals.dart' as globals;
+import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 
-class ThirdRobotList extends StatefulWidget {
+class CompareScreen extends StatefulWidget {
   @override
-  _ThirdRobotListState createState() => _ThirdRobotListState();
+  _CompareScreenState createState() => _CompareScreenState();
 }
 
-class _ThirdRobotListState extends State<ThirdRobotList> {
+class _CompareScreenState extends State<CompareScreen> {
   void reorderData(final int oldindex, int newindex) {
     setState(() {
       if (newindex > oldindex) {
@@ -19,16 +20,7 @@ class _ThirdRobotListState extends State<ThirdRobotList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[400],
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          "third robot list",
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
+    return DashboardScaffold(
       body: ReorderableListView(
         children: <Widget>[
           for (final item in globals.thirdList)

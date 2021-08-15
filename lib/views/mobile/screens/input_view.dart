@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/net/send_match_api.dart';
-import 'package:scouting_frontend/views/widgets/counter.dart';
-import 'package:scouting_frontend/views/widgets/match_dropdown.dart';
-import 'package:scouting_frontend/views/widgets/section_divider.dart';
-import 'package:scouting_frontend/views/widgets/switcher.dart';
-import 'package:scouting_frontend/views/widgets/submit_button.dart';
 import 'package:scouting_frontend/models/match_model.dart';
-import 'package:scouting_frontend/views/widgets/teams_dropdown.dart';
+import 'package:scouting_frontend/views/mobile/counter.dart';
+import 'package:scouting_frontend/views/mobile/match_dropdown.dart';
+import 'package:scouting_frontend/views/mobile/section_divider.dart';
+import 'package:scouting_frontend/views/mobile/submit_button.dart';
+import 'package:scouting_frontend/views/mobile/switcher.dart';
+import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
 
 class UserInput extends StatefulWidget {
   final TextEditingController matchNumberController = TextEditingController();

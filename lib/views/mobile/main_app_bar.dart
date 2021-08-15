@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/views/rank_view.dart';
+import 'package:scouting_frontend/views/mobile/screens/rank_view.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override

@@ -1,8 +1,11 @@
-import 'package:scouting_frontend/views/widgets/main_app_bar.dart';
-import 'package:scouting_frontend/views/input_view.dart';
-import 'package:scouting_frontend/pc_views/home_page.dart';
+import 'package:scouting_frontend/views/mobile/main_app_bar.dart';
+import 'package:scouting_frontend/views/mobile/screens/input_view.dart';
+import 'package:scouting_frontend/views/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform;
+import 'package:scouting_frontend/views/pc/team_info_screen.dart';
 
 class App extends StatelessWidget {
   @override
@@ -18,13 +21,15 @@ class App extends StatelessWidget {
     }
 
     if (pc) {
-      return MaterialApp(title: 'Orbit Scouting', home: PcHomeView());
+      return MaterialApp(
+        title: 'Orbit Scouting',
+        home: TeamInfoScreen(),
+        theme: darkModeTheme,
+      );
     } else {
       return MaterialApp(
         title: 'Orbit Scouting',
-        theme: ThemeData(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        theme: darkModeTheme,
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: MainAppBar(),
