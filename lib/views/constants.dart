@@ -11,7 +11,7 @@ const defaultPadding = 20.0;
 
 const defaultBorderRadius = BorderRadius.all(Radius.circular(10));
 
-ThemeData darkModeTheme = ThemeData.dark().copyWith(
+final ThemeData darkModeTheme = ThemeData.dark().copyWith(
   scaffoldBackgroundColor: bgColor,
   textTheme: GoogleFonts.poppinsTextTheme().apply(bodyColor: Colors.white),
   canvasColor: secondaryColor,
@@ -22,3 +22,19 @@ ThemeData darkModeTheme = ThemeData.dark().copyWith(
     borderRadius: defaultBorderRadius,
   ),
 );
+
+bool isPC(final BuildContext context) {
+  switch (Theme.of(context).platform) {
+    case TargetPlatform.windows:
+    case TargetPlatform.macOS:
+    case TargetPlatform.linux:
+      return true;
+
+    case TargetPlatform.android:
+    case TargetPlatform.iOS:
+      return false;
+
+    default:
+      return null;
+  }
+}

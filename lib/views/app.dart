@@ -10,32 +10,13 @@ import 'package:scouting_frontend/views/pc/team_info_screen.dart';
 class App extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
-    var platform = Theme.of(context).platform;
-
-    bool pc;
-
-    if (platform == TargetPlatform.android || platform == TargetPlatform.iOS) {
-      pc = false;
-    } else if (platform == TargetPlatform.windows) {
-      pc = true;
-    }
-
-    if (pc) {
-      return MaterialApp(
-        title: 'Orbit Scouting',
-        home: TeamInfoScreen(),
-        theme: darkModeTheme,
-      );
-    } else {
-      return MaterialApp(
-        title: 'Orbit Scouting',
-        theme: darkModeTheme,
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: MainAppBar(),
-          body: UserInput(),
-        ),
-      );
-    }
+    return MaterialApp(
+      title: 'Orbit Scouting',
+      home: isPC(context)
+          ? TeamInfoScreen()
+          : Scaffold(appBar: MainAppBar(), body: UserInput()),
+      theme: darkModeTheme,
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
