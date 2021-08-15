@@ -9,6 +9,8 @@ import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scouting_frontend/views/pc/widgets/spider_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:multi_charts/multi_charts.dart';
 
 class TeamInfoScreen extends StatelessWidget {
   @override
@@ -57,31 +59,20 @@ class TeamInfoScreen extends StatelessWidget {
                               Expanded(
                                 // flex: 2,
                                 child: DashboardCard(
-                                  title: 'Quick Data',
-                                  body: SpiderChart(
-                                    data: [
-                                      90,
-                                      80,
-                                      72,
+                                    title: 'Quick Data',
+                                    body: SpiderChart(values: [
+                                      9,
+                                      8,
+                                      6,
                                       5,
-                                      16,
-                                      15,
-                                    ],
-                                    //need to use data right now as 100-Wanted = value.
-                                    //example: Wanted = 10, so ill put 100 - 10 = 90 in their
-                                    features: [
-                                      "PPG",
-                                      "BPG",
-                                      "AAP",
-                                      "DD",
-                                      "EE",
-                                      "FF",
-                                      "GG",
-                                      "HH"
-                                    ],
-                                    ticks: [0, 25, 50, 75, 100],
-                                  ),
-                                ),
+                                      2,
+                                    ], labels: [
+                                      "Points per Game",
+                                      "Balls per Game",
+                                      "Auto points",
+                                      "Climbs %",
+                                      "Total climbs",
+                                    ], maxValue: 10)),
                               ),
                               SizedBox(width: defaultPadding),
                               Expanded(
