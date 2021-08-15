@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/mobile/stepper.dart';
 
+// TODO improve
 class Counter extends StatelessWidget {
   final String label;
   final IconData icon;

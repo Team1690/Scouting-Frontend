@@ -5,8 +5,8 @@ class MatchTextBox extends StatefulWidget {
   MatchTextBox({Key key, @required this.onChange, @required this.controller})
       : super(key: key);
 
-  Function(int) onChange;
-  TextEditingController controller;
+  final Function(int) onChange;
+  final TextEditingController controller;
 
   @override
   _MatchTextBoxState createState() => _MatchTextBoxState();
