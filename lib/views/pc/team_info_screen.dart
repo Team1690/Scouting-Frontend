@@ -8,6 +8,7 @@ import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:scouting_frontend/views/pc/widgets/spider_chart.dart';
 
 class TeamInfoScreen extends StatelessWidget {
   @override
@@ -57,7 +58,29 @@ class TeamInfoScreen extends StatelessWidget {
                                 // flex: 2,
                                 child: DashboardCard(
                                   title: 'Quick Data',
-                                  body: Container(),
+                                  body: SpiderChart(
+                                    data: [
+                                      90,
+                                      80,
+                                      72,
+                                      5,
+                                      16,
+                                      15,
+                                    ],
+                                    //need to use data right now as 100-Wanted = value.
+                                    //example: Wanted = 10, so ill put 100 - 10 = 90 in their
+                                    features: [
+                                      "PPG",
+                                      "BPG",
+                                      "AAP",
+                                      "DD",
+                                      "EE",
+                                      "FF",
+                                      "GG",
+                                      "HH"
+                                    ],
+                                    ticks: [0, 25, 50, 75, 100],
+                                  ),
                                 ),
                               ),
                               SizedBox(width: defaultPadding),
