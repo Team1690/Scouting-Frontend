@@ -16,20 +16,16 @@ class SpiderChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Radar Chart Demo',
-      theme: darkModeTheme,
-      home: Container(
-        width: 450,
-        height: 450,
-        //Radar Chart
-        child: RadarChart(
-          values: values,
-          labels: labels,
-          maxValue: maxValue,
-          fillColor: Colors.blue,
-          chartRadiusFactor: 0.7,
-        ),
+    return Container(
+      width: 450,
+      height: 450,
+      //Radar Chart
+      child: RadarChart(
+        values: values,
+        labels: labels,
+        maxValue: maxValue,
+        fillColor: Colors.blue,
+        chartRadiusFactor: 0.7,
       ),
     );
   }

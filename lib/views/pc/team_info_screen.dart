@@ -52,24 +52,24 @@ class TeamInfoScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               Expanded(
-                                // flex: 2,
-                                child: DashboardCard(
-                                  title: 'Quick Data',
-                                  body: SpiderChart(values: [
-                                    9,
-                                    8,
-                                    6,
-                                    5,
-                                    2,
-                                  ], labels: [
-                                    "Points per Game",
-                                    "Balls per Game",
-                                    "Auto points",
-                                    "Climbs %",
-                                    "Total climbs",
-                                  ], maxValue: 10),
-                                ),
-                              ),
+                                  // flex: 2,
+                                  child: DashboardCard(
+                                title: 'Quick Data',
+                                body: Container(
+                                    child: SpiderChart(values: [
+                                  43,
+                                  30,
+                                  86,
+                                  49,
+                                  39
+                                ], labels: [
+                                  "Points per Game",
+                                  "Balls per Game",
+                                  "Auto points",
+                                  "Climbs %",
+                                  "Total climbs",
+                                ], maxValue: 100)),
+                              )),
                               SizedBox(width: defaultPadding),
                               Expanded(
                                 // flex:
