@@ -1,7 +1,9 @@
 import 'dart:math';
-
+import 'package:faker/faker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/models/team_model.dart';
+import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
@@ -10,8 +12,11 @@ import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class TeamInfoScreen extends StatelessWidget {
+  TeamInfoScreen({this.data});
+  final List<Team> data;
   @override
   Widget build(BuildContext context) {
+    print(data[0].msg[0]);
     return DashboardScaffold(
       body: Padding(
         padding: const EdgeInsets.all(defaultPadding),
@@ -54,7 +59,7 @@ class TeamInfoScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               Expanded(
-                                // flex: 2,
+                                flex: 3,
                                 child: DashboardCard(
                                   title: 'Quick Data',
                                   body: Container(),
@@ -62,7 +67,7 @@ class TeamInfoScreen extends StatelessWidget {
                               ),
                               SizedBox(width: defaultPadding),
                               Expanded(
-                                // flex:
+                                flex: 3,
                                 child: DashboardCard(
                                   title: 'Pit Scouting',
                                   body: Container(),
@@ -80,7 +85,7 @@ class TeamInfoScreen extends StatelessWidget {
                               options: CarouselOptions(
                                 height: 3500,
                                 viewportFraction: 1,
-                                autoPlay: true,
+                                // autoPlay: true,
                               ),
                               items: [
                                 DashboardLineChart(),
@@ -88,17 +93,6 @@ class TeamInfoScreen extends StatelessWidget {
                                 DashboardLineChart(),
                               ],
                             ),
-                            // body: Padding(
-                            //   padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-                            //   child: LineChart(LineChartData(
-                            //     lineBarsData: List.generate(
-                            //         1,
-                            //         (index1) => LineChartBarData(
-                            //             spots: List.generate(
-                            //                 10,
-                            //                 (index) => FlSpot(index.toDouble(),
-                            //                     index.toDouble())))),
-                            //   ))),
                           ),
                         )
                       ],
