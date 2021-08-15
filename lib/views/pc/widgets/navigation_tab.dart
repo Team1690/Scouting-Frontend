@@ -13,55 +13,56 @@ class _NavigationTab extends State<NavigationTab> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        DrawerHeader(
-          decoration: BoxDecoration(
-            color: Colors.blue,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Text(
+              'menu',
+              textScaleFactor: 2,
+            ),
           ),
-          child: Text(
-            'menu',
-            textScaleFactor: 2,
+          ListTile(
+            title: const Text('Team Info'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TeamInfoScreen()),
+              );
+            },
           ),
-        ),
-        ListTile(
-          title: const Text('Team Info'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TeamInfoScreen()),
-            );
-          },
-        ),
-        ListTile(
-          title: const Text('Pick List'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PickListScreen()),
-            );
-          },
-        ),
-        ListTile(
-          title: const Text('Compare'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CompareScreen()),
-            );
-          },
-        ),
-        ListTile(
-          title: const Text('General Scatter'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ScattersScreen()),
-            );
-          },
-        ),
-      ],
-    ));
+          ListTile(
+            title: const Text('Pick List'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PickListScreen()),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('Compare'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CompareScreen()),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('General Scatter'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ScattersScreen()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
