@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:multi_charts/multi_charts.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/widgets/spider_chart_lib.dart';
 
@@ -39,7 +38,7 @@ class SpiderChart extends StatelessWidget {
             lineWidth: 1,
             gridSpace: 10,
             showYAxisText: false,
-            xScaleCount: 5,
+            xScaleCount: 4,
             yScaleCount: 6),
         size: Size(MediaQuery.of(context).size.width,
             MediaQuery.of(context).size.width),

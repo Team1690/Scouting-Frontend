@@ -44,14 +44,8 @@ class CoordinateStyle {
   /// contain origin point
   int yScaleCount;
 
-  /// x axis texts
-  /// 延y轴12点方向，顺时针排序
-  /// Clockwise from the y-axis 12-point direction
   final List<String> xAxisTexts;
 
-  /// y axis texts
-  /// 从内到外排序
-  /// sort from the inside out
   final List<String> yAxisTexts;
 
   /// the scale of y-axis.
@@ -91,7 +85,6 @@ class CoordinateStyle {
 }
 
 class RadarDataSourceConfig {
-  /// 延y轴12点方向，顺时针排序
   /// Clockwise from the y-axis 12-point direction
   /// values's max value must less than or equal [yScale * yScaleCount] and more than 0.0
   final List<double> values;
@@ -137,8 +130,6 @@ class Radar extends StatelessWidget {
 
   final List<RadarDataSourceConfig> dataSource;
 
-  /// 画布的大小
-  /// the size of canvas
   final Size size;
 
   Radar({
@@ -149,7 +140,6 @@ class Radar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return CustomPaint(
       size: size,
       painter: RadarPainter(coordinateStyle, dataSource),
@@ -171,11 +161,8 @@ class RadarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // TODO: implement paint
-
     Offset center = Offset(size.width / 2, size.height / 2);
 
-    // 绘制坐标系的x轴线
     Paint coorPaint = Paint()
       ..color = coordinateStyle.lineColor
       ..strokeCap = StrokeCap.square
@@ -204,7 +191,6 @@ class RadarPainter extends CustomPainter {
       }
     }
 
-    // 绘制坐标系的y轴线
     for (int i = 0; i < coordinateStyle.xScaleCount; i++) {
       Path path = new Path()
         ..moveTo(center.dx, center.dy)
@@ -212,7 +198,6 @@ class RadarPainter extends CustomPainter {
       canvas.drawPath(path, coorPaint);
     }
 
-    // 绘制x轴文字
     if (coordinateStyle.showXAxisText) {
       for (int i = 0; i < coordinateStyle.xScaleCount; i++) {
         int c = coordinateStyle.xAxisTexts[i].length < 4
@@ -246,10 +231,8 @@ class RadarPainter extends CustomPainter {
       }
     }
 
-    // 绘制y轴文字
     if (coordinateStyle.showYAxisText) {
       for (int i = 0; i < coordinateStyle.yScaleCount; i++) {
-        //FIXME:Dart中没有根据文字内容和样式获取文字size的方法
         double maxWidth = coordinateStyle.yAxisTextStyle.fontSize *
             0.4 *
             coordinateStyle.yScaleCount;
@@ -268,11 +251,9 @@ class RadarPainter extends CustomPainter {
       }
     }
 
-    // 绘制点和线以及填充区域
     for (RadarDataSourceConfig config in dataSource) {
       List<Offset> points = List();
 
-      // 创建画笔
       Paint pointPaint = Paint()
         ..color = config.dotColor ?? config.lineColor
         ..strokeCap = StrokeCap.round
@@ -330,7 +311,6 @@ class RadarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
     return false;
   }
 }

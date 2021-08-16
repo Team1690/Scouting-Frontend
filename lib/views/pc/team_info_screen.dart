@@ -3,7 +3,6 @@ import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
-import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scouting_frontend/views/pc/widgets/spider_chart.dart';
 
@@ -57,15 +56,15 @@ class TeamInfoScreen extends StatelessWidget {
                                     title: 'Quick Data',
                                     body: Container(
                                       child: SpiderChart(
-                                        data: [2, 5, 4, 3, 2],
+                                        //data is 0-5
+                                        data: [3.3, 2.7, 4.1, 1.8],
                                         xAxisText: [
                                           'PPG',
                                           'Climb %',
                                           'BPG',
                                           'Auto points',
-                                          'Total climbs'
                                         ],
-                                        compareData: [0, 0, 0, 0, 0],
+                                        compareData: [0, 0, 0, 0],
                                       ),
                                     )),
                               ),
