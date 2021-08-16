@@ -21,12 +21,13 @@ class SpiderChart extends StatelessWidget {
       height: 450,
       //Radar Chart
       child: RadarChart(
-        values: values,
-        labels: labels,
-        maxValue: maxValue,
-        fillColor: Colors.blue,
-        chartRadiusFactor: 0.7,
-      ),
+          values: values,
+          labels: labels,
+          maxValue: maxValue,
+          fillColor: Colors.blue,
+          chartRadiusFactor: 0.7,
+          labelColor: primaryWhite,
+          strokeColor: secondaryWhite),
     );
   }
 }
