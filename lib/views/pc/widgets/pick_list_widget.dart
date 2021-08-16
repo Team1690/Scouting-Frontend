@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/globals.dart' as globals;
+import 'package:toggle_switch/toggle_switch.dart';
 
 class PickList extends StatefulWidget {
   const PickList({
@@ -36,10 +37,13 @@ class _PickListState extends State<PickList> {
               elevation: 2,
               child: ListTile(
                 title: Text(item),
-                leading: Icon(
-                  Icons.adb,
-                  color: Colors.black,
-                ),
+                leading: ToggleSwitch(totalSwitches: 2, labels: [
+                  'available',
+                  'taken'
+                ], activeBgColors: [
+                  [Colors.greenAccent],
+                  [Colors.redAccent]
+                ]),
               ),
             ),
         ],

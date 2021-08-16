@@ -41,6 +41,7 @@ dependencies:
   modern_charts: ^0.1.19
   flutter_radar_chart: ^0.2.0
   multi_charts: ^0.3.0
+  toggle_switch: ^1.2.0
 
 dev_dependencies:
   flutter_test:
