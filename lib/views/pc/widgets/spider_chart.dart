@@ -1,33 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:multi_charts/multi_charts.dart';
 import 'package:scouting_frontend/views/constants.dart';
+import 'package:scouting_frontend/views/pc/widgets/spider_chart_lib.dart';
 
+// ignore: must_be_immutable
 class SpiderChart extends StatelessWidget {
-  const SpiderChart({
-    Key key,
-    @required this.values,
-    @required this.labels,
-    @required this.maxValue,
-  }) : super(key: key);
+  SpiderChart(
+      {Key key,
+      @required this.xAxisText,
+      @required this.data,
+      @required this.compareData})
+      : super(key: key);
 
-  final List<double> values;
-  final List<String> labels;
-  final double maxValue;
-
+  final List<String> xAxisText;
+  final List<double> data;
+  final List<double> compareData;
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 450,
-      height: 450,
-      //Radar Chart
-      child: RadarChart(
-          values: values,
-          labels: labels,
-          maxValue: maxValue,
-          fillColor: Colors.blue,
-          chartRadiusFactor: 0.7,
-          labelColor: primaryWhite,
-          strokeColor: secondaryWhite),
+      child: Radar(
+        dataSource: [
+          RadarDataSourceConfig(data,
+              fill: true, fillColor: Colors.green.withOpacity(0.8)),
+          RadarDataSourceConfig(compareData,
+              lineColor: Colors.blue,
+              dotColor: Colors.blue,
+              dotRadius: 2,
+              fill: true,
+              showDot: true,
+              showLine: true,
+              lineWidth: 0.5,
+              fillColor: Colors.yellowAccent.withOpacity(0.3))
+        ],
+        coordinateStyle: CoordinateStyle(1.0,
+            yAxisTexts: ["0.0", "1.0", "2.0", "3.0", "4.0", "5.0"],
+            xAxisTexts: xAxisText,
+            lineColor: primaryWhite,
+            lineWidth: 1,
+            gridSpace: 10,
+            showYAxisText: false,
+            xScaleCount: 5,
+            yScaleCount: 6),
+        size: Size(MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.width),
+      ),
     );
   }
 }

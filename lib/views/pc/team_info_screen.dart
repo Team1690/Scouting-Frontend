@@ -52,24 +52,23 @@ class TeamInfoScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               Expanded(
-                                  // flex: 2,
-                                  child: DashboardCard(
-                                title: 'Quick Data',
-                                body: Container(
-                                    child: SpiderChart(values: [
-                                  43,
-                                  30,
-                                  86,
-                                  49,
-                                  39
-                                ], labels: [
-                                  "Points per Game",
-                                  "Balls per Game",
-                                  "Auto points",
-                                  "Climbs %",
-                                  "Total climbs",
-                                ], maxValue: 100)),
-                              )),
+                                // flex: 2,
+                                child: DashboardCard(
+                                    title: 'Quick Data',
+                                    body: Container(
+                                      child: SpiderChart(
+                                        data: [2, 5, 4, 3, 2],
+                                        xAxisText: [
+                                          'PPG',
+                                          'Climb %',
+                                          'BPG',
+                                          'Auto points',
+                                          'Total climbs'
+                                        ],
+                                        compareData: [0, 0, 0, 0, 0],
+                                      ),
+                                    )),
+                              ),
                               SizedBox(width: defaultPadding),
                               Expanded(
                                 // flex:
