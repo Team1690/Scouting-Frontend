@@ -15,13 +15,14 @@ class Team {
   final int matchesPlayed;
   final double autoUpperGoalAverage;
   final double autoBottomGoalAverage;
-  final double averageShots;
+  // final double averageShots;
   final double totalShotsSD;
   final double climbsPerMatches;
   final double climbsPerAttempts;
 
   //test
   final List<String> msg;
+  final int averageShots;
 
   Team({
     this.teamNumber,

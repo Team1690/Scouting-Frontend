@@ -12,11 +12,11 @@ import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class TeamInfoScreen extends StatelessWidget {
-  TeamInfoScreen({this.data});
+  TeamInfoScreen({@required this.data});
   final List<Team> data;
   @override
   Widget build(BuildContext context) {
-    print(data[0].msg[0]);
+    // print(data[0].msg[0]);
     return DashboardScaffold(
       body: Padding(
         padding: const EdgeInsets.all(defaultPadding),
@@ -62,7 +62,16 @@ class TeamInfoScreen extends StatelessWidget {
                                 flex: 3,
                                 child: DashboardCard(
                                   title: 'Quick Data',
-                                  body: Container(),
+                                  body: Column(
+                                    children: [
+                                      Text(
+                                          'Average shootig points: ${data[0].averageShots * 2.5}'),
+                                      Text(
+                                          'Average ball Scored: ${data[0].averageShots}'),
+                                      Text(
+                                          'Average auto shootig points: ${data[0].averageShots * 0.5}')
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(width: defaultPadding),
@@ -81,6 +90,7 @@ class TeamInfoScreen extends StatelessWidget {
                           flex: 4,
                           child: DashboardCard(
                             title: 'Game Chart',
+                            // body: Container(),
                             body: CarouselSlider(
                               options: CarouselOptions(
                                 height: 3500,
@@ -89,8 +99,8 @@ class TeamInfoScreen extends StatelessWidget {
                               ),
                               items: [
                                 DashboardLineChart(),
-                                DashboardLineChart(),
-                                DashboardLineChart(),
+                                // DashboardLineChart(),
+                                // DashboardLineChart(),
                               ],
                             ),
                           ),
@@ -103,7 +113,31 @@ class TeamInfoScreen extends StatelessWidget {
                       flex: 2,
                       child: DashboardCard(
                         title: 'Scouting Specific',
-                        body: Container(),
+                        body: SingleChildScrollView(
+                          child: Column(
+                            children: data[0]
+                                .msg
+                                .map(
+                                  (e) => Card(
+                                    // shape: ,
+                                    elevation: 10,
+                                    color: bgColor,
+                                    margin: EdgeInsets.fromLTRB(
+                                        5, 0, 5, defaultPadding),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.all(defaultPadding),
+                                      child: Text(
+                                        e,
+                                        style: TextStyle(
+                                            color: primaryWhite, fontSize: 12),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
                       ))
                 ],
               ),

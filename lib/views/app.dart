@@ -15,16 +15,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Orbit Scouting',
       home: isPC(context)
-          ? FutureBuilder(
-              future: GetTeamsApi.randomData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return TeamInfoScreen(data: snapshot.data);
-                }
-                return DashboardScaffold(
-                    body: Center(child: CircularProgressIndicator()));
-              },
-            )
+          ? TeamInfoScreen(data: GetTeamsApi.randomData())
           : Scaffold(appBar: MainAppBar(), body: UserInput()),
       theme: darkModeTheme,
       debugShowCheckedModeBanner: false,
