@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
-import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
 
 class DashboardScaffold extends StatelessWidget {

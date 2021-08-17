@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
 enum climbOptions {
   climbed,
   faild,
