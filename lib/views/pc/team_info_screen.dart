@@ -114,7 +114,7 @@ class TeamInfoScreen extends StatelessWidget {
                       flex: 2,
                       child: DashboardCard(
                         title: 'Scouting Specific',
-                        body: ScoutingSpecific(msg: data),
+                        body: ScoutingSpecific(msg: data[0].msg),
                       ))
                 ],
               ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/models/team_model.dart';
 
 import '../../constants.dart';
 
@@ -9,14 +8,13 @@ class ScoutingSpecific extends StatelessWidget {
     @required this.msg,
   }) : super(key: key);
 
-  final List<Team> msg;
+  final List msg;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: msg[0]
-            .msg
+        children: msg
             .map(
               (e) => Card(
                 // shape: ,
