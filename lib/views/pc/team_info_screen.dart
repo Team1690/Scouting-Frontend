@@ -10,6 +10,7 @@ import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 
 class TeamInfoScreen extends StatelessWidget {
   TeamInfoScreen({@required this.data});
@@ -113,31 +114,7 @@ class TeamInfoScreen extends StatelessWidget {
                       flex: 2,
                       child: DashboardCard(
                         title: 'Scouting Specific',
-                        body: SingleChildScrollView(
-                          child: Column(
-                            children: data[0]
-                                .msg
-                                .map(
-                                  (e) => Card(
-                                    // shape: ,
-                                    elevation: 10,
-                                    color: bgColor,
-                                    margin: EdgeInsets.fromLTRB(
-                                        5, 0, 5, defaultPadding),
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.all(defaultPadding),
-                                      child: Text(
-                                        e,
-                                        style: TextStyle(
-                                            color: primaryWhite, fontSize: 12),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
+                        body: ScoutingSpecific(msg: data),
                       ))
                 ],
               ),
