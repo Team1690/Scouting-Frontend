@@ -62,18 +62,7 @@ class TeamInfoScreen extends StatelessWidget {
                               Expanded(
                                 flex: 3,
                                 child: DashboardCard(
-                                  title: 'Quick Data',
-                                  body: Column(
-                                    children: [
-                                      Text(
-                                          'Average shootig points: ${data[0].averageShots * 2.5}'),
-                                      Text(
-                                          'Average ball Scored: ${data[0].averageShots}'),
-                                      Text(
-                                          'Average auto shootig points: ${data[0].averageShots * 0.5}')
-                                    ],
-                                  ),
-                                ),
+                                    title: 'Quick Data', body: Container()),
                               ),
                               SizedBox(width: defaultPadding),
                               Expanded(
