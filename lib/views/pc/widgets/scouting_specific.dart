@@ -8,7 +8,7 @@ class ScoutingSpecific extends StatelessWidget {
     @required this.msg,
   }) : super(key: key);
 
-  final List msg;
+  final List<String> msg;
 
   @override
   Widget build(BuildContext context) {
