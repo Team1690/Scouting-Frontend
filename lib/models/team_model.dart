@@ -33,7 +33,7 @@ class Team {
     this.totalShotsSD = 0,
     this.climbsPerMatches = 0,
     this.climbsPerAttempts = 0,
-    this.msg,
+    this.msg = const [],
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {

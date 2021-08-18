@@ -78,10 +78,10 @@ class GetTeamsApi {
     // Completer completer = new Completer();
     Faker faker = new Faker();
 
-    return List<Team>.filled(
+    return List<Team>.generate(
         10,
-        Team(
-            teamNumber: random.decimal().toInt(),
+        (index) => Team(
+            teamNumber: faker.randomGenerator.integer(9999),
             teamName: faker.person.firstName(),
             averageShots: faker.randomGenerator.integer(100),
             msg: List.generate(5, (index) => faker.lorem.sentences(5).join())));

@@ -7,7 +7,7 @@ import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 
 import '../../constants.dart';
 
-class TeamInfoData extends StatelessWidget {
+class TeamInfoData extends StatefulWidget {
   const TeamInfoData({
     Key key,
     @required this.team,
@@ -15,6 +15,11 @@ class TeamInfoData extends StatelessWidget {
 
   final Team team;
 
+  @override
+  State<TeamInfoData> createState() => _TeamInfoDataState();
+}
+
+class _TeamInfoDataState extends State<TeamInfoData> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -71,7 +76,7 @@ class TeamInfoData extends StatelessWidget {
             flex: 2,
             child: DashboardCard(
               title: 'Scouting Specific',
-              body: ScoutingSpecific(msg: team.msg),
+              body: ScoutingSpecific(msg: widget.team.msg),
             ))
       ],
     );
