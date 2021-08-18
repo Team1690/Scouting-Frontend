@@ -84,6 +84,10 @@ class GetTeamsApi {
             teamNumber: faker.randomGenerator.integer(9999),
             teamName: faker.person.firstName(),
             averageShots: faker.randomGenerator.integer(100),
-            msg: List.generate(5, (index) => faker.lorem.sentences(5).join())));
+            msg: List.generate(5, (index) => faker.lorem.sentences(5).join()),
+            tables: List.generate(
+                2,
+                (index) => List.generate(10,
+                    (index) => [index, faker.randomGenerator.integer(10)]))));
   }
 }

@@ -4,6 +4,11 @@ enum climbOptions {
   notAttempted,
 }
 
+enum dataPoint {
+  x,
+  y,
+}
+
 class Team {
   final int teamNumber;
   final String teamName;
@@ -20,6 +25,7 @@ class Team {
   //test
   final List<String> msg;
   final int averageShots;
+  final List<List> tables;
 
   Team({
     this.teamNumber,
@@ -34,6 +40,7 @@ class Team {
     this.climbsPerMatches = 0,
     this.climbsPerAttempts = 0,
     this.msg = const [],
+    this.tables = const [],
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {

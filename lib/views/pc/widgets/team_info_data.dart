@@ -60,11 +60,11 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                       viewportFraction: 1,
                       // autoPlay: true,
                     ),
-                    items: [
-                      DashboardLineChart(),
-                      // DashboardLineChart(),
-                      // DashboardLineChart(),
-                    ],
+                    items: widget.team.tables
+                        .map((e) => DashboardLineChart(
+                              data: e,
+                            ))
+                        .toList(),
                   ),
                 ),
               )

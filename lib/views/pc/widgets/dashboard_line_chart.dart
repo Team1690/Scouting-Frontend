@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 class DashboardLineChart extends StatelessWidget {
   const DashboardLineChart({
     Key key,
+    @required this.data,
     // @required this.title,
     // @required this.body,
   }) : super(key: key);
 
+  final List data;
   // final String title;
   // final Widget body;
 
@@ -24,6 +26,25 @@ class DashboardLineChart extends StatelessWidget {
     //   const Color(0xff02d39a)
     // ];
     return LineChart(LineChartData(
+      lineBarsData: List.generate(
+          1,
+          (index1) => LineChartBarData(
+                isCurved: true,
+                colors: colors,
+                barWidth: 8,
+                isStrokeCapRound: true,
+                dotData: FlDotData(show: false),
+                belowBarData: BarAreaData(
+                  show: true,
+                  colors:
+                      colors.map((color) => color.withOpacity(0.3)).toList(),
+                ),
+                // spots: List.generate(10,
+                //     (index) => FlSpot(index.toDouble(), Random().nextDouble())))),
+                spots: data
+                    .map((dataPoint) => FlSpot(dataPoint[0], dataPoint[1]))
+                    .toList(),
+              )),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -68,21 +89,7 @@ class DashboardLineChart extends StatelessWidget {
       minX: 0,
       // maxX: 11,
       minY: 0,
-      maxY: 2,
-      lineBarsData: List.generate(
-          1,
-          (index1) => LineChartBarData(
-              isCurved: true,
-              colors: colors,
-              barWidth: 8,
-              isStrokeCapRound: true,
-              dotData: FlDotData(show: false),
-              belowBarData: BarAreaData(
-                show: true,
-                colors: colors.map((color) => color.withOpacity(0.3)).toList(),
-              ),
-              spots: List.generate(10,
-                  (index) => FlSpot(index.toDouble(), Random().nextDouble())))),
+      // maxY: 2,
     ));
   }
 }
