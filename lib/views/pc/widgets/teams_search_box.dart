@@ -9,12 +9,12 @@ class TeamsSearchBox extends StatefulWidget {
     final Key key,
     @required final this.teams,
     @required final this.onChange,
-    @required final this.typeAheadController,
+    // @required final this.typeAheadController,
   }) : super(key: key);
 
   final List<Team> teams;
   final Function(Team) onChange;
-  final TextEditingController typeAheadController;
+  // final TextEditingController typeAheadController;
 
   @override
   _TeamsSearchBoxState createState() => _TeamsSearchBoxState();
@@ -23,24 +23,29 @@ class TeamsSearchBox extends StatefulWidget {
 class _TeamsSearchBoxState extends State<TeamsSearchBox> {
   bool isValueEmpty = false;
   bool isValueInList = true;
-  List<Team> _suggestions = [];
+  final TextEditingController _typeAheadController = TextEditingController();
+
+  List<Team> updateSussestions(inputNumber) {
+    List<Team> _suggestions = List.castFrom(widget.teams);
+    String _inputNumber = inputNumber;
+    // print(inputNumber);
+    for (Team team in _suggestions) {
+      print(inputNumber.toString());
+    }
+    _suggestions.removeWhere((team) {
+      // print(team.teamNumber.toString() + ' ' + _inputNumber);
+      return team.teamNumber.toString().contains(_inputNumber);
+    });
+
+    // print(_suggestions);
+    return _suggestions;
+  }
 
   @override
   Widget build(BuildContext context) {
     return TypeAheadField(
         textFieldConfiguration: TextFieldConfiguration(
-          onChanged: (final String value) => setState(() {
-            isValueEmpty = value.isEmpty;
-
-            isValueInList = _suggestions
-                .map<String>((team) => team.teamNumber.toString())
-                .contains(value);
-
-            if (!isValueEmpty && isValueInList)
-              widget.onChange(widget.teams[widget.teams
-                  .indexWhere((team) => team.teamNumber == int.parse(value))]);
-          }),
-          controller: widget.typeAheadController,
+          controller: _typeAheadController,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.digitsOnly
           ],
@@ -49,22 +54,18 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
             prefixIcon: const Icon(Icons.search),
             border: const OutlineInputBorder(),
             hintText: 'Search Team',
-            errorText: isValueEmpty
-                ? 'Value can\'t be empty'
-                : !isValueInList
-                    ? 'Not a valid team'
-                    : null,
           ),
         ),
-        suggestionsCallback: (value) {
-          final List<Team> suggestions = widget.teams;
-
-          setState(() => this._suggestions = suggestions);
-
-          return suggestions;
-        },
+        suggestionsCallback: (pattern) => widget.teams,
         itemBuilder: (context, Team suggestion) =>
             ListTile(title: Text(suggestion.teamNumber.toString())),
+        transitionBuilder: (context, suggestionsBox, controller) {
+          return FadeTransition(
+            child: suggestionsBox,
+            opacity: CurvedAnimation(
+                parent: controller, curve: Curves.fastOutSlowIn),
+          );
+        },
         noItemsFoundBuilder: (context) => Container(
               height: 100,
               child: Center(
@@ -75,20 +76,9 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
               ),
             ),
         onSuggestionSelected: (final Team suggestion) {
-          widget.typeAheadController.text = suggestion.teamNumber.toString();
+          _typeAheadController.text = suggestion.teamNumber.toString();
           widget.onChange(widget.teams[widget.teams
               .indexWhere((team) => team.teamNumber == suggestion.teamNumber)]);
-
-          ScaffoldMessenger.of(context)
-            ..removeCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-              content: Text('Selected team: ${suggestion.teamNumber}'),
-            ));
-
-          setState(() {
-            isValueEmpty = false;
-            isValueInList = true;
-          });
         });
   }
 }

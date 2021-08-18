@@ -18,7 +18,6 @@ class TeamInfoScreen extends StatefulWidget {
 
 class _TeamInfoScreenState extends State<TeamInfoScreen> {
   Team chosenTeam = Team();
-  TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +34,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
                     child: TeamsSearchBox(
                         teams: widget.data,
                         onChange: (Team team) =>
-                            setState(() => chosenTeam = team),
-                        typeAheadController: controller)),
+                            setState(() => chosenTeam = team))),
                 SizedBox(width: defaultPadding),
                 Expanded(
                     flex: 2,
