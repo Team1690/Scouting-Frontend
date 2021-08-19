@@ -15,26 +15,14 @@ class Team {
   final int matchesPlayed;
   final double autoUpperGoalAverage;
   final double autoBottomGoalAverage;
-  final double averageShots;
+  // final double averageShots;
   final double totalShotsSD;
   final double climbsPerMatches;
   final double climbsPerAttempts;
 
-  // final int autoBottomGoalTotal;
-  // final double autoBottomGoalSD;
-  // final int autoUpperGoalTotal;
-  // final double autoUpperGoalSD;
-  // final int telpUpperGoalTotal;
-  // final double telpUpperSD;
-  // final double climb;
-
-  // //table use
-  // final int shotsInTarget;
-  // final int successfulClimbs;
-
-  // //demo use
-  // final double shotsInTargetPrecent;
-  // final double successfulClimbsPrecent;
+  //test
+  final List<String> msg;
+  final int averageShots;
 
   Team({
     this.teamNumber,
@@ -48,6 +36,7 @@ class Team {
     this.totalShotsSD = 0,
     this.climbsPerMatches = 0,
     this.climbsPerAttempts = 0,
+    this.msg,
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {

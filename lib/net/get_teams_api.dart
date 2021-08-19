@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:math';
+import 'package:faker/faker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:scouting_frontend/models/team_model.dart';
@@ -55,5 +57,34 @@ class GetTeamsApi {
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
+  }
+
+  //TODO: create one functions
+  static Future futureRandomData() async {
+    // Completer completer = new Completer();
+    Faker faker = new Faker();
+
+    return Future.delayed(
+        Duration(milliseconds: 0),
+        (() => List<Team>.filled(
+            10,
+            Team(
+                teamNumber: random.decimal().toInt(),
+                teamName: faker.person.firstName(),
+                msg: List.generate(
+                    5, (index) => faker.randomGenerator.string(500))))));
+  }
+
+  static List<Team> randomData() {
+    // Completer completer = new Completer();
+    Faker faker = new Faker();
+
+    return List<Team>.filled(
+        10,
+        Team(
+            teamNumber: random.decimal().toInt(),
+            teamName: faker.person.firstName(),
+            averageShots: faker.randomGenerator.integer(100),
+            msg: List.generate(5, (index) => faker.lorem.sentences(5).join())));
   }
 }
