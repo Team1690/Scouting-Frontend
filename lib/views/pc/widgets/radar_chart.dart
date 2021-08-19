@@ -40,6 +40,7 @@ class _SpiderChart extends State<SpiderChart> {
         ticks: widget.ticks,
         axisColor: primaryWhite,
         outlineColor: secondaryWhite,
+        featuresTextStyle: TextStyle(color: primaryWhite, fontSize: 10),
       ),
     );
   }
