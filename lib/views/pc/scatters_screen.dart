@@ -5,7 +5,7 @@ class ScattersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DashboardScaffold(
-      body: Text('Settings'),
+      body: Container(),
     );
   }
 }

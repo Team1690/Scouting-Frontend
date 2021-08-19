@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
+import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 
 import '../../constants.dart';
@@ -34,8 +35,31 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child:
-                          DashboardCard(title: 'Quick Data', body: Container()),
+                      child: DashboardCard(
+                          title: 'Quick Data',
+                          body: Container(
+                            child: SpiderChart(numberOfFeatures: 4, data: [
+                              [
+                                85,
+                                29,
+                                69,
+                                80,
+                              ],
+                              [89, 45, 32, 56],
+                              [68, 30, 19, 100]
+                            ], ticks: [
+                              0,
+                              25,
+                              50,
+                              75,
+                              100
+                            ], features: [
+                              "PPG",
+                              "BPG",
+                              "Auto Points",
+                              "Climb %",
+                            ]),
+                          )),
                     ),
                     SizedBox(width: defaultPadding),
                     Expanded(

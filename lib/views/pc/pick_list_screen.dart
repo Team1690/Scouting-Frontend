@@ -1,44 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/globals.dart' as globals;
+import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
+import 'package:scouting_frontend/views/pc/widgets/pick_list_widget.dart';
 
-class PickListScreen extends StatefulWidget {
-  @override
-  _PickListScreenState createState() => _PickListScreenState();
-}
+import '../constants.dart';
 
-class _PickListScreenState extends State<PickListScreen> {
-  void reorderData(final int oldindex, int newindex) {
-    setState(() {
-      if (newindex > oldindex) {
-        newindex -= 1;
-      }
-      final String item = globals.secondList.removeAt(oldindex);
-      globals.secondList.insert(newindex, item);
-    });
-  }
-
+class PickListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DashboardScaffold(
-      body: ReorderableListView(
-        children: <Widget>[
-          for (final item in globals.secondList)
-            Card(
-              color: Colors.blueGrey,
-              key: ValueKey(item),
-              elevation: 2,
-              child: ListTile(
-                title: Text(item),
-                leading: Icon(
-                  Icons.adb,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+        body: Container(
+      child: Row(
+        children: [
+          Expanded(
+              child: DashboardCard(
+                  title: 'first pick list',
+                  body:
+                      Expanded(child: PickList(pickList: globals.secondList)))),
+          SizedBox(width: defaultPadding),
+          Expanded(
+              child: DashboardCard(
+                  title: 'second pick list',
+                  body: Expanded(child: PickList(pickList: globals.thirdList))))
         ],
-        onReorder: reorderData,
       ),
-    );
+    ));
   }
 }
