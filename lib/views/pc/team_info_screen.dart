@@ -12,7 +12,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 
-
 class TeamInfoScreen extends StatelessWidget {
   TeamInfoScreen({@required this.data});
   final List<Team> data;
@@ -69,13 +68,11 @@ class TeamInfoScreen extends StatelessWidget {
                                           numberOfFeatures: 4,
                                           data: [
                                             [
-                                              85,
+                                              43,
+                                              70,
                                               29,
-                                              69,
-                                              80,
+                                              94,
                                             ],
-                                            [89, 45, 32, 56],
-                                            [68, 30, 19, 100]
                                           ],
                                           ticks: [
                                             0,
@@ -91,7 +88,6 @@ class TeamInfoScreen extends StatelessWidget {
                                             "Climb %",
                                           ]),
                                     )),
-
                               ),
                               SizedBox(width: defaultPadding),
                               Expanded(
