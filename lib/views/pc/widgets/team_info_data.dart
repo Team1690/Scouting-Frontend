@@ -30,30 +30,28 @@ class _TeamInfoDataState extends State<TeamInfoData> {
           child: Column(
             children: [
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Row(
                   children: [
                     Expanded(
-                      flex: 3,
-                      child: DashboardCard(
+                        flex: 3,
+                        child: DashboardCard(
                           title: 'Quick Data',
-                          body: Container(
-                            child: SpiderChart(numberOfFeatures: 4, data: [
-                              widget.team.spider,
-                            ], ticks: [
-                              0,
-                              25,
-                              50,
-                              75,
-                              100
-                            ], features: [
-                              "PPG",
-                              "BPG",
-                              "Auto Points",
-                              "Climb %",
-                            ]),
-                          )),
-                    ),
+                          body: SpiderChart(numberOfFeatures: 4, data: [
+                            widget.team.spider,
+                          ], ticks: [
+                            0,
+                            25,
+                            50,
+                            75,
+                            100
+                          ], features: [
+                            "PPG",
+                            "BPG",
+                            "Auto Points",
+                            "Climb %",
+                          ]),
+                        )),
                     SizedBox(width: defaultPadding),
                     Expanded(
                       flex: 3,
@@ -67,7 +65,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
               ),
               SizedBox(height: defaultPadding),
               Expanded(
-                flex: 4,
+                flex: 3,
                 child: DashboardCard(
                   title: 'Game Chart',
                   // body: Container(),
