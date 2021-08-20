@@ -39,14 +39,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                           title: 'Quick Data',
                           body: Container(
                             child: SpiderChart(numberOfFeatures: 4, data: [
-                              [
-                                85,
-                                29,
-                                69,
-                                80,
-                              ],
-                              [89, 45, 32, 56],
-                              [68, 30, 19, 100]
+                              widget.team.spider,
                             ], ticks: [
                               0,
                               25,

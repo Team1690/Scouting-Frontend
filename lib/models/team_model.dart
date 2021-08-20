@@ -26,6 +26,7 @@ class Team {
   final List<String> msg;
   final int averageShots;
   final List<List> tables;
+  final List<int> spider;
 
   Team({
     this.teamNumber,
@@ -41,6 +42,7 @@ class Team {
     this.climbsPerAttempts = 0,
     this.msg = const [],
     this.tables = const [],
+    this.spider = const [0, 0, 0, 0],
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {
