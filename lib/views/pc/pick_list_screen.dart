@@ -10,19 +10,19 @@ class PickListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DashboardScaffold(
-        body: Container(
+        body: Padding(
+      padding: EdgeInsets.all(defaultPadding),
       child: Row(
         children: [
           Expanded(
               child: DashboardCard(
                   title: 'first pick list',
-                  body:
-                      Expanded(child: PickList(pickList: globals.secondList)))),
+                  body: PickList(pickList: globals.secondList))),
           SizedBox(width: defaultPadding),
           Expanded(
               child: DashboardCard(
                   title: 'second pick list',
-                  body: Expanded(child: PickList(pickList: globals.thirdList))))
+                  body: PickList(pickList: globals.thirdList)))
         ],
       ),
     ));

@@ -1,10 +1,12 @@
-import 'dart:convert';
-import 'dart:math';
-
 enum climbOptions {
   climbed,
   faild,
   notAttempted,
+}
+
+enum dataPoint {
+  x,
+  y,
 }
 
 class Team {
@@ -23,6 +25,8 @@ class Team {
   //test
   final List<String> msg;
   final int averageShots;
+  final List<List> tables;
+  final List<int> spider;
 
   Team({
     this.teamNumber,
@@ -36,7 +40,9 @@ class Team {
     this.totalShotsSD = 0,
     this.climbsPerMatches = 0,
     this.climbsPerAttempts = 0,
-    this.msg,
+    this.msg = const [],
+    this.tables = const [],
+    this.spider = const [0, 0, 0, 0],
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {

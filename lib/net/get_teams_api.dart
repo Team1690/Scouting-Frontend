@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -79,12 +78,18 @@ class GetTeamsApi {
     // Completer completer = new Completer();
     Faker faker = new Faker();
 
-    return List<Team>.filled(
+    return List<Team>.generate(
         10,
-        Team(
-            teamNumber: random.decimal().toInt(),
+        (index) => Team(
+            teamNumber: faker.randomGenerator.integer(9999),
             teamName: faker.person.firstName(),
             averageShots: faker.randomGenerator.integer(100),
-            msg: List.generate(5, (index) => faker.lorem.sentences(5).join())));
+            msg: List.generate(5, (index) => faker.lorem.sentences(5).join()),
+            spider: List<int>.generate(
+                4, (index) => faker.randomGenerator.integer(100)),
+            tables: List.generate(
+                2,
+                (index) => List.generate(10,
+                    (index) => [index, faker.randomGenerator.integer(10)]))));
   }
 }

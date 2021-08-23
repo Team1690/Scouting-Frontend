@@ -1,37 +1,37 @@
-import 'dart:math';
-import 'package:faker/faker.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/pc/widgets/card.dart';
-import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
-import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
+import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
+import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
-class TeamInfoScreen extends StatelessWidget {
+
+class TeamInfoScreen extends StatefulWidget {
   TeamInfoScreen({@required this.data});
   final List<Team> data;
+
+  @override
+  State<TeamInfoScreen> createState() => _TeamInfoScreenState();
+}
+
+class _TeamInfoScreenState extends State<TeamInfoScreen> {
+  Team chosenTeam = Team();
+
   @override
   Widget build(BuildContext context) {
     // print(data[0].msg[0]);
     return DashboardScaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: Column(
-          children: [
-            Container(
-              child: Row(
+        body: Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Column(children: [
+              Row(
                 children: [
                   Expanded(
-                    flex: 1,
-                    child: TextField(
-                        decoration:
-                            InputDecoration(hintText: 'Search Team Number')),
-                  ),
+                      flex: 1,
+                      child: TeamsSearchBox(
+                          teams: widget.data,
+                          onChange: (Team team) =>
+                              setState(() => chosenTeam = team))),
                   SizedBox(width: defaultPadding),
                   Expanded(
                       flex: 2,
@@ -45,97 +45,12 @@ class TeamInfoScreen extends StatelessWidget {
                       )),
                 ],
               ),
-            ),
-            SizedBox(height: defaultPadding),
-            Expanded(
-              flex: 5,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: DashboardCard(
-                                    title: 'Quick Data',
-                                    body: Container(
-                                      child: SpiderChart(
-                                          numberOfFeatures: 4,
-                                          data: [
-                                            [
-                                              43,
-                                              70,
-                                              29,
-                                              94,
-                                            ],
-                                          ],
-                                          ticks: [
-                                            0,
-                                            25,
-                                            50,
-                                            75,
-                                            100
-                                          ],
-                                          features: [
-                                            "PPG",
-                                            "BPG",
-                                            "Auto Points",
-                                            "Climb %",
-                                          ]),
-                                    )),
-                              ),
-                              SizedBox(width: defaultPadding),
-                              Expanded(
-                                flex: 3,
-                                child: DashboardCard(
-                                  title: 'Pit Scouting',
-                                  body: Container(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: defaultPadding),
-                        Expanded(
-                          flex: 4,
-                          child: DashboardCard(
-                            title: 'Game Chart',
-                            // body: Container(),
-                            body: CarouselSlider(
-                              options: CarouselOptions(
-                                height: 3500,
-                                viewportFraction: 1,
-                                // autoPlay: true,
-                              ),
-                              items: [
-                                DashboardLineChart(),
-                                // DashboardLineChart(),
-                                // DashboardLineChart(),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: defaultPadding),
-                  Expanded(
-                      flex: 2,
-                      child: DashboardCard(
-                        title: 'Scouting Specific',
-                        body: ScoutingSpecific(msg: data[0].msg),
-                      ))
-                ],
+
+              SizedBox(height: defaultPadding),
+              Expanded(
+                // flex: 10,
+                child: TeamInfoData(team: chosenTeam),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            ])));
   }
 }
