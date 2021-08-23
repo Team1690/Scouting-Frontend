@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/views/globals.dart' as globals;
-import 'package:toggle_switch/toggle_switch.dart';
+import 'package:scouting_frontend/views/constants.dart';
+import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 
 class PickList extends StatefulWidget {
   const PickList({
@@ -32,18 +32,25 @@ class _PickListState extends State<PickList> {
         children: <Widget>[
           for (final item in widget.pickList)
             Card(
-              color: Colors.blueGrey,
+              color: bgColor,
               key: ValueKey(item),
               elevation: 2,
-              child: ListTile(
-                title: Text(item),
-                leading: ToggleSwitch(totalSwitches: 2, labels: [
-                  'available',
-                  'taken'
-                ], activeBgColors: [
-                  [Colors.greenAccent],
-                  [Colors.redAccent]
-                ]),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(
+                    0, defaultPadding / 4, 0, defaultPadding / 4),
+                child: ListTile(
+                  title: Text(item),
+                  leading: AdvancedSwitch(
+                    controller: AdvancedSwitchController(),
+                    activeColor: Colors.red,
+                    inactiveColor: primaryColor,
+                    activeChild: Text('Taken'),
+                    inactiveChild: Text('Available'),
+                    height: 25,
+                    width: 100,
+                    enabled: true,
+                  ),
+                ),
               ),
             ),
         ],

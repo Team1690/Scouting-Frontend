@@ -34,12 +34,15 @@ class _SpiderChart extends State<SpiderChart> {
 
     return Container(
       child: RadarChart(
+        graphColors: <Color>[const Color(0xff23b6e6), const Color(0xff02d39a)],
         reverseAxis: false,
         data: widget.data,
         features: widget.features,
         ticks: widget.ticks,
+        // ticksTextStyle: Theme.of(context).textTheme.subtitle1,
         axisColor: primaryWhite,
         outlineColor: secondaryWhite,
+        featuresTextStyle: Theme.of(context).textTheme.bodyText2,
       ),
     );
   }
