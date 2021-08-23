@@ -60,7 +60,10 @@ class CompareScreen extends StatelessWidget {
                                 // autoPlay: true,
                               ),
                               items: [
-                                DashboardLineChart(),
+                                // TODO: figure out how to give it fake data
+                                DashboardLineChart(
+                                  data: [],
+                                ),
                                 // DashboardLineChart(),
                                 // DashboardLineChart(),
                               ],
@@ -80,7 +83,10 @@ class CompareScreen extends StatelessWidget {
                                 // autoPlay: true,
                               ),
                               items: [
-                                DashboardLineChart(),
+                                // TODO: figure out how to give it fake data
+                                DashboardLineChart(
+                                  data: [],
+                                ),
                                 // DashboardLineChart(),
                                 // DashboardLineChart(),
                               ],
