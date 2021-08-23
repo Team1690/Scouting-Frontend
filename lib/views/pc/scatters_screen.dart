@@ -12,9 +12,7 @@ class ScattersScreen extends StatelessWidget {
     return DashboardScaffold(
       body: Padding(
         padding: const EdgeInsets.all(defaultPadding),
-        child: Scatter(
-          teams: GetTeamsApi.teamsList,
-        ),
+        child: Scatter(teams: GetTeamsApi.randomData()),
       ),
     );
   }
