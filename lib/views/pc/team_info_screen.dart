@@ -5,6 +5,7 @@ import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
+
 class TeamInfoScreen extends StatefulWidget {
   TeamInfoScreen({@required this.data});
   final List<Team> data;
@@ -44,6 +45,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
                       )),
                 ],
               ),
+
               SizedBox(height: defaultPadding),
               Expanded(
                 // flex: 10,
