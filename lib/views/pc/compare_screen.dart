@@ -115,20 +115,24 @@ class _CompareScreenState extends State<CompareScreen> {
                       child: DashboardCard(
                         title: 'Compare Spider Chart',
                         body: Center(
-                          child: SpiderChart(numberOfFeatures: 4, data: [
-                            chosenTeam.spider,
-                          ], ticks: [
-                            0,
-                            25,
-                            50,
-                            75,
-                            100
-                          ], features: [
-                            "PPG",
-                            "BPG",
-                            "Auto Points",
-                            "Climb",
-                          ]),
+                          child: SpiderChart(
+                              numberOfFeatures: 4,
+                              data: compareTeamsList
+                                  .map((team) => team.spider)
+                                  .toList(),
+                              ticks: [
+                                0,
+                                25,
+                                50,
+                                75,
+                                100
+                              ],
+                              features: [
+                                "PPG",
+                                "BPG",
+                                "Auto Points",
+                                "Climb",
+                              ]),
                         ),
                       ))
                 ],
