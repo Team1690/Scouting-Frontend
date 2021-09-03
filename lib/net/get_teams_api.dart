@@ -89,8 +89,9 @@ class GetTeamsApi {
             spider: List<int>.generate(
                 4, (index) => faker.randomGenerator.integer(100)),
             tables: List.generate(
-                2,
-                (index) => List.generate(10,
+                2, //number of tables
+                (index) => List.generate(
+                    10, //number of datapoints
                     (index) => [index, faker.randomGenerator.integer(10)]))));
   }
 }

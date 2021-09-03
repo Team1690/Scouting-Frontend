@@ -13,15 +13,19 @@ import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 // ignore: must_be_immutable
 class CompareScreen extends StatefulWidget {
   CompareScreen({
-    @required this.data,
+    @required this.teams,
   });
-  final List<Team> data;
+  final List<Team> teams;
   @override
   State<CompareScreen> createState() => _CompareScreenState();
 }
 
 class _CompareScreenState extends State<CompareScreen> {
   Team chosenTeam = Team();
+  List<Team> compareTeamsList = [];
+  // List tables;
+
+  void addTeam(team) => compareTeamsList.add(team);
 
   Widget build(BuildContext context) {
     return DashboardScaffold(
@@ -35,9 +39,8 @@ class _CompareScreenState extends State<CompareScreen> {
                   Expanded(
                     flex: 1,
                     child: TeamsSearchBox(
-                        teams: widget.data,
-                        onChange: (Team team) =>
-                            setState(() => chosenTeam = team)),
+                        teams: widget.teams,
+                        onChange: (Team team) => setState(() => addTeam(team))),
                   ),
                   SizedBox(width: defaultPadding),
                   Expanded(
@@ -63,24 +66,24 @@ class _CompareScreenState extends State<CompareScreen> {
                     child: Column(
                       children: [
                         Expanded(
-                          flex: 3,
-                          child: DashboardCard(
-                            title: 'Game Chart',
-                            // body: Container(),
-                            body: CarouselSlider(
-                              options: CarouselOptions(
-                                height: 3500,
-                                viewportFraction: 1,
-                                // autoPlay: true,
-                              ),
-                              items: chosenTeam.tables
-                                  .map((e) => DashboardLineChart(
-                                        data: e,
-                                      ))
-                                  .toList(),
-                            ),
-                          ),
-                        ),
+                            flex: 3,
+                            child: DashboardCard(
+                                title: 'Game Chart',
+                                // body: Container(),
+                                body: CarouselSlider(
+                                  options: CarouselOptions(
+                                    height: 3500,
+                                    viewportFraction: 1,
+                                    // autoPlay: true,
+                                  ),
+                                  items: List.generate(
+                                      2, //TODO: make modular
+                                      // compareTeamsList.first.tables.length,
+                                      (index) => DashboardLineChart(
+                                          dataSets: compareTeamsList
+                                              .map((team) => team.tables[index])
+                                              .toList())),
+                                ))),
                         SizedBox(height: defaultPadding),
                         Expanded(
                           flex: 3,
@@ -93,11 +96,13 @@ class _CompareScreenState extends State<CompareScreen> {
                                 viewportFraction: 1,
                                 // autoPlay: true,
                               ),
-                              items: chosenTeam.tables
-                                  .map((e) => DashboardLineChart(
-                                        data: e,
-                                      ))
-                                  .toList(),
+                              items: List.generate(
+                                  2, //TODO: make modular
+                                  // compareTeamsList.first.tables.length,
+                                  (index) => DashboardLineChart(
+                                      dataSets: compareTeamsList
+                                          .map((team) => team.tables[index])
+                                          .toList())),
                             ),
                           ),
                         )

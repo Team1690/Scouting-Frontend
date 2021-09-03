@@ -76,8 +76,8 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                       // autoPlay: true,
                     ),
                     items: widget.team.tables
-                        .map((e) => DashboardLineChart(
-                              data: e,
+                        .map((table) => DashboardLineChart(
+                              dataSets: [table],
                             ))
                         .toList(),
                   ),
