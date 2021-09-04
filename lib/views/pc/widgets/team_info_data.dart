@@ -77,6 +77,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                     ),
                     items: widget.team.tables
                         .map((table) => DashboardLineChart(
+                              colors: colors,
                               dataSets: [table],
                             ))
                         .toList(),
