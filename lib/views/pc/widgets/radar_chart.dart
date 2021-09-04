@@ -34,7 +34,7 @@ class _SpiderChart extends State<SpiderChart> {
 
     return Container(
       child: RadarChart(
-        graphColors: <Color>[const Color(0xff23b6e6), const Color(0xff02d39a)],
+        graphColors: colors,
         reverseAxis: false,
         data: widget.data,
         features: widget.features,

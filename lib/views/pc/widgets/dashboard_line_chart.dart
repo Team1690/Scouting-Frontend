@@ -8,11 +8,14 @@ class DashboardLineChart extends StatelessWidget {
   const DashboardLineChart({
     Key key,
     @required this.dataSets,
+    this.colors,
+    // this.colors = const [const Color(0xff23b6e6), const Color(0xff02d39a)],
     // @required this.title,
     // @required this.body,
   }) : super(key: key);
 
   final List dataSets;
+  final List<Color> colors;
   // final String title;
   // final Widget body;
 
@@ -20,7 +23,7 @@ class DashboardLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     inspect(dataSets);
 
-    List<Color> colors = [
+    List<Color> _colors = [
       Colors.primaries[Random().nextInt(Colors.primaries.length)],
       Colors.primaries[Random().nextInt(Colors.primaries.length)]
     ];
@@ -31,20 +34,22 @@ class DashboardLineChart extends StatelessWidget {
     return LineChart(
       LineChartData(
         lineBarsData: dataSets
+            .asMap()
+            .entries
             .map((dataSet) => LineChartBarData(
                   isCurved: true,
-                  colors: colors,
+                  colors: [colors[dataSet.key]],
                   barWidth: 8,
                   isStrokeCapRound: true,
                   dotData: FlDotData(show: false),
                   belowBarData: BarAreaData(
                     show: true,
-                    colors:
-                        colors.map((color) => color.withOpacity(0.3)).toList(),
+                    colors: [colors[dataSet.key].withOpacity(0.3)],
+                    // colors.map((color) => color.withOpacity(0.3)).toList(),
                   ),
                   // spots: List.generate(10,
                   //     (index) => FlSpot(index.toDouble(), Random().nextDouble())))),
-                  spots: dataSet
+                  spots: dataSet.value
                       .map<FlSpot>(
                           (dataPoint) => FlSpot(dataPoint[0], dataPoint[1]))
                       .toList(),

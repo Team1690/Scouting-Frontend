@@ -26,6 +26,8 @@ class _CompareScreenState extends State<CompareScreen> {
   // List tables;
 
   void addTeam(team) => compareTeamsList.add(team);
+  void removeTeam(index) => compareTeamsList
+      .removeWhere((Team entry) => entry.teamNumber == index.value.teamNumber);
 
   Widget build(BuildContext context) {
     return DashboardScaffold(
@@ -44,7 +46,31 @@ class _CompareScreenState extends State<CompareScreen> {
                   ),
                   SizedBox(width: defaultPadding),
                   Expanded(
-                      flex: 2,
+                    flex: 2,
+                    child: Row(
+                        children: compareTeamsList
+                            .asMap()
+                            .entries
+                            .map(
+                              (index) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: defaultPadding / 2),
+                                child: Chip(
+                                  label:
+                                      Text(index.value.teamNumber.toString()),
+                                  backgroundColor: colors[index.key],
+                                  onDeleted: () =>
+                                      setState(() => removeTeam(index)),
+                                ),
+                              ),
+                            )
+                            .toList()),
+                  ),
+                  SizedBox(width: defaultPadding),
+                  Expanded(flex: 3, child: Container()),
+                  SizedBox(width: defaultPadding),
+                  Align(
+                      alignment: Alignment.centerRight,
                       child: ToggleButtons(
                         children: [
                           Icon(Icons.shield_rounded),
@@ -80,6 +106,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                       2, //TODO: make modular
                                       // compareTeamsList.first.tables.length,
                                       (index) => DashboardLineChart(
+                                          colors: colors,
                                           dataSets: compareTeamsList
                                               .map((team) => team.tables[index])
                                               .toList())),
@@ -100,6 +127,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                   2, //TODO: make modular
                                   // compareTeamsList.first.tables.length,
                                   (index) => DashboardLineChart(
+                                      colors: Colors.primaries,
                                       dataSets: compareTeamsList
                                           .map((team) => team.tables[index])
                                           .toList())),
