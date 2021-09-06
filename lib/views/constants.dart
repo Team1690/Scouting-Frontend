@@ -11,6 +11,15 @@ const defaultPadding = 20.0;
 
 const defaultBorderRadius = BorderRadius.all(Radius.circular(10));
 
+const colors = [
+  const Color(0xff19B7E9),
+  const Color(0xff02d39a),
+  const Color(0xffffb443),
+  const Color(0xffff7b43),
+  const Color(0xffff4343),
+  const Color(0xffff43CA),
+];
+
 final ThemeData darkModeTheme = ThemeData.dark().copyWith(
   scaffoldBackgroundColor: bgColor,
   textTheme: GoogleFonts.poppinsTextTheme().apply(bodyColor: Colors.white),

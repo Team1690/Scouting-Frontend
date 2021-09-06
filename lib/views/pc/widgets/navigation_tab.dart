@@ -53,7 +53,7 @@ class _NavigationTab extends State<NavigationTab> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => CompareScreen(
-                          data: GetTeamsApi.randomData(),
+                          teams: GetTeamsApi.randomData(),
                         )),
               );
             },
