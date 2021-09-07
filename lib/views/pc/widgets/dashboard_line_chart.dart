@@ -21,7 +21,7 @@ class DashboardLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    inspect(dataSets);
+    // inspect(dataSets);
 
     List<Color> _colors = [
       Colors.primaries[Random().nextInt(Colors.primaries.length)],
