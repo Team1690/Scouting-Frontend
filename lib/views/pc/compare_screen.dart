@@ -104,7 +104,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                   ),
                                   items: List.generate(
                                       2, //TODO: make modular
-                                      // compareTeamsList.first.tables.length,
+                                      // compare TeamsList.first.tables.length,
                                       (index) => DashboardLineChart(
                                           colors: colors,
                                           dataSets: compareTeamsList

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:scouting_frontend/models/team_model.dart';
@@ -5,14 +7,17 @@ import 'package:scouting_frontend/models/team_model.dart';
 class Scatter extends StatelessWidget {
   const Scatter({
     @required this.teams,
+    @required this.onHover,
     Key key,
   }) : super(key: key);
 
   final List<Team> teams;
+  final Function(Team team) onHover;
 
   @override
   Widget build(BuildContext context) {
-    String tooltip = '';
+    Team selectedTeam;
+    String tooltip;
     return Container(
       // color: Colors.grey,
       child: ScatterChart(
@@ -27,16 +32,26 @@ class Scatter extends StatelessWidget {
 
           scatterTouchData: ScatterTouchData(
             touchCallback: (p0) => {
-              p0.touchedSpot != null
-                  ? tooltip =
-                      teams[p0.touchedSpot.spotIndex].teamNumber.toString()
-                  : tooltip = '',
+              if (p0.touchedSpot != null)
+                {
+                  // onHover(teams[p0.touchedSpot.spotIndex]),
+                  print(p0.clickHappened),
+                  p0.clickHappened
+                      ? onHover(teams[p0.touchedSpot.spotIndex])
+                      : null,
+                  // selectedTeam = teams[p0.touch  edSpot.spotIndex],
+                  tooltip =
+                      teams[p0.touchedSpot.spotIndex].teamNumber.toString(),
+                  // inspect(p0),
+                  // print(teams[p0.touchedSpot.spotIndex].teamNumber),
+                }
             },
             enabled: true,
             handleBuiltInTouches: true,
             touchTooltipData: ScatterTouchTooltipData(
               tooltipBgColor: Colors.grey[400],
               getTooltipItems: (ScatterSpot touchedBarSpot) {
+                // print(selectedTeam.teamNumber);
                 return ScatterTooltipItem(tooltip, TextStyle(), 10);
               },
             ),
