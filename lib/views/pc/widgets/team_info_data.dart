@@ -36,22 +36,18 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                     Expanded(
                         flex: 3,
                         child: DashboardCard(
-                          title: 'Quick Data',
-                          body: SpiderChart(numberOfFeatures: 4, data: [
-                            widget.team.spider,
-                          ], ticks: [
-                            0,
-                            25,
-                            50,
-                            75,
-                            100
-                          ], features: [
-                            "PPG",
-                            "BPG",
-                            "Auto Points",
-                            "Climb %",
-                          ]),
-                        )),
+                            title: 'Quick Data',
+                            body: Column(
+                              children: [
+                                Text(
+                                  "average shots: " +
+                                      widget.team.averageShots.toString(),
+                                ),
+                                Text("total shots sd: " +
+                                    widget.team.totalShotsSD.toString()),
+                                //TODO: need to add more of that...
+                              ],
+                            ))),
                     SizedBox(width: defaultPadding),
                     Expanded(
                       flex: 3,
