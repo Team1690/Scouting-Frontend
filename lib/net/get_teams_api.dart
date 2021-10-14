@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:html';
 import 'package:faker/faker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:scouting_frontend/models/team_model.dart';
+import 'package:graphql/client.dart';
+
 
 class GetTeamsApi {
   GetTeamsApi();
@@ -74,9 +77,47 @@ class GetTeamsApi {
                     5, (index) => faker.randomGenerator.string(500))))));
   }
 
-  static List<Team> randomData() {
+  static Future<List<Team>> randomData() async {
     // Completer completer = new Completer();
     Faker faker = new Faker();
+
+
+
+
+
+    Map<String, String> headers = new Map<String, String>();
+    headers["x-hasura-admin-secret"] = "j0eAGMVfVfeYlyUnlTfYVQc64typ3OTfNbJrpQWXrqKp0qQnon7TpNzvabMC1Pi0";
+    final link = HttpLink("https://choice-lizard-77.hasura.app/v1/graphql", defaultHeaders: headers);
+    final client = GraphQLClient(link: link);
+    final String query = """
+query MyQuery {
+  matches(where: {team: {_eq: 1690}}){
+    autoBalls
+    climb
+    initiationLine
+    team
+    teleopInner
+    teleopOuter
+  }
+}
+""";
+  final QueryResult result = await client.query(QueryOptions(document: gql(query)));
+
+  // client.query(...).then(x => x + 1).then
+  // [1, 2, 3].map(x => x + 1).map(...)
+  if(result.hasException){
+    print(result.exception.toString());
+  }
+
+  final List<dynamic> repositories =
+    result.data['matches'] as List<dynamic>;
+
+  print(repositories); 
+
+
+
+
+
 
     return List<Team>.generate(
         10,
