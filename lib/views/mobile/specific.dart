@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:html';
 
 import 'package:flutter/material.dart';
@@ -34,44 +33,83 @@ class specific extends StatelessWidget {
       ),
 
       body: Padding(
-        padding: EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 30.0),
+        padding: EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 20.0),
         child: Column(
+          
         children: <Widget> [
           MatchTextBox(onChange: onChange, controller: controller),
-          Padding(padding: EdgeInsets.all(23.0)),
+          Padding(padding: EdgeInsets.all(14.0)),
           
           TeamsDropdown(onChange: onChange, typeAheadController: typeAheadController),
-          Padding(padding: EdgeInsets.all(11.0)),
+          Padding(padding: EdgeInsets.all(9.0)),
           
-          Container(
-            color: Colors.green,
-          ),
+          
           TextField(
+            
             style: TextStyle(color: Colors.pink),
             decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 10.0),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 5.0),
               ),
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green, width: 5.0),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green, width: 3.0),
               ),
             ),
+            maxLines: 4,
 
           ),
-          Padding(padding: EdgeInsets.all(23.0)),
+          Padding(padding: EdgeInsets.all(15.0)),
           
           TeamsDropdown(onChange: onChange, typeAheadController: typeAheadController),
           Padding(padding: EdgeInsets.all(11.0)),
           
-          TextField(),
-          Padding(padding: EdgeInsets.all(23.0)),
+          TextField(
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+
+              ),
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 5.0),
+              ),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green, width: 3.0),
+              ),
+            ),
+            maxLines: 4,
+          ),
+          Padding(padding: EdgeInsets.all(15.0)),
+          
+          
+          
+          
+          
           
           TeamsDropdown(onChange: onChange, typeAheadController: typeAheadController),
-          TextField(),
+          Padding(padding: EdgeInsets.all(11.0)),
+
+          Expanded(
+            child: TextField(
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              
+              ),
+            
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 5.0),
+              ),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green, width: 3.0),
+              ),
+              fillColor: Colors.green,
+              filled: true,
+            ),
+            
+            maxLines: 4,
+          ),
+          ),
+          
         ],
         ),
- 
 
       ),
-      
          );
   }
 }
