@@ -12,8 +12,8 @@ class TeamsSearchBox extends StatefulWidget {
     // @required final this.typeAheadController,
   }) : super(key: key);
 
-  final List<Team> teams;
-  final Function(Team) onChange;
+  final List<LightTeam> teams;
+  final Function(LightTeam) onChange;
   // final TextEditingController typeAheadController;
 
   @override
@@ -25,16 +25,16 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
   bool isValueInList = true;
   final TextEditingController _typeAheadController = TextEditingController();
 
-  List<Team> updateSussestions(inputNumber) {
-    List<Team> _suggestions = List.castFrom(widget.teams);
+  List<LightTeam> updateSussestions(inputNumber) {
+    List<LightTeam> _suggestions = List.castFrom(widget.teams);
     String _inputNumber = inputNumber;
     // print(inputNumber);
-    for (Team team in _suggestions) {
+    for (LightTeam team in _suggestions) {
       print(inputNumber.toString());
     }
     _suggestions.removeWhere((team) {
-      // print(team.teamNumber.toString() + ' ' + _inputNumber);
-      return team.teamNumber.toString().contains(_inputNumber);
+      // print(team.number.toString() + ' ' + _inputNumber);
+      return team.number.toString().contains(_inputNumber);
     });
 
     // print(_suggestions);
@@ -57,8 +57,8 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
           ),
         ),
         suggestionsCallback: (pattern) => widget.teams,
-        itemBuilder: (context, Team suggestion) =>
-            ListTile(title: Text(suggestion.teamNumber.toString())),
+        itemBuilder: (context, LightTeam suggestion) =>
+            ListTile(title: Text(suggestion.number.toString())),
         transitionBuilder: (context, suggestionsBox, controller) {
           return FadeTransition(
             child: suggestionsBox,
@@ -75,10 +75,10 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
                 ),
               ),
             ),
-        onSuggestionSelected: (final Team suggestion) {
-          _typeAheadController.text = suggestion.teamNumber.toString();
+        onSuggestionSelected: (final LightTeam suggestion) {
+          _typeAheadController.text = suggestion.number.toString();
           widget.onChange(widget.teams[widget.teams
-              .indexWhere((team) => team.teamNumber == suggestion.teamNumber)]);
+              .indexWhere((team) => team.number == suggestion.number)]);
         });
   }
 }
