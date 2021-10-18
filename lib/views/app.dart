@@ -6,7 +6,6 @@ import 'package:scouting_frontend/views/constants.dart';
 
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/pc/team_info_screen.dart';
-import 'package:scouting_frontend/views/pc/widgets/drawer_1.dart';
 import 'package:scouting_frontend/views/mobile/drawer.dart';
 
 class App extends StatelessWidget {
