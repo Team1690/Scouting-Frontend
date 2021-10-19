@@ -1,6 +1,8 @@
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/constants.dart';
+import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
@@ -59,12 +61,29 @@ query FetchTeams {
                       child: FutureBuilder(
                           future: fetchTeams(),
                           builder: (context, snapshot) {
-                             if (snapshot.hasError) {
-                              return Text(
-                                  'Error has happened in the future! ' + snapshot.error.toString());
-                            }else if (!snapshot.hasData) {
-                              return const CircularProgressIndicator();
-                            }else {
+                            if (snapshot.hasError) {
+                              return Text('Error has happened in the future! ' +
+                                  snapshot.error.toString());
+                            } else if (!snapshot.hasData) {
+                              return Stack(
+                                  alignment: AlignmentDirectional.center,
+                                  children: [
+                                    TextField(
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        prefixIcon: const Icon(Icons.search),
+                                        border: const OutlineInputBorder(),
+                                        hintText: 'Search Team',
+                                        enabled: false,
+                                      ),
+                                    ),
+                                    Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ]);
+
+                              // const CircularProgressIndicator();
+                            } else {
                               return TeamsSearchBox(
                                   teams: snapshot.data as List<LightTeam>,
                                   onChange: (LightTeam team) => {
@@ -86,10 +105,31 @@ query FetchTeams {
                 ],
               ),
               SizedBox(height: defaultPadding),
-              /*Expanded(
-                // flex: 10,
-                child: //TeamInfoData(team: chosenTeam),
-              )*/
+              Expanded(
+                flex: 10,
+                child: chosenTeam == null
+                    ? DashboardCard(
+                        title: '',
+                        body: Center(
+                            child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(),
+                            ),
+                            Icon(
+                              Icons.search,
+                              size: 100,
+                            ),
+                            SizedBox(height: defaultPadding),
+                            Text(
+                                'Please choose a team in order to display data'),
+                            Expanded(
+                              child: Container(),
+                            ),
+                          ],
+                        )))
+                    : TeamInfoData(team: Team(teamNumber: chosenTeam)),
+              )
             ])));
   }
 }
