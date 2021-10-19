@@ -9,9 +9,7 @@ import 'package:scouting_frontend/views/pc/widgets/card.dart';
 
 
 
-void main() => runApp(MaterialApp(
-  home: specific()
-));
+
 
 class specific extends StatelessWidget {
   get controller => null;
@@ -46,12 +44,15 @@ class specific extends StatelessWidget {
           
           TextField(
             
-            style: TextStyle(color: Colors.pink),
+            style: TextStyle(color: Colors.black),
+            cursorColor: Colors.black,
             decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 5.0),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 4.0),
               ),
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green, width: 3.0),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0),
               ),
+              fillColor: Colors.grey,
+              filled: true,
             ),
             maxLines: 4,
 
@@ -64,14 +65,14 @@ class specific extends StatelessWidget {
           TextField(
             style: TextStyle(
               color: Colors.black,
-              fontSize: 18,
-
               ),
             decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 5.0),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 4.0),
               ),
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green, width: 3.0),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0),
               ),
+              fillColor: Colors.grey,
+              filled: true,
             ),
             maxLines: 4,
           ),
@@ -89,27 +90,22 @@ class specific extends StatelessWidget {
             child: TextField(
             style: TextStyle(
               color: Colors.black,
-              fontSize: 18,
-              
               ),
             
             decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 5.0),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 4.0),
               ),
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green, width: 3.0),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, width: 3.0),
               ),
-              fillColor: Colors.green,
+              fillColor: Colors.grey,
               filled: true,
             ),
-            
             maxLines: 4,
           ),
-          ),
-          
+        ),
         ],
         ),
-
       ),
-         );
+    );
   }
 }

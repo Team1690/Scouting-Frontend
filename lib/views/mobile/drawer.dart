@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/views/mobile/specific.dart';
 
 
 
@@ -54,7 +55,7 @@ class _Drawer1State extends State<Drawer1> {
               ),
             ),
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => specific()));
           },
           ),
           ListTile(
