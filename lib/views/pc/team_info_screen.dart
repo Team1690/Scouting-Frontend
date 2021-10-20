@@ -1,6 +1,6 @@
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
@@ -20,12 +20,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
   int chosenTeam;
 
   Future<List<LightTeam>> fetchTeams() async {
-    Map<String, String> headers = new Map<String, String>();
-    headers["x-hasura-admin-secret"] =
-        "j0eAGMVfVfeYlyUnlTfYVQc64typ3OTfNbJrpQWXrqKp0qQnon7TpNzvabMC1Pi0";
-    final link = HttpLink("https://orbitdb.hasura.app/v1/graphql",
-        defaultHeaders: headers);
-    final client = GraphQLClient(link: link, cache: GraphQLCache());
+    final client = HasuraHelper().getClient();
     final String query = """
 query FetchTeams {
   team {
