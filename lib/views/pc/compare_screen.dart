@@ -38,12 +38,12 @@ class _CompareScreenState extends State<CompareScreen> {
             Container(
               child: Row(
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: TeamsSearchBox(
-                        teams: widget.teams,
-                        onChange: (Team team) => setState(() => addTeam(team))),
-                  ),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: TeamsSearchBox(
+                  //       teams:new List<Team>(),
+                  //       onChange: (Team team) => setState(() => addTeam(team))),
+                  // ),
                   SizedBox(width: defaultPadding),
                   Expanded(
                     flex: 2,
