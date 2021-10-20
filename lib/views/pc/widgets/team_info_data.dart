@@ -64,20 +64,20 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                 flex: 3,
                 child: DashboardCard(
                   title: 'Game Chart',
-                  // body: Container(),
-                  body: CarouselSlider(
-                      // options: CarouselOptions(
-                      //   height: 3500,
-                      //   viewportFraction: 1,
-                      //   // autoPlay: true,
-                      // ),
-                      // items: widget.team.tables
-                      //     .map((table) => DashboardLineChart(
-                      //           colors: colors,
-                      //           dataSets: [table],
-                      //         ))
-                      //     .toList(),
-                      ),
+                  body: Container(),
+                  // body: CarouselSlider(
+                  //   options: CarouselOptions(
+                  //     height: 3500,
+                  //     viewportFraction: 1,
+                  //     // autoPlay: true,
+                  //   ),
+                  //   items: widget.team.tables
+                  //       .map((table) => DashboardLineChart(
+                  //             colors: colors,
+                  //             dataSets: [table],
+                  //           ))
+                  //       .toList(),
+                  // ),
                 ),
               )
             ],
