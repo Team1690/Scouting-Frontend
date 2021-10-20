@@ -20,7 +20,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
   int chosenTeam;
 
   Future<List<LightTeam>> fetchTeams() async {
-    final client = HasuraHelper().getClient();
+    final client = getClient();
     final String query = """
 query FetchTeams {
   team {
