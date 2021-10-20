@@ -128,7 +128,7 @@ query FetchTeams {
                             ),
                           ],
                         )))
-                    : TeamInfoData(team: Team(teamNumber: chosenTeam)),
+                    : TeamInfoData(team: chosenTeam),
               )
             ])));
   }

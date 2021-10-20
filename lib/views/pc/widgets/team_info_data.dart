@@ -14,7 +14,7 @@ class TeamInfoData extends StatefulWidget {
     @required this.team,
   }) : super(key: key);
 
-  final Team team;
+  final int team;
 
   @override
   State<TeamInfoData> createState() => _TeamInfoDataState();
@@ -39,12 +39,12 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                             title: 'Quick Data',
                             body: Column(
                               children: [
-                                Text(
-                                  "average shots: " +
-                                      widget.team.averageShots.toString(),
-                                ),
-                                Text("total shots sd: " +
-                                    widget.team.totalShotsSD.toString()),
+                                Text("average shots: "
+                                    // widget.team.averageShots.toString(),
+                                    ),
+                                Text("total shots sd: "
+                                    // widget.team.totalShotsSD.toString()
+                                    ),
                                 //TODO: need to add more of that...
                               ],
                             ))),
@@ -66,18 +66,18 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                   title: 'Game Chart',
                   // body: Container(),
                   body: CarouselSlider(
-                    options: CarouselOptions(
-                      height: 3500,
-                      viewportFraction: 1,
-                      // autoPlay: true,
-                    ),
-                    items: widget.team.tables
-                        .map((table) => DashboardLineChart(
-                              colors: colors,
-                              dataSets: [table],
-                            ))
-                        .toList(),
-                  ),
+                      // options: CarouselOptions(
+                      //   height: 3500,
+                      //   viewportFraction: 1,
+                      //   // autoPlay: true,
+                      // ),
+                      // items: widget.team.tables
+                      //     .map((table) => DashboardLineChart(
+                      //           colors: colors,
+                      //           dataSets: [table],
+                      //         ))
+                      //     .toList(),
+                      ),
                 ),
               )
             ],
@@ -88,7 +88,8 @@ class _TeamInfoDataState extends State<TeamInfoData> {
             flex: 2,
             child: DashboardCard(
               title: 'Scouting Specific',
-              body: ScoutingSpecific(msg: widget.team.msg),
+              // body: ScoutingSpecific(msg: widget.team.msg),
+              body: ScoutingSpecific(msg: []),
             ))
       ],
     );
