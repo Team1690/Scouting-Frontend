@@ -22,12 +22,12 @@ class CompareScreen extends StatefulWidget {
 
 class _CompareScreenState extends State<CompareScreen> {
   Team chosenTeam = Team();
-  List<Team> compareTeamsList = [];
+  List<LightTeam> compareTeamsList = [];
   // List tables;
 
-  void addTeam(team) => compareTeamsList.add(team);
-  void removeTeam(index) => compareTeamsList
-      .removeWhere((Team entry) => entry.teamNumber == index.value.teamNumber);
+  void addTeam(LightTeam team) => compareTeamsList.add(team);
+  void removeTeam( index) => compareTeamsList
+      .removeWhere((LightTeam entry) => entry.number == index.value.teamNumber);
 
   Widget build(BuildContext context) {
     return DashboardScaffold(
@@ -55,7 +55,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                     horizontal: defaultPadding / 2),
                                 child: Chip(
                                   label:
-                                      Text(index.value.teamNumber.toString()),
+                                      Text(index.value.number.toString()),
                                   backgroundColor: colors[index.key],
                                   onDeleted: () =>
                                       setState(() => removeTeam(index)),
@@ -106,7 +106,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                       (index) => DashboardLineChart(
                                           colors: colors,
                                           dataSets: compareTeamsList
-                                              .map((team) => team.tables[index])
+                                              .map((LightTeam team) => team.number)
                                               .toList())),
                                 ))),
                         SizedBox(height: defaultPadding),
