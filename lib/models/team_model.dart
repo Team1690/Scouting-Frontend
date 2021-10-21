@@ -17,9 +17,12 @@ class LightTeam {
 }
 
 class QuickData {
-  QuickData(this.averageInner, this.averageOuter) {}
+  QuickData(
+      this.averageInner, this.averageOuter, this.autoBalls, this.climbRate) {}
   final double averageInner;
   final double averageOuter;
+  final double autoBalls;
+  final double climbRate;
 }
 
 class Team {

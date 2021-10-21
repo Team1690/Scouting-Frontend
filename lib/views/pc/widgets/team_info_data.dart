@@ -32,13 +32,24 @@ class _TeamInfoDataState extends State<TeamInfoData> {
 query MyQuery(\$teamNumber: Int) {
   team(where: {number: {_eq: \$teamNumber}}) {
     name
-    matches_aggregate {
+    balls: matches_aggregate {
       aggregate {
         avg {
           teleop_inner
           teleop_outer
+          auto_balls
         }
       }
+    }
+  }
+  climb: match_aggregate(where: {climb: {name: {_eq: "succeed"}, _and: {matches: {number: {_eq: \$teamNumber}}}}}) {
+    aggregate {
+      count(columns: climb_id)
+    }
+  }
+  failed: match_aggregate(where: {climb: {name: {_eq: "failed"}, _and: {matches: {number: {_eq: \$teamNumber}}}}}) {
+    aggregate {
+      count(columns: climb_id)
     }
   }
 }
@@ -55,8 +66,10 @@ query MyQuery(\$teamNumber: Int) {
     //  print(result.data['team'][0]['matches_aggregate']['aggregate']['avg']);
     return (result.data['team'] as List<dynamic>)
         .map((e) => QuickData(
-            e['matches_aggregate']['aggregate']['avg']['teleop_inner'],
-            e['matches_aggregate']['aggregate']['avg']['teleop_outer']))
+            e['balls']['aggregate']['avg']['teleop_inner'],
+            e['balls']['aggregate']['avg']['teleop_outer'],
+            e['balls']['aggregate']['avg']['auto_balls'],
+            result.data['success']))
         .toList();
     //.entries.map((e) => LightTeam(e['id']);
   }
@@ -89,7 +102,10 @@ query MyQuery(\$teamNumber: Int) {
                                                 'Error has happened in the future! ' +
                                                     snapshot.error.toString());
                                           } else if (!snapshot.hasData) {
-                                            return Text('no data :(');
+                                            return Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
                                           } else {
                                             inspect(snapshot.data);
                                             if (snapshot.data.length != 1) {
@@ -100,7 +116,12 @@ query MyQuery(\$teamNumber: Int) {
                                                     .toString() +
                                                 "\nAverage outer: " +
                                                 snapshot.data[0].averageOuter
-                                                    .toString());
+                                                    .toString() +
+                                                "\nAverage autoBalls: " +
+                                                snapshot.data[0].autoBalls
+                                                    .toString() +
+                                                "\nAverage autoBalls: " +
+                                                snapshot.data[0].climbRate);
                                           }
                                         })),
                                 //TODO: need to add more of that...
