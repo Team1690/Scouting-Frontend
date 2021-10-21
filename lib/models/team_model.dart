@@ -16,6 +16,12 @@ class LightTeam {
   final String name;
 }
 
+class QuickData {
+  QuickData(this.averageInner, this.averageOuter) {}
+  final double averageInner;
+  final double averageOuter;
+}
+
 class Team {
   final int teamNumber;
   final String teamName;
