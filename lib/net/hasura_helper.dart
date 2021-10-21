@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
+import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 GraphQLClient getClient() {
   Map<String, String> headers = new Map<String, String>();

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/get_teams_api.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 
 class TeamsSearchBox extends StatefulWidget {
   TeamsSearchBox({
@@ -13,7 +15,7 @@ class TeamsSearchBox extends StatefulWidget {
   }) : super(key: key);
 
   final List<LightTeam> teams;
-  final Function(LightTeam) onChange;
+  final void Function(LightTeam) onChange;
   // final TextEditingController typeAheadController;
 
   @override
@@ -81,4 +83,62 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
               .indexWhere((team) => team.number == suggestion.number)]);
         });
   }
+}
+
+  Future<List<LightTeam>> fetchTeams() async {
+    final client = getClient();
+    final String query = """
+query FetchTeams {
+  team {
+    id
+    number
+    name
+  }
+}
+  """;
+
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    return (result.data['team'] as List<dynamic>)
+        .map((e) => LightTeam(e['id'], e['number'], e['name']))
+        .toList();
+    //.entries.map((e) => LightTeam(e['id']);
+  }
+
+
+Widget teamSearch(void Function(LightTeam) callback) {
+  return Expanded(
+      flex: 1,
+      child: FutureBuilder(
+          future: fetchTeams(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error has happened in the future! ' +
+                  snapshot.error.toString());
+            } else if (!snapshot.hasData) {
+              return Stack(alignment: AlignmentDirectional.center, children: [
+                TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search),
+                    border: const OutlineInputBorder(),
+                    hintText: 'Search Team',
+                    enabled: false,
+                  ),
+                ),
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ]);
+              // const CircularProgressIndicator();
+            } else {
+              return TeamsSearchBox(
+                teams: snapshot.data as List<LightTeam>,
+                onChange: callback,
+              );
+            }
+          }));
 }

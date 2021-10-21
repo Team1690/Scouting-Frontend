@@ -19,29 +19,6 @@ class TeamInfoScreen extends StatefulWidget {
 class _TeamInfoScreenState extends State<TeamInfoScreen> {
   int chosenTeam;
 
-  Future<List<LightTeam>> fetchTeams() async {
-    final client = getClient();
-    final String query = """
-query FetchTeams {
-  team {
-    id
-    number
-    name
-  }
-}
-  """;
-
-    final QueryResult result =
-        await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => LightTeam(e['id'], e['number'], e['name']))
-        .toList();
-    //.entries.map((e) => LightTeam(e['id']);
-  }
-
   @override
   Widget build(BuildContext context) {
     // print(data[0].msg[0]);
@@ -51,41 +28,8 @@ query FetchTeams {
             child: Column(children: [
               Row(
                 children: [
-                  Expanded(
-                      flex: 1,
-                      child: FutureBuilder(
-                          future: fetchTeams(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Text('Error has happened in the future! ' +
-                                  snapshot.error.toString());
-                            } else if (!snapshot.hasData) {
-                              return Stack(
-                                  alignment: AlignmentDirectional.center,
-                                  children: [
-                                    TextField(
-                                      keyboardType: TextInputType.number,
-                                      decoration: InputDecoration(
-                                        prefixIcon: const Icon(Icons.search),
-                                        border: const OutlineInputBorder(),
-                                        hintText: 'Search Team',
-                                        enabled: false,
-                                      ),
-                                    ),
-                                    Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ]);
-
-                              // const CircularProgressIndicator();
-                            } else {
-                              return TeamsSearchBox(
-                                  teams: snapshot.data as List<LightTeam>,
-                                  onChange: (LightTeam team) => {
-                                        setState(() => chosenTeam = team.number)
-                                      });
-                            }
-                          })),
+                  teamSearch((LightTeam team) =>
+                      {setState(() => chosenTeam = team.number)}),
                   SizedBox(width: defaultPadding),
                   Expanded(
                       flex: 2,
