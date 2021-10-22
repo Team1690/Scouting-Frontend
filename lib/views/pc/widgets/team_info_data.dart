@@ -1,16 +1,20 @@
-import 'dart:developer';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
-import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
-import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
-import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 
 import '../../constants.dart';
+
+class QuickData {
+  QuickData(this.averageInner, this.averageOuter, this.autoBalls, this.success,
+      this.failed) {}
+  final double averageInner;
+  final double averageOuter;
+  final double autoBalls;
+  final double success;
+  final double failed;
+}
 
 // ignore: must_be_immutable
 class TeamInfoData extends StatefulWidget {
@@ -29,7 +33,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
   Future<List<QuickData>> fetchQuickData() async {
     final client = getClient();
     final String query = """
-query MyQuery(\$teamNumber: Int) {
+  query MyQuery(\$teamNumber: Int) {
   team(where: {number: {_eq: \$teamNumber}}) {
     name
     balls: matches_aggregate {
@@ -41,18 +45,19 @@ query MyQuery(\$teamNumber: Int) {
         }
       }
     }
-  }
-  climb: match_aggregate(where: {climb: {name: {_eq: "succeed"}, _and: {matches: {number: {_eq: \$teamNumber}}}}}) {
-    aggregate {
-      count(columns: climb_id)
+    climbSuccess: matches_aggregate(where: {climb: {name: {_eq: "Succeeded"}}}){
+      aggregate{
+        count(columns: climb_id)
+      }
+    }
+    climbFail: matches_aggregate(where: {climb: {name: {_eq: "failed"}}}){
+      aggregate{
+        count(columns: climb_id)
+      }
     }
   }
-  failed: match_aggregate(where: {climb: {name: {_eq: "failed"}, _and: {matches: {number: {_eq: \$teamNumber}}}}}) {
-    aggregate {
-      count(columns: climb_id)
-    }
   }
-}
+ 
 
 
   """;
@@ -63,15 +68,14 @@ query MyQuery(\$teamNumber: Int) {
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
-    //  print(result.data['team'][0]['matches_aggregate']['aggregate']['avg']);
     return (result.data['team'] as List<dynamic>)
         .map((e) => QuickData(
             e['balls']['aggregate']['avg']['teleop_inner'],
             e['balls']['aggregate']['avg']['teleop_outer'],
             e['balls']['aggregate']['avg']['auto_balls'],
-            result.data['success']))
+            e['climbSuccess']['aggregate']['count'],
+            e['climbFail']['aggregate']['count']))
         .toList();
-    //.entries.map((e) => LightTeam(e['id']);
   }
 
   @override
@@ -107,24 +111,29 @@ query MyQuery(\$teamNumber: Int) {
                                                   CircularProgressIndicator(),
                                             );
                                           } else {
-                                            inspect(snapshot.data);
                                             if (snapshot.data.length != 1) {
                                               return Text('invalid data :(');
                                             }
-                                            return Text("Average inner: " +
+                                            return Text("Average Inner: " +
                                                 snapshot.data[0].averageInner
                                                     .toString() +
-                                                "\nAverage outer: " +
+                                                "\nAverage Outer: " +
                                                 snapshot.data[0].averageOuter
                                                     .toString() +
-                                                "\nAverage autoBalls: " +
+                                                "\nAverage AutoBalls: " +
                                                 snapshot.data[0].autoBalls
                                                     .toString() +
-                                                "\nAverage autoBalls: " +
-                                                snapshot.data[0].climbRate);
+                                                "\nClimb Rate: : " +
+                                                (snapshot.data[0].success /
+                                                        (snapshot.data[0]
+                                                                .failed +
+                                                            snapshot.data[0]
+                                                                .success) *
+                                                        100)
+                                                    .toString() +
+                                                "%");
                                           }
                                         })),
-                                //TODO: need to add more of that...
                               ],
                             ))),
                     SizedBox(width: defaultPadding),
