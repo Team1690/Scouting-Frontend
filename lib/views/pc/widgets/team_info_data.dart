@@ -45,21 +45,18 @@ class _TeamInfoDataState extends State<TeamInfoData> {
         }
       }
     }
-    climbSuccess: matches_aggregate(where: {climb: {name: {_eq: "Succeeded"}}}){
-      aggregate{
+    climbSuccess: matches_aggregate(where: {climb: {name: {_eq: "Succeeded"}}}) {
+      aggregate {
         count(columns: climb_id)
       }
     }
-    climbFail: matches_aggregate(where: {climb: {name: {_eq: "failed"}}}){
-      aggregate{
+    climbFail: matches_aggregate(where: {climb: {name: {_eq: "failed"}}}) {
+      aggregate {
         count(columns: climb_id)
       }
     }
   }
-  }
- 
-
-
+}
   """;
 
     final QueryResult result = await client.query(QueryOptions(
@@ -114,24 +111,20 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                                             if (snapshot.data.length != 1) {
                                               return Text('invalid data :(');
                                             }
-                                            return Text("Average Inner: " +
-                                                snapshot.data[0].averageInner
-                                                    .toString() +
-                                                "\nAverage Outer: " +
-                                                snapshot.data[0].averageOuter
-                                                    .toString() +
-                                                "\nAverage AutoBalls: " +
-                                                snapshot.data[0].autoBalls
-                                                    .toString() +
-                                                "\nClimb Rate: : " +
-                                                (snapshot.data[0].success /
-                                                        (snapshot.data[0]
-                                                                .failed +
-                                                            snapshot.data[0]
-                                                                .success) *
-                                                        100)
-                                                    .toString() +
-                                                "%");
+                                            final QuickData report =
+                                                snapshot.data[0];
+                                            return Text(
+                                                "\nAverage inner: ${report.averageInner}"
+                                                        "\nAverage outer: ${report.averageOuter}"
+                                                        "\nAverage auto balls: ${report.autoBalls}"
+                                                        "\nClimb Rate: " +
+                                                    (report.success /
+                                                            (report.failed +
+                                                                report
+                                                                    .success) *
+                                                            100)
+                                                        .toString() +
+                                                    "%");
                                           }
                                         })),
                               ],
