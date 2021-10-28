@@ -215,8 +215,11 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                             if (snapshot.data.length < 1) {
                               return Text('invalid data :(');
                             }
-                            final SpecificData report = snapshot.data[0];
-                            return ScoutingSpecific(msg: [report.msg]);
+                            final List<dynamic> report =
+                                (snapshot.data as List<dynamic>)
+                                    .map((e) => e.msg)
+                                    .toList();
+                            return ScoutingSpecific(msg: report.cast<String>());
                           }
                         }))))
       ],
