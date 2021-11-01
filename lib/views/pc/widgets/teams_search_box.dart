@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/get_teams_api.dart';
 
 class TeamsSearchBox extends StatefulWidget {
   TeamsSearchBox({

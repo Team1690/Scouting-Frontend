@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
-import 'package:http/http.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/globals.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
-
 import '../../constants.dart';
 
 class QuickData {
   QuickData(this.averageInner, this.averageOuter, this.autoBalls, this.success,
-      this.failed) {}
+      this.failed);
   final double averageInner;
   final double averageOuter;
   final double autoBalls;
@@ -19,7 +16,7 @@ class QuickData {
 }
 
 class SpecificData {
-  SpecificData(this.msg) {}
+  SpecificData(this.msg);
   final String msg;
 }
 
@@ -138,7 +135,8 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                                             );
                                           } else {
                                             if (snapshot.data.length != 1) {
-                                              return Text('invalid data :(');
+                                              return Text(
+                                                  'data.length is shorter than 1! :(');
                                             }
                                             final QuickData report =
                                                 snapshot.data[0];
@@ -213,7 +211,8 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                             );
                           } else {
                             if (snapshot.data.length < 1) {
-                              return Text('invalid data :(');
+                              return Text(
+                                  ' data.length is \nshorter than 1! :(');
                             }
                             final List<dynamic> report =
                                 (snapshot.data as List<dynamic>)

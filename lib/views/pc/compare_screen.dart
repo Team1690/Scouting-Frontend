@@ -2,13 +2,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/globals.dart' as globals;
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
-import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
-import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 // ignore: must_be_immutable
 class CompareScreen extends StatefulWidget {
