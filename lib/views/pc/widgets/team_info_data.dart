@@ -192,35 +192,30 @@ class _TeamInfoDataState extends State<TeamInfoData> {
           ),
         ),
         SizedBox(width: defaultPadding),
-        Expanded(
-            flex: 2,
-            child: DashboardCard(
-                title: 'Scouting Specific',
-                // body: ScoutingSpecific(msg: widget.team.msg),
-                body: Expanded(
-                    flex: 1,
-                    child: FutureBuilder(
-                        future: fetchSpesific(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text('Error has happened in the future! ' +
-                                snapshot.error.toString());
-                          } else if (!snapshot.hasData) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else {
-                            if (snapshot.data.length < 1) {
-                              return Text(
-                                  ' data.length is \nshorter than 1! :(');
-                            }
-                            final List<dynamic> report =
-                                (snapshot.data as List<dynamic>)
-                                    .map((e) => e.msg)
-                                    .toList();
-                            return ScoutingSpecific(msg: report.cast<String>());
-                          }
-                        }))))
+        DashboardCard(
+            title: 'Scouting Specific',
+            // body: ScoutingSpecific(msg: widget.team.msg),
+            body: FutureBuilder(
+                future: fetchSpesific(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error has happened in the future! ' +
+                        snapshot.error.toString());
+                  } else if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    if (snapshot.data.length < 1) {
+                      return Text(' data.length is \nshorter than 1! :(');
+                    }
+                    final List<dynamic> report =
+                        (snapshot.data as List<dynamic>)
+                            .map((e) => e.msg)
+                            .toList();
+                    return ScoutingSpecific(msg: report.cast<String>());
+                  }
+                }))
       ],
     );
   }
