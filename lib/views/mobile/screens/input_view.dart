@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:graphql/client.dart';
+import 'package:scouting_frontend/models/team_model.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/net/send_match_api.dart';
 import 'package:scouting_frontend/models/match_model.dart';
 import 'package:scouting_frontend/views/mobile/counter.dart';
@@ -7,6 +10,7 @@ import 'package:scouting_frontend/views/mobile/section_divider.dart';
 import 'package:scouting_frontend/views/mobile/submit_button.dart';
 import 'package:scouting_frontend/views/mobile/switcher.dart';
 import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
+import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 class UserInput extends StatefulWidget {
   final TextEditingController matchNumberController = TextEditingController();
@@ -31,6 +35,29 @@ class _UserInputState extends State<UserInput> {
     });
   }
 
+  Future<List<LightTeam>> fetchTeams() async {
+    final client = getClient();
+    final String query = """
+query FetchTeams {
+  team {
+    id
+    number
+    name
+  }
+}
+  """;
+
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    return (result.data['team'] as List<dynamic>)
+        .map((e) => LightTeam(e['id'], e['number'], e['name']))
+        .toList();
+    //.entries.map((e) => LightTeam(e['id']);
+  }
+
   @override
   Widget build(final BuildContext context) {
     return SingleChildScrollView(
@@ -50,11 +77,39 @@ class _UserInputState extends State<UserInput> {
             SizedBox(
               height: 15,
             ),
-            TeamsDropdown(
-              onChange: (final int value) =>
-                  setState(() => match.teamNumber = value),
-              typeAheadController: widget.teamNumberController,
-            ),
+
+            FutureBuilder(
+                future: fetchTeams(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error has happened in the future! ' +
+                        snapshot.error.toString());
+                  } else if (!snapshot.hasData) {
+                    return Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: [
+                          TextField(
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.search),
+                              border: const OutlineInputBorder(),
+                              hintText: 'Search Team',
+                              enabled: false,
+                            ),
+                          ),
+                          Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ]);
+
+                    // const CircularProgressIndicator();
+                  } else {
+                    return TeamsSearchBox(
+                        teams: snapshot.data as List<LightTeam>,
+                        onChange: (LightTeam team) =>
+                            {setState(() => match.teamId = team.id)});
+                  }
+                }),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Upper Goal:',
@@ -117,7 +172,7 @@ class _UserInputState extends State<UserInput> {
                 "auto_balls": match.autoUpperGoal,
                 "climb_id": 2,
                 "number": match.matchNumber,
-                "team_id": 1,
+                "team_id": match.teamId,
                 "teleop_inner": match.teleUpperGoal,
                 "teleop_outer": match.teleUpperGoal,
                 "match_type_id": 1,

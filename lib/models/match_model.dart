@@ -32,6 +32,8 @@ class Match {
   int teamNumber;
   int matchNumber;
 
+  int teamId;
+
   int autoUpperGoal = 0;
   int autoBottomGoal = 0;
 
@@ -42,6 +44,7 @@ class Match {
   String matchJson;
 
   Match({
+    this.teamId = 0,
     this.teamNumber = 0,
     this.matchNumber = 0,
     this.autoUpperGoal = 0,
