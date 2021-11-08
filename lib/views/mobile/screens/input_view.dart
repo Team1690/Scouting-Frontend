@@ -99,7 +99,31 @@ class _UserInputState extends State<UserInput> {
             // const SizedBox(height: 20),
             SectionDivider(label: 'Send Data'),
             SubmitButton(
-              uploadData: () async => await SendMatchApi.sendData(match),
+              mutation:
+                  """mutation MyMutation(\$auto_balls: Int, \$climb_id: Int, \$number: Int, \$team_id: Int, \$teleop_inner: Int, \$teleop_outer: Int, \$match_type_id : Int, \$initiation_line: Boolean, \$defended_by: Int) {
+  insert_match(objects: {auto_balls: \$auto_balls, climb_id: \$climb_id, number: \$number, team_id: \$team_id, teleop_inner: \$teleop_inner, teleop_outer: \$teleop_outer, match_type_id: \$match_type_id, initiation_line: \$initiation_line, defended_by: \$defended_by}) {
+    returning {
+      auto_balls
+      climb_id
+      number
+      team_id
+      teleop_inner
+      teleop_outer
+    }
+  }
+}
+              """,
+              vars: {
+                "auto_balls": match.autoUpperGoal,
+                "climb_id": 2,
+                "number": match.matchNumber,
+                "team_id": 1,
+                "teleop_inner": match.teleUpperGoal,
+                "teleop_outer": match.teleUpperGoal,
+                "match_type_id": 1,
+                "defended_by": 254,
+                "initiation_line": true,
+              },
               onPressed: clearForm,
             ),
             const SizedBox(height: 20),

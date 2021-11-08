@@ -30,30 +30,23 @@ class SendMatchApi {
 """;
   }
 
-  static Future<Map<int, int>> getIDs() async {
+  static Future<int> getIDs(int teamNumber) async {
     print("getIds");
     final client = getClient();
-    String query = """query MyQuery {
-  team {
+    String query = """query MyQuery (\$teamNumber: Int){
+  team (where: {number:{_eq: \$teamNumber}}){
 		number
     id
   }
 }
 """;
-    final QueryResult result =
-        await client.query(QueryOptions(document: gql(query)));
+    final QueryResult result = await client.query(QueryOptions(
+        document: gql(query),
+        variables: <String, dynamic>{"teamNumber": teamNumber}));
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
-
-    print(Map.fromIterable(result.data['team'],
-        key: (e) => e["number"], value: (e) => e["id"]));
-
-    return Map.fromIterable(result.data['team'],
-        key: (e) => e["number"], value: (e) => e["id"]);
+    return result.data['team'][0]['id'];
   }
 }
-//Instance of '_Future<Map<int, int>>'
-//yeyy 200
-//getIds
 //{1690: 1, 254: 3, 1324: 2}
