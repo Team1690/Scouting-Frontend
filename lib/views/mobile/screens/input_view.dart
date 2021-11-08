@@ -58,6 +58,17 @@ query FetchTeams {
     //.entries.map((e) => LightTeam(e['id']);
   }
 
+  int climbStatusToId(ClimbOptions climbStatus) {
+    switch (climbStatus) {
+      case ClimbOptions.climbed:
+        return 4;
+      case ClimbOptions.failed:
+        return 2;
+      default:
+        return 1;
+    }
+  }
+
   @override
   Widget build(final BuildContext context) {
     return SingleChildScrollView(
@@ -170,7 +181,7 @@ query FetchTeams {
               """,
               vars: {
                 "auto_balls": match.autoUpperGoal,
-                "climb_id": 2,
+                "climb_id": climbStatusToId(match.climbStatus),
                 "number": match.matchNumber,
                 "team_id": match.teamId,
                 "teleop_inner": match.teleUpperGoal,
