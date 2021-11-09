@@ -1,8 +1,55 @@
 import 'dart:developer';
-
+import 'package:graphql/client.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:scouting_frontend/models/team_model.dart';
+import 'package:flutter/src/widgets/framework.dart';
+
+class ScatterData {
+  ScatterData(this.games, this.avgInner, this.avgOuter, this.stddevInner,
+      this.stddevOuter);
+  double games;
+  double avgInner;
+  double avgOuter;
+  double stddevInner;
+  double stddevOuter;
+  Future<List<ScatterData>> fetchQuickData() async {
+    final client = getClient();
+    final String query = """query MyQuery {
+  match_aggregate {
+    aggregate {
+      avg {
+        teleop_inner
+        teleop_outer
+      }
+      stddev {
+        teleop_inner
+        teleop_outer
+      }
+    }
+  }
+  match {
+    team {
+      matches {
+        number
+      }
+    }
+  }
+  
+}
+
+}""";
+    final QueryResult result = await client.query(
+        QueryOptions(document: gql(query), variables: <String, double>{}));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    return (result.data["stddev"](stddevInner * games + stddevOuter * games) /
+            (avgInner * avgOuter))
+        .toDouble();
+  }
+}
 
 class Scatter extends StatelessWidget {
   const Scatter({

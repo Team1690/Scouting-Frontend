@@ -8,3 +8,10 @@ GraphQLClient getClient() {
       defaultHeaders: headers);
   return GraphQLClient(link: link, cache: GraphQLCache());
 }
+
+nullSafty(var x) {
+  if (x == null) {
+    return ("no data available");
+  } else
+    return (x);
+}
