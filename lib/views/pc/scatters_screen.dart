@@ -11,9 +11,6 @@ import 'package:scouting_frontend/views/pc/widgets/scatter.dart';
 //TODO: need to get some fake data to test it.
 
 class ScattersScreen extends StatefulWidget {
-  ScattersScreen({@required this.teams});
-
-  List<Team> teams;
   @override
   State<ScattersScreen> createState() => _ScattersScreenState();
 }
@@ -32,10 +29,12 @@ class _ScattersScreenState extends State<ScattersScreen> {
               flex: 4,
               child: DashboardCard(
                   title: 'Scatter',
-                  body: Scatter(
+                  body:
+                      Container() /*Scatter(
                     teams: widget.teams,
                     onHover: (Team team) => setState(() => displayTeam = team),
-                  )),
+                  )*/
+                  ),
             ),
             SizedBox(width: defaultPadding),
             Expanded(

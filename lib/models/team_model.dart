@@ -23,8 +23,9 @@ class Team {
 
   // NEW PARAMS:
   final int matchesPlayed;
-  final double autoUpperGoalAverage;
-  final double autoBottomGoalAverage;
+  final double teleInnerGoalAverage;
+  final double teleOuterGoalAverage;
+  final double autoGoalAverage;
   // final double averageShots;
   final double totalShotsSD;
   final double climbsPerMatches;
@@ -43,8 +44,9 @@ class Team {
 
     //NEW ANALYTICS!!!!
     this.matchesPlayed = 0,
-    this.autoUpperGoalAverage = 0,
-    this.autoBottomGoalAverage = 0,
+    this.teleInnerGoalAverage = 0,
+    this.teleOuterGoalAverage = 0,
+    this.autoGoalAverage = 0,
     this.averageShots = 0,
     this.totalShotsSD = 0,
     this.climbsPerMatches = 0,

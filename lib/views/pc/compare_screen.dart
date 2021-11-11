@@ -12,10 +12,6 @@ import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 // ignore: must_be_immutable
 class CompareScreen extends StatefulWidget {
-  CompareScreen({
-    @required this.teams,
-  });
-  final List<Team> teams;
   @override
   State<CompareScreen> createState() => _CompareScreenState();
 }
@@ -44,6 +40,51 @@ query FetchTeams {
     } //TODO: avoid dynamic
     return (result.data['team'] as List<dynamic>)
         .map((e) => LightTeam(e['id'], e['number'], e['name']))
+        .toList();
+    //.entries.map((e) => LightTeam(e['id']);
+  }
+
+  Future<List<Team>> fetchGameChart(int team_id) async {
+    final client = getClient();
+    final String query = """
+
+query MyQuery (\$team_id:Int){
+  match_aggregate(where: {team_id: {_eq: \$team_id}}) {
+    aggregate {
+      avg {
+        auto_balls
+        teleop_inner
+        teleop_outer
+      }
+      count(columns: id)
+    }
+  }
+  match(where: {team_id: {_eq: \$team_id}}) {
+    auto_balls
+    teleop_inner
+    teleop_outer
+    climb_id
+  }
+}
+
+  """;
+
+    final QueryResult result = await client.query(
+        QueryOptions(document: gql(query), variables: {"team_id": team_id}));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    print(result.data['match_aggregate']['aggregate']['avg']);
+    return (result.data['match_aggregate'] as List<dynamic>)
+        .map((e) => Team(
+              autoGoalAverage: e['aggregate']['avg']['auto_balls'],
+              teleInnerGoalAverage: e['aggregate']['avg']['teleop_inner'],
+              teleOuterGoalAverage: e['aggregate']['avg']['teleop_outter'],
+              id: team_id,
+              // tables: e['match'].map((f) => [
+              //       f['auto_balls'] + f['teleop_inner'] + f['teleop_outer'],
+              //       f['climb_id']
+            ))
         .toList();
     //.entries.map((e) => LightTeam(e['id']);
   }
@@ -92,10 +133,30 @@ query FetchTeams {
                               return TeamsSearchBox(
                                   teams: snapshot.data as List<LightTeam>,
                                   onChange: (LightTeam team) => {
-                                        setState(() => compareTeamsList.add(
-                                            new Team(
-                                                teamNumber: team.number,
-                                                id: team.id)))
+                                        setState(() => FutureBuilder(
+                                            future: fetchGameChart(team.id),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.hasError) {
+                                                return Text(
+                                                    'Error has happened in the future! ' +
+                                                        snapshot.error
+                                                            .toString());
+                                              } else if (!snapshot.hasData) {
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              } else {
+                                                if (snapshot.data.length != 1) {
+                                                  return Text(
+                                                      'data.length is shorter than 1! :(');
+                                                }
+                                                final Team report =
+                                                    snapshot.data;
+                                                compareTeamsList.add(report);
+                                                return Text("");
+                                              }
+                                            })),
                                       });
                             }
                           })),
