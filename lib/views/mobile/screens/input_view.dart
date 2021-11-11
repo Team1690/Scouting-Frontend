@@ -58,17 +58,6 @@ query FetchTeams {
     //.entries.map((e) => LightTeam(e['id']);
   }
 
-  int climbStatusToId(ClimbOptions climbStatus) {
-    switch (climbStatus) {
-      case ClimbOptions.climbed:
-        return 4;
-      case ClimbOptions.failed:
-        return 2;
-      default:
-        return 1;
-    }
-  }
-
   @override
   Widget build(final BuildContext context) {
     return SingleChildScrollView(
@@ -123,26 +112,27 @@ query FetchTeams {
                 }),
             SectionDivider(label: 'Auto'),
             Counter(
-              label: 'Upper Goal:',
+              label: 'Auto Balls:',
               icon: Icons.adjust,
               onChange: (final int count) =>
                   setState(() => match.autoUpperGoal = count),
               count: match.autoUpperGoal,
             ),
-            Counter(
-              label: 'Bottom Goal:',
-              icon: Icons.surround_sound_outlined,
-              onChange: (final int count) =>
-                  setState(() => match.autoBottomGoal = count),
-              count: match.autoBottomGoal,
-            ),
+
             SectionDivider(label: 'Teleop'),
             Counter(
-              label: 'Upper Goal:',
+              label: 'Inner Port:',
               icon: Icons.adjust,
               onChange: (final int count) =>
-                  setState(() => match.teleUpperGoal = count),
-              count: match.teleUpperGoal,
+                  setState(() => match.teleInner = count),
+              count: match.teleInner,
+            ),
+            Counter(
+              label: 'Outer Port:',
+              icon: Icons.surround_sound_outlined,
+              onChange: (final int count) =>
+                  setState(() => match.teleOuter = count),
+              count: match.teleOuter,
             ),
             SectionDivider(label: 'End Game'),
             Switcher(
@@ -159,7 +149,7 @@ query FetchTeams {
               selected: selectedClimbIndex,
               onChange: (final int index) => setState(() {
                 selectedClimbIndex = index == selectedClimbIndex ? -1 : index;
-                match.climbStatus = intToClimbOption(selectedClimbIndex);
+                match.climbStatus = climbId(selectedClimbIndex);
               }),
             ),
             // const SizedBox(height: 20),
@@ -181,13 +171,13 @@ query FetchTeams {
               """,
               vars: {
                 "auto_balls": match.autoUpperGoal,
-                "climb_id": climbStatusToId(match.climbStatus),
+                "climb_id": match.climbStatus,
                 "number": match.matchNumber,
                 "team_id": match.teamId,
-                "teleop_inner": match.teleUpperGoal,
-                "teleop_outer": match.teleUpperGoal,
+                "teleop_inner": match.teleInner,
+                "teleop_outer": match.teleOuter,
                 "match_type_id": 1,
-                "defended_by": 254,
+                "defended_by": 0,
                 "initiation_line": true,
               },
               onPressed: clearForm,

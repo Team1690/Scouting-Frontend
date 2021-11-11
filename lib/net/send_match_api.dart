@@ -29,24 +29,4 @@ class SendMatchApi {
 }
 """;
   }
-
-  static Future<int> getIDs(int teamNumber) async {
-    print("getIds");
-    final client = getClient();
-    String query = """query MyQuery (\$teamNumber: Int){
-  team (where: {number:{_eq: \$teamNumber}}){
-		number
-    id
-  }
 }
-""";
-    final QueryResult result = await client.query(QueryOptions(
-        document: gql(query),
-        variables: <String, dynamic>{"teamNumber": teamNumber}));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return result.data['team'][0]['id'];
-  }
-}
-//{1690: 1, 254: 3, 1324: 2}
