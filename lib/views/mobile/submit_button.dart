@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:graphql/client.dart';
+import 'package:http/http.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 
 class SubmitButton extends StatefulWidget {
-  final Future<http.Response> Function() uploadData;
+  final Map<String, dynamic> vars;
+  final String mutation;
   final Function onPressed;
 
-  const SubmitButton({this.uploadData, this.onPressed, Key key})
+  const SubmitButton({this.vars, this.mutation, this.onPressed, Key key})
       : super(key: key);
 
   @override
   _SubmitButtonState createState() => _SubmitButtonState();
 }
 
-ButtonState getResponseState(final http.Response response) =>
-    200 == response.statusCode ? ButtonState.success : ButtonState.fail;
+// ButtonState getResponseState(final http.Response response) =>
+//     200 == response.statusCode ? ButtonState.success : ButtonState.fail;
 
 class _SubmitButtonState extends State<SubmitButton> {
   ButtonState _state = ButtonState.idle;
@@ -48,31 +51,10 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () async {
-        switch (_state) {
-          case ButtonState.idle:
-            setState(() {
-              _state = ButtonState.loading;
-            });
-
-            final response = await widget.uploadData();
-            setState(() => _state = getResponseState(response));
-
-            Future.delayed(
-              Duration(seconds: 2),
-              () {
-                setState(() => _state = ButtonState.idle);
-                widget.onPressed();
-              },
-            );
-
-            break;
-
-          case ButtonState.fail:
-          case ButtonState.success:
-          default:
-            setState(() => _state = ButtonState.idle);
-            break;
-        }
+        print(widget.vars.toString());
+        final client = getClient();
+        client.mutate(MutationOptions(
+            document: gql(widget.mutation), variables: widget.vars));
       },
       state: _state,
     );
