@@ -92,8 +92,10 @@ query FetchTeams {
                               return TeamsSearchBox(
                                   teams: snapshot.data as List<LightTeam>,
                                   onChange: (LightTeam team) => {
-                                        setState(() =>
-                                            chosenTeam = team.number as Team)
+                                        setState(() => compareTeamsList.add(
+                                            new Team(
+                                                teamNumber: team.number,
+                                                id: team.id)))
                                       });
                             }
                           })),

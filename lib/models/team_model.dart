@@ -17,6 +17,7 @@ class LightTeam {
 }
 
 class Team {
+  final int id;
   final int teamNumber;
   final String teamName;
 
@@ -36,6 +37,7 @@ class Team {
   final List<int> spider;
 
   Team({
+    this.id,
     this.teamNumber,
     this.teamName,
 
@@ -51,34 +53,4 @@ class Team {
     this.tables = const [],
     this.spider = const [0, 0, 0, 0],
   });
-
-  factory Team.fromJson(Map<String, dynamic> json) {
-    if (json['analytics'] != null) {
-      return Team(
-        teamNumber: json['number'],
-        teamName: json['name'],
-
-        //NEW
-        matchesPlayed: json['analytics']['matchesPlayed'],
-        autoUpperGoalAverage:
-            json['analytics']['auto']['upperAverage'].toDouble(),
-        autoBottomGoalAverage:
-            json['analytics']['auto']['bottomAverage'].toDouble(),
-        averageShots:
-            json['analytics']['teleop']['averageShotsInTarget'].toDouble(),
-        totalShotsSD: json['analytics']['teleop']['shotsSD'].toDouble(),
-        climbsPerMatches:
-            json['analytics']['teleop']['climbPerMatches'].toDouble(),
-        climbsPerAttempts:
-            json['analytics']['teleop']['climbPerAttempts'].toDouble(),
-      );
-    }
-  }
-
-  factory Team.fromJsonLite(Map<String, dynamic> json) {
-    return Team(
-      teamNumber: json['number'],
-      teamName: json['name'],
-    );
-  }
 }
