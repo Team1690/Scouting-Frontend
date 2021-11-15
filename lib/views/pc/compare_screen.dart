@@ -18,7 +18,7 @@ class CompareScreen extends StatefulWidget {
 
 class _CompareScreenState extends State<CompareScreen> {
   Team chosenTeam = Team();
-  List<Team> compareTeamsList = [];
+  List<LightTeam> compareTeamsList = [];
   // List tables;
 
   Future<List<LightTeam>> fetchTeams() async {
@@ -44,54 +44,63 @@ query FetchTeams {
     //.entries.map((e) => LightTeam(e['id']);
   }
 
-  Future<List<Team>> fetchGameChart(int team_id) async {
+  Future<List<Team>> fetchGameChart(int teamId) async {
     final client = getClient();
     final String query = """
-
-query MyQuery (\$team_id:Int){
-  match_aggregate(where: {team_id: {_eq: \$team_id}}) {
-    aggregate {
-      avg {
-        auto_balls
-        teleop_inner
-        teleop_outer
+query MyQuery (\$team_id: Int){
+  team(where: {id: {_eq: \$team_id}}) {
+    matches_aggregate{
+      aggregate {
+        avg {
+          auto_balls
+          teleop_inner
+          teleop_outer
+        }
+        count(columns: id)
       }
-      count(columns: id)
+    }
+    matches{
+      auto_balls
+      teleop_inner
+      teleop_outer
+      climb_id
     }
   }
-  match(where: {team_id: {_eq: \$team_id}}) {
-    auto_balls
-    teleop_inner
-    teleop_outer
-    climb_id
-  }
 }
+
 
   """;
 
     final QueryResult result = await client.query(
-        QueryOptions(document: gql(query), variables: {"team_id": team_id}));
+        QueryOptions(document: gql(query), variables: {"team_id": teamId}));
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
-    print(result.data['match_aggregate']['aggregate']['avg']);
-    return (result.data['match_aggregate'] as List<dynamic>)
+    // for(int i = 0; i < (result.data['team'][0]['matches'] as List<dynamic>).length; i++){
+    //   dynamic f = result.data['team'][0]['matches'] as List<dynamic>;
+    //   print(((f as List<dynamic>).map((g) => [
+    //                 g['auto_balls'] + g['teleop_inner'] + g['teleop_outer'],
+    //                 g['climb_id']]).toList()).runtimeType);
+    //   print([
+    //                 f[i]['auto_balls'] + f[i]['teleop_inner'] + f[i]['teleop_outer'],
+    //                 f[i]['climb_id']]);
+    // }
+
+    return (result.data['team'] as List<dynamic>)
         .map((e) => Team(
-              autoGoalAverage: e['aggregate']['avg']['auto_balls'],
-              teleInnerGoalAverage: e['aggregate']['avg']['teleop_inner'],
-              teleOuterGoalAverage: e['aggregate']['avg']['teleop_outter'],
-              id: team_id,
-              // tables: e['match'].map((f) => [
-              //       f['auto_balls'] + f['teleop_inner'] + f['teleop_outer'],
-              //       f['climb_id']
-            ))
-        .toList();
+              autoGoalAverage: e['matches_aggregate']['aggregate']['avg']['auto_balls'],
+              teleInnerGoalAverage: e['matches_aggregate']['aggregate']['avg']['teleop_inner'],
+              teleOuterGoalAverage: e['matches_aggregate']['aggregate']['avg']['teleop_outter'],
+              id: teamId,
+              tables: ((e['matches'] as List<dynamic>).map((g) => [
+                    g['auto_balls'] + g['teleop_inner'] + g['teleop_outer'],
+                    g['climb_id']]).toList()))).toList();
     //.entries.map((e) => LightTeam(e['id']);
   }
 
   void addTeam(team) => compareTeamsList.add(team);
   void removeTeam(index) => compareTeamsList
-      .removeWhere((Team entry) => entry.teamNumber == index.value.teamNumber);
+      .removeWhere((LightTeam entry) => entry.number == index.value.teamNumber);
 
   Widget build(BuildContext context) {
     return DashboardScaffold(
@@ -133,30 +142,7 @@ query MyQuery (\$team_id:Int){
                               return TeamsSearchBox(
                                   teams: snapshot.data as List<LightTeam>,
                                   onChange: (LightTeam team) => {
-                                        setState(() => FutureBuilder(
-                                            future: fetchGameChart(team.id),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasError) {
-                                                return Text(
-                                                    'Error has happened in the future! ' +
-                                                        snapshot.error
-                                                            .toString());
-                                              } else if (!snapshot.hasData) {
-                                                return Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                );
-                                              } else {
-                                                if (snapshot.data.length != 1) {
-                                                  return Text(
-                                                      'data.length is shorter than 1! :(');
-                                                }
-                                                final Team report =
-                                                    snapshot.data;
-                                                compareTeamsList.add(report);
-                                                return Text("");
-                                              }
-                                            })),
+                                        setState(() => addTeam(team)),
                                       });
                             }
                           })),
@@ -173,7 +159,7 @@ query MyQuery (\$team_id:Int){
                                     horizontal: defaultPadding / 2),
                                 child: Chip(
                                   label:
-                                      Text(index.value.teamNumber.toString()),
+                                      Text(index.value.number.toString()),
                                   backgroundColor: colors[index.key],
                                   onDeleted: () =>
                                       setState(() => removeTeam(index)),
@@ -224,32 +210,10 @@ query MyQuery (\$team_id:Int){
                                       (index) => DashboardLineChart(
                                           colors: colors,
                                           dataSets: compareTeamsList
-                                              .map((team) => team.tables[index])
+                                              .map((team) => team)
                                               .toList())),
                                 ))),
-                        SizedBox(height: defaultPadding),
-                        Expanded(
-                          flex: 3,
-                          child: DashboardCard(
-                            title: 'Game Chart',
-                            // body: Container(),
-                            body: CarouselSlider(
-                              options: CarouselOptions(
-                                height: 3500,
-                                viewportFraction: 1,
-                                // autoPlay: true,
-                              ),
-                              items: List.generate(
-                                  2, //TODO: make modular
-                                  // compareTeamsList.first.tables.length,
-                                  (index) => DashboardLineChart(
-                                      colors: Colors.primaries,
-                                      dataSets: compareTeamsList
-                                          .map((team) => team.tables[index])
-                                          .toList())),
-                            ),
-                          ),
-                        )
+                      
                       ],
                     ),
                   ),
@@ -259,11 +223,11 @@ query MyQuery (\$team_id:Int){
                       child: DashboardCard(
                         title: 'Compare Spider Chart',
                         body: Center(
-                          child: SpiderChart(
+                          child: FutureBuilder(future: fetchGameChart(1),builder: (context, snapshot){
+                            print(snapshot.data[0].teleInnerGoalAverage);
+                            return  SpiderChart(
                               numberOfFeatures: 4,
-                              data: compareTeamsList
-                                  .map((team) => team.spider)
-                                  .toList(),
+                              data: (snapshot.data as List<dynamic>).map((e) => [1, 1 , e.teleInnerGoalAverage.toInt() as int, (e.autoGoalAverage.toInt() as int) * 3]).toList(),
                               ticks: [
                                 0,
                                 25,
@@ -276,7 +240,8 @@ query MyQuery (\$team_id:Int){
                                 "BPG",
                                 "Auto Points",
                                 "Climb",
-                              ]),
+                              ]);
+                          },)
                         ),
                       ))
                 ],

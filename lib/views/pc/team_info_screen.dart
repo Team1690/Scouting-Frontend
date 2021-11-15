@@ -33,6 +33,7 @@ query FetchTeams {
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
+    print(result.data);
     return (result.data['team'] as List<dynamic>)
         .map((e) => LightTeam(e['id'], e['number'], e['name']))
         .toList();
