@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/mobile/specific.dart';
+import 'package:scouting_frontend/views/mobile/screens/input_view.dart';
 
+class SideNavBar extends StatefulWidget {
+  const SideNavBar({Key key}) : super(key: key);
 
-
-class Drawer1 extends StatefulWidget {
-  const Drawer1({ Key key }) : super(key: key);
-  
   @override
-  _Drawer1State createState() => _Drawer1State();
+  _SideNavBarState createState() => _SideNavBarState();
 }
 
-class _Drawer1State extends State<Drawer1> {
+class _SideNavBarState extends State<SideNavBar> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
-        children:  [
+        children: [
           DrawerHeader(
             decoration: BoxDecoration(
               color: Color(0xFF2A2D3E),
@@ -30,20 +29,6 @@ class _Drawer1State extends State<Drawer1> {
                 color: Colors.white,
               ),
             ),
-
-          ),
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: const Text(
-              'Match',
-              style: TextStyle(
-                fontSize: 25.0,
-                letterSpacing: 1.0,
-              ),
-            ),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold()));
-            },
           ),
           ListTile(
             leading: Icon(Icons.search),
@@ -54,9 +39,10 @@ class _Drawer1State extends State<Drawer1> {
                 letterSpacing: 1.0,
               ),
             ),
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => specific()));
-          },
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => specific()));
+            },
           ),
           ListTile(
             leading: Icon(Icons.error_outline),
@@ -67,9 +53,10 @@ class _Drawer1State extends State<Drawer1> {
                 letterSpacing: 1.0,
               ),
             ),
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold()));
-          },
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Scaffold()));
+            },
           ),
         ],
       ),

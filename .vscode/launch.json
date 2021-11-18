@@ -8,12 +8,6 @@
             "name": "Scouting-Frontend",
             "request": "launch",
             "type": "dart"
-        },
-        {
-            "name": "Flutter (lib\\views\\mobile\\drawer1.dart)",
-            "type": "dart",
-            "request": "launch",
-            "program": "lib\\views\\mobile\\drawer1.dart"
         }
     ]
 }
