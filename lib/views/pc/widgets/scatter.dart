@@ -1,20 +1,24 @@
-import 'dart:developer';
-import 'package:graphql/client.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 
-class ScatterData {
-  ScatterData(this.games, this.avgInner, this.avgOuter, this.stddevInner,
-      this.stddevOuter);
+
+class ScatterQuickData {
+  ScatterQuickData(this.games, this.avgInner, this.avgOuter, this.stddevInner,
+      this.stddevOuter, this.teams);
   double games;
   double avgInner;
   double avgOuter;
   double stddevInner;
   double stddevOuter;
-  Future<List<ScatterData>> fetchQuickData() async {
+  int teams;
+
+
+
+
+  Future<List<ScatterQuickData>> fetchQuickData() async {
     final client = getClient();
     final String query = """query MyQuery {
   match_aggregate {
@@ -34,22 +38,31 @@ class ScatterData {
       matches {
         number
       }
+    number
     }
   }
-  
+  team {
+    number
 }
-
 }""";
-    final QueryResult result = await client.query(
-        QueryOptions(document: gql(query), variables: <String, double>{}));
+
+ final QueryResult result = await client.query(QueryOptions(
+        document: gql(query),
+        variables: <String, int>{}));
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
-    return (result.data["stddev"](stddevInner * games + stddevOuter * games) /
-            (avgInner * avgOuter))
-        .toDouble();
+    return (result.data['team'] as List<dynamic>)
+        .map((e) => ScatterQuickData(
+            e['match_aggregate']['aggregate']['avg']['teleop_inner'],
+            e['match_aggregate']['aggregate']['avg']['teleop_outer'],
+            e['match_aggregate']['aggregate']['stddev']['teleop_inner'],
+            e['match_aggregate']['aggregate']['stddev']['teleop_outer'],
+            e['match']['team']['matches']['number']['number'],
+            e['team']['number']))
+        .toList();
   }
-}
+  }
 
 class Scatter extends StatelessWidget {
   const Scatter({
@@ -57,8 +70,8 @@ class Scatter extends StatelessWidget {
     @required this.onHover,
     Key key,
   }) : super(key: key);
+    final List<Team> teams;
 
-  final List<Team> teams;
   final Function(Team team) onHover;
 
   @override
@@ -69,11 +82,10 @@ class Scatter extends StatelessWidget {
       // color: Colors.grey,
       child: ScatterChart(
         ScatterChartData(
-          scatterSpots: teams
+                    scatterSpots: teams
               .map(
                 (element) => ScatterSpot(
-                    element.averageShots.toDouble(), element.totalShotsSD,
-                    radius: 5),
+                    element.averageShots.toDouble(),),
               )
               .toList(),
 
