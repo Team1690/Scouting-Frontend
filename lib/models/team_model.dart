@@ -28,8 +28,8 @@ class Team {
   final double autoGoalAverage;
   // final double averageShots;
   final double totalShotsSD;
-  final double climbsPerMatches;
-  final double climbsPerAttempts;
+  final int climbFailed;
+  final int climbSuccess;
 
   //test
   final List<String> msg;
@@ -49,8 +49,8 @@ class Team {
     this.autoGoalAverage = 0,
     this.averageShots = 0,
     this.totalShotsSD = 0,
-    this.climbsPerMatches = 0,
-    this.climbsPerAttempts = 0,
+    this.climbFailed = 0,
+    this.climbSuccess = 0,
     this.msg = const [],
     this.tables = const [],
     this.spider = const [0, 0, 0, 0],
