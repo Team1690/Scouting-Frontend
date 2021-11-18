@@ -28,9 +28,7 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
     List<LightTeam> _suggestions = List.castFrom(widget.teams);
     String _inputNumber = inputNumber;
     // print(inputNumber);
-    for (LightTeam team in _suggestions) {
-      print(inputNumber.toString());
-    }
+    for (LightTeam team in _suggestions) {}
     _suggestions.removeWhere((team) {
       // print(team.number.toString() + ' ' + _inputNumber);
       return team.number.toString().contains(_inputNumber);
