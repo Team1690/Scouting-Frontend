@@ -131,7 +131,7 @@ query MyQuery (\$team_id: Int){
 
   void addTeam(team) => compareTeamsList.add(team);
   void removeTeam(index) => compareTeamsList
-      .removeWhere((LightTeam entry) => entry.number == index.value.teamNumber);
+      .removeWhere((LightTeam entry) => entry.number == index.value.number);
 
   Widget build(BuildContext context) {
     return DashboardScaffold(
