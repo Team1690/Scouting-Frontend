@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/constants.dart';
@@ -26,7 +27,7 @@ class _CompareScreenState extends State<CompareScreen> {
   // List tables;
 
   void addTeam(LightTeam team) => compareTeamsList.add(team);
-  void removeTeam( index) => compareTeamsList
+  void removeTeam(index) => compareTeamsList
       .removeWhere((LightTeam entry) => entry.number == index.value.teamNumber);
 
   Widget build(BuildContext context) {
@@ -40,7 +41,8 @@ class _CompareScreenState extends State<CompareScreen> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: teamSearch( (LightTeam team) => setState(() => addTeam(team))),
+                    child: teamSearch(
+                        (LightTeam team) => setState(() => addTeam(team))),
                   ),
                   SizedBox(width: defaultPadding),
                   Expanded(
@@ -54,8 +56,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: defaultPadding / 2),
                                 child: Chip(
-                                  label:
-                                      Text(index.value.number.toString()),
+                                  label: Text(index.value.number.toString()),
                                   backgroundColor: colors[index.key],
                                   onDeleted: () =>
                                       setState(() => removeTeam(index)),
@@ -106,7 +107,8 @@ class _CompareScreenState extends State<CompareScreen> {
                                       (index) => DashboardLineChart(
                                           colors: colors,
                                           dataSets: compareTeamsList
-                                              .map((LightTeam team) => team.number)
+                                              .map((LightTeam team) =>
+                                                  team.number)
                                               .toList())),
                                 ))),
                         SizedBox(height: defaultPadding),
@@ -121,14 +123,15 @@ class _CompareScreenState extends State<CompareScreen> {
                                 viewportFraction: 1,
                                 // autoPlay: true,
                               ),
-                              items: List.generate(
-                                  2, //TODO: make modular
-                                  // compareTeamsList.first.tables.length,
-                                  (index) => DashboardLineChart(
-                                      colors: Colors.primaries,
-                                      dataSets: compareTeamsList
-                                          .map((team) => team.tables[index])
-                                          .toList())),
+                              items: [],
+                              // items: List.generate(
+                              //     2, //TODO: make modular
+                              //     // compareTeamsList.first.tables.length,
+                              //     (index) => DashboardLineChart(
+                              //         colors: Colors.primaries,
+                              //         dataSets: compareTeamsList
+                              //             .map((team) => team.tables[index])
+                              //             .toList())),
                             ),
                           ),
                         )
@@ -140,26 +143,27 @@ class _CompareScreenState extends State<CompareScreen> {
                       flex: 2,
                       child: DashboardCard(
                         title: 'Compare Spider Chart',
-                        body: Center(
-                          child: SpiderChart(
-                              numberOfFeatures: 4,
-                              data: compareTeamsList
-                                  .map((team) => team.spider)
-                                  .toList(),
-                              ticks: [
-                                0,
-                                25,
-                                50,
-                                75,
-                                100
-                              ],
-                              features: [
-                                "PPG",
-                                "BPG",
-                                "Auto Points",
-                                "Climb",
-                              ]),
-                        ),
+                        body: Container(),
+                        //   body: Center(
+                        //     child: SpiderChart(
+                        //         numberOfFeatures: 4,
+                        //         data: compareTeamsList
+                        //             .map((team) => team.spider)
+                        //             .toList(),
+                        //         ticks: [
+                        //           0,
+                        //           25,
+                        //           50,
+                        //           75,
+                        //           100
+                        //         ],
+                        //         features: [
+                        //           "PPG",
+                        //           "BPG",
+                        //           "Auto Points",
+                        //           "Climb",
+                        //         ]),
+                        //   ),
                       ))
                 ],
               ),

@@ -14,7 +14,7 @@ class DashboardLineChart extends StatelessWidget {
     // @required this.body,
   }) : super(key: key);
 
-  final List <int> dataSets;
+  final List<int> dataSets;
   final List<Color> colors;
   // final String title;
   // final Widget body;
@@ -47,14 +47,18 @@ class DashboardLineChart extends StatelessWidget {
                     colors: [colors[dataSet.key].withOpacity(0.3)],
                     // colors.map((color) => color.withOpacity(0.3)).toList(),
                   ),
-                  // spots: List.generate(10,
-                  //     (index) => FlSpot(index.toDouble(), Random().nextDouble())))),
-                  spots: dataSet.value
-                      .map<FlSpot>(
-                          (dataPoint) => FlSpot(dataPoint[0], dataPoint[1]))
-                      .toList(),
+                  spots: List.generate(
+                      10,
+                      (index) =>
+                          FlSpot(index.toDouble(), Random().nextDouble())),
+                  // spots: dataSet
+                  //     .map<FlSpot>(
+                  //         (dataPoint) => FlSpot(dataPoint[0], dataPoint[1]))
+                  //     .toList(),
                 ))
             .toList(),
+
+        //Some UI beautiness
         gridData: FlGridData(
           show: true,
           drawVerticalLine: true,

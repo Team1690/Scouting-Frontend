@@ -59,13 +59,13 @@ class _ScattersScreenState extends State<ScattersScreen> {
                                   viewportFraction: 1,
                                   // autoPlay: true,
                                 ),
-                                // items: [Container()],
-                                items: displayTeam.tables
-                                    .map((table) => DashboardLineChart(
-                                          colors: colors,
-                                          dataSets: [table],
-                                        ))
-                                    .toList(),
+                                items: [Container()],
+                                // items: displayTeam.tables
+                                //     .map((table) => DashboardLineChart(
+                                //           colors: colors,
+                                //           dataSets: [table],
+                                //         ))
+                                //     .toList(),
                               ),
                             ),
                             Expanded(
