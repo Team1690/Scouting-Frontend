@@ -14,11 +14,6 @@ class DashboardLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // List<Color> colors = [
-    //   Colors.primaries[Random().nextInt(Colors.primaries.length)],
-    //   Colors.primaries[Random().nextInt(Colors.primaries.length)]
-    // ];
-
     const List<Color> colors = [
       const Color(0xff23b6e6),
       const Color(0xff02d39a)
@@ -40,12 +35,7 @@ class DashboardLineChart extends StatelessWidget {
                   .asMap()
                   .entries
                   .map((entry) => FlSpot(entry.key.toDouble(), entry.value))
-                  .toList()
-              //     .toList())
-              // dataSet
-              //     .map((match) => FlSpot(Random().nextDouble(), match))
-              //     .toList(),
-              )),
+                  .toList())),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -84,6 +74,7 @@ class DashboardLineChart extends StatelessWidget {
           margin: 12,
           interval: 100,
           // interval: List.from(dataSet..sort()).last,
+          //TODO: make the interval size base on the data
         ),
       ),
       borderData: FlBorderData(

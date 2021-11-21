@@ -45,8 +45,6 @@ query fetchGameChart(\$teamNumber : Int) {
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
-    // print(result.data['team']);
-
     return (result.data['team'][0]['matches'] as List<dynamic>)
         .map((e) => e['teleop_inner'])
         .toList();
@@ -133,7 +131,6 @@ query fetchGameChart(\$teamNumber : Int) {
             flex: 2,
             child: DashboardCard(
               title: 'Scouting Specific',
-              // body: ScoutingSpecific(msg: widget.team.msg),
               body: ScoutingSpecific(msg: []),
             ))
       ],
