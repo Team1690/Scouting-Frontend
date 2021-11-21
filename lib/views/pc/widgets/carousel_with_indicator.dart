@@ -3,13 +3,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class CarouselWithIndicator extends StatefulWidget {
-  CarouselWithIndicator({this.widgets});
+  CarouselWithIndicator({@required this.widgets});
   @override
   State<StatefulWidget> createState() {
     return _CarouselWithIndicatorState();
   }
 
-  List<Widget> widgets;
+  final List<Widget> widgets;
 }
 
 class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:convert' as convert;
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,13 @@ class TeamInfoData extends StatefulWidget {
   State<TeamInfoData> createState() => _TeamInfoDataState();
 }
 
+class LineChartData {
+  LineChartData({this.points});
+  List<double> points;
+}
+
 class _TeamInfoDataState extends State<TeamInfoData> {
-  Future<List> fetchGameChart() async {
+  Future<List<LineChartData>> fetchGameChart() async {
     final client = getClient();
     final String query = """
 query fetchGameChart(\$teamNumber : Int) {
@@ -34,6 +40,7 @@ query fetchGameChart(\$teamNumber : Int) {
     matches(order_by: {number: asc}) {
       teleop_inner
       teleop_outer
+      auto_balls
     }
   }
 }
@@ -46,9 +53,28 @@ query fetchGameChart(\$teamNumber : Int) {
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
-    return (result.data['team'][0]['matches'] as List<dynamic>)
-        .map((e) => e['teleop_inner'])
-        .toList();
+
+    // print(convert.jsonDecode(result.data['team'][0]['matches']));
+    return [
+      LineChartData(
+        points: (result.data['team'][0]['matches'] as List<dynamic>)
+            .map((e) => e['teleop_inner'])
+            .toList()
+            .cast<double>(),
+      ),
+      LineChartData(
+        points: (result.data['team'][0]['matches'] as List<dynamic>)
+            .map((e) => e['teleop_outer'])
+            .toList()
+            .cast<double>(),
+      ),
+      LineChartData(
+        points: (result.data['team'][0]['matches'] as List<dynamic>)
+            .map((e) => e['auto_balls'])
+            .toList()
+            .cast<double>(),
+      ),
+    ];
   }
 
   @override
@@ -96,7 +122,8 @@ query fetchGameChart(\$teamNumber : Int) {
                     title: 'Game Chart',
                     body: FutureBuilder(
                         future: fetchGameChart(),
-                        builder: (context, snapshot) {
+                        builder: (context,
+                            AsyncSnapshot<List<LineChartData>> snapshot) {
                           if (snapshot.hasError) {
                             return Text('Error has happened in the future! ' +
                                 snapshot.error.toString());
@@ -107,28 +134,13 @@ query fetchGameChart(\$teamNumber : Int) {
                           } else {
                             inspect(snapshot.data);
                             return CarouselWithIndicator(
-                              widgets: [
-                                DashboardLineChart(dataSet: snapshot.data),
-                                Text('BLA'),
-                              ],
+                              widgets: snapshot.data
+                                  .map((LineChartData e) =>
+                                      DashboardLineChart(dataSet: e.points))
+                                  .toList(),
                             );
-                            // return DashboardLineChart(dataSet: snapshot.data);
                           }
-                        })
-                    // body: CarouselSlider(
-                    //   options: CarouselOptions(
-                    //     height: 3500,
-                    //     viewportFraction: 1,
-                    //     // autoPlay: true,
-                    //   ),
-                    //   items: widget.team.tables
-                    //       .map((table) => DashboardLineChart(
-                    //             colors: colors,
-                    //             dataSets: [table],
-                    //           ))
-                    //       .toList(),
-                    // ),
-                    ),
+                        })),
               )
             ],
           ),
