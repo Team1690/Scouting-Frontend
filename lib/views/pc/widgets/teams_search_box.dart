@@ -6,8 +6,8 @@ import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 
-class TeamsSearchBox extends StatefulWidget {
-  TeamsSearchBox({
+class _TeamsSearchBox extends StatefulWidget {
+  _TeamsSearchBox({
     final Key key,
     @required final this.teams,
     @required final this.onChange,
@@ -22,7 +22,7 @@ class TeamsSearchBox extends StatefulWidget {
   _TeamsSearchBoxState createState() => _TeamsSearchBoxState();
 }
 
-class _TeamsSearchBoxState extends State<TeamsSearchBox> {
+class _TeamsSearchBoxState extends State<_TeamsSearchBox> {
   bool isValueEmpty = false;
   bool isValueInList = true;
   final TextEditingController _typeAheadController = TextEditingController();
@@ -85,9 +85,9 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
   }
 }
 
-  Future<List<LightTeam>> fetchTeams() async {
-    final client = getClient();
-    final String query = """
+Future<List<LightTeam>> fetchTeams() async {
+  final client = getClient();
+  final String query = """
 query FetchTeams {
   team {
     id
@@ -97,17 +97,16 @@ query FetchTeams {
 }
   """;
 
-    final QueryResult result =
-        await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => LightTeam(e['id'], e['number'], e['name']))
-        .toList();
-    //.entries.map((e) => LightTeam(e['id']);
-  }
-
+  final QueryResult result =
+      await client.query(QueryOptions(document: gql(query)));
+  if (result.hasException) {
+    print(result.exception.toString());
+  } //TODO: avoid dynamic
+  return (result.data['team'] as List<dynamic>)
+      .map((e) => LightTeam(e['id'], e['number'], e['name']))
+      .toList();
+  //.entries.map((e) => LightTeam(e['id']);
+}
 
 Widget teamSearch(void Function(LightTeam) callback) {
   return Expanded(
@@ -116,8 +115,8 @@ Widget teamSearch(void Function(LightTeam) callback) {
           future: fetchTeams(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text('Error has happened in the future! ' +
-                  snapshot.error.toString());
+              return Text(
+                  'Error has happened in the future! ${snapshot.error}');
             } else if (!snapshot.hasData) {
               return Stack(alignment: AlignmentDirectional.center, children: [
                 TextField(
@@ -135,7 +134,7 @@ Widget teamSearch(void Function(LightTeam) callback) {
               ]);
               // const CircularProgressIndicator();
             } else {
-              return TeamsSearchBox(
+              return _TeamsSearchBox(
                 teams: snapshot.data as List<LightTeam>,
                 onChange: callback,
               );

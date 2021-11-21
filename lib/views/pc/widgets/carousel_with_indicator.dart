@@ -42,7 +42,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
             child: Container(
               width: 12.0,
               height: 12.0,
-              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: (Theme.of(context).brightness == Brightness.dark

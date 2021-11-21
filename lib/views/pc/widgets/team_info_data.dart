@@ -52,9 +52,7 @@ query fetchGameChart(\$teamNumber : Int) {
         variables: <String, int>{"teamNumber": widget.team}));
     if (result.hasException) {
       print(result.exception.toString());
-    } //TODO: avoid dynamic
-
-    // print(convert.jsonDecode(result.data['team'][0]['matches']));
+    }
     return [
       LineChartData(
         points: (result.data['team'][0]['matches'] as List<dynamic>)
@@ -132,11 +130,10 @@ query fetchGameChart(\$teamNumber : Int) {
                               child: CircularProgressIndicator(),
                             );
                           } else {
-                            inspect(snapshot.data);
                             return CarouselWithIndicator(
                               widgets: snapshot.data
-                                  .map((LineChartData e) =>
-                                      DashboardLineChart(dataSet: e.points))
+                                  .map((LineChartData chart) =>
+                                      DashboardLineChart(dataSet: chart.points))
                                   .toList(),
                             );
                           }
