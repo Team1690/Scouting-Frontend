@@ -123,8 +123,8 @@ query fetchGameChart(\$teamNumber : Int) {
                         builder: (context,
                             AsyncSnapshot<List<LineChartData>> snapshot) {
                           if (snapshot.hasError) {
-                            return Text('Error has happened in the future! ' +
-                                snapshot.error.toString());
+                            return Text(
+                                'Error has happened in the future!   ${snapshot.error}');
                           } else if (!snapshot.hasData) {
                             return Center(
                               child: CircularProgressIndicator(),
