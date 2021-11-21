@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 
 class _TeamsSearchBox extends StatefulWidget {
@@ -11,12 +10,10 @@ class _TeamsSearchBox extends StatefulWidget {
     final Key key,
     @required final this.teams,
     @required final this.onChange,
-    // @required final this.typeAheadController,
   }) : super(key: key);
 
   final List<LightTeam> teams;
   final void Function(LightTeam) onChange;
-  // final TextEditingController typeAheadController;
 
   @override
   _TeamsSearchBoxState createState() => _TeamsSearchBoxState();
@@ -30,16 +27,13 @@ class _TeamsSearchBoxState extends State<_TeamsSearchBox> {
   List<LightTeam> updateSussestions(inputNumber) {
     List<LightTeam> _suggestions = List.castFrom(widget.teams);
     String _inputNumber = inputNumber;
-    // print(inputNumber);
     for (LightTeam team in _suggestions) {
       print(inputNumber.toString());
     }
     _suggestions.removeWhere((team) {
-      // print(team.number.toString() + ' ' + _inputNumber);
       return team.number.toString().contains(_inputNumber);
     });
 
-    // print(_suggestions);
     return _suggestions;
   }
 
@@ -105,7 +99,6 @@ query FetchTeams {
   return (result.data['team'] as List<dynamic>)
       .map((e) => LightTeam(e['id'], e['number'], e['name']))
       .toList();
-  //.entries.map((e) => LightTeam(e['id']);
 }
 
 Widget teamSearch(void Function(LightTeam) callback) {
@@ -132,7 +125,6 @@ Widget teamSearch(void Function(LightTeam) callback) {
                   child: CircularProgressIndicator(),
                 ),
               ]);
-              // const CircularProgressIndicator();
             } else {
               return _TeamsSearchBox(
                 teams: snapshot.data as List<LightTeam>,
