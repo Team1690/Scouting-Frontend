@@ -1,5 +1,8 @@
+import 'package:graphql/client.dart';
 import 'package:http/http.dart' as http;
 import 'package:scouting_frontend/models/match_model.dart';
+
+import 'hasura_helper.dart';
 
 class SendMatchApi {
   Match match;
@@ -7,28 +10,23 @@ class SendMatchApi {
   SendMatchApi();
   static int statusCode;
 
-  static Future<http.Response> sendData(Match match) async {
-    final url = Uri.parse('https://scouting-system.herokuapp.com/graphql');
-    var jsonMatchData = match.toJson();
-    var postRequest =
-        '{\"query\": \"mutation{createMatch(match: $jsonMatchData){statusCode, error}}\"}';
-
-// {"query": "mutation{createMatch(match: {number: 0, team: 0}){_id}}"}
-    //http rerquest
-    var response = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: postRequest);
-    statusCode = response.statusCode;
-
-    if (response.statusCode == 200) {
-      print('yeyy ${response.statusCode}');
-    } else {
-      print('oops');
-      print(response.body);
+  static void sendData(Match match) async {
+    String mutation =
+        """mutation MyMutation (\$auto_balls: Int, \$climb_id: Int, \$defended_by: Int, \$initiation_line: Boolean, \$number: Int, \$match_type_id: Int, \$team_id: Int, \$teleop_inner: Int, \$teleop_outer: Int){
+  insert_match(objects: {auto_balls: \$auto_balls, climb_id: \$climb_id, defended_by: \$defended_by, initiation_line: \$initiation_line, number: \$number, match_type_id: \$match_type_id, team_id: \$team_id, teleop_inner: \$teleop_inner, teleop_outer: \$teleop_outer}) {
+    returning {
+      auto_balls
+      climb_id
+      defended_by
+      initiation_line
+      match_type_id
+      number
+      team_id
+      teleop_inner
+      teleop_outer
     }
-
-    return response;
+  }
+}
+""";
   }
 }

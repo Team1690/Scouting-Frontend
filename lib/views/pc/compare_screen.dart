@@ -1,15 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/globals.dart' as globals;
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
-import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 // ignore: must_be_immutable
@@ -27,7 +27,30 @@ class _CompareScreenState extends State<CompareScreen> {
   List<LightTeam> compareTeamsList = [];
   // List tables;
 
-  void addTeam(LightTeam team) => compareTeamsList.add(team);
+  Future<List<LightTeam>> fetchTeams() async {
+    final client = getClient();
+    final String query = """
+query FetchTeams {
+  team {
+    id
+    number
+    name
+  }
+}
+  """;
+
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    return (result.data['team'] as List<dynamic>)
+        .map((e) => LightTeam(e['id'], e['number'], e['name']))
+        .toList();
+    //.entries.map((e) => LightTeam(e['id']);
+  }
+
+  void addTeam(team) => compareTeamsList.add(team);
   void removeTeam(index) => compareTeamsList
       .removeWhere((LightTeam entry) => entry.number == index.value.teamNumber);
 
@@ -41,10 +64,43 @@ class _CompareScreenState extends State<CompareScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 1,
-                    child: teamSearch(
-                        (LightTeam team) => setState(() => addTeam(team))),
-                  ),
+                      flex: 1,
+                      child: FutureBuilder(
+                          future: fetchTeams(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Error has happened in the future! ' +
+                                  snapshot.error.toString());
+                            } else if (!snapshot.hasData) {
+                              return Stack(
+                                  alignment: AlignmentDirectional.center,
+                                  children: [
+                                    TextField(
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        prefixIcon: const Icon(Icons.search),
+                                        border: const OutlineInputBorder(),
+                                        hintText: 'Search Team',
+                                        enabled: false,
+                                      ),
+                                    ),
+                                    Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ]);
+
+                              // const CircularProgressIndicator();
+                            } else {
+                              return TeamsSearchBox(
+                                  teams: snapshot.data as List<LightTeam>,
+                                  onChange: (LightTeam team) => {
+                                        setState(() => compareTeamsList.add(
+                                            new Team(
+                                                teamNumber: team.number,
+                                                id: team.id)))
+                                      });
+                            }
+                          })),
                   SizedBox(width: defaultPadding),
                   Expanded(
                     flex: 2,
