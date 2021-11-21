@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
@@ -21,6 +25,33 @@ class TeamInfoData extends StatefulWidget {
 }
 
 class _TeamInfoDataState extends State<TeamInfoData> {
+  Future<List> fetchGameChart() async {
+    final client = getClient();
+    final String query = """
+query fetchGameChart(\$teamNumber : Int) {
+  team(where: {number: {_eq: \$teamNumber}}) {
+    matches(order_by: {number: asc}) {
+      teleop_inner
+      teleop_outer
+    }
+  }
+}
+
+""";
+
+    final QueryResult result = await client.query(QueryOptions(
+        document: gql(query),
+        variables: <String, int>{"teamNumber": widget.team}));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    // print(result.data['team']);
+
+    return (result.data['team'][0]['matches'] as List<dynamic>)
+        .map((e) => e['teleop_inner'])
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -63,22 +94,36 @@ class _TeamInfoDataState extends State<TeamInfoData> {
               Expanded(
                 flex: 3,
                 child: DashboardCard(
-                  title: 'Game Chart',
-                  body: Container(),
-                  // body: CarouselSlider(
-                  //   options: CarouselOptions(
-                  //     height: 3500,
-                  //     viewportFraction: 1,
-                  //     // autoPlay: true,
-                  //   ),
-                  //   items: widget.team.tables
-                  //       .map((table) => DashboardLineChart(
-                  //             colors: colors,
-                  //             dataSets: [table],
-                  //           ))
-                  //       .toList(),
-                  // ),
-                ),
+                    title: 'Game Chart',
+                    body: FutureBuilder(
+                        future: fetchGameChart(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Error has happened in the future! ' +
+                                snapshot.error.toString());
+                          } else if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            inspect(snapshot.data);
+                            return DashboardLineChart(dataSet: snapshot.data);
+                          }
+                        })
+                    // body: CarouselSlider(
+                    //   options: CarouselOptions(
+                    //     height: 3500,
+                    //     viewportFraction: 1,
+                    //     // autoPlay: true,
+                    //   ),
+                    //   items: widget.team.tables
+                    //       .map((table) => DashboardLineChart(
+                    //             colors: colors,
+                    //             dataSets: [table],
+                    //           ))
+                    //       .toList(),
+                    // ),
+                    ),
               )
             ],
           ),
