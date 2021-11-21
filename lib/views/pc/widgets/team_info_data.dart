@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
+import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
 import '../../constants.dart';
@@ -61,7 +62,7 @@ query fetchGameChart(\$teamNumber : Int) {
     if (result.hasException) {
       print(result.exception.toString());
     }
-      return [
+    return [
       LineChartData(
         points: (result.data['team'][0]['matches'] as List<dynamic>)
             .map((e) => e['teleop_inner'])
@@ -134,7 +135,7 @@ query fetchGameChart(\$teamNumber : Int) {
 }
   """;
 
-     final QueryResult result = await client.query(QueryOptions(
+    final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team}));
     if (result.hasException) {
@@ -148,7 +149,7 @@ query fetchGameChart(\$teamNumber : Int) {
             e['climbSuccess']['aggregate']['count'],
             e['climbFail']['aggregate']['count']))
         .toList();
-
+  }
 
   @override
   Widget build(BuildContext context) {

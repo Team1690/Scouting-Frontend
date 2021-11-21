@@ -24,12 +24,6 @@ class GetTeamsApi {
       //converts respone to an array of teams. type: <Team>
       var jsonResponse =
           convert.jsonDecode(response.body)['data']['getCurrentComp']['teams'];
-      assert(jsonResponse is List);
-      for (var item in jsonResponse) {
-        item['analytics'] != null
-            ? teamsList.add(Team.fromJson(item))
-            : nullTeams += 1;
-      }
       //checks is no data is available
       nullTeams == jsonResponse.length ? statusCode = 204 : statusCode = 200;
       print(statusCode);
@@ -49,10 +43,7 @@ class GetTeamsApi {
     if (response.statusCode == 200) {
       List teams =
           convert.jsonDecode(response.body)['data']['getCurrentComp']['teams'];
-      return teams.map((json) => Team.fromJsonLite(json)).where((user) {
-        final number = user.teamNumber;
-        return number.toString().contains(query);
-      }).toList();
+      return teams.map((json) => Team());
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }

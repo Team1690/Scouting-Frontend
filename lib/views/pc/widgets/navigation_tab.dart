@@ -50,19 +50,19 @@ class _NavigationTab extends State<NavigationTab> {
               );
             },
           ),
-          // ListTile(
-          //   title: const Text('Compare'),
-          //   leading: Icon(Icons.compare_arrows_rounded),
-          //   onTap: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (context) => CompareScreen(
-          //                 teams: GetTeamsApi.randomData(),
-          //               )),
-          //     );
-          //   },
-          // ),
+          ListTile(
+            title: const Text('Compare'),
+            leading: Icon(Icons.compare_arrows_rounded),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CompareScreen(
+                          teams: GetTeamsApi.randomData(),
+                        )),
+              );
+            },
+          ),
           ListTile(
             title: const Text('General Scatter'),
             leading: Icon(Icons.bar_chart_rounded),

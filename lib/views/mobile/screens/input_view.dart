@@ -77,39 +77,8 @@ query FetchTeams {
             SizedBox(
               height: 15,
             ),
-
-            FutureBuilder(
-                future: fetchTeams(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error has happened in the future! ' +
-                        snapshot.error.toString());
-                  } else if (!snapshot.hasData) {
-                    return Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          TextField(
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
-                              border: const OutlineInputBorder(),
-                              hintText: 'Search Team',
-                              enabled: false,
-                            ),
-                          ),
-                          Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ]);
-
-                    // const CircularProgressIndicator();
-                  } else {
-                    return TeamsSearchBox(
-                        teams: snapshot.data as List<LightTeam>,
-                        onChange: (LightTeam team) =>
-                            {setState(() => match.teamId = team.id)});
-                  }
-                }),
+            teamSearch(
+                (LightTeam team) => {setState(() => match.teamId = team.id)}),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Auto Balls:',
