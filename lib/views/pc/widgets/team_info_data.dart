@@ -9,6 +9,7 @@ import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
+import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
 
 import '../../constants.dart';
 
@@ -105,7 +106,13 @@ query fetchGameChart(\$teamNumber : Int) {
                             );
                           } else {
                             inspect(snapshot.data);
-                            return DashboardLineChart(dataSet: snapshot.data);
+                            return CarouselWithIndicator(
+                              widgets: [
+                                DashboardLineChart(dataSet: snapshot.data),
+                                Text('BLA'),
+                              ],
+                            );
+                            // return DashboardLineChart(dataSet: snapshot.data);
                           }
                         })
                     // body: CarouselSlider(
