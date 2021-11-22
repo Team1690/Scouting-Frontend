@@ -184,6 +184,18 @@ query fetchGameChart(\$teamNumber : Int) {
                                             }
                                             final QuickData report =
                                                 snapshot.data[0];
+                                            if (report.success +
+                                                    report.failed ==
+                                                0) {
+                                              return Center(
+                                                child: Text(
+                                                    "\nAverage inner: ${report.averageInner.round()}"
+                                                    "\nAverage outer: ${report.averageOuter.round()}"
+                                                    "\nAverage auto balls: ${report.autoBalls.round()}"
+                                                    "\nClimb Rate: 0"
+                                                    "%"),
+                                              );
+                                            }
                                             return Center(
                                               child: Text(
                                                   "\nAverage inner: ${report.averageInner.round()}"
