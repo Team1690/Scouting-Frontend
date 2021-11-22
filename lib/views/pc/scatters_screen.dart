@@ -26,8 +26,8 @@ class _ScattersScreenState extends State<ScattersScreen> {
         child: Row(
           children: [
             Expanded(
-              flex: 4,
-              child: DashboardCard(
+                flex: 4,
+                child: DashboardCard(
                   title: 'Scatter',
                   body:
                       Container() /*Scatter(
@@ -36,6 +36,7 @@ class _ScattersScreenState extends State<ScattersScreen> {
                   )*/
                   ),
             ),
+
             SizedBox(width: defaultPadding),
             Expanded(
                 flex: 2,
