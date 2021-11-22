@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:scouting_frontend/views/pc/scatters_screen.dart';
 import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
 import 'package:scouting_frontend/views/pc/team_info_screen.dart';
@@ -34,9 +33,7 @@ class _NavigationTab extends State<NavigationTab> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        TeamInfoScreen(data: GetTeamsApi.randomData())),
+                MaterialPageRoute(builder: (context) => TeamInfoScreen()),
               );
             },
           ),
@@ -56,10 +53,7 @@ class _NavigationTab extends State<NavigationTab> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => CompareScreen(
-                          teams: GetTeamsApi.randomData(),
-                        )),
+                MaterialPageRoute(builder: (context) => CompareScreen()),
               );
             },
           ),
@@ -69,10 +63,7 @@ class _NavigationTab extends State<NavigationTab> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => ScattersScreen(
-                          teams: GetTeamsApi.randomData(),
-                        )),
+                MaterialPageRoute(builder: (context) => ScattersScreen()),
               );
             },
           ),

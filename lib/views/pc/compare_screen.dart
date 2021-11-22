@@ -12,10 +12,6 @@ import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 // ignore: must_be_immutable
 class CompareScreen extends StatefulWidget {
-  CompareScreen({
-    @required this.teams,
-  });
-  final List<Team> teams;
   @override
   State<CompareScreen> createState() => _CompareScreenState();
 }
