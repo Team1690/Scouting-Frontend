@@ -36,8 +36,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: widget.widgets.asMap().entries.map((entry) {
-          return GestureDetector(
+        children: widget.widgets.asMap().entries.map((entry) =>
+          GestureDetector(
             onTap: () => _controller.animateToPage(entry.key),
             child: Container(
               width: 12.0,
@@ -50,8 +50,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                           : Colors.black)
                       .withOpacity(_current == entry.key ? 0.9 : 0.4)),
             ),
-          );
-        }).toList(),
+          )
+        ).toList(),
       ),
     ]);
   }

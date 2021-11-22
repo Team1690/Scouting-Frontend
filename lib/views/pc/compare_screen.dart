@@ -132,14 +132,6 @@ query FetchTeams {
                                 // autoPlay: true,
                               ),
                               items: [],
-                              // items: List.generate(
-                              //     2, //TODO: make modular
-                              //     // compareTeamsList.first.tables.length,
-                              //     (index) => DashboardLineChart(
-                              //         colors: Colors.primaries,
-                              //         dataSets: compareTeamsList
-                              //             .map((team) => team.tables[index])
-                              //             .toList())),
                             ),
                           ),
                         )
@@ -152,26 +144,6 @@ query FetchTeams {
                       child: DashboardCard(
                         title: 'Compare Spider Chart',
                         body: Container(),
-                        //   body: Center(
-                        //     child: SpiderChart(
-                        //         numberOfFeatures: 4,
-                        //         data: compareTeamsList
-                        //             .map((team) => team.spider)
-                        //             .toList(),
-                        //         ticks: [
-                        //           0,
-                        //           25,
-                        //           50,
-                        //           75,
-                        //           100
-                        //         ],
-                        //         features: [
-                        //           "PPG",
-                        //           "BPG",
-                        //           "Auto Points",
-                        //           "Climb",
-                        //         ]),
-                        //   ),
                       ))
                 ],
               ),

@@ -52,20 +52,7 @@ class _ScattersScreenState extends State<ScattersScreen> {
                             SizedBox(height: defaultPadding),
                             Expanded(
                               flex: 2,
-                              child: CarouselSlider(
-                                options: CarouselOptions(
-                                  // height: 3500,
-                                  viewportFraction: 1,
-                                  // autoPlay: true,
-                                ),
-                                items: [Container()],
-                                // items: displayTeam.tables
-                                //     .map((table) => DashboardLineChart(
-                                //           colors: colors,
-                                //           dataSets: [table],
-                                //         ))
-                                //     .toList(),
-                              ),
+                              child: Container(), //TODO: Add the game chart
                             ),
                             Expanded(
                                 flex: 4,

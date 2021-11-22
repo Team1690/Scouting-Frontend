@@ -56,30 +56,24 @@ query fetchGameChart(\$teamNumber : Int) {
 }
 
 """;
+
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team}));
     if (result.hasException) {
       print(result.exception.toString());
     }
+    final List<dynamic> matches =
+        result.data["team"][0]["matches"] as List<dynamic>;
     return [
       LineChartData(
-        points: (result.data['team'][0]['matches'] as List<dynamic>)
-            .map((e) => e['teleop_inner'])
-            .toList()
-            .cast<double>(),
+        points: matches.map((e) => e['teleop_inner']).toList().cast<double>(),
       ),
       LineChartData(
-        points: (result.data['team'][0]['matches'] as List<dynamic>)
-            .map((e) => e['teleop_outer'])
-            .toList()
-            .cast<double>(),
+        points: matches.map((e) => e['teleop_outer']).toList().cast<double>(),
       ),
       LineChartData(
-        points: (result.data['team'][0]['matches'] as List<dynamic>)
-            .map((e) => e['auto_balls'])
-            .toList()
-            .cast<double>(),
+        points: matches.map((e) => e['auto_balls']).toList().cast<double>(),
       ),
     ];
   }
