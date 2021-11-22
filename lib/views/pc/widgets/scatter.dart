@@ -33,7 +33,6 @@ class Scatter extends StatelessWidget {
               if (p0.touchedSpot != null)
                 {
                   // onHover(teams[p0.touchedSpot.spotIndex]),
-                  print(p0.clickHappened),
                   p0.clickHappened
                       ? onHover(teams[p0.touchedSpot.spotIndex])
                       : null,

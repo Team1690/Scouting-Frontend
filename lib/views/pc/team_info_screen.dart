@@ -9,15 +9,36 @@ import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 import 'package:graphql/client.dart';
 
 class TeamInfoScreen extends StatefulWidget {
-  TeamInfoScreen({@required this.data});
-  final List<Team> data;
-
   @override
   State<TeamInfoScreen> createState() => _TeamInfoScreenState();
 }
 
 class _TeamInfoScreenState extends State<TeamInfoScreen> {
   int chosenTeam;
+
+  Future<List<LightTeam>> fetchTeams() async {
+    final client = getClient();
+    final String query = """
+query FetchTeams {
+  team {
+    id
+    number
+    name
+  }
+}
+  """;
+
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    print(result.data);
+    return (result.data['team'] as List<dynamic>)
+        .map((e) => LightTeam(e['id'], e['number'], e['name']))
+        .toList();
+    //.entries.map((e) => LightTeam(e['id']);
+  }
 
   @override
   Widget build(BuildContext context) {
