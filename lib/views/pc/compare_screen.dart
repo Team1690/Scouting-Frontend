@@ -195,13 +195,6 @@ query MyQuery (\$team_id: Int){
                     child: Column(
                       children: [
                         Expanded(
-                            flex: 3,
-                            child: DashboardCard(
-                                title: 'Game Chart',
-                                // body: Container(),
-                                body: CarouselWithIndicator(widgets: []))),
-                        SizedBox(height: defaultPadding),
-                        Expanded(
                           flex: 3,
                           child: DashboardCard(
                             title: 'Game Chart',

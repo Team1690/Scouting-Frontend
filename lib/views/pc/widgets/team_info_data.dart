@@ -184,18 +184,21 @@ query fetchGameChart(\$teamNumber : Int) {
                                             }
                                             final QuickData report =
                                                 snapshot.data[0];
-                                            return Text(
-                                                "\nAverage inner: ${report.averageInner}"
-                                                        "\nAverage outer: ${report.averageOuter}"
-                                                        "\nAverage auto balls: ${report.autoBalls}"
-                                                        "\nClimb Rate: " +
-                                                    (report.success /
-                                                            (report.failed +
-                                                                report
-                                                                    .success) *
-                                                            100)
-                                                        .toString() +
-                                                    "%");
+                                            return Center(
+                                              child: Text(
+                                                  "\nAverage inner: ${report.averageInner.round()}"
+                                                          "\nAverage outer: ${report.averageOuter.round()}"
+                                                          "\nAverage auto balls: ${report.autoBalls.round()}"
+                                                          "\nClimb Rate: " +
+                                                      (report.success /
+                                                              (report.failed +
+                                                                  report
+                                                                      .success) *
+                                                              100)
+                                                          .round()
+                                                          .toString() +
+                                                      "%"),
+                                            );
                                           }
                                         })),
                               ],
