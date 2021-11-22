@@ -161,7 +161,11 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                       flex: 3,
                       child: DashboardCard(
                         title: 'Pit Scouting',
-                        body: Container(),
+                        body: Container(
+                          child: Center(
+                            child: Text('TBD'),
+                          ),
+                        ),
                       ),
                     ),
                   ],
