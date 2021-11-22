@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
@@ -18,7 +20,7 @@ class CompareScreen extends StatefulWidget {
 
 class _CompareScreenState extends State<CompareScreen> {
   Team chosenTeam = Team();
-  List<Team> compareTeamsList = [];
+  List<LightTeam> compareTeamsList = [];
   // List tables;
 
   Future<List<LightTeam>> fetchTeams() async {
@@ -44,9 +46,92 @@ query FetchTeams {
     //.entries.map((e) => LightTeam(e['id']);
   }
 
+  Future<List<Team>> fetchGameCharts(List<int> teamId) async {
+    List<Team> teamList = [];
+    for (int i = 0; i < teamId.length; i++) {
+      teamList.addAll(await fetchGameChart(teamId[i]));
+    }
+
+    return teamList;
+  }
+
+  Future<List<Team>> fetchGameChart(int teamId) async {
+    final client = getClient();
+    final String query = """
+query MyQuery (\$team_id: Int){
+  team(where: {id: {_eq: \$team_id}}) {
+    matches_aggregate{
+      aggregate {
+        avg {
+          auto_balls
+          teleop_inner
+          teleop_outer
+        }
+        count(columns: id)
+      }
+    }
+    matches{
+      auto_balls
+      teleop_inner
+      teleop_outer
+      climb_id
+    }
+
+    climbSuccess: matches_aggregate(where: {climb: {name: {_eq: "Succeeded"}}}) {
+      aggregate {
+        count(columns: climb_id)
+      }
+    }
+    climbFail: matches_aggregate(where: {climb: {name: {_eq: "failed"}}}) {
+      aggregate {
+        count(columns: climb_id)
+      }
+    }
+  }
+}
+
+
+  """;
+
+    final QueryResult result = await client.query(
+        QueryOptions(document: gql(query), variables: {"team_id": teamId}));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    // for(int i = 0; i < (result.data['team'][0]['matches'] as List<dynamic>).length; i++){
+    //   dynamic f = result.data['team'][0]['matches'] as List<dynamic>;
+    //   print(((f as List<dynamic>).map((g) => [
+    //                 g['auto_balls'] + g['teleop_inner'] + g['teleop_outer'],
+    //                 g['climb_id']]).toList()).runtimeType);
+    //   print([
+    //                 f[i]['auto_balls'] + f[i]['teleop_inner'] + f[i]['teleop_outer'],
+    //                 f[i]['climb_id']]);
+    // }
+
+    return (result.data['team'] as List<dynamic>)
+        .map((e) => Team(
+            autoGoalAverage: e['matches_aggregate']['aggregate']['avg']
+                ['auto_balls'],
+            teleInnerGoalAverage: e['matches_aggregate']['aggregate']['avg']
+                ['teleop_inner'],
+            teleOuterGoalAverage: e['matches_aggregate']['aggregate']['avg']
+                ['teleop_outer'],
+            id: teamId,
+            climbFailed: e['climbFail']['aggregate']['count'],
+            climbSuccess: e['climbSuccess']['aggregate']['count'],
+            tables: ((e['matches'] as List<dynamic>)
+                .map((g) => [
+                      g['auto_balls'] + g['teleop_inner'] + g['teleop_outer'],
+                      g['climb_id']
+                    ])
+                .toList())))
+        .toList();
+    //.entries.map((e) => LightTeam(e['id']);
+  }
+
   void addTeam(team) => compareTeamsList.add(team);
   void removeTeam(index) => compareTeamsList
-      .removeWhere((Team entry) => entry.teamNumber == index.value.teamNumber);
+      .removeWhere((LightTeam entry) => entry.number == index.value.number);
 
   Widget build(BuildContext context) {
     return DashboardScaffold(
@@ -88,10 +173,7 @@ query FetchTeams {
                               return TeamsSearchBox(
                                   teams: snapshot.data as List<LightTeam>,
                                   onChange: (LightTeam team) => {
-                                        setState(() => compareTeamsList.add(
-                                            new Team(
-                                                teamNumber: team.number,
-                                                id: team.id)))
+                                        setState(() => addTeam(team)),
                                       });
                             }
                           })),
@@ -107,8 +189,7 @@ query FetchTeams {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: defaultPadding / 2),
                                 child: Chip(
-                                  label:
-                                      Text(index.value.teamNumber.toString()),
+                                  label: Text(index.value.number.toString()),
                                   backgroundColor: colors[index.key],
                                   onDeleted: () =>
                                       setState(() => removeTeam(index)),
@@ -159,32 +240,10 @@ query FetchTeams {
                                       (index) => DashboardLineChart(
                                           colors: colors,
                                           dataSets: compareTeamsList
-                                              .map((team) => team.tables[index])
+                                              .map((team) =>
+                                                  fetchGameChart(team.id))
                                               .toList())),
                                 ))),
-                        SizedBox(height: defaultPadding),
-                        Expanded(
-                          flex: 3,
-                          child: DashboardCard(
-                            title: 'Game Chart',
-                            // body: Container(),
-                            body: CarouselSlider(
-                              options: CarouselOptions(
-                                height: 3500,
-                                viewportFraction: 1,
-                                // autoPlay: true,
-                              ),
-                              items: List.generate(
-                                  2, //TODO: make modular
-                                  // compareTeamsList.first.tables.length,
-                                  (index) => DashboardLineChart(
-                                      colors: Colors.primaries,
-                                      dataSets: compareTeamsList
-                                          .map((team) => team.tables[index])
-                                          .toList())),
-                            ),
-                          ),
-                        )
                       ],
                     ),
                   ),
@@ -194,25 +253,87 @@ query FetchTeams {
                       child: DashboardCard(
                         title: 'Compare Spider Chart',
                         body: Center(
-                          child: SpiderChart(
-                              numberOfFeatures: 4,
-                              data: compareTeamsList
-                                  .map((team) => team.spider)
-                                  .toList(),
-                              ticks: [
-                                0,
-                                25,
-                                50,
-                                75,
-                                100
-                              ],
-                              features: [
-                                "PPG",
-                                "BPG",
-                                "Auto Points",
-                                "Climb",
-                              ]),
-                        ),
+                            child: FutureBuilder(
+                          future: fetchGameCharts(
+                              compareTeamsList.map((e) => e.id).toList()),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Error has happened in the future! ' +
+                                  snapshot.error.toString());
+                            } else if (!snapshot.hasData) {
+                              return Stack(
+                                  alignment: AlignmentDirectional.center,
+                                  children: [
+                                    TextField(
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        prefixIcon: const Icon(Icons.search),
+                                        border: const OutlineInputBorder(),
+                                        hintText: 'Search Team',
+                                        enabled: false,
+                                      ),
+                                    ),
+                                    Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ]);
+
+                              // const CircularProgressIndicator();
+                            } else {
+                              if ((snapshot.data as List<Team>).isNotEmpty) {
+                                double innerRatio = 100 /
+                                    (snapshot.data as List<Team>)
+                                        .map((e) => e.teleInnerGoalAverage)
+                                        .reduce((curr, next) =>
+                                            curr > next ? curr : next);
+                                double outerRatio = 100 /
+                                    (snapshot.data as List<Team>)
+                                        .map((e) => e.teleOuterGoalAverage)
+                                        .reduce((curr, next) =>
+                                            curr > next ? curr : next);
+                                double autoRatio = 100 /
+                                    (snapshot.data as List<Team>)
+                                        .map((e) => e.autoGoalAverage)
+                                        .reduce((curr, next) =>
+                                            curr > next ? curr : next);
+                                return SpiderChart(
+                                    numberOfFeatures: 4,
+                                    data: (snapshot.data as List<Team>)
+                                        .map((e) => ([
+                                              (e.teleInnerGoalAverage *
+                                                      innerRatio)
+                                                  .toInt(),
+                                              (e.teleOuterGoalAverage *
+                                                      outerRatio)
+                                                  .toInt(),
+                                              (e.autoGoalAverage * autoRatio)
+                                                  .toInt(),
+                                              (e.climbSuccess /
+                                                      (e.climbSuccess +
+                                                          e.climbFailed) *
+                                                      100)
+                                                  .toInt()
+                                            ]))
+                                        .toList(),
+                                    ticks: [
+                                      0,
+                                      25,
+                                      50,
+                                      75,
+                                      100
+                                    ],
+                                    features: [
+                                      "inner balls",
+                                      "outer balls",
+                                      "Auto balls",
+                                      "Climb%",
+                                    ]);
+                              } else {
+                                return Container();
+                              }
+                            }
+                          },
+                        )),
                       ))
                 ],
               ),

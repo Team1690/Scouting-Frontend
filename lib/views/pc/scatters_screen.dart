@@ -29,13 +29,14 @@ class _ScattersScreenState extends State<ScattersScreen> {
                 flex: 4,
                 child: DashboardCard(
                   title: 'Scatter',
-                  body: Container(),
-                )
-                // body: Scatter(
-                //   teams: widget.teams,
-                //   onHover: (Team team) => setState(() => displayTeam = team),
-                // )),
-                ),
+                  body:
+                      Container() /*Scatter(
+                    teams: widget.teams,
+                    onHover: (Team team) => setState(() => displayTeam = team),
+                  )*/
+                  ),
+            ),
+
             SizedBox(width: defaultPadding),
             Expanded(
                 flex: 2,
