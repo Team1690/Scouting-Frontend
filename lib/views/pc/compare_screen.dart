@@ -1,12 +1,14 @@
 import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
+import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
@@ -142,41 +144,10 @@ query MyQuery (\$team_id: Int){
             Container(
               child: Row(
                 children: [
-                  Expanded(
-                      flex: 1,
-                      child: FutureBuilder(
-                          future: fetchTeams(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Text('Error has happened in the future! ' +
-                                  snapshot.error.toString());
-                            } else if (!snapshot.hasData) {
-                              return Stack(
-                                  alignment: AlignmentDirectional.center,
-                                  children: [
-                                    TextField(
-                                      keyboardType: TextInputType.number,
-                                      decoration: InputDecoration(
-                                        prefixIcon: const Icon(Icons.search),
-                                        border: const OutlineInputBorder(),
-                                        hintText: 'Search Team',
-                                        enabled: false,
-                                      ),
-                                    ),
-                                    Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ]);
-
-                              // const CircularProgressIndicator();
-                            } else {
-                              return TeamsSearchBox(
-                                  teams: snapshot.data as List<LightTeam>,
-                                  onChange: (LightTeam team) => {
-                                        setState(() => addTeam(team)),
-                                      });
-                            }
-                          })),
+                  teamSearch((LightTeam team) => {
+                        setState(() => compareTeamsList.add(
+                            new LightTeam(team.id, team.number, team.name)))
+                      }),
                   SizedBox(width: defaultPadding),
                   Expanded(
                     flex: 2,
@@ -228,22 +199,23 @@ query MyQuery (\$team_id: Int){
                             child: DashboardCard(
                                 title: 'Game Chart',
                                 // body: Container(),
-                                body: CarouselSlider(
-                                  options: CarouselOptions(
-                                    height: 3500,
-                                    viewportFraction: 1,
-                                    // autoPlay: true,
-                                  ),
-                                  items: List.generate(
-                                      2, //TODO: make modular
-                                      // compare TeamsList.first.tables.length,
-                                      (index) => DashboardLineChart(
-                                          colors: colors,
-                                          dataSets: compareTeamsList
-                                              .map((team) =>
-                                                  fetchGameChart(team.id))
-                                              .toList())),
-                                ))),
+                                body: CarouselWithIndicator(widgets: []))),
+                        SizedBox(height: defaultPadding),
+                        Expanded(
+                          flex: 3,
+                          child: DashboardCard(
+                            title: 'Game Chart',
+                            // body: Container(),
+                            body: CarouselSlider(
+                              options: CarouselOptions(
+                                height: 3500,
+                                viewportFraction: 1,
+                                // autoPlay: true,
+                              ),
+                              items: [],
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
