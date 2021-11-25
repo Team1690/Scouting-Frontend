@@ -3,22 +3,51 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
 
 
 class ScatterQuickData {
   ScatterQuickData(this.games, this.avgInner, this.avgOuter, this.stddevInner,
-      this.stddevOuter, this.teams);
-  double games;
-  double avgInner;
-  double avgOuter;
-  double stddevInner;
-  double stddevOuter;
-  int teams;
+      this.stddevOuter, this.teams) {}
+      final  double avgInner;
+      final  double avgOuter;
+      final  double stddevInner;
+      final  double stddevOuter;
+      final  double games;
+      final  double teams;
+}
+
+class ScatterData extends StatefulWidget {
+  ScatterData({
+    Key key,
+    @required this.team,
+  }) : super(key: key);
+
+  int team;
+
+  @override
+  State<ScatterData> createState() => _ScatterDataState();
+}
+
+class Scatter extends StatelessWidget {
+  const Scatter({
+    @required this.teams,
+    @required this.onHover,
+    Key key,
+  }) : super(key: key);
+    final List<Team> teams;
+
+    final Function(Team team) onHover;
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }}
 
 
-
-
-  Future<List<ScatterQuickData>> fetchQuickData() async {
+ class _ScatterDataState extends State<ScatterData> {
+  Future<List<ScatterQuickData>> fetchScatterQuickData() async {
     final client = getClient();
     final String query = """query MyQuery {
   match_aggregate {
@@ -62,32 +91,55 @@ class ScatterQuickData {
             e['team']['number']))
         .toList();
   }
-  }
 
-class Scatter extends StatelessWidget {
-  const Scatter({
-    @required this.teams,
-    @required this.onHover,
-    Key key,
-  }) : super(key: key);
-    final List<Team> teams;
 
-  final Function(Team team) onHover;
 
+
+
+  
   @override
   Widget build(BuildContext context) {
     Team selectedTeam;
     String tooltip;
     return Container(
-      // color: Colors.grey,
-      child: ScatterChart(
+      color: Colors.grey,
+      child : Column ( 
+      children : [
+        Expanded( 
+              flex: 1,
+              child: FutureBuilder(
+                    future: fetchScatterQuickData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(
+                            'Error has happened in the future! ' +
+                                snapshot.error.toString());
+                      } else if (!snapshot.hasData) {
+                              return Center(
+                                child:
+                                    CircularProgressIndicator(),
+                              );
+                      } else {
+                        if (snapshot.data.length != 1) {
+                          return Text('invalid data :(');
+                        }
+                      
+                      final QuickData report =
+                        snapshot.data[0];
+                      double averageShots = report.avgInner+ report.avgOuter;
+                      double stddev = (report.stddevInner * report.games + report.teleopOuter * report.games)/
+                    (report.avgInner+ report.avgOuter);
+                      return ScatterChart(
         ScatterChartData(
                     scatterSpots: teams
               .map(
+                    
                 (element) => ScatterSpot(
-                    element.averageShots.toDouble(),),
+                    element.averageShots.toDouble(),
+                    element.stddev.toDouble(), ),
               )
               .toList(),
+                      )
 
           scatterTouchData: ScatterTouchData(
             touchCallback: (p0) => {
@@ -151,6 +203,15 @@ class Scatter extends StatelessWidget {
           maxY: 100,
         ),
       ),
-    );
+        )
+      ]
+
+    ));
   }
 }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
