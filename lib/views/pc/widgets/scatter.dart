@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:graphql/client.dart';
@@ -5,40 +7,21 @@ import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
 
-class ScatterQuickData {
-  ScatterQuickData(this.games, this.avgInner, this.avgOuter, this.stddevInner,
+class ScatterData {
+  ScatterData(this.avgInner, this.avgOuter, this.stddevInner,
       this.stddevOuter, this.number);
-  double avgInner;
-  double avgOuter;
-  double stddevInner;
-  double stddevOuter;
-  double games;
-  int number;
+  final double avgInner;
+  final double avgOuter;
+  final double stddevInner;
+  final double stddevOuter;
+  final int number;
 
 }
 
-class ScatterData extends StatefulWidget {
-  ScatterData({
-    Key key,
-    @required this.team,
-  }) : super(key: key);
 
-  int team;
-
-  @override
-  State<ScatterData> createState() => _ScatterDataState();
-}
-
-class _ScatterDataState extends State<ScatterData> {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-}
-
+// ignore: must_be_immutable
 class Scatter extends StatelessWidget {
-  Future<List<ScatterQuickData>> fetchScatter() async {
+  Future<List<ScatterData>> fetchScatter() async {
     final client = getClient();
     final String query = """query MyQuery{
   team{
@@ -66,8 +49,7 @@ class Scatter extends StatelessWidget {
       print(result.exception.toString());
     } //TODO: avoid dynamic
     return (result.data['team'] as List<dynamic>)
-        .map((e) => ScatterQuickData(
-            e['stats']['aggregate']['count'],
+        .map((e) => ScatterData(
             e['stats']['aggregate']['avg']['teleop_inner'],
             e['stats']['aggregate']['avg']['teleop_outer'],
             e['stats']['aggregate']['stddev']['teleop_inner'],
@@ -121,13 +103,8 @@ class Scatter extends StatelessWidget {
             touchCallback: (p0) => {
               if (p0.touchedSpot != null)
                 {
-                  // onHover(teams[p0.touchedSpot.spotIndex]),
-                  // selectedTeam = teams[p0.touch  edSpot.spotIndex],
-                  print(teams),
                   tooltip =
                       teams[p0.touchedSpot.spotIndex].teamNumber.toString(),
-                  // inspect(p0),
-                  // print(teams[p0.touchedSpot.spotIndex].teamNumber),
                 }
             },
             enabled: true,
@@ -135,7 +112,6 @@ class Scatter extends StatelessWidget {
             touchTooltipData: ScatterTouchTooltipData(
               tooltipBgColor: Colors.grey[400],
               getTooltipItems: (ScatterSpot touchedBarSpot) {
-                // print(selectedTeam.teamNumber);
                 return ScatterTooltipItem(tooltip, TextStyle(), 10);
               },
             ),
@@ -154,8 +130,9 @@ class Scatter extends StatelessWidget {
                         ),
                         gridData: FlGridData(
                           show: true,
-                          horizontalInterval: 5,
-                          verticalInterval: 5,
+                          horizontalInterval: report.map((e) => (e.avgInner + e.avgOuter)).reduce((curr, next) => curr > next? curr: next) / 10,
+                          verticalInterval: report.map((e) => ((e.avgInner + e.avgOuter) != 0 && e.stddevInner != null && e.stddevOuter != null && e.avgInner != null && e.avgOuter != null) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
+                                      (e.avgInner + e.avgOuter) : 0).reduce((curr, next) => curr > next? curr: next) / 10,
                           drawHorizontalLine: true,
                           checkToShowHorizontalLine: (value) => true,
                           getDrawingHorizontalLine: (value) =>
@@ -172,8 +149,9 @@ class Scatter extends StatelessWidget {
                         ),
                         minX: 0,
                         minY: 0,
-                        maxX: 100,
-                        maxY: 100,
+                        maxX: report.map((e) => (e.avgInner + e.avgOuter)).reduce((curr, next) => curr > next? curr: next),
+                        maxY: report.map((e) => ((e.avgInner + e.avgOuter) != 0 && e.stddevInner != null && e.stddevOuter != null && e.avgInner != null && e.avgOuter != null) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
+                                      (e.avgInner + e.avgOuter) : 0).reduce((curr, next) => curr > next? curr: next),
                       ));
                     }
                   }))

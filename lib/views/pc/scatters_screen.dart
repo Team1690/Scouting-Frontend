@@ -38,46 +38,6 @@ class _ScattersScreenState extends State<ScattersScreen> {
                     onHover: (Team team) => setState(() => displayTeam = team),
                   )),
             ),
-            SizedBox(width: defaultPadding),
-            Expanded(
-                flex: 2,
-                child: DashboardCard(
-                  title: 'Team Data',
-                  body: displayTeam == null
-                      ? Container()
-                      : Column(
-                          children: [
-                            Text(displayTeam.teamNumber.toString() +
-                                ' - ' +
-                                displayTeam.teamName),
-                            SizedBox(height: defaultPadding),
-                            Expanded(
-                              flex: 2,
-                              child: CarouselSlider(
-                                options: CarouselOptions(
-                                  // height: 3500,
-                                  viewportFraction: 1,
-                                  // autoPlay: true,
-                                ),
-                                // items: [Container()],
-                                items: displayTeam.tables
-                                    .map((table) => DashboardLineChart(
-                                          colors: colors,
-                                          dataSets: [table],
-                                        ))
-                                    .toList(),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 4,
-                                child: SpiderChart(
-                                    numberOfFeatures: 4,
-                                    data: [displayTeam.spider],
-                                    ticks: [0, 25, 50, 75, 100],
-                                    features: ["", "", "", ""]))
-                          ],
-                        ),
-                ))
           ],
         ),
       ),
