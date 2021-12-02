@@ -77,8 +77,7 @@ query FetchTeams {
             SizedBox(
               height: 15,
             ),
-
-            FutureBuilder(
+               FutureBuilder(
                 future: fetchTeams(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -110,6 +109,8 @@ query FetchTeams {
                             {setState(() => match.teamId = team.id)});
                   }
                 }),
+            // teamSearch(
+            //     (LightTeam team) => {setState(() => match.teamId = team.id)}),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Auto Balls:',
