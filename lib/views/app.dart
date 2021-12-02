@@ -1,4 +1,3 @@
-import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:scouting_frontend/views/mobile/main_app_bar.dart';
 import 'package:scouting_frontend/views/mobile/SideNavBar.dart';
 import 'package:scouting_frontend/views/mobile/screens/input_view.dart';

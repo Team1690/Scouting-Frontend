@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/get_teams_api.dart';
 
 class TeamsDropdown extends StatefulWidget {
   TeamsDropdown({
@@ -53,14 +52,7 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
                     : null,
           ),
         ),
-        suggestionsCallback: (value) async {
-          final List<Team> suggestions =
-              await GetTeamsApi.getTeamsSuggestion(value);
-
-          setState(() => this._suggestions = suggestions);
-
-          return suggestions;
-        },
+        suggestionsCallback: (value) async {},
         itemBuilder: (context, Team suggestion) =>
             ListTile(title: Text(suggestion.teamNumber.toString())),
         noItemsFoundBuilder: (context) => Container(
