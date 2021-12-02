@@ -13,7 +13,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Orbit Scouting',
       home: isPC(context)
-          ? TeamInfoScreen(data: GetTeamsApi.randomData())
+          ? TeamInfoScreen()
           : Scaffold(appBar: MainAppBar(), body: UserInput(), drawer: SideNavBar(),),
       theme: darkModeTheme,
       debugShowCheckedModeBanner: false,
