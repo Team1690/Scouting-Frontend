@@ -89,13 +89,13 @@ class Scatter extends StatelessWidget {
                       if (snapshot.data.length < 1) {
                         return Text('invalid data :(');
                       }
-                      final List<dynamic> report = snapshot.data;
+                      final List<dynamic> report = snapshot.data.map((e) => ScatterData(e.avgInner != null ? e.avgInner : 0, e.avgOuter != null ? e.avgOuter : 0, e.stddevInner != null ? e.stddevInner : 0, e.stddevOuter != null ? e.stddevOuter : 0, e.number != null ? e.number : 0)).toList();
                       teams = report.map((e) => Team(teamNumber: e.number)).toList();
                       return ScatterChart(ScatterChartData(
                         scatterSpots: report
                             .map((e) => ScatterSpot(
                                   (e.avgInner + e.avgOuter).toDouble(),
-                                  ((e.avgInner + e.avgOuter) != 0 && e.stddevInner != null && e.stddevOuter != null && e.avgInner != null && e.avgOuter != null) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
+                                  ((e.avgInner + e.avgOuter) != 0) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
                                       (e.avgInner + e.avgOuter) : 0,
                                 ))
                             .toList(),
@@ -131,7 +131,7 @@ class Scatter extends StatelessWidget {
                         gridData: FlGridData(
                           show: true,
                           horizontalInterval: report.map((e) => (e.avgInner + e.avgOuter)).reduce((curr, next) => curr > next? curr: next) / 10,
-                          verticalInterval: report.map((e) => ((e.avgInner + e.avgOuter) != 0 && e.stddevInner != null && e.stddevOuter != null && e.avgInner != null && e.avgOuter != null) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
+                          verticalInterval: report.map((e) => ((e.avgInner + e.avgOuter) != 0) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
                                       (e.avgInner + e.avgOuter) : 0).reduce((curr, next) => curr > next? curr: next) / 10,
                           drawHorizontalLine: true,
                           checkToShowHorizontalLine: (value) => true,
@@ -150,7 +150,7 @@ class Scatter extends StatelessWidget {
                         minX: 0,
                         minY: 0,
                         maxX: report.map((e) => (e.avgInner + e.avgOuter)).reduce((curr, next) => curr > next? curr: next),
-                        maxY: report.map((e) => ((e.avgInner + e.avgOuter) != 0 && e.stddevInner != null && e.stddevOuter != null && e.avgInner != null && e.avgOuter != null) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
+                        maxY: report.map((e) => ((e.avgInner + e.avgOuter) != 0) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
                                       (e.avgInner + e.avgOuter) : 0).reduce((curr, next) => curr > next? curr: next),
                       ));
                     }
