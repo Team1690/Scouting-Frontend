@@ -13,20 +13,16 @@ import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
 import 'package:scouting_frontend/models/match_model.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
-
 class Specific extends StatefulWidget {
-
-  
-
   @override
   State<Specific> createState() => _SpecificState();
 }
 
 class _SpecificState extends State<Specific> {
-  String box = "";
+  String _box;
+  final TextEditingController box = TextEditingController();
+
   Match match = Match();
-
-
 
   Future<List<LightTeam>> fetchTeams() async {
     final client = getClient();
@@ -62,47 +58,46 @@ query FetchTeams {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-
               Padding(padding: EdgeInsets.all(15)),
               FutureBuilder(
-                future: fetchTeams(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error has happened in the future! ' +
-                        snapshot.error.toString());
-                  } else if (!snapshot.hasData) {
-                    return Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          TextField(
-                            
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
-                              border: const OutlineInputBorder(),
-                              hintText: 'Search Team',
-                              enabled: false,
+                  future: fetchTeams(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error has happened in the future! ' +
+                          snapshot.error.toString());
+                    } else if (!snapshot.hasData) {
+                      return Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                            TextField(
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.search),
+                                border: const OutlineInputBorder(),
+                                hintText: 'Search Team',
+                                enabled: false,
+                              ),
                             ),
-                          ),
-                          
-                          Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ]);
+                            Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ]);
 
-                    // const CircularProgressIndicator();
-                  } else {
-                    return TeamsSearchBox(
-                        teams: snapshot.data as List<LightTeam>,
-                        onChange: (LightTeam team) =>
-                            {setState(() => match.teamId = team.id)});
-                  }
-                }),
+                      // const CircularProgressIndicator();
+                    } else {
+                      return TeamsSearchBox(
+                          teams: snapshot.data as List<LightTeam>,
+                          onChange: (LightTeam team) =>
+                              {setState(() => match.teamId = team.id)});
+                    }
+                  }),
               Padding(padding: EdgeInsets.all(14.0)),
               TextField(
-                onChanged: (newText) {
-                    box = newText;
-                    print(box);
+                controller: box,
+                onChanged: (text) {
+                  this.setState(() {
+                    _box = text;
+                  });
                 },
                 style: TextStyle(color: Colors.white),
                 cursorColor: Colors.white,
@@ -118,13 +113,12 @@ query FetchTeams {
                 ),
                 maxLines: 18,
               ),
-
               Padding(padding: EdgeInsets.all(11.0)),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: SubmitButton(
-                  mutation: 
-                  """mutation MyMutation (\$team_id: Int, \$message: String){
+                  mutation:
+                      """mutation MyMutation (\$team_id: Int, \$message: String){
   insert_specific(objects: {team_id: \$team_id, message: \$message}) {
     returning {
       team_id
@@ -135,7 +129,7 @@ query FetchTeams {
                   """,
                   vars: {
                     "team_id": match.teamId,
-                    "message": box.toString()
+                    "message": _box,
                   },
                 ),
               ),
