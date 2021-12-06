@@ -95,9 +95,7 @@ query FetchTeams {
               TextField(
                 controller: box,
                 onChanged: (text) {
-                  this.setState(() {
                     _box = text;
-                  });
                 },
                 style: TextStyle(color: Colors.white),
                 cursorColor: Colors.white,
@@ -129,7 +127,7 @@ query FetchTeams {
                   """,
                   vars: {
                     "team_id": match.teamId,
-                    "message": _box,
+                    "message": this._box,
                   },
                 ),
               ),
