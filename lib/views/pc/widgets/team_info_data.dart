@@ -3,17 +3,21 @@ import 'package:graphql/client.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
-
 import '../../constants.dart';
 
 class QuickData {
   QuickData(this.averageInner, this.averageOuter, this.autoBalls, this.success,
-      this.failed) {}
+      this.failed);
   final double averageInner;
   final double averageOuter;
   final double autoBalls;
   final double success;
   final double failed;
+}
+
+class SpecificData {
+  SpecificData(this.msg);
+  final String msg;
 }
 
 // ignore: must_be_immutable
@@ -30,6 +34,28 @@ class TeamInfoData extends StatefulWidget {
 }
 
 class _TeamInfoDataState extends State<TeamInfoData> {
+  Future<List<SpecificData>> fetchSpesific() async {
+    final client = getClient();
+    final String query = """query MyQuery(\$teamNumber : Int){
+  specific(where: {team: {number: {_eq: \$teamNumber}}}) {
+    match_id
+    message
+    id
+  }
+}""";
+    final QueryResult result = await client.query(QueryOptions(
+        document: gql(query),
+        variables: <String, int>{"teamNumber": widget.team}));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    return (result.data['specific'] as List<dynamic>)
+        .map((e) => SpecificData(
+              e['message'],
+            ))
+        .toList();
+  }
+
   Future<List<QuickData>> fetchQuickData() async {
     final client = getClient();
     final String query = """
@@ -109,7 +135,8 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                                             );
                                           } else {
                                             if (snapshot.data.length != 1) {
-                                              return Text('invalid data :(');
+                                              return Text(
+                                                  'data.length is shorter than 1! :(');
                                             }
                                             final QuickData report =
                                                 snapshot.data[0];
@@ -165,13 +192,30 @@ class _TeamInfoDataState extends State<TeamInfoData> {
           ),
         ),
         SizedBox(width: defaultPadding),
-        Expanded(
-            flex: 2,
-            child: DashboardCard(
-              title: 'Scouting Specific',
-              // body: ScoutingSpecific(msg: widget.team.msg),
-              body: ScoutingSpecific(msg: []),
-            ))
+        DashboardCard(
+            title: 'Scouting Specific',
+            // body: ScoutingSpecific(msg: widget.team.msg),
+            body: FutureBuilder(
+                future: fetchSpesific(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error has happened in the future! ' +
+                        snapshot.error.toString());
+                  } else if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    if (snapshot.data.length < 1) {
+                      return Text(' data.length is \nshorter than 1! :(');
+                    }
+                    final List<dynamic> report =
+                        (snapshot.data as List<dynamic>)
+                            .map((e) => e.msg)
+                            .toList();
+                    return ScoutingSpecific(msg: report.cast<String>());
+                  }
+                }))
       ],
     );
   }
