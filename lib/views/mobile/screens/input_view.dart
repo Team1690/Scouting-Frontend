@@ -26,13 +26,11 @@ class _UserInputState extends State<UserInput> {
   int selectedClimbIndex = -1; // -1 means nothing
 
   void clearForm() {
-    setState(() {
       match = new Match();
       selectedClimbIndex = -1;
 
       widget.matchNumberController.clear();
       widget.teamNumberController.clear();
-    });
   }
 
   Future<List<LightTeam>> fetchTeams() async {
@@ -70,8 +68,8 @@ query FetchTeams {
           children: [
             SectionDivider(label: 'Match Details'),
             MatchTextBox(
-              onChange: (final int value) =>
-                  setState(() => match.matchNumber = value),
+              onChange: ((final int value) =>
+                  match.matchNumber = value),
               controller: widget.matchNumberController,
             ),
             SizedBox(
@@ -106,17 +104,15 @@ query FetchTeams {
                     return TeamsSearchBox(
                         teams: snapshot.data as List<LightTeam>,
                         onChange: (LightTeam team) =>
-                            {setState(() => match.teamId = team.id)});
+                            match.teamId = team.id);
                   }
                 }),
-            // teamSearch(
-            //     (LightTeam team) => {setState(() => match.teamId = team.id)}),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Auto Balls:',
               icon: Icons.adjust,
-              onChange: (final int count) =>
-                  setState(() => match.autoUpperGoal = count),
+              onChange: ((final int count) =>
+                  match.autoUpperGoal = count),
               count: match.autoUpperGoal,
             ),
 
@@ -124,15 +120,15 @@ query FetchTeams {
             Counter(
               label: 'Inner Port:',
               icon: Icons.adjust,
-              onChange: (final int count) =>
-                  setState(() => match.teleInner = count),
+              onChange: ((final int count) =>
+                  match.teleInner = count),
               count: match.teleInner,
             ),
             Counter(
               label: 'Outer Port:',
               icon: Icons.surround_sound_outlined,
-              onChange: (final int count) =>
-                  setState(() => match.teleOuter = count),
+              onChange: ((final int count) =>
+                 match.teleOuter = count),
               count: match.teleOuter,
             ),
             SectionDivider(label: 'End Game'),
