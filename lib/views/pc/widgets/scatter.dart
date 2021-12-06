@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -44,7 +43,7 @@ class Scatter extends StatelessWidget {
 """;
 
     final QueryResult result = await client
-        .query(QueryOptions(document: gql(query), variables: <String, int>{}));
+        .query(QueryOptions(document: gql(query)));
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
@@ -52,8 +51,8 @@ class Scatter extends StatelessWidget {
         .map((e) => ScatterData(
             e['stats']['aggregate']['avg']['teleop_inner'],
             e['stats']['aggregate']['avg']['teleop_outer'],
-            e['stats']['aggregate']['stddev']['teleop_inner'],
-            e['stats']['aggregate']['stddev']['teleop_outer'],
+            e['stats']['aggregate']['stddev']['teleop_inner'] ?? 0,
+            e['stats']['aggregate']['stddev']['teleop_outer'] ?? 0,
             e['number']))
         .toList();
   }
@@ -89,7 +88,8 @@ class Scatter extends StatelessWidget {
                       if (snapshot.data.length < 1) {
                         return Text('invalid data :(');
                       }
-                      final List<dynamic> report = snapshot.data.map((e) => ScatterData(e.avgInner != null ? e.avgInner : 0, e.avgOuter != null ? e.avgOuter : 0, e.stddevInner != null ? e.stddevInner : 0, e.stddevOuter != null ? e.stddevOuter : 0, e.number != null ? e.number : 0)).toList();
+                      final List<dynamic> report = snapshot.data.map((e) => ScatterData(e.avgInner , e.avgOuter ,
+                       e.stddevInner, e.stddevOuter, e.number)).toList();
                       teams = report.map((e) => Team(teamNumber: e.number)).toList();
                       return ScatterChart(ScatterChartData(
                         scatterSpots: report

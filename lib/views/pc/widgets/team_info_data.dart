@@ -24,7 +24,6 @@ class TeamInfoData extends StatefulWidget {
   }) : super(key: key);
 
   int team;
-  
 
   @override
   State<TeamInfoData> createState() => _TeamInfoDataState();
