@@ -1,4 +1,3 @@
-import 'package:scouting_frontend/net/get_teams_api.dart';
 import 'package:scouting_frontend/views/mobile/main_app_bar.dart';
 import 'package:scouting_frontend/views/mobile/screens/input_view.dart';
 import 'package:scouting_frontend/views/constants.dart';
@@ -12,7 +11,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Orbit Scouting',
       home: isPC(context)
-          ? TeamInfoScreen(data: GetTeamsApi.randomData())
+          ? TeamInfoScreen()
           : Scaffold(appBar: MainAppBar(), body: UserInput()),
       theme: darkModeTheme,
       debugShowCheckedModeBanner: false,

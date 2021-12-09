@@ -9,9 +9,6 @@ import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 import 'package:graphql/client.dart';
 
 class TeamInfoScreen extends StatefulWidget {
-  TeamInfoScreen({@required this.data});
-  final List<Team> data;
-
   @override
   State<TeamInfoScreen> createState() => _TeamInfoScreenState();
 }
