@@ -1,4 +1,5 @@
-
+import 'dart:html';
+import "dart:math" as math;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:graphql/client.dart';
@@ -7,19 +8,24 @@ import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
 
 class ScatterData {
-  ScatterData(this.avgInner, this.avgOuter, this.stddevInner,
-      this.stddevOuter, this.number);
+  ScatterData(this.avgInner, this.avgOuter, this.stddevInner, this.stddevOuter,
+      this.number);
   final double avgInner;
   final double avgOuter;
   final double stddevInner;
   final double stddevOuter;
   final int number;
-
 }
-
 
 // ignore: must_be_immutable
 class Scatter extends StatelessWidget {
+  double stddev(e) {
+    return ((e.avgInner + e.avgOuter) != 0)
+        ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
+            (e.avgInner + e.avgOuter)
+        : 0;
+  }
+
   Future<List<ScatterData>> fetchScatter() async {
     final client = getClient();
     final String query = """query MyQuery{
@@ -42,24 +48,27 @@ class Scatter extends StatelessWidget {
 }
 """;
 
-    final QueryResult result = await client
-        .query(QueryOptions(document: gql(query)));
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
     if (result.hasException) {
       print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => ScatterData(
-            e['stats']['aggregate']['avg']['teleop_inner'],
-            e['stats']['aggregate']['avg']['teleop_outer'],
-            e['stats']['aggregate']['stddev']['teleop_inner'] ?? 0,
-            e['stats']['aggregate']['stddev']['teleop_outer'] ?? 0,
-            e['number']))
-        .toList();
+    } else {
+      //TODO: avoid dynamic
+      return (result.data['team'] as List<dynamic>)
+          .map((e) => ScatterData(
+              e['stats']['aggregate']['avg']['teleop_inner'],
+              e['stats']['aggregate']['avg']['teleop_outer'],
+              e['stats']['aggregate']['stddev']['teleop_inner'] ?? 0,
+              e['stats']['aggregate']['stddev']['teleop_outer'] ?? 0,
+              e['number']))
+          .toList();
+    }
   }
 
   Scatter({
     @required this.onHover,
-    Key key, List<Team> teams,
+    Key key,
+    List<Team> teams,
   }) : super(key: key);
   List<Team> teams;
 
@@ -88,35 +97,40 @@ class Scatter extends StatelessWidget {
                       if (snapshot.data.length < 1) {
                         return Text('invalid data :(');
                       }
-                      final List<dynamic> report = snapshot.data.map((e) => ScatterData(e.avgInner , e.avgOuter ,
-                       e.stddevInner, e.stddevOuter, e.number)).toList();
-                      teams = report.map((e) => Team(teamNumber: e.number)).toList();
+                      final List<ScatterData> report = snapshot.data
+                          .map((e) => ScatterData(e.avgInner, e.avgOuter,
+                              e.stddevInner, e.stddevOuter, e.number))
+                          .toList()
+                          .cast<ScatterData>();
+                      teams = report
+                          .map((e) => Team(teamNumber: e.number))
+                          .toList();
                       return ScatterChart(ScatterChartData(
                         scatterSpots: report
                             .map((e) => ScatterSpot(
                                   (e.avgInner + e.avgOuter).toDouble(),
-                                  ((e.avgInner + e.avgOuter) != 0) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
-                                      (e.avgInner + e.avgOuter) : 0,
+                                  stddev(e),
                                 ))
                             .toList(),
                         scatterTouchData: ScatterTouchData(
-            touchCallback: (p0) => {
-              if (p0.touchedSpot != null)
-                {
-                  tooltip =
-                      teams[p0.touchedSpot.spotIndex].teamNumber.toString(),
-                }
-            },
-            enabled: true,
-            handleBuiltInTouches: true,
-            touchTooltipData: ScatterTouchTooltipData(
-              tooltipBgColor: Colors.grey[400],
-              getTooltipItems: (ScatterSpot touchedBarSpot) {
-                return ScatterTooltipItem(tooltip, TextStyle(), 10);
-              },
-            ),
-          ),
-                        
+                          touchCallback: (p0) => {
+                            if (p0.touchedSpot != null)
+                              {
+                                tooltip = teams[p0.touchedSpot.spotIndex]
+                                    .teamNumber
+                                    .toString(),
+                              }
+                          },
+                          enabled: true,
+                          handleBuiltInTouches: true,
+                          touchTooltipData: ScatterTouchTooltipData(
+                            tooltipBgColor: Colors.grey[400],
+                            getTooltipItems: (ScatterSpot touchedBarSpot) {
+                              return ScatterTooltipItem(
+                                  tooltip, TextStyle(), 10);
+                            },
+                          ),
+                        ),
                         titlesData: FlTitlesData(
                           show: true,
                           bottomTitles: SideTitles(
@@ -130,9 +144,13 @@ class Scatter extends StatelessWidget {
                         ),
                         gridData: FlGridData(
                           show: true,
-                          horizontalInterval: report.map((e) => (e.avgInner + e.avgOuter)).reduce((curr, next) => curr > next? curr: next) / 10,
-                          verticalInterval: report.map((e) => ((e.avgInner + e.avgOuter) != 0) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
-                                      (e.avgInner + e.avgOuter) : 0).reduce((curr, next) => curr > next? curr: next) / 10,
+                          horizontalInterval: report
+                                  .map((e) => (e.avgInner + e.avgOuter))
+                                  .reduce(math.max) /
+                              10,
+                          verticalInterval:
+                              report.map((e) => stddev(e)).reduce(math.max) /
+                                  10,
                           drawHorizontalLine: true,
                           checkToShowHorizontalLine: (value) => true,
                           getDrawingHorizontalLine: (value) =>
@@ -149,9 +167,12 @@ class Scatter extends StatelessWidget {
                         ),
                         minX: 0,
                         minY: 0,
-                        maxX: report.map((e) => (e.avgInner + e.avgOuter)).reduce((curr, next) => curr > next? curr: next),
-                        maxY: report.map((e) => ((e.avgInner + e.avgOuter) != 0) ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
-                                      (e.avgInner + e.avgOuter) : 0).reduce((curr, next) => curr > next? curr: next),
+                        maxX: report
+                            .map((e) => (e.avgInner + e.avgOuter))
+                            .reduce((curr, next) => curr > next ? curr : next),
+                        maxY: report
+                            .map((e) => stddev(e))
+                            .reduce((curr, next) => curr > next ? curr : next),
                       ));
                     }
                   }))
