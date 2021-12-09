@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/net/send_match_api.dart';
+
 import 'package:scouting_frontend/models/match_model.dart';
 import 'package:scouting_frontend/views/mobile/counter.dart';
 import 'package:scouting_frontend/views/mobile/match_dropdown.dart';
