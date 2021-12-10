@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class Selector extends StatefulWidget {
-  const Selector(this.list, {Key key}) : super(key: key);
+  const Selector(this.hint, this.list, {Key key}) : super(key: key);
   final List<String> list;
+  final String hint;
   @override
-  State<Selector> createState() => _SelectorState(list);
+  State<Selector> createState() => _SelectorState(list, hint);
 }
 
 class _SelectorState extends State<Selector> {
-  String dropDownValue = '';
-  _SelectorState(this.list) {
-    list.insert(0, 'Choose an option');
+  String dropDownValue;
+  final String hint;
+  _SelectorState(this.list, this.hint) {
+    list.insert(0, hint);
     dropDownValue = list.elementAt(0);
   }
   List<String> list;
@@ -19,16 +21,19 @@ class _SelectorState extends State<Selector> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
+      isExpanded: true,
       value: dropDownValue,
-      icon: const Icon(Icons.arrow_downward),
-      elevation: 16,
-      style: const TextStyle(color: primaryColor),
+      elevation: 24,
+      style: const TextStyle(color: primaryColor, fontSize: 14),
       underline: Container(
         height: 2,
         color: primaryColor,
       ),
       onChanged: (String newValue) {
         setState(() {
+          if (list.contains(hint) && newValue != hint) {
+            list.remove(hint);
+          }
           dropDownValue = newValue;
         });
       },
