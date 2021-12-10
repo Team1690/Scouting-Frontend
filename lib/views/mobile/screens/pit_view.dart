@@ -86,9 +86,9 @@ query FetchTeams {
             SectionDivider(label: 'Drive Train'),
             Container(
               padding: const EdgeInsets.fromLTRB(
-                100,
+                50,
                 defaultPadding / 4,
-                100,
+                50,
                 defaultPadding / 4,
               ),
               child: Selector('Choose a DriveTrain', [
@@ -111,7 +111,7 @@ query FetchTeams {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(
-                  100, defaultPadding / 4, 100, defaultPadding / 4),
+                  50, defaultPadding / 4, 50, defaultPadding / 4),
               child: Selector('Choose a Drive Motor', [
                 'Falcon',
                 'Neo',
@@ -122,7 +122,11 @@ query FetchTeams {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(
-                  100, defaultPadding / 4, 100, defaultPadding / 4),
+                50,
+                defaultPadding / 4,
+                50,
+                defaultPadding / 4,
+              ),
               child: TextField(
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(
@@ -137,7 +141,7 @@ query FetchTeams {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(
-                  100, defaultPadding / 4, 100, defaultPadding / 4),
+                  50, defaultPadding / 4, 50, defaultPadding / 4),
               child: Selector("Choose a Shifter", [
                 'None',
                 'Purchased',
