@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 
@@ -95,7 +94,7 @@ query FetchTeams {
               TextField(
                 controller: box,
                 onChanged: (text) {
-                    _box = text;
+                  _box = text;
                 },
                 style: TextStyle(color: Colors.white),
                 cursorColor: Colors.white,
