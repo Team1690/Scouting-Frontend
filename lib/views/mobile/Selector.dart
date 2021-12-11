@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class Selector extends StatefulWidget {
-  const Selector(this.hint, this.list, {Key key}) : super(key: key);
+  const Selector(this.hint, this.list, {Key key, this.onChanged})
+      : super(key: key);
   final List<String> list;
   final String hint;
+  final Function(String) onChanged;
   @override
   State<Selector> createState() => _SelectorState(list, hint);
 }
@@ -12,6 +14,7 @@ class Selector extends StatefulWidget {
 class _SelectorState extends State<Selector> {
   String dropDownValue;
   final String hint;
+
   _SelectorState(this.list, this.hint) {
     list.insert(0, hint);
     dropDownValue = list.elementAt(0);
@@ -31,6 +34,7 @@ class _SelectorState extends State<Selector> {
       ),
       onChanged: (String newValue) {
         setState(() {
+          widget.onChanged(newValue);
           if (list.contains(hint) && newValue != hint) {
             list.remove(hint);
           }
