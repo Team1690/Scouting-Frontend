@@ -24,7 +24,7 @@ class _SelectorState extends State<Selector> {
       isExpanded: true,
       value: dropDownValue,
       elevation: 24,
-      style: const TextStyle(color: primaryColor, fontSize: 16),
+      style: const TextStyle(color: primaryColor, fontSize: 18),
       underline: Container(
         height: 2,
         color: primaryColor,
