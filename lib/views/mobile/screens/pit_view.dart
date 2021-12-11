@@ -20,14 +20,34 @@ class PitView extends StatefulWidget {
 
 class _PitViewState extends State<PitView> {
   LightTeam team;
+  String driveTrainInitialValue = 'Choose a DriveTrain';
   String driveTrainValue = 'Choose a DriveTrain';
+  List<String> driveTrains = [
+    'Choose a DriveTrain',
+    'Westcoast',
+    'Kit Chassis',
+    'Custom Tank',
+    'Swerve',
+    'Mecanum/H',
+    'Other',
+  ];
+  String driveMotorInitialValue = 'Choose a Drive Motor';
   String driveMotorValue = 'Choose a Drive Motor';
-  String wheelType = '';
+  List<String> driveMotors = [
+    'Choose a Drive Motor',
+    'Falcon',
+    'Neo',
+    'CIM',
+    'Mini CIM',
+    'Other',
+  ];
   int motorAmount = 2;
   int selectedShifterIndex = -1;
+  String wheelType = '';
   double driveTrainReliability = 1;
   double electronicsReliability = 1;
   double robotReliability = 1;
+  String notes = '';
 
   Future<List<LightTeam>> fetchTeams() async {
     final client = getClient();
@@ -71,13 +91,16 @@ query FetchTeams {
                   return Stack(
                       alignment: AlignmentDirectional.center,
                       children: [
-                        TextField(
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search),
-                            border: const OutlineInputBorder(),
-                            hintText: 'Search Team',
-                            enabled: false,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.search),
+                              border: const OutlineInputBorder(),
+                              hintText: 'Search Team',
+                              enabled: false,
+                            ),
                           ),
                         ),
                         Center(
@@ -108,32 +131,69 @@ query FetchTeams {
               30,
               defaultPadding,
             ),
-            child: Selector(
-              'Choose a DriveTrain',
-              [
-                'Westcoast',
-                'Kit Chassis',
-                'Custom Tank',
-                'Swerve',
-                'Mecanum/H',
-                'Other',
-              ],
-              onChanged: (newValue) => {driveTrainValue = newValue},
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: driveTrainValue,
+              elevation: 24,
+              style: const TextStyle(color: primaryColor, fontSize: 18),
+              underline: Container(
+                height: 2,
+                color: primaryColor,
+              ),
+              onChanged: (String newValue) {
+                setState(() {
+                  if (driveTrains.contains(driveTrainInitialValue) &&
+                      newValue != driveTrainInitialValue) {
+                    driveTrains.remove(driveTrainInitialValue);
+                  }
+                  driveTrainValue = newValue;
+                });
+              },
+              items: driveTrains.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              }).toList(),
             ),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(
-                30, defaultPadding, 30, defaultPadding),
-            child: Selector(
-              'Choose a Drive Motor',
-              [
-                'Falcon',
-                'Neo',
-                'CIM',
-                'Mini CIM',
-                'Other',
-              ],
-              onChanged: (newValue) => {driveMotorValue = newValue},
+              30,
+              defaultPadding,
+              30,
+              defaultPadding,
+            ),
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: driveMotorValue,
+              elevation: 24,
+              style: const TextStyle(color: primaryColor, fontSize: 18),
+              underline: Container(
+                height: 2,
+                color: primaryColor,
+              ),
+              onChanged: (String newValue) {
+                setState(() {
+                  if (driveMotors.contains(driveMotorInitialValue) &&
+                      newValue != driveMotorInitialValue) {
+                    driveMotors.remove(driveMotorInitialValue);
+                  }
+                  driveMotorValue = newValue;
+                });
+              },
+              items: driveMotors.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              }).toList(),
             ),
           ),
           Padding(
@@ -147,9 +207,7 @@ query FetchTeams {
               lowerLimit: 2,
               stepValue: 2,
               longPressedValue: 4,
-              onChange: (newVal) {
-                motorAmount = newVal;
-              },
+              onChange: (newVal) => setState(() => motorAmount = newVal),
             ),
           ),
           Padding(
@@ -180,7 +238,11 @@ query FetchTeams {
               bottom: defaultPadding,
             ),
             child: TextField(
-              onChanged: (value) => wheelType = value,
+              onChanged: (value) {
+                setState(() {
+                  wheelType = value;
+                });
+              },
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.fromLTRB(10, defaultPadding, 10, defaultPadding),
@@ -189,6 +251,7 @@ query FetchTeams {
               ),
             ),
           ),
+          SectionDivider(label: 'General Robot Reliability'),
           Padding(
             padding: const EdgeInsets.only(
                 top: defaultPadding, bottom: defaultPadding),
@@ -208,7 +271,6 @@ query FetchTeams {
               ],
             ),
           ),
-          SectionDivider(label: 'General Robot'),
           Padding(
             padding: const EdgeInsets.only(
                 top: defaultPadding, bottom: defaultPadding),
@@ -246,7 +308,28 @@ query FetchTeams {
                 )
               ],
             ),
-          )
+          ),
+          SectionDivider(label: 'Notes'),
+          TextField(
+            onChanged: (text) {
+              setState(() {
+                notes = text;
+              });
+            },
+            style: TextStyle(color: Colors.white),
+            cursorColor: Colors.white,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 4.0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 4.0),
+              ),
+              fillColor: secondaryColor,
+              filled: true,
+            ),
+            maxLines: 18,
+          ),
         ],
       ),
     );
@@ -296,5 +379,8 @@ Container(
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly
                 ]),
-          )          
+          ) 
+
+
+
 */
