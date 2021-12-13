@@ -51,6 +51,7 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () async {
+        widget.onPressed();
         final client = getClient();
         client.mutate(MutationOptions(
             document: gql(widget.mutation), variables: widget.vars));
