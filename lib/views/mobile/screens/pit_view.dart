@@ -68,8 +68,30 @@ class _PitViewState extends State<PitView> {
   double robotReliability = 1;
 
   String notes = '';
-
+  TextEditingController controller = TextEditingController();
   Map<String, dynamic> map = Map();
+  TextEditingController teamSelectionController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
+
+  void resetFrame() {
+    if (!driveTrains.contains(driveTrainInitialValue)) {
+      driveTrains.add(driveTrainInitialValue);
+    }
+    driveTrainValue = driveTrainInitialValue;
+    if (!driveMotors.contains(driveMotorInitialValue)) {
+      driveMotors.add(driveMotorInitialValue);
+    }
+    driveMotorValue = driveMotorInitialValue;
+    selectedShifterIndex = -1;
+    selectedGearBoxIndex = -1;
+    notesController.clear();
+    controller.clear();
+    driveTrainReliability = 1;
+    electronicsReliability = 1;
+    robotReliability = 1;
+    motorAmount = 2;
+    (context as Element).reassemble();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,6 +186,7 @@ class _PitViewState extends State<PitView> {
                 bottom: defaultPadding,
               ),
               child: TextField(
+                controller: controller,
                 onChanged: (value) {
                   map['drive_wheel_type'] = value;
                   wheelType = value;
@@ -221,6 +244,8 @@ class _PitViewState extends State<PitView> {
               padding: const EdgeInsets.only(
                   top: defaultPadding, bottom: defaultPadding),
               child: TextField(
+                textDirection: TextDirection.rtl,
+                controller: notesController,
                 onChanged: (text) {
                   map['notes'] = text;
                   notes = text;
@@ -265,6 +290,7 @@ class _PitViewState extends State<PitView> {
       }
       """,
                 vars: map,
+                onPressed: resetFrame,
               ),
             )
           ],
