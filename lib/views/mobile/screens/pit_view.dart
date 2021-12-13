@@ -6,9 +6,14 @@ import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/mobile/Selector.dart';
+import 'package:scouting_frontend/views/mobile/PitViewCounter.dart';
+import 'package:scouting_frontend/views/mobile/PitViewSlider.dart';
+import 'package:scouting_frontend/views/mobile/PitViewSwitcher.dart';
+import 'package:scouting_frontend/views/mobile/PitViewSelector.dart';
+import 'package:scouting_frontend/views/mobile/TeamSelection.dart';
 import 'package:scouting_frontend/views/mobile/counter.dart';
 import 'package:scouting_frontend/views/mobile/section_divider.dart';
+import 'package:scouting_frontend/views/mobile/submit_button.dart';
 import 'package:scouting_frontend/views/mobile/switcher.dart';
 import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
@@ -19,9 +24,12 @@ class PitView extends StatefulWidget {
 }
 
 class _PitViewState extends State<PitView> {
-  LightTeam team;
-  String driveTrainInitialValue = 'Choose a DriveTrain';
+  LightTeam team = LightTeam(0, 0, "");
+
+  final String driveTrainInitialValue = 'Choose a DriveTrain';
+
   String driveTrainValue = 'Choose a DriveTrain';
+
   List<String> driveTrains = [
     'Choose a DriveTrain',
     'Westcoast',
@@ -31,8 +39,11 @@ class _PitViewState extends State<PitView> {
     'Mecanum/H',
     'Other',
   ];
-  String driveMotorInitialValue = 'Choose a Drive Motor';
+
+  final String driveMotorInitialValue = 'Choose a Drive Motor';
+
   String driveMotorValue = 'Choose a Drive Motor';
+
   List<String> driveMotors = [
     'Choose a Drive Motor',
     'Falcon',
@@ -41,37 +52,24 @@ class _PitViewState extends State<PitView> {
     'Mini CIM',
     'Other',
   ];
+
   int motorAmount = 2;
+
   int selectedShifterIndex = -1;
+
+  int selectedGearBoxIndex = -1;
+
   String wheelType = '';
+
   double driveTrainReliability = 1;
+
   double electronicsReliability = 1;
+
   double robotReliability = 1;
+
   String notes = '';
 
-  Future<List<LightTeam>> fetchTeams() async {
-    final client = getClient();
-    final String query =
-        """
-query FetchTeams {
-  team {
-    id
-    number
-    name
-  }
-}
-  """;
-
-    final QueryResult result =
-        await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => LightTeam(e['id'], e['number'], e['name']))
-        .toList();
-    //.entries.map((e) => LightTeam(e['id']);
-  }
+  Map<String, dynamic> map = Map();
 
   @override
   Widget build(BuildContext context) {
@@ -79,308 +77,199 @@ query FetchTeams {
       appBar: AppBar(
         title: Center(child: Text('Pit Scouting')),
       ),
-      body: ListView(
-        children: [
-          FutureBuilder(
-              future: fetchTeams(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error has happened in the future! ' +
-                      snapshot.error.toString());
-                } else if (!snapshot.hasData) {
-                  return Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
-                              border: const OutlineInputBorder(),
-                              hintText: 'Search Team',
-                              enabled: false,
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ]);
-
-                  // const CircularProgressIndicator();
-                } else {
-                  return Padding(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                    child: TeamsSearchBox(
-                      teams: snapshot.data as List<LightTeam>,
-                      onChange: (LightTeam) {
-                        setState(() {
-                          team = LightTeam;
-                        });
-                      },
-                    ),
-                  );
-                }
-              }),
-          SectionDivider(label: 'Drive Train'),
-          Container(
-            padding: const EdgeInsets.fromLTRB(
-              30,
-              defaultPadding,
-              30,
-              defaultPadding,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            TeamSelection(
+              onChange: (lightTeam) {
+                team = lightTeam;
+                map['team_id'] = team.id;
+              },
             ),
-            child: DropdownButton<String>(
-              isExpanded: true,
+            SectionDivider(label: 'Drive Train'),
+            Selector(
+              padding: const EdgeInsets.fromLTRB(
+                  30, defaultPadding, 30, defaultPadding),
               value: driveTrainValue,
-              elevation: 24,
-              style: const TextStyle(color: primaryColor, fontSize: 18),
-              underline: Container(
-                height: 2,
-                color: primaryColor,
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  if (driveTrains.contains(driveTrainInitialValue) &&
-                      newValue != driveTrainInitialValue) {
-                    driveTrains.remove(driveTrainInitialValue);
-                  }
-                  driveTrainValue = newValue;
-                });
+              values: driveTrains,
+              initialValue: driveTrainInitialValue,
+              onChange: (newValue) {
+                map['drive_train_type'] = newValue;
+                driveTrainValue = newValue;
+                print(driveTrainValue);
               },
-              items: driveTrains.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
-              }).toList(),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(
-              30,
-              defaultPadding,
-              30,
-              defaultPadding,
-            ),
-            child: DropdownButton<String>(
-              isExpanded: true,
+            Selector(
+              padding: const EdgeInsets.fromLTRB(
+                  30, defaultPadding, 30, defaultPadding),
               value: driveMotorValue,
-              elevation: 24,
-              style: const TextStyle(color: primaryColor, fontSize: 18),
-              underline: Container(
-                height: 2,
-                color: primaryColor,
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  if (driveMotors.contains(driveMotorInitialValue) &&
-                      newValue != driveMotorInitialValue) {
-                    driveMotors.remove(driveMotorInitialValue);
-                  }
-                  driveMotorValue = newValue;
-                });
+              values: driveMotors,
+              initialValue: driveMotorInitialValue,
+              onChange: (newValue) {
+                map['drive_motor_type'] = newValue;
+                driveMotorValue = newValue;
               },
-              items: driveMotors.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
-              }).toList(),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-                top: defaultPadding, bottom: defaultPadding),
-            child: Counter(
-              label: 'Drive Motors',
-              icon: Icons.adjust,
-              count: motorAmount,
-              upperLimit: 10,
-              lowerLimit: 2,
-              stepValue: 2,
-              longPressedValue: 4,
-              onChange: (newVal) => setState(() => motorAmount = newVal),
+            PitViewCounter(
+              amount: motorAmount,
+              onChange: (newValue) {
+                map['drive_motor_amount'] = newValue;
+                motorAmount = newValue;
+              },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-                top: defaultPadding, bottom: defaultPadding),
-            child: Switcher(
+            PitViewSwitcher(
+              padding:
+                  EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
               labels: [
-                'Regular shifter',
-                'Purchesed shifter',
+                'Shifter',
                 'No shifter',
               ],
               colors: [
                 Colors.white,
                 Colors.white,
+              ],
+              onChange: (newValue) {
+                map['shifter'] = newValue == -1
+                    ? null
+                    : newValue == 0
+                        ? "Has a Shifter"
+                        : "No Shifter";
+                selectedShifterIndex = newValue;
+                print(selectedShifterIndex);
+              },
+            ),
+            PitViewSwitcher(
+              padding:
+                  EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
+              labels: [
+                'Purchased GearBox',
+                'Custom GearBox',
+              ],
+              colors: [
+                Colors.white,
                 Colors.white,
               ],
-              selected: selectedShifterIndex,
-              onChange: (final int index) => setState(() {
-                selectedShifterIndex =
-                    index == selectedShifterIndex ? -1 : index;
-                print(selectedShifterIndex);
-              }),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: defaultPadding,
-              bottom: defaultPadding,
-            ),
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  wheelType = value;
-                });
+              onChange: (newValue) {
+                map['gearbox'] = newValue == -1
+                    ? null
+                    : newValue == 0
+                        ? "Purchased gearbox"
+                        : "Custom gearbox";
+                selectedGearBoxIndex = newValue;
               },
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.fromLTRB(10, defaultPadding, 10, defaultPadding),
-                hintText: 'Drive Wheel type',
-                hintStyle: TextStyle(fontSize: 14),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: defaultPadding,
+                bottom: defaultPadding,
+              ),
+              child: TextField(
+                onChanged: (value) {
+                  map['drive_wheel_type'] = value;
+                  wheelType = value;
+                },
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(
+                      10, defaultPadding, 10, defaultPadding),
+                  hintText: 'Drive Wheel type',
+                  hintStyle: TextStyle(fontSize: 14),
+                ),
               ),
             ),
-          ),
-          SectionDivider(label: 'General Robot Reliability'),
-          Padding(
-            padding: const EdgeInsets.only(
-                top: defaultPadding, bottom: defaultPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Drive Train Reliablity:'),
-                Slider(
-                  min: 1,
-                  max: 5,
-                  divisions: 5,
-                  value: driveTrainReliability,
-                  label: driveTrainReliability.round().toString(),
-                  onChanged: (newVal) =>
-                      setState(() => driveTrainReliability = newVal),
-                )
-              ],
+            SectionDivider(label: 'General Robot Reliability'),
+            PitViewSlider(
+              label: 'Drive Train Reliablity:',
+              value: driveTrainReliability,
+              padding:
+                  EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
+              onChange: (newVal) {
+                map['drive_train_reliability'] = newVal;
+                driveTrainReliability = newVal;
+              },
+              divisions: 4,
+              max: 5,
+              min: 1,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-                top: defaultPadding, bottom: defaultPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Electronics Reliablity:'),
-                Slider(
-                  min: 1,
-                  max: 5,
-                  divisions: 5,
-                  value: electronicsReliability,
-                  label: electronicsReliability.round().toString(),
-                  onChanged: (newVal) =>
-                      setState(() => electronicsReliability = newVal),
-                )
-              ],
+            PitViewSlider(
+              label: 'Electronics Reliability',
+              padding:
+                  EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
+              value: electronicsReliability,
+              divisions: 4,
+              min: 1,
+              max: 5,
+              onChange: (newValue) {
+                map['electronics_reliability'] = newValue;
+                electronicsReliability = newValue;
+              },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-                top: defaultPadding, bottom: defaultPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Robot Reliablity:'),
-                Slider(
-                  min: 1,
-                  max: 10,
-                  divisions: 10,
-                  value: robotReliability,
-                  label: robotReliability.round().toString(),
-                  onChanged: (newVal) =>
-                      setState(() => robotReliability = newVal),
-                )
-              ],
+            PitViewSlider(
+              label: 'Robot Reliability',
+              padding:
+                  EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
+              value: robotReliability,
+              divisions: 9,
+              max: 10,
+              min: 1,
+              onChange: (newValue) {
+                map['robot_reliability'] = newValue;
+                robotReliability = newValue;
+              },
             ),
-          ),
-          SectionDivider(label: 'Notes'),
-          TextField(
-            onChanged: (text) {
-              setState(() {
-                notes = text;
-              });
-            },
-            style: TextStyle(color: Colors.white),
-            cursorColor: Colors.white,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue, width: 4.0),
+            SectionDivider(label: 'Notes'),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: defaultPadding, bottom: defaultPadding),
+              child: TextField(
+                onChanged: (text) {
+                  map['notes'] = text;
+                  notes = text;
+                },
+                style: TextStyle(color: Colors.white),
+                cursorColor: Colors.white,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 4.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 4.0),
+                  ),
+                  fillColor: secondaryColor,
+                  filled: true,
+                ),
+                maxLines: 18,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey, width: 4.0),
-              ),
-              fillColor: secondaryColor,
-              filled: true,
             ),
-            maxLines: 18,
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: defaultPadding, bottom: defaultPadding),
+              child: SubmitButton(
+                mutation: """
+      mutation MyMutation(\$drive_motor_amount: Int, \$drive_motor_type: String, \$drive_train_reliability: Int, \$drive_train_type: String, \$drive_wheel_type: String, \$electronics_reliability: Int, \$gearbox: String, \$notes:String,\$robot_reliability:Int,\$shifter:String,\$team_id:Int) {
+      insert_pit(objects: {drive_motor_amount: \$drive_motor_amount, drive_motor_type: \$drive_motor_type, drive_train_reliability: \$drive_train_reliability, drive_train_type: \$drive_train_type, drive_wheel_type: \$drive_wheel_type, electronics_reliability: \$electronics_reliability, gearbox: \$gearbox, notes: \$notes, robot_reliability: \$robot_reliability, shifter: \$shifter, team_id: \$team_id}) {
+        returning {
+      drive_motor_amount
+      drive_motor_type
+      drive_train_reliability
+      drive_train_type
+      drive_wheel_type
+      electronics_reliability
+      gearbox
+      id
+      notes
+      robot_reliability
+      shifter
+      team_id
+        }
+      }
+      }
+      """,
+                vars: map,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
-
-/*
-shifter selector:
-Container(
-            padding: const EdgeInsets.fromLTRB(
-                50, defaultPadding, 50, defaultPadding),
-            child: Selector("Choose a Shifter", [
-              'None',
-              'Purchased',
-              'Regular',
-            ]),
-          )
-
-
-  child: AdvancedSwitch(
-    controller: AdvancedSwitchController(),
-    activeColor: primaryColor,
-    inactiveColor: primaryColor,
-    activeChild: Text('Tank'),
-    inactiveChild: Text('Swerve'),
-    height: 25,
-    width: 100,
-    enabled: true,
-  ),
-
-drive motor text field
-Container(
-            padding: const EdgeInsets.fromLTRB(
-              50,
-              defaultPadding,
-              50,
-              defaultPadding,
-            ),
-            child: TextField(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(
-                      10, defaultPadding, 10, defaultPadding),
-                  hintText: 'Drive Motor Amount',
-                  hintStyle: TextStyle(fontSize: 14),
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ]),
-          ) 
-
-
-
-*/
