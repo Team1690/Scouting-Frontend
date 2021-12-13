@@ -57,6 +57,16 @@ class _NavigationTab extends State<NavigationTab> {
               );
             },
           ),
+          ListTile(
+            title: const Text('Scatter'),
+            leading: Icon(Icons.compare_arrows_rounded),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ScattersScreen()),
+              );
+            },
+          ),
         ],
       ),
     );

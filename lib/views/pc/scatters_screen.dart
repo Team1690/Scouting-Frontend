@@ -26,44 +26,13 @@ class _ScattersScreenState extends State<ScattersScreen> {
         child: Row(
           children: [
             Expanded(
-                flex: 4,
-                child: DashboardCard(
+              flex: 4,
+              child: DashboardCard(
                   title: 'Scatter',
-                  body:
-                      Container() /*Scatter(
-                    teams: widget.teams,
+                  body: Scatter(
                     onHover: (Team team) => setState(() => displayTeam = team),
-                  )*/
-                  ),
+                  )),
             ),
-
-            SizedBox(width: defaultPadding),
-            Expanded(
-                flex: 2,
-                child: DashboardCard(
-                  title: 'Team Data',
-                  body: displayTeam == null
-                      ? Container()
-                      : Column(
-                          children: [
-                            Text(displayTeam.teamNumber.toString() +
-                                ' - ' +
-                                displayTeam.teamName),
-                            SizedBox(height: defaultPadding),
-                            Expanded(
-                              flex: 2,
-                              child: Container(), //TODO: Add the game chart
-                            ),
-                            Expanded(
-                                flex: 4,
-                                child: SpiderChart(
-                                    numberOfFeatures: 4,
-                                    data: [displayTeam.spider],
-                                    ticks: [0, 25, 50, 75, 100],
-                                    features: ["", "", "", ""]))
-                          ],
-                        ),
-                ))
           ],
         ),
       ),
