@@ -18,3 +18,6 @@ samples, guidance on mobile development, and a full API reference.
 
 Hasura username: idosobol1005@gmail.com
 Hasura password: 0rbit169O!
+
+Firebase gmail: orbitscouting@gmail.com
+Firebase password: 0rbit169O!
