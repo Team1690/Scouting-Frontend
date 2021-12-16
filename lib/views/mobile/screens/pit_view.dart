@@ -6,6 +6,8 @@ import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
+import 'package:scouting_frontend/views/mobile/FilePickerWidget.dart';
+import 'package:scouting_frontend/views/mobile/FirebaseSubmitButton.dart';
 import 'package:scouting_frontend/views/mobile/PitViewCounter.dart';
 import 'package:scouting_frontend/views/mobile/PitViewSlider.dart';
 import 'package:scouting_frontend/views/mobile/PitViewSwitcher.dart';
@@ -118,7 +120,6 @@ class _PitViewState extends State<PitView> {
               onChange: (newValue) {
                 map['drive_train_type'] = newValue;
                 driveTrainValue = newValue;
-                print(driveTrainValue);
               },
             ),
             Selector(
@@ -157,7 +158,6 @@ class _PitViewState extends State<PitView> {
                         ? "Has a Shifter"
                         : "No Shifter";
                 selectedShifterIndex = newValue;
-                print(selectedShifterIndex);
               },
             ),
             PitViewSwitcher(
@@ -239,6 +239,8 @@ class _PitViewState extends State<PitView> {
                 robotReliability = newValue;
               },
             ),
+            SectionDivider(label: 'Robot Image'),
+            FilePickerWidget(),
             SectionDivider(label: 'Notes'),
             Padding(
               padding: const EdgeInsets.only(
@@ -268,10 +270,10 @@ class _PitViewState extends State<PitView> {
             Padding(
               padding: const EdgeInsets.only(
                   top: defaultPadding, bottom: defaultPadding),
-              child: SubmitButton(
+              child: FireBaseSubmitButton(
                 mutation: """
-      mutation MyMutation(\$drive_motor_amount: Int, \$drive_motor_type: String, \$drive_train_reliability: Int, \$drive_train_type: String, \$drive_wheel_type: String, \$electronics_reliability: Int, \$gearbox: String, \$notes:String,\$robot_reliability:Int,\$shifter:String,\$team_id:Int) {
-      insert_pit(objects: {drive_motor_amount: \$drive_motor_amount, drive_motor_type: \$drive_motor_type, drive_train_reliability: \$drive_train_reliability, drive_train_type: \$drive_train_type, drive_wheel_type: \$drive_wheel_type, electronics_reliability: \$electronics_reliability, gearbox: \$gearbox, notes: \$notes, robot_reliability: \$robot_reliability, shifter: \$shifter, team_id: \$team_id}) {
+      mutation MyMutation(\$url: String, \$drive_motor_amount: Int, \$drive_motor_type: String, \$drive_train_reliability: Int, \$drive_train_type: String, \$drive_wheel_type: String, \$electronics_reliability: Int, \$gearbox: String, \$notes:String,\$robot_reliability:Int,\$shifter:String,\$team_id:Int) {
+      insert_pit(objects: {url: \$url, drive_motor_amount: \$drive_motor_amount, drive_motor_type: \$drive_motor_type, drive_train_reliability: \$drive_train_reliability, drive_train_type: \$drive_train_type, drive_wheel_type: \$drive_wheel_type, electronics_reliability: \$electronics_reliability, gearbox: \$gearbox, notes: \$notes, robot_reliability: \$robot_reliability, shifter: \$shifter, team_id: \$team_id}) {
         returning {
       drive_motor_amount
       drive_motor_type
@@ -285,6 +287,7 @@ class _PitViewState extends State<PitView> {
       robot_reliability
       shifter
       team_id
+      url
         }
       }
       }
