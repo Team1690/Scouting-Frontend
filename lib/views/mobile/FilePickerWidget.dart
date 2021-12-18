@@ -4,9 +4,12 @@ import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:scouting_frontend/views/constants.dart';
 
 class FilePickerWidget extends StatefulWidget {
-  FilePickerWidget({Key key}) : super(key: key);
-  static FilePickerResult result;
-  static AdvancedSwitchController controller = AdvancedSwitchController();
+  FilePickerWidget({Key key, @required this.controller, this.onImagePicked})
+      : super(key: key);
+  FilePickerResult result;
+  final AdvancedSwitchController controller;
+  final Function(FilePickerResult) onImagePicked;
+
   @override
   _FilePickerWidgetState createState() => _FilePickerWidgetState();
 }
@@ -20,10 +23,11 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
           padding: EdgeInsets.symmetric(vertical: defaultPadding),
           child: ElevatedButton(
             onPressed: () async {
-              FilePickerWidget.result = await FilePicker.platform
+              widget.result = await FilePicker.platform
                   .pickFiles(type: FileType.image, allowMultiple: false);
-              if (FilePickerWidget.result == null) return;
-              FilePickerWidget.controller.value = true;
+              if (widget.result == null) return;
+              widget.controller.value = true;
+              widget.onImagePicked(widget.result);
             },
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -39,7 +43,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
         ),
         AdvancedSwitch(
           width: 105,
-          controller: FilePickerWidget.controller,
+          controller: widget.controller,
           enabled: false,
           activeColor: Colors.green,
           inactiveColor: Colors.red,
