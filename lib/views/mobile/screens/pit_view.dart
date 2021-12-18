@@ -29,9 +29,7 @@ class PitView extends StatefulWidget {
 class _PitViewState extends State<PitView> {
   LightTeam team;
 
-  final String driveTrainInitialValue = 'Choose a DriveTrain';
-
-  String driveTrainValue = 'Choose a DriveTrain';
+  static const String driveTrainInitialValue = 'Choose a DriveTrain';
 
   final List<String> driveTrains = [
     'Choose a DriveTrain',
@@ -43,9 +41,7 @@ class _PitViewState extends State<PitView> {
     'Other',
   ];
 
-  final String driveMotorInitialValue = 'Choose a Drive Motor';
-
-  String driveMotorValue = 'Choose a Drive Motor';
+  static const String driveMotorInitialValue = 'Choose a Drive Motor';
 
   final List<String> driveMotors = [
     'Choose a Drive Motor',
@@ -56,26 +52,23 @@ class _PitViewState extends State<PitView> {
     'Other',
   ];
 
-  int motorAmount = 2;
-
-  int selectedShifterIndex = -1;
-
-  int selectedGearBoxIndex = -1;
-
-  String wheelType = '';
-
-  double driveTrainReliability = 1;
-
-  double electronicsReliability = 1;
-
-  double robotReliability = 1;
-
-  String notes = '';
-
   FilePickerResult result;
 
   final TextEditingController wheelTypeController = TextEditingController();
-  final Map<String, dynamic> map = Map();
+  final Map<String, dynamic> vars = {
+    'drive_train_type': driveTrainInitialValue,
+    'drive_motor_type': driveMotorInitialValue,
+    'drive_motor_amount': 2,
+    'shifter': -1,
+    'gearbox': -1,
+    'notes': '',
+    'drive_wheel_type': '',
+    'drive_train_reliability': 1,
+    'electronics_reliability': 1,
+    'robot_reliability': 1,
+    'team_id': null
+  };
+
   final TextEditingController teamSelectionController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   final AdvancedSwitchController advancedSwitchController =
@@ -85,19 +78,19 @@ class _PitViewState extends State<PitView> {
     if (!driveTrains.contains(driveTrainInitialValue)) {
       driveTrains.add(driveTrainInitialValue);
     }
-    driveTrainValue = driveTrainInitialValue;
+    vars['drive_train_type'] = driveTrainInitialValue;
     if (!driveMotors.contains(driveMotorInitialValue)) {
       driveMotors.add(driveMotorInitialValue);
     }
-    driveMotorValue = driveMotorInitialValue;
-    selectedShifterIndex = -1;
-    selectedGearBoxIndex = -1;
+    vars['drive_motor_type'] = driveMotorInitialValue;
+    vars['shifter'] = -1;
+    vars['gearbox'] = -1;
     notesController.clear();
     wheelTypeController.clear();
-    driveTrainReliability = 1;
-    electronicsReliability = 1;
-    robotReliability = 1;
-    motorAmount = 2;
+    vars['drive_train_reliability'] = 1.0;
+    vars['electronics_reliability'] = 1.0;
+    vars['robot_reliability'] = 1.0;
+    vars['drive_motor_amount'] = 2;
 
     result = null;
     advancedSwitchController.value = false;
@@ -116,37 +109,34 @@ class _PitViewState extends State<PitView> {
             TeamSelection(
               onChange: (lightTeam) {
                 team = lightTeam;
-                map['team_id'] = team.id;
+                vars['team_id'] = team.id;
               },
             ),
             SectionDivider(label: 'Drive Train'),
             Selector(
               padding: const EdgeInsets.fromLTRB(
                   30, defaultPadding, 30, defaultPadding),
-              value: driveTrainValue,
+              value: vars['drive_train_type'].toString(),
               values: driveTrains,
               initialValue: driveTrainInitialValue,
               onChange: (newValue) {
-                map['drive_train_type'] = newValue;
-                driveTrainValue = newValue;
+                vars['drive_train_type'] = newValue;
               },
             ),
             Selector(
               padding: const EdgeInsets.fromLTRB(
                   30, defaultPadding, 30, defaultPadding),
-              value: driveMotorValue,
+              value: vars['drive_motor_type'],
               values: driveMotors,
               initialValue: driveMotorInitialValue,
               onChange: (newValue) {
-                map['drive_motor_type'] = newValue;
-                driveMotorValue = newValue;
+                vars['drive_motor_type'] = newValue;
               },
             ),
             PitViewCounter(
-              amount: motorAmount,
+              amount: vars['drive_motor_amount'],
               onChange: (newValue) {
-                map['drive_motor_amount'] = newValue;
-                motorAmount = newValue;
+                vars['drive_motor_amount'] = newValue;
               },
             ),
             PitViewSwitcher(
@@ -161,12 +151,11 @@ class _PitViewState extends State<PitView> {
                 Colors.white,
               ],
               onChange: (newValue) {
-                map['shifter'] = newValue == -1
+                vars['shifter'] = newValue == -1
                     ? null
                     : newValue == 0
                         ? "Has a Shifter"
                         : "No Shifter";
-                selectedShifterIndex = newValue;
               },
             ),
             PitViewSwitcher(
@@ -181,12 +170,11 @@ class _PitViewState extends State<PitView> {
                 Colors.white,
               ],
               onChange: (newValue) {
-                map['gearbox'] = newValue == -1
+                vars['gearbox'] = newValue == -1
                     ? null
                     : newValue == 0
                         ? "Purchased gearbox"
                         : "Custom gearbox";
-                selectedGearBoxIndex = newValue;
               },
             ),
             Padding(
@@ -197,8 +185,7 @@ class _PitViewState extends State<PitView> {
               child: TextField(
                 controller: wheelTypeController,
                 onChanged: (value) {
-                  map['drive_wheel_type'] = value;
-                  wheelType = value;
+                  vars['drive_wheel_type'] = value;
                 },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(
@@ -211,12 +198,11 @@ class _PitViewState extends State<PitView> {
             SectionDivider(label: 'General Robot Reliability'),
             PitViewSlider(
               label: 'Drive Train Reliablity:',
-              value: driveTrainReliability,
+              value: vars['drive_train_reliability'].floorToDouble(),
               padding:
                   EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
               onChange: (newVal) {
-                map['drive_train_reliability'] = newVal;
-                driveTrainReliability = newVal;
+                vars['drive_train_reliability'] = newVal;
               },
               divisions: 4,
               max: 5,
@@ -226,26 +212,24 @@ class _PitViewState extends State<PitView> {
               label: 'Electronics Reliability',
               padding:
                   EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
-              value: electronicsReliability,
+              value: vars['electronics_reliability'].floorToDouble(),
               divisions: 4,
               min: 1,
               max: 5,
               onChange: (newValue) {
-                map['electronics_reliability'] = newValue;
-                electronicsReliability = newValue;
+                vars['electronics_reliability'] = newValue;
               },
             ),
             PitViewSlider(
               label: 'Robot Reliability',
               padding:
                   EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
-              value: robotReliability,
+              value: vars['robot_reliability'].floorToDouble(),
               divisions: 9,
               max: 10,
               min: 1,
               onChange: (newValue) {
-                map['robot_reliability'] = newValue;
-                robotReliability = newValue;
+                vars['robot_reliability'] = newValue;
               },
             ),
             SectionDivider(label: 'Robot Image'),
@@ -261,8 +245,7 @@ class _PitViewState extends State<PitView> {
                 textDirection: TextDirection.rtl,
                 controller: notesController,
                 onChanged: (text) {
-                  map['notes'] = text;
-                  notes = text;
+                  vars['notes'] = text;
                 },
                 style: TextStyle(color: Colors.white),
                 cursorColor: Colors.white,
@@ -330,7 +313,7 @@ class _PitViewState extends State<PitView> {
       }
       }
       """,
-                vars: map,
+                vars: vars,
                 resetForm: resetFrame,
               ),
             )
