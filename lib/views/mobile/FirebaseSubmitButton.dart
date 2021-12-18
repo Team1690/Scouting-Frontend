@@ -69,6 +69,7 @@ class FireBaseSubmitButton extends StatelessWidget {
         lastState = event.state;
       }
       if (event.state == TaskState.success) {
+        Map<String, dynamic> vars = Map.from(this.vars);
         var url = await ref.getDownloadURL();
         vars['url'] = url;
 
