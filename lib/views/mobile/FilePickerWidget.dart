@@ -42,13 +42,13 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
           ),
         ),
         AdvancedSwitch(
-          width: 105,
+          width: 110,
           controller: widget.controller,
           enabled: false,
           activeColor: Colors.green,
           inactiveColor: Colors.red,
           activeChild: Text('File Selected'),
-          inactiveChild: Text('No File Selected'),
+          inactiveChild: Expanded(child: Text('No File Selected')),
         )
       ],
     );
