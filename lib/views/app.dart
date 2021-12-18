@@ -8,11 +8,11 @@ import 'package:scouting_frontend/views/pc/team_info_screen.dart';
 import 'package:scouting_frontend/views/mobile/SideNavBar.dart';
 
 class App extends StatelessWidget {
-  static final mesengerKey = GlobalKey<ScaffoldMessengerState>();
+  static final messengerKey = GlobalKey<ScaffoldMessengerState>();
   @override
   Widget build(final BuildContext context) {
     return MaterialApp(
-      scaffoldMessengerKey: App.mesengerKey,
+      scaffoldMessengerKey: App.messengerKey,
       title: 'Orbit Scouting',
       home: isPC(context)
           ? TeamInfoScreen()
