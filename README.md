@@ -51,7 +51,7 @@ void main() async {
 }
 ```
 
-- in the terminal move to the directroy of your project and run `flutter pub add firebase_storage`
+- in the terminal move to the directory of your project and run `flutter pub add firebase_storage`
 - go to your firebase console https://console.firebase.google.com/u/0/ and  enter your projects console
 - click on storage and in there click get started and click next (if you want you can change the location of the server) after that click next again
 - in the storage tab click rules and change `if false` to `if true` and click publish
@@ -77,7 +77,7 @@ void pickFile() async {
 
   final  task = kIsWeb
     ? ref.putData(result!.files.first.bytes!)
-    : ref.putFile(File('${result!.files.first.path}'));
+    : ref.putFile(File(result!.files.first.path));
 
 }
 ```
