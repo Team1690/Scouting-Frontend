@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,13 +27,13 @@ class PitView extends StatefulWidget {
 }
 
 class _PitViewState extends State<PitView> {
-  LightTeam team = LightTeam(0, 0, "");
+  LightTeam team;
 
   final String driveTrainInitialValue = 'Choose a DriveTrain';
 
   String driveTrainValue = 'Choose a DriveTrain';
 
-  List<String> driveTrains = [
+  final List<String> driveTrains = [
     'Choose a DriveTrain',
     'Westcoast',
     'Kit Chassis',
@@ -46,7 +47,7 @@ class _PitViewState extends State<PitView> {
 
   String driveMotorValue = 'Choose a Drive Motor';
 
-  List<String> driveMotors = [
+  final List<String> driveMotors = [
     'Choose a Drive Motor',
     'Falcon',
     'Neo',
@@ -70,10 +71,15 @@ class _PitViewState extends State<PitView> {
   double robotReliability = 1;
 
   String notes = '';
-  TextEditingController controller = TextEditingController();
-  Map<String, dynamic> map = Map();
-  TextEditingController teamSelectionController = TextEditingController();
-  TextEditingController notesController = TextEditingController();
+
+  FilePickerResult result;
+
+  final TextEditingController wheelTypeController = TextEditingController();
+  final Map<String, dynamic> map = Map();
+  final TextEditingController teamSelectionController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
+  final AdvancedSwitchController advancedSwitchController =
+      AdvancedSwitchController();
 
   void resetFrame() {
     if (!driveTrains.contains(driveTrainInitialValue)) {
@@ -87,11 +93,14 @@ class _PitViewState extends State<PitView> {
     selectedShifterIndex = -1;
     selectedGearBoxIndex = -1;
     notesController.clear();
-    controller.clear();
+    wheelTypeController.clear();
     driveTrainReliability = 1;
     electronicsReliability = 1;
     robotReliability = 1;
     motorAmount = 2;
+
+    result = null;
+    advancedSwitchController.value = false;
     (context as Element).reassemble();
   }
 
@@ -186,7 +195,7 @@ class _PitViewState extends State<PitView> {
                 bottom: defaultPadding,
               ),
               child: TextField(
-                controller: controller,
+                controller: wheelTypeController,
                 onChanged: (value) {
                   map['drive_wheel_type'] = value;
                   wheelType = value;
@@ -240,7 +249,10 @@ class _PitViewState extends State<PitView> {
               },
             ),
             SectionDivider(label: 'Robot Image'),
-            FilePickerWidget(),
+            FilePickerWidget(
+              controller: advancedSwitchController,
+              onImagePicked: (newResult) => result = newResult,
+            ),
             SectionDivider(label: 'Notes'),
             Padding(
               padding: const EdgeInsets.only(
@@ -271,11 +283,37 @@ class _PitViewState extends State<PitView> {
               padding: const EdgeInsets.only(
                   top: defaultPadding, bottom: defaultPadding),
               child: FireBaseSubmitButton(
+                result: () => result,
                 mutation: """
-      mutation MyMutation(\$url: String, \$drive_motor_amount: Int, \$drive_motor_type: String, \$drive_train_reliability: Int, \$drive_train_type: String, \$drive_wheel_type: String, \$electronics_reliability: Int, \$gearbox: String, \$notes:String,\$robot_reliability:Int,\$shifter:String,\$team_id:Int) {
-      insert_pit(objects: {url: \$url, drive_motor_amount: \$drive_motor_amount, drive_motor_type: \$drive_motor_type, drive_train_reliability: \$drive_train_reliability, drive_train_type: \$drive_train_type, drive_wheel_type: \$drive_wheel_type, electronics_reliability: \$electronics_reliability, gearbox: \$gearbox, notes: \$notes, robot_reliability: \$robot_reliability, shifter: \$shifter, team_id: \$team_id}) {
+      mutation MyMutation(
+        \$url: String,
+        \$drive_motor_amount: Int,
+        \$drive_motor_type: String,
+        \$drive_train_reliability: Int,
+        \$drive_train_type: String,
+        \$drive_wheel_type: String,
+        \$electronics_reliability: Int,
+        \$gearbox: String,
+        \$notes:String, 
+        \$robot_reliability:Int,
+        \$shifter:String,
+        \$team_id:Int) {
+      insert_pit(objects: {
+      url: \$url,
+      drive_motor_amount: \$drive_motor_amount,
+      drive_motor_type: \$drive_motor_type,
+      drive_train_reliability: \$drive_train_reliability,
+      drive_train_type: \$drive_train_type,
+      drive_wheel_type: \$drive_wheel_type,
+      electronics_reliability: \$electronics_reliability,
+      gearbox: \$gearbox,
+      notes: \$notes,
+      robot_reliability: \$robot_reliability,
+      shifter: \$shifter,
+      team_id: \$team_id
+      }) {
         returning {
-      drive_motor_amount
+            drive_motor_amount
       drive_motor_type
       drive_train_reliability
       drive_train_type
@@ -293,7 +331,7 @@ class _PitViewState extends State<PitView> {
       }
       """,
                 vars: map,
-                onPressed: resetFrame,
+                resetForm: resetFrame,
               ),
             )
           ],
