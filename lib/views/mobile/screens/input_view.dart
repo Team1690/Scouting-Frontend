@@ -105,6 +105,7 @@ query FetchTeams {
                     // const CircularProgressIndicator();
                   } else {
                     return TeamsSearchBox(
+                        typeAheadController: widget.teamNumberController,
                         teams: snapshot.data as List<LightTeam>,
                         onChange: (LightTeam team) =>
                             {setState(() => match.teamId = team.id)});
@@ -180,7 +181,7 @@ query FetchTeams {
                 "defended_by": 0,
                 "initiation_line": true,
               },
-              onPressed: clearForm,
+              resetForm: clearForm,
             ),
             const SizedBox(height: 20),
           ],

@@ -21,15 +21,12 @@ import 'package:scouting_frontend/views/mobile/switcher.dart';
 import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
-class PitView extends StatefulWidget {
-  @override
-  State<PitView> createState() => _PitViewState();
-}
+const String driveTrainInitialValue = 'Choose a DriveTrain';
+const String driveMotorInitialValue = 'Choose a Drive Motor';
 
-class _PitViewState extends State<PitView> {
+class PitView extends StatelessWidget {
+  PitView({Key key}) : super(key: key);
   LightTeam team;
-
-  static const String driveTrainInitialValue = 'Choose a DriveTrain';
 
   final List<String> driveTrains = [
     'Choose a DriveTrain',
@@ -40,8 +37,6 @@ class _PitViewState extends State<PitView> {
     'Mecanum/H',
     'Other',
   ];
-
-  static const String driveMotorInitialValue = 'Choose a Drive Motor';
 
   final List<String> driveMotors = [
     'Choose a Drive Motor',
@@ -54,7 +49,6 @@ class _PitViewState extends State<PitView> {
 
   FilePickerResult result;
 
-  final TextEditingController wheelTypeController = TextEditingController();
   final Map<String, dynamic> vars = {
     'drive_train_type': driveTrainInitialValue,
     'drive_motor_type': driveMotorInitialValue,
@@ -69,12 +63,13 @@ class _PitViewState extends State<PitView> {
     'team_id': null
   };
 
+  final TextEditingController wheelTypeController = TextEditingController();
   final TextEditingController teamSelectionController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   final AdvancedSwitchController advancedSwitchController =
       AdvancedSwitchController();
 
-  void resetFrame() {
+  void resetFrame(BuildContext context) {
     if (!driveTrains.contains(driveTrainInitialValue)) {
       driveTrains.add(driveTrainInitialValue);
     }
@@ -91,7 +86,8 @@ class _PitViewState extends State<PitView> {
     vars['electronics_reliability'] = 1.0;
     vars['robot_reliability'] = 1.0;
     vars['drive_motor_amount'] = 2;
-
+    vars['team_id'] = null;
+    teamSelectionController.clear();
     result = null;
     advancedSwitchController.value = false;
     (context as Element).reassemble();
@@ -100,9 +96,6 @@ class _PitViewState extends State<PitView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: resetFrame,
-      ),
       appBar: AppBar(
         title: Center(child: Text('Pit Scouting')),
       ),
@@ -110,6 +103,7 @@ class _PitViewState extends State<PitView> {
         child: Column(
           children: [
             TeamSelection(
+              controller: teamSelectionController,
               onChange: (lightTeam) {
                 team = lightTeam;
                 vars['team_id'] = team.id;
@@ -317,7 +311,7 @@ class _PitViewState extends State<PitView> {
       }
       """,
                 vars: vars,
-                resetForm: resetFrame,
+                resetForm: () => resetFrame(context),
               ),
             )
           ],
