@@ -22,7 +22,7 @@ class SubmitButton extends StatefulWidget {
 
 class _SubmitButtonState extends State<SubmitButton> {
   ButtonState _state = ButtonState.idle;
-
+  String _errorMessage = '';
   @override
   Widget build(BuildContext context) {
     return ProgressButton.icon(
@@ -51,6 +51,18 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () async {
+        if (_state == ButtonState.fail) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Error message'),
+              ),
+              body: Center(
+                child: Text(_errorMessage),
+              ),
+            );
+          }));
+        }
         if (_state == ButtonState.loading) return;
         print(widget.vars);
         setState(() {
@@ -63,6 +75,7 @@ class _SubmitButtonState extends State<SubmitButton> {
           setState(() {
             _state = ButtonState.fail;
           });
+          _errorMessage = queryResult.exception.graphqlErrors.first.message;
         } else {
           widget.resetForm();
           setState(() {
