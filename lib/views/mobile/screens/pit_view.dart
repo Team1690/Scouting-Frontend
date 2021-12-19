@@ -59,13 +59,13 @@ class _PitViewState extends State<PitView> {
     'drive_train_type': driveTrainInitialValue,
     'drive_motor_type': driveMotorInitialValue,
     'drive_motor_amount': 2,
-    'shifter': -1,
-    'gearbox': -1,
+    'shifter': null,
+    'gearbox': null,
     'notes': '',
     'drive_wheel_type': '',
-    'drive_train_reliability': 1,
-    'electronics_reliability': 1,
-    'robot_reliability': 1,
+    'drive_train_reliability': 1.0,
+    'electronics_reliability': 1.0,
+    'robot_reliability': 1.0,
     'team_id': null
   };
 
@@ -83,8 +83,8 @@ class _PitViewState extends State<PitView> {
       driveMotors.add(driveMotorInitialValue);
     }
     vars['drive_motor_type'] = driveMotorInitialValue;
-    vars['shifter'] = -1;
-    vars['gearbox'] = -1;
+    vars['shifter'] = null;
+    vars['gearbox'] = null;
     notesController.clear();
     wheelTypeController.clear();
     vars['drive_train_reliability'] = 1.0;
@@ -100,6 +100,9 @@ class _PitViewState extends State<PitView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: resetFrame,
+      ),
       appBar: AppBar(
         title: Center(child: Text('Pit Scouting')),
       ),
@@ -198,7 +201,7 @@ class _PitViewState extends State<PitView> {
             SectionDivider(label: 'General Robot Reliability'),
             PitViewSlider(
               label: 'Drive Train Reliablity:',
-              value: vars['drive_train_reliability'].floorToDouble(),
+              value: vars['drive_train_reliability'],
               padding:
                   EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
               onChange: (newVal) {
@@ -212,7 +215,7 @@ class _PitViewState extends State<PitView> {
               label: 'Electronics Reliability',
               padding:
                   EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
-              value: vars['electronics_reliability'].floorToDouble(),
+              value: vars['electronics_reliability'],
               divisions: 4,
               min: 1,
               max: 5,
@@ -224,7 +227,7 @@ class _PitViewState extends State<PitView> {
               label: 'Robot Reliability',
               padding:
                   EdgeInsets.only(top: defaultPadding, bottom: defaultPadding),
-              value: vars['robot_reliability'].floorToDouble(),
+              value: vars['robot_reliability'],
               divisions: 9,
               max: 10,
               min: 1,
