@@ -1,5 +1,7 @@
-class PitVars {
-  String driveTrainType = driveMotorInitialValue;
+import 'package:scouting_frontend/views/mobile/HasuraVars.dart';
+
+class PitVars implements HasuraVars {
+  String driveTrainType = driveTrainInitialValue;
   String driveMotorType = driveMotorInitialValue;
   int driveMotorAmount = 2;
   String shifter;
@@ -10,6 +12,7 @@ class PitVars {
   double electronicsReliability = 1;
   double robotReliability = 1;
   int teamId;
+  @override
   Map<String, dynamic> toHasuraVars() {
     return {
       'drive_train_type': driveTrainType,

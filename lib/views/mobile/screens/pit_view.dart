@@ -292,7 +292,7 @@ class PitView extends StatelessWidget {
       }
       }
       """,
-                vars: vars.toHasuraVars(),
+                vars: vars,
                 resetForm: () => resetFrame(context),
               ),
             )

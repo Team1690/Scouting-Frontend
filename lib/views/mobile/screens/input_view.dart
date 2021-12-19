@@ -170,17 +170,7 @@ query FetchTeams {
   }
 }
               """,
-              vars: {
-                "auto_balls": match.autoUpperGoal,
-                "climb_id": match.climbStatus,
-                "number": match.matchNumber,
-                "team_id": match.teamId,
-                "teleop_inner": match.teleInner,
-                "teleop_outer": match.teleOuter,
-                "match_type_id": 1,
-                "defended_by": 0,
-                "initiation_line": true,
-              },
+              vars: match,
               resetForm: clearForm,
             ),
             const SizedBox(height: 20),

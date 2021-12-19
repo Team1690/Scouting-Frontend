@@ -4,9 +4,10 @@ import 'package:http/http.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/mobile/HasuraVars.dart';
 
 class SubmitButton extends StatefulWidget {
-  final Map<String, dynamic> vars;
+  final HasuraVars vars;
   final String mutation;
   final Function resetForm;
 
@@ -70,7 +71,8 @@ class _SubmitButtonState extends State<SubmitButton> {
         });
         final client = getClient();
         final queryResult = await client.mutate(MutationOptions(
-            document: gql(widget.mutation), variables: widget.vars));
+            document: gql(widget.mutation),
+            variables: widget.vars.toHasuraVars()));
         if (queryResult.hasException) {
           setState(() {
             _state = ButtonState.fail;

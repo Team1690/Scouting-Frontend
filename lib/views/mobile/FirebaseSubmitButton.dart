@@ -9,12 +9,13 @@ import 'package:graphql/client.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/mobile/HasuraVars.dart';
 
 class FireBaseSubmitButton extends StatefulWidget {
   const FireBaseSubmitButton(
       {Key key, this.vars, this.mutation, this.resetForm, this.result})
       : super(key: key);
-  final Map<String, dynamic> vars;
+  final HasuraVars vars;
   final String mutation;
   final Function() resetForm;
   final FilePickerResult Function() result;
@@ -76,7 +77,9 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           }));
           return;
         }
-        uploadResult(widget.vars['team_id'] as int, this.widget.result());
+        print(widget.vars);
+        uploadResult(
+            widget.vars.toHasuraVars()['team_id'] as int, this.widget.result());
       },
     );
   }
@@ -120,7 +123,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
         });
         running = false;
       } else if (event.state == TaskState.success) {
-        Map<String, dynamic> vars = Map.from(this.widget.vars);
+        Map<String, dynamic> vars = Map.from(this.widget.vars.toHasuraVars());
         var url = await ref.getDownloadURL();
         vars['url'] = url;
 

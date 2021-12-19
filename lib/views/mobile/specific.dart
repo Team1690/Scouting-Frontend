@@ -83,7 +83,7 @@ class _SpecificState extends State<Specific> {
   }
 }
                   """,
-                  vars: vars.toHasuraVars(),
+                  vars: vars,
                 ),
               ),
             ],
