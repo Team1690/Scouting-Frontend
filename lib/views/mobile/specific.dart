@@ -6,6 +6,7 @@ import 'package:progress_state_button/progress_button.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
+import 'package:scouting_frontend/views/mobile/SpecificVars.dart';
 import 'package:scouting_frontend/views/mobile/TeamSelection.dart';
 import 'package:scouting_frontend/views/mobile/match_dropdown.dart';
 import 'package:scouting_frontend/views/mobile/submit_button.dart';
@@ -19,9 +20,9 @@ class Specific extends StatefulWidget {
 }
 
 class _SpecificState extends State<Specific> {
-  final TextEditingController box = TextEditingController();
+  final TextEditingController messageController = TextEditingController();
   final TextEditingController teamSelectionController = TextEditingController();
-  final Map<String, dynamic> vars = {'team_id': null, 'message': null};
+  final SpecificVars vars = SpecificVars();
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +38,15 @@ class _SpecificState extends State<Specific> {
               Padding(padding: EdgeInsets.all(15)),
               TeamSelection(
                 onChange: (team) {
-                  vars['team_id'] = team.id;
+                  vars.teamId = team.id;
                 },
                 controller: teamSelectionController,
               ),
               Padding(padding: EdgeInsets.all(14.0)),
               TextField(
-                controller: box,
+                controller: messageController,
                 onChanged: (text) {
-                  vars['message'] = text;
+                  vars.message = text;
                 },
                 style: TextStyle(color: Colors.white),
                 cursorColor: Colors.white,
@@ -67,10 +68,9 @@ class _SpecificState extends State<Specific> {
                 child: SubmitButton(
                   resetForm: () {
                     setState(() {
-                      vars['team_id'] = null;
-                      vars['message'] = '';
+                      vars.reset();
                       teamSelectionController.clear();
-                      box.clear();
+                      messageController.clear();
                     });
                   },
                   mutation:
@@ -83,7 +83,7 @@ class _SpecificState extends State<Specific> {
   }
 }
                   """,
-                  vars: vars,
+                  vars: vars.toHasuraVars(),
                 ),
               ),
             ],
