@@ -82,24 +82,18 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
   }
 
   void uploadResult(int teamid, FilePickerResult result) {
-    if (teamid == null) {
+    if (teamid == null || result == null) {
       setState(() {
-        errorMessage = 'Pick a Team';
+        if (teamid == null && result == null) {
+          errorMessage = 'Pick a Team and File';
+        } else {
+          errorMessage = teamid == null ? 'Pick a Team' : 'Pick a File';
+        }
         _state = ButtonState.fail;
       });
 
       Future.delayed(Duration(seconds: 5),
           () => setState((() => _state = ButtonState.idle)));
-      return;
-    } else if (result == null) {
-      setState(() {
-        errorMessage = 'Pick a File';
-        _state = ButtonState.fail;
-      });
-
-      Future.delayed(Duration(seconds: 5),
-          () => setState((() => _state = ButtonState.idle)));
-
       return;
     }
 
