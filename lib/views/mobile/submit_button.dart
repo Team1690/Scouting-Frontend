@@ -8,9 +8,9 @@ import 'package:scouting_frontend/net/hasura_helper.dart';
 class SubmitButton extends StatefulWidget {
   final Map<String, dynamic> vars;
   final String mutation;
-  final Function onPressed;
+  final Function resetForm;
 
-  const SubmitButton({this.vars, this.mutation, this.onPressed, Key key})
+  const SubmitButton({this.vars, this.mutation, this.resetForm, Key key})
       : super(key: key);
 
   @override
@@ -51,10 +51,29 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () async {
-        widget.onPressed();
+        if (_state == ButtonState.loading) return;
+        print(widget.vars);
+        setState(() {
+          _state = ButtonState.loading;
+        });
         final client = getClient();
-        client.mutate(MutationOptions(
+        final queryResult = await client.mutate(MutationOptions(
             document: gql(widget.mutation), variables: widget.vars));
+        if (queryResult.hasException) {
+          setState(() {
+            _state = ButtonState.fail;
+          });
+        } else {
+          widget.resetForm();
+          setState(() {
+            _state = ButtonState.success;
+          });
+        }
+        Future.delayed(Duration(seconds: 5), () {
+          setState(() {
+            _state = ButtonState.idle;
+          });
+        });
       },
       state: _state,
     );
