@@ -43,7 +43,7 @@ class _SpecificState extends State<Specific> {
               ),
               Padding(padding: EdgeInsets.all(14.0)),
               TextField(
-                controller: vars['message'],
+                controller: box,
                 onChanged: (text) {
                   vars['message'] = text;
                 },
