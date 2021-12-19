@@ -18,7 +18,8 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
 
   Future<List<LightTeam>> fetchTeams() async {
     final client = getClient();
-    final String query = """
+    final String query =
+        """
 query FetchTeams {
   team {
     id
@@ -77,6 +78,7 @@ query FetchTeams {
                               // const CircularProgressIndicator();
                             } else {
                               return TeamsSearchBox(
+                                  typeAheadController: TextEditingController(),
                                   teams: snapshot.data as List<LightTeam>,
                                   onChange: (LightTeam team) => {
                                         setState(() => chosenTeam = team.number)
