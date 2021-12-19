@@ -19,12 +19,9 @@ class Specific extends StatefulWidget {
 }
 
 class _SpecificState extends State<Specific> {
-  String _box;
   final TextEditingController box = TextEditingController();
   final TextEditingController teamSelectionController = TextEditingController();
-  Match match = Match();
-
-  Map<String, dynamic> vars = {'team_id': null, 'message': null};
+  final Map<String, dynamic> vars = {'team_id': null, 'message': null};
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +66,9 @@ class _SpecificState extends State<Specific> {
                 alignment: Alignment.bottomCenter,
                 child: SubmitButton(
                   resetForm: () {
-                    print('reseting');
                     setState(() {
                       vars['team_id'] = null;
-                      vars['message'] = null;
+                      vars['message'] = '';
                       teamSelectionController.clear();
                       box.clear();
                     });
