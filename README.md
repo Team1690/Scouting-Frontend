@@ -16,12 +16,10 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
-Hasura username: idosobol1005@gmail.com
-Hasura password: 0rbit169O!
+gmail: orbitscouting@gmail.com
+password: 4[2VNAn~E&
 
-Firebase gmail: orbitscouting@gmail.com
-Firebase password: 4[2VNAn~E&
-
+login to firebase and hasura with google account
 
 
 ## Firebase storage with flutter setup
