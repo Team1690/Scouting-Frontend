@@ -6,6 +6,7 @@ import 'package:progress_state_button/progress_button.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
+import 'package:scouting_frontend/views/mobile/TeamSelection.dart';
 import 'package:scouting_frontend/views/mobile/match_dropdown.dart';
 import 'package:scouting_frontend/views/mobile/submit_button.dart';
 import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
@@ -20,31 +21,10 @@ class Specific extends StatefulWidget {
 class _SpecificState extends State<Specific> {
   String _box;
   final TextEditingController box = TextEditingController();
-
+  final TextEditingController teamSelectionController = TextEditingController();
   Match match = Match();
 
-  Future<List<LightTeam>> fetchTeams() async {
-    final client = getClient();
-    final String query = """
-query FetchTeams {
-  team {
-    id
-    number
-    name
-  }
-}
-  """;
-
-    final QueryResult result =
-        await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => LightTeam(e['id'], e['number'], e['name']))
-        .toList();
-    //.entries.map((e) => LightTeam(e['id']);
-  }
+  Map<String, dynamic> vars = {'team_id': null, 'message': null};
 
   @override
   Widget build(BuildContext context) {
@@ -58,43 +38,17 @@ query FetchTeams {
           child: Column(
             children: <Widget>[
               Padding(padding: EdgeInsets.all(15)),
-              FutureBuilder(
-                  future: fetchTeams(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error has happened in the future! ' +
-                          snapshot.error.toString());
-                    } else if (!snapshot.hasData) {
-                      return Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            TextField(
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.search),
-                                border: const OutlineInputBorder(),
-                                hintText: 'Search Team',
-                                enabled: false,
-                              ),
-                            ),
-                            Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ]);
-
-                      // const CircularProgressIndicator();
-                    } else {
-                      return TeamsSearchBox(
-                          teams: snapshot.data as List<LightTeam>,
-                          onChange: (LightTeam team) =>
-                              {setState(() => match.teamId = team.id)});
-                    }
-                  }),
+              TeamSelection(
+                onChange: (team) {
+                  vars['team_id'] = team.id;
+                },
+                controller: teamSelectionController,
+              ),
               Padding(padding: EdgeInsets.all(14.0)),
               TextField(
-                controller: box,
+                controller: vars['message'],
                 onChanged: (text) {
-                  _box = text;
+                  vars['message'] = text;
                 },
                 style: TextStyle(color: Colors.white),
                 cursorColor: Colors.white,
@@ -114,6 +68,15 @@ query FetchTeams {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: SubmitButton(
+                  resetForm: () {
+                    print('reseting');
+                    setState(() {
+                      vars['team_id'] = null;
+                      vars['message'] = null;
+                      teamSelectionController.clear();
+                      box.clear();
+                    });
+                  },
                   mutation:
                       """mutation MyMutation (\$team_id: Int, \$message: String){
   insert_specific(objects: {team_id: \$team_id, message: \$message}) {
@@ -124,10 +87,7 @@ query FetchTeams {
   }
 }
                   """,
-                  vars: {
-                    "team_id": match.teamId,
-                    "message": this._box,
-                  },
+                  vars: vars,
                 ),
               ),
             ],
