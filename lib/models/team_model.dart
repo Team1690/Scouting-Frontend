@@ -23,12 +23,13 @@ class Team {
 
   // NEW PARAMS:
   final int matchesPlayed;
-  final double autoUpperGoalAverage;
-  final double autoBottomGoalAverage;
+  final double teleInnerGoalAverage;
+  final double teleOuterGoalAverage;
+  final double autoGoalAverage;
   // final double averageShots;
   final double totalShotsSD;
-  final double climbsPerMatches;
-  final double climbsPerAttempts;
+  final int climbFailed;
+  final int climbSuccess;
 
   //test
   final List<String> msg;
@@ -43,12 +44,13 @@ class Team {
 
     //NEW ANALYTICS!!!!
     this.matchesPlayed = 0,
-    this.autoUpperGoalAverage = 0,
-    this.autoBottomGoalAverage = 0,
+    this.teleInnerGoalAverage = 0,
+    this.teleOuterGoalAverage = 0,
+    this.autoGoalAverage = 0,
     this.averageShots = 0,
     this.totalShotsSD = 0,
-    this.climbsPerMatches = 0,
-    this.climbsPerAttempts = 0,
+    this.climbFailed = 0,
+    this.climbSuccess = 0,
     this.msg = const [],
     this.tables = const [],
     this.spider = const [0, 0, 0, 0],

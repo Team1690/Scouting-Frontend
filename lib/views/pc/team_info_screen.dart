@@ -33,6 +33,7 @@ query FetchTeams {
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
+    print(result.data);
     return (result.data['team'] as List<dynamic>)
         .map((e) => LightTeam(e['id'], e['number'], e['name']))
         .toList();
@@ -48,41 +49,9 @@ query FetchTeams {
             child: Column(children: [
               Row(
                 children: [
-                  Expanded(
-                      flex: 1,
-                      child: FutureBuilder(
-                          future: fetchTeams(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Text('Error has happened in the future! ' +
-                                  snapshot.error.toString());
-                            } else if (!snapshot.hasData) {
-                              return Stack(
-                                  alignment: AlignmentDirectional.center,
-                                  children: [
-                                    TextField(
-                                      keyboardType: TextInputType.number,
-                                      decoration: InputDecoration(
-                                        prefixIcon: const Icon(Icons.search),
-                                        border: const OutlineInputBorder(),
-                                        hintText: 'Search Team',
-                                        enabled: false,
-                                      ),
-                                    ),
-                                    Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ]);
 
-                              // const CircularProgressIndicator();
-                            } else {
-                              return TeamsSearchBox(
-                                  typeAheadController: TextEditingController(),
-                                  teams: snapshot.data as List<LightTeam>,
-                                  onChange: (LightTeam team) =>
-                                      {setState(() => chosenTeam = team)});
-                            }
-                          })),
+                  teamSearch((LightTeam team) =>
+                      {setState(() => chosenTeam = team.number)}),
                   SizedBox(width: defaultPadding),
                   Expanded(
                       flex: 2,

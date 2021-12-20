@@ -58,8 +58,8 @@ class _NavigationTab extends State<NavigationTab> {
             },
           ),
           ListTile(
-            title: const Text('General Scatter'),
-            leading: Icon(Icons.bar_chart_rounded),
+            title: const Text('Scatter'),
+            leading: Icon(Icons.compare_arrows_rounded),
             onTap: () {
               Navigator.push(
                 context,

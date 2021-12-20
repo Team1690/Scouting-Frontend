@@ -1,10 +1,13 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_pit.dart';
+import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
+import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
 import '../../constants.dart';
 
 class QuickData {
@@ -61,6 +64,11 @@ class TeamInfoData extends StatefulWidget {
   State<TeamInfoData> createState() => _TeamInfoDataState();
 }
 
+class LineChartData {
+  LineChartData({this.points});
+  List<double> points;
+}
+
 class _TeamInfoDataState extends State<TeamInfoData> {
   Future<PitViewData> fetchPit() async {
     final client = getClient();
@@ -101,13 +109,46 @@ query MyQuery(\$team_id: Int!) {
           robotReliability: result.data["pit_by_pk"]['robot_reliability'],
           url: result.data["pit_by_pk"]['url']);
     }
+  Future<List<LineChartData>> fetchGameChart() async {
+    final client = getClient();
+    final String query = """
+query fetchGameChart(\$teamNumber : Int) {
+  team(where: {number: {_eq: \$teamNumber}}) {
+    matches(order_by: {number: asc}) {
+      teleop_inner
+      teleop_outer
+      auto_balls
+    }
+  }
+}
+
+""";
+
+    final QueryResult result = await client.query(QueryOptions(
+        document: gql(query),
+        variables: <String, int>{"teamNumber": widget.team}));
+    if (result.hasException) {
+      print(result.exception.toString());
+    }
+    final List<dynamic> matches =
+        result.data["team"][0]["matches"] as List<dynamic>;
+    return [
+      LineChartData(
+        points: matches.map((e) => e['teleop_inner']).toList().cast<double>(),
+      ),
+      LineChartData(
+        points: matches.map((e) => e['teleop_outer']).toList().cast<double>(),
+      ),
+      LineChartData(
+        points: matches.map((e) => e['auto_balls']).toList().cast<double>(),
+      ),
+    ];
   }
 
   Future<List<SpecificData>> fetchSpesific() async {
     final client = getClient();
     final String query = """query MyQuery(\$teamNumber : Int){
   specific(where: {team: {number: {_eq: \$teamNumber}}}) {
-    match_id
     message
     id
   }
@@ -209,18 +250,33 @@ query MyQuery(\$team_id: Int!) {
                                             }
                                             final QuickData report =
                                                 snapshot.data[0];
-                                            return Text(
-                                                "\nAverage inner: ${report.averageInner}"
-                                                        "\nAverage outer: ${report.averageOuter}"
-                                                        "\nAverage auto balls: ${report.autoBalls}"
-                                                        "\nClimb Rate: " +
-                                                    (report.success /
-                                                            (report.failed +
-                                                                report
-                                                                    .success) *
-                                                            100)
-                                                        .toString() +
-                                                    "%");
+                                            if (report.success +
+                                                    report.failed ==
+                                                0) {
+                                              return Center(
+                                                child: Text(
+                                                    "\nAverage inner: ${report.averageInner.round()}"
+                                                    "\nAverage outer: ${report.averageOuter.round()}"
+                                                    "\nAverage auto balls: ${report.autoBalls.round()}"
+                                                    "\nClimb Rate: 0"
+                                                    "%"),
+                                              );
+                                            }
+                                            return Center(
+                                              child: Text(
+                                                  "\nAverage inner: ${report.averageInner.round()}"
+                                                          "\nAverage outer: ${report.averageOuter.round()}"
+                                                          "\nAverage auto balls: ${report.autoBalls.round()}"
+                                                          "\nClimb Rate: " +
+                                                      (report.success /
+                                                              (report.failed +
+                                                                  report
+                                                                      .success) *
+                                                              100)
+                                                          .round()
+                                                          .toString() +
+                                                      "%"),
+                                            );
                                           }
                                         })),
                               ],
@@ -255,22 +311,27 @@ query MyQuery(\$team_id: Int!) {
               Expanded(
                 flex: 3,
                 child: DashboardCard(
-                  title: 'Game Chart',
-                  body: Container(),
-                  // body: CarouselSlider(
-                  //   options: CarouselOptions(
-                  //     height: 3500,
-                  //     viewportFraction: 1,
-                  //     // autoPlay: true,
-                  //   ),
-                  //   items: widget.team.tables
-                  //       .map((table) => DashboardLineChart(
-                  //             colors: colors,
-                  //             dataSets: [table],
-                  //           ))
-                  //       .toList(),
-                  // ),
-                ),
+                    title: 'Game Chart',
+                    body: FutureBuilder(
+                        future: fetchGameChart(),
+                        builder: (context,
+                            AsyncSnapshot<List<LineChartData>> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(
+                                'Error has happened in the future!   ${snapshot.error}');
+                          } else if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            return CarouselWithIndicator(
+                              widgets: snapshot.data
+                                  .map((LineChartData chart) =>
+                                      DashboardLineChart(dataSet: chart.points))
+                                  .toList(),
+                            );
+                          }
+                        })),
               )
             ],
           ),
@@ -291,7 +352,7 @@ query MyQuery(\$team_id: Int!) {
                     );
                   } else {
                     if (snapshot.data.length < 1) {
-                      return Text(' data.length is \nshorter than 1! :(');
+                      return Text('no data yet!');
                     }
                     final List<dynamic> report =
                         (snapshot.data as List<dynamic>)
