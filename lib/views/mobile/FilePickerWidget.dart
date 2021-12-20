@@ -48,7 +48,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
           activeColor: Colors.green,
           inactiveColor: Colors.red,
           activeChild: Text('File Selected'),
-          inactiveChild: Expanded(child: Text('No File Selected')),
+          inactiveChild: Text('No File Selected'),
         )
       ],
     );
