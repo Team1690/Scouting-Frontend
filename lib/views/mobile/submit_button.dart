@@ -65,7 +65,6 @@ class _SubmitButtonState extends State<SubmitButton> {
           }));
         }
         if (_state == ButtonState.loading) return;
-        print(widget.vars);
         setState(() {
           _state = ButtonState.loading;
         });
