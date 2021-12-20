@@ -27,7 +27,8 @@ class _CompareScreenState extends State<CompareScreen> {
 
   Future<List<LightTeam>> fetchTeams() async {
     final client = getClient();
-    final String query = """
+    final String query =
+        """
 query FetchTeams {
   team {
     id
@@ -144,10 +145,45 @@ query MyQuery (\$team_id: Int){
             Container(
               child: Row(
                 children: [
-                  teamSearch((LightTeam team) => {
-                        setState(() => compareTeamsList.add(
-                            new LightTeam(team.id, team.number, team.name)))
-                      }),
+                  Expanded(
+                      flex: 1,
+                      child: FutureBuilder(
+                          future: fetchTeams(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Error has happened in the future! ' +
+                                  snapshot.error.toString());
+                            } else if (!snapshot.hasData) {
+                              return Stack(
+                                  alignment: AlignmentDirectional.center,
+                                  children: [
+                                    TextField(
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        prefixIcon: const Icon(Icons.search),
+                                        border: const OutlineInputBorder(),
+                                        hintText: 'Search Team',
+                                        enabled: false,
+                                      ),
+                                    ),
+                                    Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ]);
+
+                              // const CircularProgressIndicator();
+                            } else {
+                              return TeamsSearchBox(
+                                  typeAheadController: TextEditingController(),
+                                  teams: snapshot.data as List<LightTeam>,
+                                  onChange: (LightTeam team) => {
+                                        setState(() => compareTeamsList.add(
+                                            new Team(
+                                                teamNumber: team.number,
+                                                id: team.id)))
+                                      });
+                            }
+                          })),
                   SizedBox(width: defaultPadding),
                   Expanded(
                     flex: 2,

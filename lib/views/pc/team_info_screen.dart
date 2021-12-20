@@ -14,7 +14,7 @@ class TeamInfoScreen extends StatefulWidget {
 }
 
 class _TeamInfoScreenState extends State<TeamInfoScreen> {
-  int chosenTeam;
+  LightTeam chosenTeam;
 
   Future<List<LightTeam>> fetchTeams() async {
     final client = getClient();
@@ -49,6 +49,7 @@ query FetchTeams {
             child: Column(children: [
               Row(
                 children: [
+
                   teamSearch((LightTeam team) =>
                       {setState(() => chosenTeam = team.number)}),
                   SizedBox(width: defaultPadding),
