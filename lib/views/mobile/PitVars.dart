@@ -23,8 +23,8 @@ class PitVars implements HasuraVars {
       'notes': notes,
       'drive_wheel_type': driveWheelType,
       'drive_train_reliability': driveTrainReliability,
-      'electronics_reliability': driveTrainReliability,
-      'robot_reliability': driveTrainReliability,
+      'electronics_reliability': electronicsReliability,
+      'robot_reliability': robotReliability,
       'team_id': teamId
     };
   }
@@ -42,7 +42,7 @@ class PitVars implements HasuraVars {
     robotReliability = 1.0;
     teamId = null;
   }
-}
 
-const String driveTrainInitialValue = 'Choose a DriveTrain';
-const String driveMotorInitialValue = 'Choose a Drive Motor';
+  static const String driveTrainInitialValue = 'Choose a DriveTrain';
+  static const String driveMotorInitialValue = 'Choose a Drive Motor';
+}
