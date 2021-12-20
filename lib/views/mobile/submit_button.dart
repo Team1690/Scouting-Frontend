@@ -4,14 +4,13 @@ import 'package:http/http.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/mobile/HasuraVars.dart';
 
 class SubmitButton extends StatefulWidget {
-  final HasuraVars vars;
+  final Map<String, dynamic> vars;
   final String mutation;
-  final Function resetForm;
+  final Function onPressed;
 
-  const SubmitButton({this.vars, this.mutation, this.resetForm, Key key})
+  const SubmitButton({this.vars, this.mutation, this.onPressed, Key key})
       : super(key: key);
 
   @override
@@ -23,7 +22,7 @@ class SubmitButton extends StatefulWidget {
 
 class _SubmitButtonState extends State<SubmitButton> {
   ButtonState _state = ButtonState.idle;
-  String _errorMessage = '';
+
   @override
   Widget build(BuildContext context) {
     return ProgressButton.icon(
@@ -52,42 +51,9 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () async {
-        if (_state == ButtonState.fail) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text('Error message'),
-              ),
-              body: Center(
-                child: Text(_errorMessage),
-              ),
-            );
-          }));
-        }
-        if (_state == ButtonState.loading) return;
-        setState(() {
-          _state = ButtonState.loading;
-        });
         final client = getClient();
-        final queryResult = await client.mutate(MutationOptions(
-            document: gql(widget.mutation),
-            variables: widget.vars.toHasuraVars()));
-        if (queryResult.hasException) {
-          setState(() {
-            _state = ButtonState.fail;
-          });
-          _errorMessage = queryResult.exception.graphqlErrors.first.message;
-        } else {
-          widget.resetForm();
-          setState(() {
-            _state = ButtonState.success;
-          });
-        }
-        Future.delayed(Duration(seconds: 5), () {
-          setState(() {
-            _state = ButtonState.idle;
-          });
-        });
+        client.mutate(MutationOptions(
+            document: gql(widget.mutation), variables: widget.vars));
       },
       state: _state,
     );

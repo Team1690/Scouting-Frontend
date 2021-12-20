@@ -11,14 +11,10 @@ class _TeamsSearchBox extends StatefulWidget {
     final Key key,
     @required final this.teams,
     @required final this.onChange,
-    @required final this.typeAheadController,
-    // @required final this.typeAheadController,
   }) : super(key: key);
 
   final List<LightTeam> teams;
-  final Function(LightTeam) onChange;
-  final TextEditingController typeAheadController;
-  // final TextEditingController typeAheadController;
+  final void Function(LightTeam) onChange;
 
   @override
   _TeamsSearchBoxState createState() => _TeamsSearchBoxState();
@@ -27,6 +23,7 @@ class _TeamsSearchBox extends StatefulWidget {
 class _TeamsSearchBoxState extends State<_TeamsSearchBox> {
   bool isValueEmpty = false;
   bool isValueInList = true;
+  final TextEditingController _typeAheadController = TextEditingController();
 
   List<LightTeam> updateSussestions(inputNumber) {
     List<LightTeam> _suggestions = List.castFrom(widget.teams);
@@ -42,7 +39,7 @@ class _TeamsSearchBoxState extends State<_TeamsSearchBox> {
   Widget build(BuildContext context) {
     return TypeAheadField(
         textFieldConfiguration: TextFieldConfiguration(
-          controller: widget.typeAheadController,
+          controller: _typeAheadController,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.digitsOnly
           ],
@@ -73,7 +70,7 @@ class _TeamsSearchBoxState extends State<_TeamsSearchBox> {
               ),
             ),
         onSuggestionSelected: (final LightTeam suggestion) {
-          widget.typeAheadController.text = suggestion.number.toString();
+          _typeAheadController.text = suggestion.number.toString();
           widget.onChange(widget.teams[widget.teams
               .indexWhere((team) => team.number == suggestion.number)]);
         });

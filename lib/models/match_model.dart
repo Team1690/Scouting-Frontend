@@ -1,5 +1,3 @@
-import 'package:scouting_frontend/views/mobile/HasuraVars.dart';
-
 int climbId(final int i) {
   switch (i) {
     case 0:
@@ -12,7 +10,7 @@ int climbId(final int i) {
   }
 }
 
-class Match implements HasuraVars {
+class Match {
   int teamNumber;
   int matchNumber;
 
@@ -35,19 +33,4 @@ class Match implements HasuraVars {
     this.teleInner = 0,
     this.climbStatus = 1,
   });
-
-  @override
-  Map<String, dynamic> toHasuraVars() {
-    return {
-      "auto_balls": autoUpperGoal,
-      "climb_id": climbStatus,
-      "number": matchNumber,
-      "team_id": teamId,
-      "teleop_inner": teleInner,
-      "teleop_outer": teleOuter,
-      "match_type_id": 1,
-      "defended_by": 0,
-      "initiation_line": true,
-    };
-  }
 }

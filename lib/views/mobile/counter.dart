@@ -9,20 +9,13 @@ class Counter extends StatelessWidget {
   final Function(int) onChange;
 
   final int count;
-  final int stepValue;
-  final int upperLimit;
-  final int lowerLimit;
-  final int longPressedValue;
 
-  Counter(
-      {@required final this.label,
-      @required final this.icon,
-      @required final this.count,
-      final this.onChange,
-      final this.stepValue = 1,
-      final this.upperLimit = 100,
-      final this.lowerLimit = 0,
-      final this.longPressedValue = 5});
+  Counter({
+    @required final this.label,
+    @required final this.icon,
+    @required final this.count,
+    final this.onChange,
+  });
 
   @override
   Widget build(final BuildContext context) {
@@ -49,11 +42,11 @@ class Counter extends StatelessWidget {
           flex: 4,
           child: CustomStepper(
             iconSize: 30,
-            lowerLimit: this.lowerLimit,
-            upperLimit: this.upperLimit,
+            lowerLimit: 0,
+            upperLimit: 100,
             value: this.count,
-            stepValue: this.stepValue,
-            longPressStepValue: this.longPressedValue,
+            stepValue: 1,
+            longPressStepValue: 5,
             onChanged: this.onChange,
           ),
         )

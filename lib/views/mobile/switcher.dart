@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
 
-class Switcher extends StatefulWidget {
+class Switcher extends StatelessWidget {
   final List<String> labels;
   final List<Color> colors;
   final Function(int) onChange;
   final double height;
-  int selected;
+  final int selected;
 
   Switcher({
     @required final this.labels,
     @required final this.colors,
+    @required final this.selected,
     final this.height = 70,
     final this.onChange,
   });
-  @override
-  State<Switcher> createState() => _SwitcherState();
-}
 
-class _SwitcherState extends State<Switcher> {
   RoundedRectangleBorder getBorder(final int index) {
     return RoundedRectangleBorder(
       borderRadius: index == 0
           ? BorderRadius.horizontal(
               left: Radius.circular(20),
             )
-          : index == widget.labels.length - 1
+          : index == labels.length - 1
               ? BorderRadius.horizontal(
                   right: Radius.circular(20),
                 )
@@ -40,29 +37,23 @@ class _SwitcherState extends State<Switcher> {
         border: Border.all(color: Colors.grey, width: 1),
       ),
       width: MediaQuery.of(context).size.width,
-      height: widget.height,
+      height: height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          for (int i = 0; i < widget.labels.length; i++)
+          for (int i = 0; i < labels.length; i++)
             Expanded(
               child: SizedBox(
-                height: widget.height,
+                height: height,
                 child: FlatButton(
                   child: Text(
-                    widget.labels[i],
+                    labels[i],
                     style: const TextStyle(fontSize: 15),
                   ),
-                  textColor:
-                      widget.selected == i ? widget.colors[i] : Colors.black,
-                  splashColor:
-                      widget.selected == i ? widget.colors[i] : Colors.grey,
+                  textColor: selected == i ? colors[i] : Colors.black,
+                  splashColor: selected == i ? colors[i] : Colors.grey,
                   shape: getBorder(i),
-                  onPressed: () => setState(() {
-                    i = i == widget.selected ? -1 : i;
-                    widget.onChange(i);
-                    widget.selected = i;
-                  }),
+                  onPressed: () => this.onChange(i),
                 ),
               ),
             ),

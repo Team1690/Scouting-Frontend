@@ -1,12 +1,9 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
-
+import 'package:scouting_frontend/net/send_match_api.dart';
 import 'package:scouting_frontend/models/match_model.dart';
-import 'package:scouting_frontend/views/mobile/TeamSelection.dart';
 import 'package:scouting_frontend/views/mobile/counter.dart';
 import 'package:scouting_frontend/views/mobile/match_dropdown.dart';
 import 'package:scouting_frontend/views/mobile/section_divider.dart';
@@ -15,21 +12,50 @@ import 'package:scouting_frontend/views/mobile/switcher.dart';
 import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
-class UserInput extends StatelessWidget {
+class UserInput extends StatefulWidget {
   final TextEditingController matchNumberController = TextEditingController();
 
   final TextEditingController teamNumberController = TextEditingController();
+
+  @override
+  _UserInputState createState() => _UserInputState();
+}
+
+class _UserInputState extends State<UserInput> {
   Match match = Match();
   int selectedClimbIndex = -1; // -1 means nothing
 
   void clearForm() {
-    match = new Match();
-    selectedClimbIndex = -1;
+    setState(() {
+      match = new Match();
+      selectedClimbIndex = -1;
 
-    matchNumberController.clear();
-    teamNumberController.clear();
+      widget.matchNumberController.clear();
+      widget.teamNumberController.clear();
+    });
+  }
 
-    (context as Element).reassemble();
+  Future<List<LightTeam>> fetchTeams() async {
+    final client = getClient();
+    final String query = """
+query FetchTeams {
+  team {
+    id
+    number
+    name
+  }
+}
+  """;
+
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
+    if (result.hasException) {
+      print(result.exception.toString());
+    } //TODO: avoid dynamic
+    return (result.data['team'] as List<dynamic>)
+        .map((e) => LightTeam(e['id'], e['number'], e['name']))
+        .toList();
+    //.entries.map((e) => LightTeam(e['id']);
   }
 
   @override
@@ -44,25 +70,21 @@ class UserInput extends StatelessWidget {
           children: [
             SectionDivider(label: 'Match Details'),
             MatchTextBox(
-              onChange: (final int value) => match.matchNumber = value,
-              controller: matchNumberController,
+              onChange: (final int value) =>
+                  setState(() => match.matchNumber = value),
+              controller: widget.matchNumberController,
             ),
             SizedBox(
               height: 15,
             ),
-
-            TeamSelection(
-              controller: teamNumberController,
-              onChange: (team) {
-                match.teamId = team.id;
-                match.teamNumber = team.number;
-              },
-            ),
+            teamSearch(
+                (LightTeam team) => {setState(() => match.teamId = team.id)}),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Auto Balls:',
               icon: Icons.adjust,
-              onChange: (final int count) => match.autoUpperGoal = count,
+              onChange: (final int count) =>
+                  setState(() => match.autoUpperGoal = count),
               count: match.autoUpperGoal,
             ),
 
@@ -70,26 +92,35 @@ class UserInput extends StatelessWidget {
             Counter(
               label: 'Inner Port:',
               icon: Icons.adjust,
-              onChange: (final int count) => match.teleInner = count,
+              onChange: (final int count) =>
+                  setState(() => match.teleInner = count),
               count: match.teleInner,
             ),
             Counter(
               label: 'Outer Port:',
               icon: Icons.surround_sound_outlined,
-              onChange: (final int count) => match.teleOuter = count,
+              onChange: (final int count) =>
+                  setState(() => match.teleOuter = count),
               count: match.teleOuter,
             ),
             SectionDivider(label: 'End Game'),
-            Switcher(labels: [
-              'Climbed',
-              'Failed',
-              'No attempt',
-            ], colors: [
-              Colors.green,
-              Colors.pink,
-              Colors.amber,
-            ], onChange: (final int index) => match.climbStatus = index),
-
+            Switcher(
+              labels: [
+                'Climbed',
+                'Failed',
+                'No attempt',
+              ],
+              colors: [
+                Colors.green,
+                Colors.pink,
+                Colors.amber,
+              ],
+              selected: selectedClimbIndex,
+              onChange: (final int index) => setState(() {
+                selectedClimbIndex = index == selectedClimbIndex ? -1 : index;
+                match.climbStatus = climbId(selectedClimbIndex);
+              }),
+            ),
             // const SizedBox(height: 20),
             SectionDivider(label: 'Send Data'),
             SubmitButton(
@@ -107,8 +138,18 @@ class UserInput extends StatelessWidget {
   }
 }
               """,
-              vars: match,
-              resetForm: clearForm,
+              vars: {
+                "auto_balls": match.autoUpperGoal,
+                "climb_id": match.climbStatus,
+                "number": match.matchNumber,
+                "team_id": match.teamId,
+                "teleop_inner": match.teleInner,
+                "teleop_outer": match.teleOuter,
+                "match_type_id": 1,
+                "defended_by": 0,
+                "initiation_line": true,
+              },
+              onPressed: clearForm,
             ),
             const SizedBox(height: 20),
           ],
