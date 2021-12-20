@@ -1,9 +1,12 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 
 import 'package:scouting_frontend/models/match_model.dart';
+import 'package:scouting_frontend/views/mobile/TeamSelection.dart';
 import 'package:scouting_frontend/views/mobile/counter.dart';
 import 'package:scouting_frontend/views/mobile/match_dropdown.dart';
 import 'package:scouting_frontend/views/mobile/section_divider.dart';
@@ -12,50 +15,21 @@ import 'package:scouting_frontend/views/mobile/switcher.dart';
 import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
-class UserInput extends StatefulWidget {
+class UserInput extends StatelessWidget {
   final TextEditingController matchNumberController = TextEditingController();
 
   final TextEditingController teamNumberController = TextEditingController();
-
-  @override
-  _UserInputState createState() => _UserInputState();
-}
-
-class _UserInputState extends State<UserInput> {
   Match match = Match();
   int selectedClimbIndex = -1; // -1 means nothing
 
   void clearForm() {
-    setState(() {
-      match = new Match();
-      selectedClimbIndex = -1;
+    match = new Match();
+    selectedClimbIndex = -1;
 
-      widget.matchNumberController.clear();
-      widget.teamNumberController.clear();
-    });
-  }
+    matchNumberController.clear();
+    teamNumberController.clear();
 
-  Future<List<LightTeam>> fetchTeams() async {
-    final client = getClient();
-    final String query = """
-query FetchTeams {
-  team {
-    id
-    number
-    name
-  }
-}
-  """;
-
-    final QueryResult result =
-        await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => LightTeam(e['id'], e['number'], e['name']))
-        .toList();
-    //.entries.map((e) => LightTeam(e['id']);
+    (context as Element).reassemble();
   }
 
   @override
@@ -70,53 +44,25 @@ query FetchTeams {
           children: [
             SectionDivider(label: 'Match Details'),
             MatchTextBox(
-              onChange: (final int value) =>
-                  setState(() => match.matchNumber = value),
-              controller: widget.matchNumberController,
+              onChange: (final int value) => match.matchNumber = value,
+              controller: matchNumberController,
             ),
             SizedBox(
               height: 15,
             ),
 
-            FutureBuilder(
-                future: fetchTeams(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error has happened in the future! ' +
-                        snapshot.error.toString());
-                  } else if (!snapshot.hasData) {
-                    return Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          TextField(
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
-                              border: const OutlineInputBorder(),
-                              hintText: 'Search Team',
-                              enabled: false,
-                            ),
-                          ),
-                          Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ]);
-
-                    // const CircularProgressIndicator();
-                  } else {
-                    return TeamsSearchBox(
-                        typeAheadController: widget.teamNumberController,
-                        teams: snapshot.data as List<LightTeam>,
-                        onChange: (LightTeam team) =>
-                            {setState(() => match.teamId = team.id)});
-                  }
-                }),
+            TeamSelection(
+              controller: teamNumberController,
+              onChange: (team) {
+                match.teamId = team.id;
+                match.teamNumber = team.number;
+              },
+            ),
             SectionDivider(label: 'Auto'),
             Counter(
               label: 'Auto Balls:',
               icon: Icons.adjust,
-              onChange: (final int count) =>
-                  setState(() => match.autoUpperGoal = count),
+              onChange: (final int count) => match.autoUpperGoal = count,
               count: match.autoUpperGoal,
             ),
 
@@ -124,35 +70,26 @@ query FetchTeams {
             Counter(
               label: 'Inner Port:',
               icon: Icons.adjust,
-              onChange: (final int count) =>
-                  setState(() => match.teleInner = count),
+              onChange: (final int count) => match.teleInner = count,
               count: match.teleInner,
             ),
             Counter(
               label: 'Outer Port:',
               icon: Icons.surround_sound_outlined,
-              onChange: (final int count) =>
-                  setState(() => match.teleOuter = count),
+              onChange: (final int count) => match.teleOuter = count,
               count: match.teleOuter,
             ),
             SectionDivider(label: 'End Game'),
-            Switcher(
-              labels: [
-                'Climbed',
-                'Failed',
-                'No attempt',
-              ],
-              colors: [
-                Colors.green,
-                Colors.pink,
-                Colors.amber,
-              ],
-              selected: selectedClimbIndex,
-              onChange: (final int index) => setState(() {
-                selectedClimbIndex = index == selectedClimbIndex ? -1 : index;
-                match.climbStatus = climbId(selectedClimbIndex);
-              }),
-            ),
+            Switcher(labels: [
+              'Climbed',
+              'Failed',
+              'No attempt',
+            ], colors: [
+              Colors.green,
+              Colors.pink,
+              Colors.amber,
+            ], onChange: (final int index) => match.climbStatus = index),
+
             // const SizedBox(height: 20),
             SectionDivider(label: 'Send Data'),
             SubmitButton(

@@ -47,16 +47,13 @@ query FetchTeams {
                 snapshot.error.toString());
           } else if (!snapshot.hasData) {
             return Stack(alignment: AlignmentDirectional.center, children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
-                    border: const OutlineInputBorder(),
-                    hintText: 'Search Team',
-                    enabled: false,
-                  ),
+              TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.search),
+                  border: const OutlineInputBorder(),
+                  hintText: 'Search Team',
+                  enabled: false,
                 ),
               ),
               Center(
@@ -66,17 +63,14 @@ query FetchTeams {
 
             // const CircularProgressIndicator();
           } else {
-            return Padding(
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: TeamsSearchBox(
-                typeAheadController: widget.controller,
-                teams: snapshot.data as List<LightTeam>,
-                onChange: (LightTeam) {
-                  setState(() {
-                    widget.onChange(LightTeam);
-                  });
-                },
-              ),
+            return TeamsSearchBox(
+              typeAheadController: widget.controller,
+              teams: snapshot.data as List<LightTeam>,
+              onChange: (LightTeam) {
+                setState(() {
+                  widget.onChange(LightTeam);
+                });
+              },
             );
           }
         });
