@@ -77,7 +77,6 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           }));
           return;
         }
-        print(widget.vars);
         uploadResult(
             widget.vars.toHasuraVars()['team_id'] as int, this.widget.result());
       },
