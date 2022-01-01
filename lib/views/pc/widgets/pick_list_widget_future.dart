@@ -8,7 +8,7 @@ class PickListFuture extends StatefulWidget {
   const PickListFuture({Key key, @required this.screen, this.onReorder})
       : super(key: key);
 
-  final CurrentScreen screen;
+  final CurrentPickList screen;
   final Function(List<PickListTeam> list) onReorder;
   @override
   _PickListFutureState createState() => _PickListFutureState();
@@ -54,26 +54,13 @@ class _PickListFutureState extends State<PickListFuture> {
     if (result.hasException) {
       throw Exception('Grapgql error ${result.exception}');
     }
-    List<PickListTeam> teams =
-        (result.data["team"] as List<dynamic>).map<PickListTeam>((e) {
-      var team = PickListTeam(e['id'], e['number'], e['name'],
-          e['first_picklist_index'], e['second_picklist_index'], e['taken']);
-      return team;
-    }).toList();
+    List<PickListTeam> teams = (result.data["team"] as List<dynamic>)
+        .map<PickListTeam>((e) => PickListTeam(e['id'], e['number'], e['name'],
+            e['first_picklist_index'], e['second_picklist_index'], e['taken']))
+        .toList();
 
-    switch (widget.screen) {
-      case CurrentScreen.FIRST:
-        teams.sort((team1, team2) {
-          return team1.firstListIndex.compareTo(team2.firstListIndex);
-        });
-        break;
-      case CurrentScreen.SECOND:
-        teams.sort((team1, team2) {
-          return team1.secondListIndex.compareTo(team2.secondListIndex);
-        });
-        break;
-    }
-
+    teams.sort((left, right) =>
+        widget.screen.getIndex(left).compareTo(widget.screen.getIndex(right)));
     return teams;
   }
 }

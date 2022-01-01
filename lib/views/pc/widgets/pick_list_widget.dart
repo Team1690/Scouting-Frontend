@@ -1,3 +1,4 @@
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/constants.dart';
@@ -8,7 +9,7 @@ class PickList extends StatefulWidget {
   const PickList({Key key, @required this.uiList, this.screen, this.onReorder});
 
   final List<PickListTeam> uiList;
-  final CurrentScreen screen;
+  final CurrentPickList screen;
   final Function(List<PickListTeam> list) onReorder;
 
   @override
@@ -24,14 +25,7 @@ class _PickListState extends State<PickList> {
       final PickListTeam item = widget.uiList.removeAt(oldindex);
       widget.uiList.insert(newindex, item);
       for (int i = 0; i < widget.uiList.length; i++) {
-        switch (widget.screen) {
-          case CurrentScreen.FIRST:
-            widget.uiList[i].firstListIndex = i;
-            break;
-          case CurrentScreen.SECOND:
-            widget.uiList[i].secondListIndex = i;
-            break;
-        }
+        widget.screen.setIndex(widget.uiList[i], i);
       }
     });
     widget.onReorder(widget.uiList);
@@ -76,10 +70,9 @@ class _PickListState extends State<PickList> {
   }
 }
 
-class PickListTeam extends LightTeam {
-  PickListTeam(int id, int number, String name, this.firstListIndex,
-      this.secondListIndex, bool available)
-      : super(id, number, name) {
+class PickListTeam {
+  PickListTeam(this.id, this.number, this.name, this.firstListIndex,
+      this.secondListIndex, bool available) {
     if (id <= 0) {
       throw ArgumentError('Invalid ID');
     } else if (number < 0) {
@@ -89,7 +82,9 @@ class PickListTeam extends LightTeam {
     }
     this.controller.value = available;
   }
-
+  final int id;
+  final int number;
+  final String name;
   int firstListIndex;
   int secondListIndex;
   AdvancedSwitchController controller = AdvancedSwitchController();

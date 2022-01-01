@@ -15,18 +15,9 @@ class PickListScreen extends StatefulWidget {
 
 class _PickListScreenState extends State<PickListScreen> {
   List<PickListTeam> teams;
-  CurrentScreen currentScreen = CurrentScreen.FIRST;
+  CurrentPickList currentScreen = CurrentPickList.FIRST;
   @override
   Widget build(BuildContext context) {
-    String title;
-    switch (currentScreen) {
-      case CurrentScreen.FIRST:
-        title = 'First PickList';
-        break;
-      case CurrentScreen.SECOND:
-        title = 'Second PickList';
-        break;
-    }
     return DashboardScaffold(
         body: Padding(
       padding: EdgeInsets.all(defaultPadding),
@@ -38,14 +29,7 @@ class _PickListScreenState extends State<PickListScreen> {
                   IconButton(
                       onPressed: () {
                         setState(() {
-                          switch (currentScreen) {
-                            case CurrentScreen.FIRST:
-                              currentScreen = CurrentScreen.SECOND;
-                              break;
-                            case CurrentScreen.SECOND:
-                              currentScreen = CurrentScreen.FIRST;
-                              break;
-                          }
+                          currentScreen = currentScreen.nextScreen();
                         });
                       },
                       icon: Icon(Icons.swap_horiz)),
@@ -57,7 +41,7 @@ class _PickListScreenState extends State<PickListScreen> {
                       onPressed: () => setState(() {}),
                       icon: Icon(Icons.refresh))
                 ],
-                title: title,
+                title: currentScreen.title,
                 body: PickListFuture(
                   onReorder: (list) => teams = list,
                   screen: currentScreen,
@@ -131,4 +115,29 @@ class _PickListScreenState extends State<PickListScreen> {
   }
 }
 
-enum CurrentScreen { FIRST, SECOND }
+enum CurrentPickList { FIRST, SECOND }
+
+extension CurrentPickListExtension on CurrentPickList {
+  T map<T>(T Function() onFirst, T Function() onSecond) {
+    switch (this) {
+      case CurrentPickList.FIRST:
+        return onFirst();
+      case CurrentPickList.SECOND:
+        return onSecond();
+    }
+  }
+
+  String get title => name[0].toUpperCase() + name.substring(1);
+
+  CurrentPickList nextScreen() =>
+      map(() => CurrentPickList.SECOND, () => CurrentPickList.FIRST);
+
+  int getIndex(final PickListTeam team) =>
+      map(() => team.firstListIndex, () => team.secondListIndex);
+
+  int setIndex(PickListTeam team, int index) => map(
+      () => team.firstListIndex = index, () => team.secondListIndex = index);
+  // useful for sweeping changes, i.e. to increase a team's index by one use `mapIndex(team, (final int index) => index + 1);
+  int mapIndex<T>(PickListTeam team, int Function(int) f) =>
+      setIndex(team, f(getIndex(team)));
+}
