@@ -33,41 +33,35 @@ class _PickListScreenState extends State<PickListScreen> {
       child: Column(
         children: [
           Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: DashboardCard(
-                      titleWidgets: [
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                switch (currentScreen) {
-                                  case CurrentScreen.FIRST:
-                                    currentScreen = CurrentScreen.SECOND;
-                                    break;
-                                  case CurrentScreen.SECOND:
-                                    currentScreen = CurrentScreen.FIRST;
-                                    break;
-                                }
-                              });
-                            },
-                            icon: Icon(Icons.arrow_upward)),
-                        IconButton(
-                          onPressed: save,
-                          icon: Icon(Icons.save),
-                        ),
-                        IconButton(
-                            onPressed: () => setState(() {}),
-                            icon: Icon(Icons.refresh))
-                      ],
-                      title: title,
-                      body: PickListFuture(
-                        onReorder: (list) => teams = list,
-                        screen: currentScreen,
-                      )),
-                ),
-              ],
-            ),
+            child: DashboardCard(
+                titleWidgets: [
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          switch (currentScreen) {
+                            case CurrentScreen.FIRST:
+                              currentScreen = CurrentScreen.SECOND;
+                              break;
+                            case CurrentScreen.SECOND:
+                              currentScreen = CurrentScreen.FIRST;
+                              break;
+                          }
+                        });
+                      },
+                      icon: Icon(Icons.arrow_upward)),
+                  IconButton(
+                    onPressed: save,
+                    icon: Icon(Icons.save),
+                  ),
+                  IconButton(
+                      onPressed: () => setState(() {}),
+                      icon: Icon(Icons.refresh))
+                ],
+                title: title,
+                body: PickListFuture(
+                  onReorder: (list) => teams = list,
+                  screen: currentScreen,
+                )),
           ),
         ],
       ),
