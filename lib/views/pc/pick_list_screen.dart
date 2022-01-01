@@ -127,7 +127,8 @@ extension CurrentPickListExtension on CurrentPickList {
     }
   }
 
-  String get title => name[0].toUpperCase() + name.substring(1);
+  String get title =>
+      name[0].toUpperCase() + name.substring(1).toLowerCase() + ' Picklist';
 
   CurrentPickList nextScreen() =>
       map(() => CurrentPickList.SECOND, () => CurrentPickList.FIRST);
