@@ -50,7 +50,7 @@ class Scatter extends StatelessWidget {
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
     if (result.hasException) {
-      print(result.exception.toString());
+      throw GraphQLError(message: result.exception.toString());
     } else {
       //TODO: avoid dynamic
       return (result.data['team'] as List<dynamic>)
@@ -99,8 +99,8 @@ class Scatter extends StatelessWidget {
                       final List<ScatterData> report = snapshot.data
                           .map((e) => ScatterData(e.avgInner, e.avgOuter,
                               e.stddevInner, e.stddevOuter, e.number))
-                          .toList()
-                          .cast<ScatterData>();
+                          .toList();
+
                       teams = report
                           .map((e) => Team(teamNumber: e.number))
                           .toList();
