@@ -48,7 +48,7 @@ class _PickListScreenState extends State<PickListScreen> {
                           }
                         });
                       },
-                      icon: Icon(Icons.arrow_upward)),
+                      icon: Icon(Icons.swap_horiz)),
                   IconButton(
                     onPressed: save,
                     icon: Icon(Icons.save),
