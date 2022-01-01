@@ -2,7 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scouting_frontend/views/mobile/PitVars.dart';
+import 'package:scouting_frontend/views/mobile/pit_vars.dart';
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

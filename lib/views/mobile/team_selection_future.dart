@@ -4,16 +4,17 @@ import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
-class TeamSelection extends StatefulWidget {
-  TeamSelection({Key key, this.onChange, this.controller}) : super(key: key);
+class TeamSelectionFuture extends StatefulWidget {
+  TeamSelectionFuture({Key key, this.onChange, this.controller})
+      : super(key: key);
   @required
   final TextEditingController controller;
   final Function(LightTeam) onChange;
   @override
-  State<TeamSelection> createState() => _TeamSelectionState();
+  State<TeamSelectionFuture> createState() => _TeamSelectionFutureState();
 }
 
-class _TeamSelectionState extends State<TeamSelection> {
+class _TeamSelectionFutureState extends State<TeamSelectionFuture> {
   Future<List<LightTeam>> fetchTeams() async {
     final client = getClient();
     final String query = """

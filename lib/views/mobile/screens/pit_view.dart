@@ -7,12 +7,12 @@ import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/mobile/FilePickerWidget.dart';
-import 'package:scouting_frontend/views/mobile/FirebaseSubmitButton.dart';
-import 'package:scouting_frontend/views/mobile/PitVars.dart';
-import 'package:scouting_frontend/views/mobile/Slider.dart';
-import 'package:scouting_frontend/views/mobile/Selector.dart';
-import 'package:scouting_frontend/views/mobile/TeamSelection.dart';
+import 'package:scouting_frontend/views/mobile/file_picker_widget.dart';
+import 'package:scouting_frontend/views/mobile/firebase_submit_button.dart';
+import 'package:scouting_frontend/views/mobile/pit_vars.dart';
+import 'package:scouting_frontend/views/mobile/slider.dart';
+import 'package:scouting_frontend/views/mobile/selector.dart';
+import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
 import 'package:scouting_frontend/views/mobile/counter.dart';
 import 'package:scouting_frontend/views/mobile/section_divider.dart';
 import 'package:scouting_frontend/views/mobile/submit_button.dart';
@@ -87,7 +87,7 @@ class PitView extends StatelessWidget {
           ),
           child: Column(
             children: [
-              TeamSelection(
+              TeamSelectionFuture(
                 controller: teamSelectionController,
                 onChange: (lightTeam) {
                   team = lightTeam;

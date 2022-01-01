@@ -6,8 +6,8 @@ import 'package:progress_state_button/progress_button.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/mobile/SpecificVars.dart';
-import 'package:scouting_frontend/views/mobile/TeamSelection.dart';
+import 'package:scouting_frontend/views/mobile/specific_vars.dart';
+import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
 import 'package:scouting_frontend/views/mobile/match_dropdown.dart';
 import 'package:scouting_frontend/views/mobile/submit_button.dart';
 import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
@@ -36,7 +36,7 @@ class _SpecificState extends State<Specific> {
           child: Column(
             children: <Widget>[
               Padding(padding: EdgeInsets.all(15)),
-              TeamSelection(
+              TeamSelectionFuture(
                 onChange: (team) {
                   vars.teamId = team.id;
                 },

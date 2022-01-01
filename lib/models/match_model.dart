@@ -1,4 +1,4 @@
-import 'package:scouting_frontend/views/mobile/HasuraVars.dart';
+import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 
 int climbId(final int i) {
   switch (i) {

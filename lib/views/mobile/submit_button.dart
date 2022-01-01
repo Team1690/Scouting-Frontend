@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/mobile/HasuraVars.dart';
+import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 
 class SubmitButton extends StatefulWidget {
   final HasuraVars vars;
