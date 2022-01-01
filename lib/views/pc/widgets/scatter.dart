@@ -79,7 +79,6 @@ class Scatter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Team selectedTeam;
     String tooltip;
     return Container(
         color: secondaryColor,
@@ -101,8 +100,12 @@ class Scatter extends StatelessWidget {
                         return Text('invalid data :(');
                       }
                       final List<ScatterData> report = snapshot.data
-                          .map((e) => ScatterData(e.avgInner, e.avgOuter,
-                              e.stddevInner, e.stddevOuter, e.number))
+                          .map<ScatterData>((e) => ScatterData(
+                              e.avgInner,
+                              e.avgOuter,
+                              e.stddevInner,
+                              e.stddevOuter,
+                              e.number))
                           .toList();
 
                       teams = report
