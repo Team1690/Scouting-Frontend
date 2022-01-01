@@ -14,14 +14,18 @@ class ScatterData {
   final double stddevInner;
   final double stddevOuter;
   final int number;
+
+  double get sumOfAvg {
+    return avgInner + avgOuter;
+  }
 }
 
 // ignore: must_be_immutable
 class Scatter extends StatelessWidget {
-  double stddev(e) {
-    return ((e.avgInner + e.avgOuter) != 0)
+  double stddev(ScatterData e) {
+    return ((e.sumOfAvg) != 0)
         ? ((e.stddevInner * e.avgInner) + (e.stddevOuter * e.avgOuter)) /
-            (e.avgInner + e.avgOuter)
+            (e.sumOfAvg)
         : 0;
   }
 
@@ -107,7 +111,7 @@ class Scatter extends StatelessWidget {
                       return ScatterChart(ScatterChartData(
                         scatterSpots: report
                             .map((e) => ScatterSpot(
-                                  (e.avgInner + e.avgOuter).toDouble(),
+                                  (e.sumOfAvg).toDouble(),
                                   stddev(e),
                                 ))
                             .toList(),
@@ -143,13 +147,11 @@ class Scatter extends StatelessWidget {
                         ),
                         gridData: FlGridData(
                           show: true,
-                          horizontalInterval: report
-                                  .map((e) => (e.avgInner + e.avgOuter))
-                                  .reduce(math.max) /
-                              10,
-                          verticalInterval:
-                              report.map((e) => stddev(e)).reduce(math.max) /
+                          horizontalInterval:
+                              report.map((e) => (e.sumOfAvg)).reduce(math.max) /
                                   10,
+                          verticalInterval:
+                              report.map(stddev).reduce(math.max) / 10,
                           drawHorizontalLine: true,
                           checkToShowHorizontalLine: (value) => true,
                           getDrawingHorizontalLine: (value) =>
@@ -166,12 +168,8 @@ class Scatter extends StatelessWidget {
                         ),
                         minX: 0,
                         minY: 0,
-                        maxX: report
-                            .map((e) => (e.avgInner + e.avgOuter))
-                            .reduce((curr, next) => curr > next ? curr : next),
-                        maxY: report
-                            .map((e) => stddev(e))
-                            .reduce((curr, next) => curr > next ? curr : next),
+                        maxX: report.map((e) => (e.sumOfAvg)).reduce(math.max),
+                        maxY: report.map(stddev).reduce(math.max),
                       ));
                     }
                   }))
