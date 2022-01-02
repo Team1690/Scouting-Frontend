@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/mobile/screens/pit_view.dart';
-import 'package:scouting_frontend/views/mobile/specific.dart';
+import 'package:scouting_frontend/views/mobile/screens/specific_view.dart';
 import 'package:scouting_frontend/views/mobile/screens/input_view.dart';
 
 class SideNavBar extends StatefulWidget {
