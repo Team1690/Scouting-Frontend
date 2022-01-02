@@ -9,7 +9,7 @@ import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 class SubmitButton extends StatefulWidget {
   final HasuraVars vars;
   final String mutation;
-  final Function resetForm;
+  final Function() resetForm;
 
   const SubmitButton({this.vars, this.mutation, this.resetForm, Key key})
       : super(key: key);

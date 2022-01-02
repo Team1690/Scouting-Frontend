@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
@@ -22,7 +20,7 @@ class UserInput extends StatelessWidget {
   Match match = Match();
   int selectedClimbIndex = -1; // -1 means nothing
 
-  void clearForm() {
+  void clearForm(BuildContext context) {
     match = new Match();
     selectedClimbIndex = -1;
 
@@ -108,7 +106,7 @@ class UserInput extends StatelessWidget {
 }
               """,
               vars: match,
-              resetForm: clearForm,
+              resetForm: () => clearForm(context),
             ),
             const SizedBox(height: 20),
           ],
