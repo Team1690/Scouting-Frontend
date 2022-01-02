@@ -10,13 +10,9 @@
             "type": "dart",
             "deviceId": "chrome",
             "args": [
-                "--web-port",
-                "8080",
-                "--web-hostname",
-                "0.0.0.0",
                 "--web-renderer",
                 "html"
             ]
-        }
+        },
     ]
 }
