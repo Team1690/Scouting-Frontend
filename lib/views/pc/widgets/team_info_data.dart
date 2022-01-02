@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
+import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
+import 'package:scouting_frontend/views/pc/widgets/scouting_pit.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 import '../../constants.dart';
 
@@ -20,6 +22,32 @@ class SpecificData {
   final String msg;
 }
 
+class PitViewData {
+  PitViewData(
+      {this.driveTrainType,
+      this.driveMotorAmount,
+      this.driveMotorType,
+      this.driveTrainReliability,
+      this.driveWheelType,
+      this.electronicsReliability,
+      this.gearbox,
+      this.notes,
+      this.robotReliability,
+      this.shifter,
+      this.url});
+  final String driveTrainType;
+  final int driveMotorAmount;
+  final String driveWheelType;
+  final String shifter;
+  final String gearbox;
+  final String driveMotorType;
+  final int driveTrainReliability;
+  final int electronicsReliability;
+  final int robotReliability;
+  final String notes;
+  final String url;
+}
+
 // ignore: must_be_immutable
 class TeamInfoData extends StatefulWidget {
   TeamInfoData({
@@ -27,13 +55,54 @@ class TeamInfoData extends StatefulWidget {
     @required this.team,
   }) : super(key: key);
 
-  int team;
+  LightTeam team;
 
   @override
   State<TeamInfoData> createState() => _TeamInfoDataState();
 }
 
 class _TeamInfoDataState extends State<TeamInfoData> {
+  Future<PitViewData> fetchPit() async {
+    final client = getClient();
+    final String query = """
+query MyQuery(\$team_id: Int!) {
+  pit_by_pk(team_id: \$team_id) {
+    drive_motor_amount
+    drive_motor_type
+    drive_train_reliability
+    drive_train_type
+    drive_wheel_type
+    electronics_reliability
+    gearbox
+    notes
+    robot_reliability
+    team_id
+    shifter
+    url
+  }
+}
+
+    """;
+    final QueryResult result = await client.query(QueryOptions(
+        document: gql(query), variables: {'team_id': widget.team.id}));
+    if (!result.hasException) {
+      return PitViewData(
+          driveTrainType: result.data["pit_by_pk"]['drive_train_type'],
+          driveMotorAmount: result.data["pit_by_pk"]['drive_motor_amount'],
+          driveMotorType: result.data["pit_by_pk"]['drive_motor_type'],
+          driveTrainReliability: result.data["pit_by_pk"]
+              ['drive_train_reliability'],
+          driveWheelType: result.data["pit_by_pk"]['drive_wheel_type'],
+          electronicsReliability: result.data["pit_by_pk"]
+              ['electronics_reliability'],
+          gearbox: result.data["pit_by_pk"]['gearbox'],
+          shifter: result.data['pit_by_pk']['shifter'],
+          notes: result.data["pit_by_pk"]['notes'],
+          robotReliability: result.data["pit_by_pk"]['robot_reliability'],
+          url: result.data["pit_by_pk"]['url']);
+    }
+  }
+
   Future<List<SpecificData>> fetchSpesific() async {
     final client = getClient();
     final String query = """query MyQuery(\$teamNumber : Int){
@@ -44,7 +113,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
 }""";
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
-        variables: <String, int>{"teamNumber": widget.team}));
+        variables: <String, int>{"teamNumber": widget.team.number}));
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
@@ -86,7 +155,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
 
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
-        variables: <String, int>{"teamNumber": widget.team}));
+        variables: <String, int>{"teamNumber": widget.team.number}));
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
@@ -160,7 +229,22 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                       flex: 3,
                       child: DashboardCard(
                         title: 'Pit Scouting',
-                        body: Container(),
+                        body: FutureBuilder(
+                          future: fetchPit(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Error has happened in the future! ' +
+                                  snapshot.error.toString());
+                            } else if (!snapshot.hasData) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              final PitViewData report = snapshot.data;
+                              return ScoutingPit(report);
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ],

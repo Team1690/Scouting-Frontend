@@ -14,7 +14,7 @@ class TeamInfoScreen extends StatefulWidget {
 }
 
 class _TeamInfoScreenState extends State<TeamInfoScreen> {
-  int chosenTeam;
+  LightTeam chosenTeam;
 
   Future<List<LightTeam>> fetchTeams() async {
     final client = getClient();
@@ -77,10 +77,10 @@ query FetchTeams {
                               // const CircularProgressIndicator();
                             } else {
                               return TeamsSearchBox(
+                                  typeAheadController: TextEditingController(),
                                   teams: snapshot.data as List<LightTeam>,
-                                  onChange: (LightTeam team) => {
-                                        setState(() => chosenTeam = team.number)
-                                      });
+                                  onChange: (LightTeam team) =>
+                                      {setState(() => chosenTeam = team)});
                             }
                           })),
                   SizedBox(width: defaultPadding),
