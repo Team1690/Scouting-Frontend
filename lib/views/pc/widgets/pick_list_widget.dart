@@ -54,7 +54,7 @@ class _PickListState extends State<PickList> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => TeamInfoScreen(
-                                chosenTeam: e.number,
+                                chosenTeam: LightTeam(e.id, e.number, e.name),
                               ))),
                   title: Text(e.toString()),
                   leading: AdvancedSwitch(
