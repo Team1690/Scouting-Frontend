@@ -40,7 +40,11 @@ class Match implements HasuraVars {
   Map<String, dynamic> toHasuraVars() {
     return {
       "auto_balls": autoUpperGoal,
-      "climb_id": climbStatus,
+      "climb_id": climbStatus == 0
+          ? 4
+          : climbStatus == 1
+              ? 2
+              : 1,
       "number": matchNumber,
       "team_id": teamId,
       "teleop_inner": teleInner,
