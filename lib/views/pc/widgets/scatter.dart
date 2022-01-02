@@ -130,10 +130,13 @@ class Scatter extends StatelessWidget {
                           enabled: true,
                           handleBuiltInTouches: true,
                           touchTooltipData: ScatterTouchTooltipData(
-                            tooltipBgColor: Colors.grey[400],
+                            tooltipBgColor: bgColor,
                             getTooltipItems: (ScatterSpot touchedBarSpot) {
                               return ScatterTooltipItem(
-                                  tooltip, TextStyle(), 10);
+                                tooltip,
+                                TextStyle(color: Colors.white),
+                                10,
+                              );
                             },
                           ),
                         ),
