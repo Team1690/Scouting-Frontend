@@ -85,6 +85,7 @@ query MyQuery(\$team_id: Int!) {
     """;
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query), variables: {'team_id': widget.team.id}));
+    if (result.data['pit_by_pk'] == null) return null;
     if (!result.hasException) {
       return PitViewData(
           driveTrainType: result.data["pit_by_pk"]['drive_train_type'],
@@ -100,6 +101,8 @@ query MyQuery(\$team_id: Int!) {
           notes: result.data["pit_by_pk"]['notes'],
           robotReliability: result.data["pit_by_pk"]['robot_reliability'],
           url: result.data["pit_by_pk"]['url']);
+    } else {
+      throw result.exception;
     }
   }
 
@@ -232,6 +235,9 @@ query MyQuery(\$team_id: Int!) {
                         body: FutureBuilder(
                           future: fetchPit(),
                           builder: (context, snapshot) {
+                            if (snapshot.data == null) {
+                              return Text('No data yet :(');
+                            }
                             if (snapshot.hasError) {
                               return Text('Error has happened in the future! ' +
                                   snapshot.error.toString());
