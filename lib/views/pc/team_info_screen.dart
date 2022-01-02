@@ -10,7 +10,7 @@ import 'package:graphql/client.dart';
 
 class TeamInfoScreen extends StatefulWidget {
   TeamInfoScreen({Key key, this.chosenTeam});
-  int chosenTeam;
+  LightTeam chosenTeam;
   @override
   State<TeamInfoScreen> createState() => _TeamInfoScreenState();
 }
@@ -77,10 +77,10 @@ query FetchTeams {
                               // const CircularProgressIndicator();
                             } else {
                               return TeamsSearchBox(
+                                  typeAheadController: TextEditingController(),
                                   teams: snapshot.data as List<LightTeam>,
                                   onChange: (LightTeam team) => {
-                                        setState(() =>
-                                            widget.chosenTeam = team.number)
+                                        setState(() => widget.chosenTeam = team)
                                       });
                             }
                           })),
