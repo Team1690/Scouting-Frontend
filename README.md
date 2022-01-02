@@ -16,9 +16,6 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
-gmail: orbitscouting@gmail.com
-password: 4[2VNAn~E&
-
 login to firebase and hasura with google account
 
 
@@ -29,7 +26,7 @@ login to firebase and hasura with google account
 - in the terminal move to the directory of the project and run `flutter pub add firebase_core` this adds a package that is needed for firebase
 - run `dart pub global activate flutterfire_cli` in terminal
 - add C:\Users\ **your_username** \AppData\Local\Pub\Cache\bin to the Path environment variable https://youtu.be/Kj3FSWoKYfo and reopen the terminal
-- install node.js https://nodejs.org/en/ (not needed but alot easier to do next step ) https://nodejs.org/en/
+- install node.js https://nodejs.org/en/ (not needed but alot easier to do next step )
 - run npm install -g firebase-tools in terminal
 - open https://firebase.google.com/ and create a firebase project (I prefer to disable google analytics you can read about is online)
 - run firebase login in terminal and login to the accout that you made a project on

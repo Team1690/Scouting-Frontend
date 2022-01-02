@@ -107,7 +107,6 @@ query MyQuery(\$team_id: Int!) {
     final client = getClient();
     final String query = """query MyQuery(\$teamNumber : Int){
   specific(where: {team: {number: {_eq: \$teamNumber}}}) {
-    match_id
     message
     id
   }
@@ -291,7 +290,7 @@ query MyQuery(\$team_id: Int!) {
                     );
                   } else {
                     if (snapshot.data.length < 1) {
-                      return Text(' data.length is \nshorter than 1! :(');
+                      return Text('no data yet!');
                     }
                     final List<dynamic> report =
                         (snapshot.data as List<dynamic>)
