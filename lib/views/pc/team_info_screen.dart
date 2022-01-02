@@ -9,8 +9,13 @@ import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 import 'package:graphql/client.dart';
 
 class TeamInfoScreen extends StatefulWidget {
-  TeamInfoScreen({Key key, this.chosenTeam});
+  TeamInfoScreen({Key key, this.chosenTeam}) {
+    if (chosenTeam != null) {
+      controller.text = chosenTeam.number.toString();
+    }
+  }
   LightTeam chosenTeam;
+  TextEditingController controller = TextEditingController();
   @override
   State<TeamInfoScreen> createState() => _TeamInfoScreenState();
 }
@@ -77,11 +82,10 @@ query FetchTeams {
                               // const CircularProgressIndicator();
                             } else {
                               return TeamsSearchBox(
-                                  typeAheadController: TextEditingController(),
+                                  typeAheadController: widget.controller,
                                   teams: snapshot.data as List<LightTeam>,
-                                  onChange: (LightTeam team) => {
-                                        setState(() => widget.chosenTeam = team)
-                                      });
+                                  onChange: (LightTeam team) =>
+                                      setState(() => widget.chosenTeam = team));
                             }
                           })),
                   SizedBox(width: defaultPadding),
