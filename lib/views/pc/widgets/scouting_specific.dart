@@ -23,9 +23,16 @@ class ScoutingSpecific extends StatelessWidget {
                 margin: EdgeInsets.fromLTRB(5, 0, 5, defaultPadding),
                 child: Padding(
                   padding: const EdgeInsets.all(defaultPadding),
-                  child: Text(
-                    e,
-                    style: TextStyle(color: primaryWhite, fontSize: 12),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: 110,
+                        child: Text(
+                          e,
+                          style: TextStyle(color: primaryWhite, fontSize: 12),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
