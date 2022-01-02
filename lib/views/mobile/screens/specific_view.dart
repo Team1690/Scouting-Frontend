@@ -28,7 +28,8 @@ class _SpecificState extends State<Specific> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        centerTitle: true,
+        title: Text('Specific'),
       ),
       body: Padding(
         padding: EdgeInsets.all(14),
@@ -44,6 +45,7 @@ class _SpecificState extends State<Specific> {
               ),
               Padding(padding: EdgeInsets.all(14.0)),
               TextField(
+                textDirection: TextDirection.rtl,
                 controller: messageController,
                 onChanged: (text) {
                   vars.message = text;
@@ -55,7 +57,7 @@ class _SpecificState extends State<Specific> {
                     borderSide: BorderSide(color: Colors.blue, width: 4.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 14.0),
+                    borderSide: BorderSide(color: Colors.grey, width: 4.0),
                   ),
                   fillColor: secondaryColor,
                   filled: true,

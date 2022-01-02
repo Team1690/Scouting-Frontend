@@ -77,7 +77,8 @@ class PitView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Pit Scouting')),
+        centerTitle: true,
+        title: Text('Pit'),
       ),
       body: SingleChildScrollView(
         child: Container(
