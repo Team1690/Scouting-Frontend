@@ -23,8 +23,7 @@ class _CompareScreenState extends State<CompareScreen> {
 
   Future<List<LightTeam>> fetchTeams() async {
     final client = getClient();
-    final String query =
-        """
+    final String query = """
 query FetchTeams {
   team {
     id
