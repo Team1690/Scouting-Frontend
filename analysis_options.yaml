@@ -1,4 +1,8 @@
-include: package:lints/recommended.yaml
+include: package:lints/flutter.yaml
+
+# TODO: combine all 3 linting styles (including multiple lints doesn't work)
+# include: package:lints/pedantic.yaml
+# include: package:lints/recommended.yaml
 
 analyzer:
   exclude: [build/**]
@@ -9,13 +13,35 @@ analyzer:
     implicit-dynamic: false
 
 linter:
+  # Documentation on https://dart-lang.github.io/linter/lints/
+  # TODO: add more rules
   rules:
     - always_declare_return_types
     - cancel_subscriptions
     - close_sinks
     - comment_references
+    - depend_on_referenced_packages
     - one_member_abstracts
     - only_throw_errors
     - package_api_docs
-    - prefer_final_in_for_each
+    - package_names
     - prefer_double_quotes
+    - prefer_final_in_for_each
+    - prefer_final_locals
+    - prefer_final_parameters
+    - prefer_foreach
+    - prefer_is_not_operator
+    - prefer_null_aware_method_calls
+    - prefer_null_aware_operators
+    - require_trailing_commas
+    - secure_pubspec_urls
+    - sort_constructors_first
+    - sort_pub_dependencies
+    - sort_unnamed_constructors_first
+    - tighten_type_of_initializing_formals
+    - type_annotate_public_apis
+    - unnecessary_await_in_return
+    - unnecessary_lambdas
+    - unnecessary_this
+    - unwaited_futures
+    - use_named_constants
