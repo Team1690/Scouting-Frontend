@@ -212,9 +212,9 @@ query MyQuery(\$team_id: Int!) {
                                             final QuickData report =
                                                 snapshot.data[0];
                                             return Text(
-                                                "\nAverage inner: ${report.averageInner}"
-                                                        "\nAverage outer: ${report.averageOuter}"
-                                                        "\nAverage auto balls: ${report.autoBalls}"
+                                                "\nAverage inner: ${report.averageInner.toStringAsFixed(3)}"
+                                                        "\nAverage outer: ${report.averageOuter.toStringAsFixed(3)}"
+                                                        "\nAverage auto balls: ${report.autoBalls.toStringAsFixed(3)}"
                                                         "\nClimb Rate: " +
                                                     (report.success /
                                                             (report.failed +
