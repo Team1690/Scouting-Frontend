@@ -44,20 +44,18 @@ class Match implements HasuraVars {
 
 extension ClimbHelper on Match {
   static bool querySuccess = false;
-  static int _succeeded;
-  static int _noAttempt;
-  static int _failed;
+  static Map<String, int> _ids = {};
 
   static int get successId {
-    return _succeeded;
+    return _ids['succeeded'];
   }
 
   static int get noAttemptId {
-    return _noAttempt;
+    return _ids['noAttempt'];
   }
 
   static int get failedId {
-    return _failed;
+    return _ids['failed'];
   }
 
   static int climbId(final int i) {
@@ -95,13 +93,13 @@ extension ClimbHelper on Match {
       (result.data['climb']).forEach((element) {
         switch (element["name"] as String) {
           case "failed":
-            _failed = element['id'];
+            _ids['failed'] = element['id'];
             break;
           case "No attempt":
-            _noAttempt = element['id'];
+            _ids['noAttempt'] = element['id'];
             break;
           case "Succeeded":
-            _succeeded = element['id'];
+            _ids['succeeded'] = element['id'];
             break;
         }
       });
