@@ -48,6 +48,15 @@ class PitViewData {
   final String url;
 }
 
+extension MapNullable<A> on A {
+  B mapNullable<B>(B Function(A) f) => this == null ? null : f(this);
+}
+
+extension MapQueryResult on QueryResult {
+  T mapQueryResult<T>(T Function(Map<String, dynamic>) f) =>
+      this.hasException ? throw this.exception : f(this.data);
+}
+
 // ignore: must_be_immutable
 class TeamInfoData extends StatefulWidget {
   TeamInfoData({
@@ -85,25 +94,20 @@ query MyQuery(\$team_id: Int!) {
     """;
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query), variables: {'team_id': widget.team.id}));
-    if (result.data['pit_by_pk'] == null) return null;
-    if (!result.hasException) {
-      return PitViewData(
-          driveTrainType: result.data["pit_by_pk"]['drive_train_type'],
-          driveMotorAmount: result.data["pit_by_pk"]['drive_motor_amount'],
-          driveMotorType: result.data["pit_by_pk"]['drive_motor_type'],
-          driveTrainReliability: result.data["pit_by_pk"]
-              ['drive_train_reliability'],
-          driveWheelType: result.data["pit_by_pk"]['drive_wheel_type'],
-          electronicsReliability: result.data["pit_by_pk"]
-              ['electronics_reliability'],
-          gearbox: result.data["pit_by_pk"]['gearbox'],
-          shifter: result.data['pit_by_pk']['shifter'],
-          notes: result.data["pit_by_pk"]['notes'],
-          robotReliability: result.data["pit_by_pk"]['robot_reliability'],
-          url: result.data["pit_by_pk"]['url']);
-    } else {
-      throw result.exception;
-    }
+    result.mapQueryResult((data) => {
+          data['pit_by_pk'].mapNullable((pit) => PitViewData(
+              driveTrainType: pit['drive_train_type'],
+              driveMotorAmount: pit['drive_motor_amount'],
+              driveMotorType: pit['drive_motor_type'],
+              driveTrainReliability: pit['drive_train_reliability'],
+              driveWheelType: pit['drive_wheel_type'],
+              electronicsReliability: pit['electronics_reliability'],
+              gearbox: pit['gearbox'],
+              shifter: pit['shifter'],
+              notes: pit['notes'],
+              robotReliability: pit['robot_reliability'],
+              url: pit['url']))
+        });
   }
 
   Future<List<SpecificData>> fetchSpesific() async {
@@ -235,12 +239,11 @@ query MyQuery(\$team_id: Int!) {
                         body: FutureBuilder(
                           future: fetchPit(),
                           builder: (context, snapshot) {
-                            if (snapshot.data == null) {
-                              return Text('No data yet :(');
-                            }
                             if (snapshot.hasError) {
                               return Text('Error has happened in the future! ' +
                                   snapshot.error.toString());
+                            } else if (snapshot.data == null) {
+                              return Text('No data yet :(');
                             } else if (!snapshot.hasData) {
                               return Center(
                                 child: CircularProgressIndicator(),
