@@ -6,6 +6,7 @@ import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_pit.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 import '../../constants.dart';
+import '../../../net/hasura_helper.dart';
 
 class QuickData {
   QuickData(this.averageInner, this.averageOuter, this.autoBalls, this.success,
@@ -48,15 +49,6 @@ class PitViewData {
   final String url;
 }
 
-extension MapNullable<A> on A {
-  B mapNullable<B>(B Function(A) f) => this == null ? null : f(this);
-}
-
-extension MapQueryResult on QueryResult {
-  T mapQueryResult<T>(T Function(Map<String, dynamic>) f) =>
-      this.hasException ? throw this.exception : f(this.data);
-}
-
 // ignore: must_be_immutable
 class TeamInfoData extends StatefulWidget {
   TeamInfoData({
@@ -92,22 +84,23 @@ query MyQuery(\$team_id: Int!) {
 }
 
     """;
-    final QueryResult result = await client.query(QueryOptions(
-        document: gql(query), variables: {'team_id': widget.team.id}));
-    result.mapQueryResult((data) => {
-          data['pit_by_pk'].mapNullable((pit) => PitViewData(
-              driveTrainType: pit['drive_train_type'],
-              driveMotorAmount: pit['drive_motor_amount'],
-              driveMotorType: pit['drive_motor_type'],
-              driveTrainReliability: pit['drive_train_reliability'],
-              driveWheelType: pit['drive_wheel_type'],
-              electronicsReliability: pit['electronics_reliability'],
-              gearbox: pit['gearbox'],
-              shifter: pit['shifter'],
-              notes: pit['notes'],
-              robotReliability: pit['robot_reliability'],
-              url: pit['url']))
-        });
+    return (await client.query(QueryOptions(
+            document: gql(query), variables: {'team_id': widget.team.id})))
+        .mapQueryResult<PitViewData>((final Map<String, dynamic> data) =>
+            (data['pit_by_pk'] as Map<String, dynamic>)
+                .mapNullable<PitViewData>((final Map<String, dynamic> pit) =>
+                    PitViewData(
+                        driveTrainType: pit['drive_train_type'],
+                        driveMotorAmount: pit['drive_motor_amount'],
+                        driveMotorType: pit['drive_motor_type'],
+                        driveTrainReliability: pit['drive_train_reliability'],
+                        driveWheelType: pit['drive_wheel_type'],
+                        electronicsReliability: pit['electronics_reliability'],
+                        gearbox: pit['gearbox'],
+                        shifter: pit['shifter'],
+                        notes: pit['notes'],
+                        robotReliability: pit['robot_reliability'],
+                        url: pit['url'])));
   }
 
   Future<List<SpecificData>> fetchSpesific() async {
