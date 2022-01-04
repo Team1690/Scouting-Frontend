@@ -139,6 +139,4 @@ extension CurrentPickListExtension on CurrentPickList {
   int setIndex(PickListTeam team, int index) => map(
       () => team.firstListIndex = index, () => team.secondListIndex = index);
   // useful for sweeping changes, i.e. to increase a team's index by one use `mapIndex(team, (final int index) => index + 1);
-  int mapIndex<T>(PickListTeam team, int Function(int) f) =>
-      setIndex(team, f(getIndex(team)));
 }
