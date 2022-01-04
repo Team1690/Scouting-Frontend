@@ -32,7 +32,8 @@ class ScoutingPit extends StatelessWidget {
           CachedNetworkImage(
             width: 120,
             imageUrl: newUrl,
-            placeholder: (context, url) => CircularProgressIndicator(),
+            placeholder: (context, url) =>
+                Center(child: CircularProgressIndicator()),
           )
         ],
       ),
