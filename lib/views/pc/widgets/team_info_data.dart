@@ -114,14 +114,12 @@ query MyQuery(\$team_id: Int!) {
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['specific'] as List<dynamic>)
-        .map((e) => SpecificData(
-              e['message'],
-            ))
-        .toList();
+
+    return result.mapQueryResult((final Map<String, dynamic> data) =>
+        (data['specific'] as List<dynamic>).mapNullable(
+            (final List<dynamic> specificEntries) => specificEntries
+                .map((e) => SpecificData(e['message']))
+                .toList()));
   }
 
   Future<List<QuickData>> fetchQuickData() async {
@@ -156,10 +154,9 @@ query MyQuery(\$team_id: Int!) {
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
+    return result
+        .mapQueryResult(
+            (final Map<String, dynamic> data) => data['team'] as List<dynamic>)
         .map((e) => QuickData(
             e['balls']['aggregate']['avg']['teleop_inner'],
             e['balls']['aggregate']['avg']['teleop_outer'],
@@ -196,7 +193,8 @@ query MyQuery(\$team_id: Int!) {
                                             return Text(
                                                 'Error has happened in the future! ' +
                                                     snapshot.error.toString());
-                                          } else if (!snapshot.hasData) {
+                                          } else if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
                                             return Center(
                                               child:
                                                   CircularProgressIndicator(),
@@ -235,12 +233,13 @@ query MyQuery(\$team_id: Int!) {
                             if (snapshot.hasError) {
                               return Text('Error has happened in the future! ' +
                                   snapshot.error.toString());
-                            } else if (snapshot.data == null) {
-                              return Text('No data yet :(');
-                            } else if (!snapshot.hasData) {
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return Center(
                                 child: CircularProgressIndicator(),
                               );
+                            } else if (snapshot.data == null) {
+                              return Text('No data yet :(');
                             } else {
                               final PitViewData report = snapshot.data;
                               return ScoutingPit(report);
@@ -286,7 +285,8 @@ query MyQuery(\$team_id: Int!) {
                   if (snapshot.hasError) {
                     return Text('Error has happened in the future! ' +
                         snapshot.error.toString());
-                  } else if (!snapshot.hasData) {
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
