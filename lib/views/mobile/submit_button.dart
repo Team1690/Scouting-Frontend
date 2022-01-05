@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
-import 'package:http/http.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
@@ -9,7 +8,7 @@ import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 class SubmitButton extends StatefulWidget {
   final HasuraVars vars;
   final String mutation;
-  final Function resetForm;
+  final Function() resetForm;
 
   const SubmitButton({this.vars, this.mutation, this.resetForm, Key key})
       : super(key: key);
@@ -53,7 +52,8 @@ class _SubmitButtonState extends State<SubmitButton> {
       },
       onPressed: () async {
         if (_state == ButtonState.fail) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
+          Navigator.push(context,
+              MaterialPageRoute<Scaffold>(builder: (context) {
             return Scaffold(
               appBar: AppBar(
                 title: Text('Error message'),

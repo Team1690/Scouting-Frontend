@@ -1,11 +1,8 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
-import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
-import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/scatter.dart';
 
 //TODO: need to get some fake data to test it.

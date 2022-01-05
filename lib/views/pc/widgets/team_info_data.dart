@@ -6,6 +6,7 @@ import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_pit.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 import '../../constants.dart';
+import '../../../net/hasura_helper.dart';
 
 class QuickData {
   QuickData(this.averageInner, this.averageOuter, this.autoBalls, this.success,
@@ -83,24 +84,26 @@ query MyQuery(\$team_id: Int!) {
 }
 
     """;
-    final QueryResult result = await client.query(QueryOptions(
-        document: gql(query), variables: {'team_id': widget.team.id}));
-    if (!result.hasException) {
-      return PitViewData(
-          driveTrainType: result.data["pit_by_pk"]['drive_train_type'],
-          driveMotorAmount: result.data["pit_by_pk"]['drive_motor_amount'],
-          driveMotorType: result.data["pit_by_pk"]['drive_motor_type'],
-          driveTrainReliability: result.data["pit_by_pk"]
-              ['drive_train_reliability'],
-          driveWheelType: result.data["pit_by_pk"]['drive_wheel_type'],
-          electronicsReliability: result.data["pit_by_pk"]
-              ['electronics_reliability'],
-          gearbox: result.data["pit_by_pk"]['gearbox'],
-          shifter: result.data['pit_by_pk']['shifter'],
-          notes: result.data["pit_by_pk"]['notes'],
-          robotReliability: result.data["pit_by_pk"]['robot_reliability'],
-          url: result.data["pit_by_pk"]['url']);
-    }
+    return (await client.query(QueryOptions(
+            document: gql(query),
+            variables: <String, dynamic>{'team_id': widget.team.id})))
+        .mapQueryResult<PitViewData>((final Map<String, dynamic> data) =>
+            (data['pit_by_pk'] as Map<String, dynamic>)
+                .mapNullable<PitViewData>((final Map<String, dynamic> pit) =>
+                    PitViewData(
+                        driveTrainType: pit['drive_train_type'] as String,
+                        driveMotorAmount: pit['drive_motor_amount'] as int,
+                        driveMotorType: pit['drive_motor_type'] as String,
+                        driveTrainReliability:
+                            pit['drive_train_reliability'] as int,
+                        driveWheelType: pit['drive_wheel_type'] as String,
+                        electronicsReliability:
+                            pit['electronics_reliability'] as int,
+                        gearbox: pit['gearbox'] as String,
+                        shifter: pit['shifter'] as String,
+                        notes: pit['notes'] as String,
+                        robotReliability: pit['robot_reliability'] as int,
+                        url: pit['url'] as String)));
   }
 
   Future<List<SpecificData>> fetchSpesific() async {
@@ -114,14 +117,12 @@ query MyQuery(\$team_id: Int!) {
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['specific'] as List<dynamic>)
-        .map((e) => SpecificData(
-              e['message'],
-            ))
-        .toList();
+
+    return result.mapQueryResult((final Map<String, dynamic> data) =>
+        (data['specific'] as List<dynamic>).mapNullable(
+            (final List<dynamic> specificEntries) => specificEntries
+                .map((final dynamic e) => SpecificData(e['message'] as String))
+                .toList()));
   }
 
   Future<List<QuickData>> fetchQuickData() async {
@@ -156,16 +157,15 @@ query MyQuery(\$team_id: Int!) {
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => QuickData(
-            e['balls']['aggregate']['avg']['teleop_inner'],
-            e['balls']['aggregate']['avg']['teleop_outer'],
-            e['balls']['aggregate']['avg']['auto_balls'],
-            e['climbSuccess']['aggregate']['count'],
-            e['climbFail']['aggregate']['count']))
+    return result
+        .mapQueryResult(
+            (final Map<String, dynamic> data) => data['team'] as List<dynamic>)
+        .map((final dynamic e) => QuickData(
+            e['balls']['aggregate']['avg']['teleop_inner'] as double,
+            e['balls']['aggregate']['avg']['teleop_outer'] as double,
+            e['balls']['aggregate']['avg']['auto_balls'] as double,
+            e['climbSuccess']['aggregate']['count'] as double,
+            e['climbFail']['aggregate']['count'] as double))
         .toList();
   }
 
@@ -189,14 +189,15 @@ query MyQuery(\$team_id: Int!) {
                               children: [
                                 Expanded(
                                     flex: 1,
-                                    child: FutureBuilder(
+                                    child: FutureBuilder<List<QuickData>>(
                                         future: fetchQuickData(),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasError) {
                                             return Text(
                                                 'Error has happened in the future! ' +
                                                     snapshot.error.toString());
-                                          } else if (!snapshot.hasData) {
+                                          } else if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
                                             return Center(
                                               child:
                                                   CircularProgressIndicator(),
@@ -209,9 +210,9 @@ query MyQuery(\$team_id: Int!) {
                                             final QuickData report =
                                                 snapshot.data[0];
                                             return Text(
-                                                "\nAverage inner: ${report.averageInner}"
-                                                        "\nAverage outer: ${report.averageOuter}"
-                                                        "\nAverage auto balls: ${report.autoBalls}"
+                                                "\nAverage inner: ${report.averageInner.toStringAsFixed(3)}"
+                                                        "\nAverage outer: ${report.averageOuter.toStringAsFixed(3)}"
+                                                        "\nAverage auto balls: ${report.autoBalls.toStringAsFixed(3)}"
                                                         "\nClimb Rate: " +
                                                     (report.success /
                                                             (report.failed +
@@ -229,16 +230,19 @@ query MyQuery(\$team_id: Int!) {
                       flex: 3,
                       child: DashboardCard(
                         title: 'Pit Scouting',
-                        body: FutureBuilder(
+                        body: FutureBuilder<PitViewData>(
                           future: fetchPit(),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               return Text('Error has happened in the future! ' +
                                   snapshot.error.toString());
-                            } else if (!snapshot.hasData) {
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return Center(
                                 child: CircularProgressIndicator(),
                               );
+                            } else if (snapshot.data == null) {
+                              return Text('No data yet :(');
                             } else {
                               final PitViewData report = snapshot.data;
                               return ScoutingPit(report);
@@ -278,13 +282,14 @@ query MyQuery(\$team_id: Int!) {
         DashboardCard(
             title: 'Scouting Specific',
             // body: ScoutingSpecific(msg: widget.team.msg),
-            body: FutureBuilder(
+            body: FutureBuilder<List<SpecificData>>(
                 future: fetchSpesific(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error has happened in the future! ' +
                         snapshot.error.toString());
-                  } else if (!snapshot.hasData) {
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
@@ -293,7 +298,7 @@ query MyQuery(\$team_id: Int!) {
                       return Text('no data yet!');
                     }
                     final List<dynamic> report =
-                        (snapshot.data as List<dynamic>)
+                        (snapshot.data as List<SpecificData>)
                             .map((e) => e.msg)
                             .toList();
                     return ScoutingSpecific(msg: report.cast<String>());

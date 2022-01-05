@@ -38,14 +38,15 @@ query FetchTeams {
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => LightTeam(e['id'], e['number'], e['name']))
+    return (result.data['team'] as List<Map<String, dynamic>>)
+        .map((e) =>
+            LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
         .toList();
     //.entries.map((e) => LightTeam(e['id']);
   }
 
-  void addTeam(team) => compareTeamsList.add(team);
-  void removeTeam(index) => compareTeamsList
+  void addTeam(Team team) => compareTeamsList.add(team);
+  void removeTeam(MapEntry<int, Team> index) => compareTeamsList
       .removeWhere((Team entry) => entry.teamNumber == index.value.teamNumber);
 
   Widget build(BuildContext context) {

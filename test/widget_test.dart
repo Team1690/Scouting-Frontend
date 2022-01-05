@@ -20,7 +20,7 @@ void main() {
       // Build our app and trigger a frame.
       // WidgetsFlutterBinding.ensureInitialized();
       // await Firebase.initializeApp(
-          // options: DefaultFirebaseOptions.currentPlatform,
+      // options: DefaultFirebaseOptions.currentPlatform,
       // );
       // await tester.pumpWidget(App());
 
@@ -38,6 +38,5 @@ void main() {
       fail("Not updated yet");
     },
     skip: true,
-    reason: "Should be testing our app, not the default counter",
   );
 }

@@ -8,13 +8,11 @@
             "name": "Scouting-Frontend",
             "request": "launch",
             "type": "dart",
-            "deviceId": "web-server",
+            "deviceId": "chrome",
             "args": [
-                "--web-port",
-                "8080",
                 "--web-renderer",
                 "html"
             ]
-        }
+        },
     ]
 }

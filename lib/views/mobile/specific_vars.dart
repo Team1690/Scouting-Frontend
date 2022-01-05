@@ -5,7 +5,7 @@ class SpecificVars implements HasuraVars {
   String message = '';
   @override
   Map<String, dynamic> toHasuraVars() {
-    return {
+    return <String, dynamic>{
       'team_id': teamId,
       'message': message,
     };

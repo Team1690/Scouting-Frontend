@@ -33,7 +33,7 @@ class Team {
   //test
   final List<String> msg;
   final int averageShots;
-  final List<List> tables;
+  final List<List<List<double>>> tables;
   final List<int> spider;
 
   Team({
@@ -49,8 +49,8 @@ class Team {
     this.totalShotsSD = 0,
     this.climbsPerMatches = 0,
     this.climbsPerAttempts = 0,
-    this.msg = const [],
+    this.msg = const <String>[],
     this.tables = const [],
-    this.spider = const [0, 0, 0, 0],
+    this.spider = const <int>[0, 0, 0, 0],
   });
 }

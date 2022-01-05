@@ -58,12 +58,12 @@ class Scatter extends StatelessWidget {
     } else {
       //TODO: avoid dynamic
       return (result.data['team'] as List<dynamic>)
-          .map((e) => ScatterData(
-              e['stats']['aggregate']['avg']['teleop_inner'],
-              e['stats']['aggregate']['avg']['teleop_outer'],
-              e['stats']['aggregate']['stddev']['teleop_inner'] ?? 0,
-              e['stats']['aggregate']['stddev']['teleop_outer'] ?? 0,
-              e['number']))
+          .map((final dynamic e) => ScatterData(
+              e['stats']['aggregate']['avg']['teleop_inner'] as double,
+              e['stats']['aggregate']['avg']['teleop_outer'] as double,
+              e['stats']['aggregate']['stddev']['teleop_inner'] as double ?? 0,
+              e['stats']['aggregate']['stddev']['teleop_outer'] as double ?? 0,
+              e['number'] as int))
           .toList();
     }
   }
@@ -85,7 +85,7 @@ class Scatter extends StatelessWidget {
         child: Column(children: [
           Expanded(
               flex: 1,
-              child: FutureBuilder(
+              child: FutureBuilder<List<ScatterData>>(
                   future: fetchScatter(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
@@ -130,10 +130,13 @@ class Scatter extends StatelessWidget {
                           enabled: true,
                           handleBuiltInTouches: true,
                           touchTooltipData: ScatterTouchTooltipData(
-                            tooltipBgColor: Colors.grey[400],
+                            tooltipBgColor: bgColor,
                             getTooltipItems: (ScatterSpot touchedBarSpot) {
                               return ScatterTooltipItem(
-                                  tooltip, TextStyle(), 10);
+                                tooltip,
+                                TextStyle(color: Colors.white),
+                                10,
+                              );
                             },
                           ),
                         ),

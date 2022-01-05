@@ -14,7 +14,7 @@ class PitVars implements HasuraVars {
   int teamId;
   @override
   Map<String, dynamic> toHasuraVars() {
-    return {
+    return <String, dynamic>{
       'drive_train_type': driveTrainType,
       'drive_motor_type': driveMotorType,
       'drive_motor_amount': driveMotorAmount,

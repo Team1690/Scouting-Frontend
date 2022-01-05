@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/mobile/screens/pit_view.dart';
-import 'package:scouting_frontend/views/mobile/specific.dart';
-import 'package:scouting_frontend/views/mobile/screens/input_view.dart';
+import 'package:scouting_frontend/views/mobile/screens/specific_view.dart';
 
 class SideNavBar extends StatefulWidget {
   const SideNavBar({Key key}) : super(key: key);
@@ -42,7 +41,9 @@ class _SideNavBarState extends State<SideNavBar> {
             ),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Specific()));
+                  context,
+                  MaterialPageRoute<Specific>(
+                      builder: (context) => Specific()));
             },
           ),
           ListTile(
@@ -55,8 +56,8 @@ class _SideNavBarState extends State<SideNavBar> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PitView()));
+              Navigator.push(context,
+                  MaterialPageRoute<PitView>(builder: (context) => PitView()));
             },
           ),
         ],

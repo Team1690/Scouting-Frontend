@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:graphql/client.dart';
 
-import 'package:progress_state_button/iconed_button.dart';
-import 'package:progress_state_button/progress_button.dart';
-import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/mobile/specific_vars.dart';
 import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
-import 'package:scouting_frontend/views/mobile/match_dropdown.dart';
 import 'package:scouting_frontend/views/mobile/submit_button.dart';
-import 'package:scouting_frontend/views/mobile/teams_dropdown.dart';
-import 'package:scouting_frontend/models/match_model.dart';
-import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 class Specific extends StatefulWidget {
   @override
@@ -28,7 +19,8 @@ class _SpecificState extends State<Specific> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        centerTitle: true,
+        title: Text('Specific'),
       ),
       body: Padding(
         padding: EdgeInsets.all(14),
@@ -44,6 +36,7 @@ class _SpecificState extends State<Specific> {
               ),
               Padding(padding: EdgeInsets.all(14.0)),
               TextField(
+                textDirection: TextDirection.rtl,
                 controller: messageController,
                 onChanged: (text) {
                   vars.message = text;
@@ -55,7 +48,7 @@ class _SpecificState extends State<Specific> {
                     borderSide: BorderSide(color: Colors.blue, width: 4.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 14.0),
+                    borderSide: BorderSide(color: Colors.grey, width: 4.0),
                   ),
                   fillColor: secondaryColor,
                   filled: true,

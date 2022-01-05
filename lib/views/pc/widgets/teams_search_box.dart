@@ -25,7 +25,7 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
   bool isValueEmpty = false;
   bool isValueInList = true;
 
-  List<LightTeam> updateSussestions(inputNumber) {
+  List<LightTeam> updateSussestions(String inputNumber) {
     List<LightTeam> _suggestions = List.castFrom(widget.teams);
     String _inputNumber = inputNumber;
     // print(inputNumber);

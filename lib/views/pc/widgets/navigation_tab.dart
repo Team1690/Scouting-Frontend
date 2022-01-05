@@ -33,7 +33,8 @@ class _NavigationTab extends State<NavigationTab> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TeamInfoScreen()),
+                MaterialPageRoute<TeamInfoScreen>(
+                    builder: (context) => TeamInfoScreen()),
               );
             },
           ),
@@ -43,7 +44,8 @@ class _NavigationTab extends State<NavigationTab> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PickListScreen()),
+                MaterialPageRoute<PickListScreen>(
+                    builder: (context) => PickListScreen()),
               );
             },
           ),
@@ -53,7 +55,8 @@ class _NavigationTab extends State<NavigationTab> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CompareScreen()),
+                MaterialPageRoute<CompareScreen>(
+                    builder: (context) => CompareScreen()),
               );
             },
           ),
@@ -63,7 +66,8 @@ class _NavigationTab extends State<NavigationTab> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ScattersScreen()),
+                MaterialPageRoute<ScattersScreen>(
+                    builder: (context) => ScattersScreen()),
               );
             },
           ),

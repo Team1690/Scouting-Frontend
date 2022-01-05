@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:scouting_frontend/views/constants.dart';
 
 class DashboardCard extends StatelessWidget {
-  const DashboardCard({
-    Key key,
-    @required this.title,
-    @required this.body,
-  }) : super(key: key);
+  const DashboardCard(
+      {Key key,
+      @required this.title,
+      @required this.body,
+      this.titleWidgets = const []})
+      : super(key: key);
 
   final String title;
   final Widget body;
+  final List<Widget> titleWidgets;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +24,15 @@ class DashboardCard extends StatelessWidget {
         padding: const EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            Text(
-              title,
-              // style: TextStyle(fontSize: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  // style: TextStyle(fontSize: 10),
+                ),
+                ...titleWidgets
+              ],
             ),
             SizedBox(
               height: defaultPadding,

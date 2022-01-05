@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-
 class PitViewSlider extends StatefulWidget {
   PitViewSlider(
       {Key key,
