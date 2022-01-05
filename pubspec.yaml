@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   stepper_counter_swipe: ^1.0.0
-  percent_indicator: ^2.1.9+1
+  percent_indicator: ^3.4.0
   progress_state_button: ^1.0.2
   dropdownfield: ^1.0.3
   flutter_typeahead: ^3.1.3
