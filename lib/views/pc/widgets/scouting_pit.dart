@@ -18,8 +18,8 @@ class ScoutingPit extends StatelessWidget {
           Drive Train Type: ${data.driveTrainType == PitVars.driveTrainInitialValue ? 'Not Answered' : data.driveTrainType}
           Drive Train Motor: ${data.driveMotorType == PitVars.driveMotorInitialValue ? 'Not Answered' : data.driveMotorType}
           Drive Motor Amount: ${data.driveMotorAmount}
-          Shifter: ${data.shifter == null ? 'Not Answered' : data.shifter}
-          Gearbox: ${data.gearbox == null ? 'Not Answered' : data.gearbox}
+          Shifter: ${data.shifter ?? 'Not Answered'}
+          Gearbox: ${data.gearbox ?? 'Not Answered'}
           Drive Wheel Type: ${data.driveWheelType}
           DriveTrain Reliability: ${data.driveTrainReliability}
           Electronics Reliability: ${data.electronicsReliability}
