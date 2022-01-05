@@ -196,7 +196,7 @@ packages:
       name: fl_chart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.36.4"
+    version: "0.40.6"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -208,7 +208,7 @@ packages:
       name: flutter_advanced_switch
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "3.0.0"
   flutter_blurhash:
     dependency: transitive
     description:
