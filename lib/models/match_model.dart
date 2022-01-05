@@ -1,6 +1,6 @@
-import 'package:graphql/client.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
+import "package:graphql/client.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class Match implements HasuraVars {
   int teamNumber;
@@ -28,7 +28,7 @@ class Match implements HasuraVars {
 
   @override
   Map<String, dynamic> toHasuraVars() {
-    return {
+    return <String, dynamic>{
       "auto_balls": autoUpperGoal,
       "climb_id": ClimbHelper.climbId(climbStatus),
       "number": matchNumber,
@@ -47,20 +47,20 @@ extension ClimbHelper on Match {
   static Map<String, int> _ids = {};
 
   static int get successId {
-    return _ids['succeeded'];
+    return _ids["succeeded"];
   }
 
   static int get noAttemptId {
-    return _ids['noAttempt'];
+    return _ids["noAttempt"];
   }
 
   static int get failedId {
-    return _ids['failed'];
+    return _ids["failed"];
   }
 
   static int climbId(final int i) {
     if (!querySuccess) {
-      throw GraphQLError(message: 'climb id query didnt succeed');
+      throw GraphQLError(message: "climb id query didnt succeed");
     }
     switch (i) {
       case 0:
@@ -74,8 +74,8 @@ extension ClimbHelper on Match {
   }
 
   static Future<void> queryclimbId() async {
-    final client = getClient();
-    final query = """
+    final GraphQLClient client = getClient();
+    final String query = """
     query MyQuery {
   climb {
     id
@@ -84,22 +84,23 @@ extension ClimbHelper on Match {
 }
 
     """;
-    final result = await client.query(QueryOptions(document: gql(query)));
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
     if (result.hasException) {
       throw result.exception;
     } else if (result.data == null) {
-      throw GraphQLError(message: 'No climb ids found');
+      throw Exception("no climb ids found");
     } else {
-      (result.data['climb']).forEach((element) {
+      (result.data["climb"] as List<dynamic>).forEach((final dynamic element) {
         switch (element["name"] as String) {
           case "failed":
-            _ids['failed'] = element['id'];
+            _ids["failed"] = element["id"] as int;
             break;
           case "No attempt":
-            _ids['noAttempt'] = element['id'];
+            _ids["noAttempt"] = element["id"] as int;
             break;
           case "Succeeded":
-            _ids['succeeded'] = element['id'];
+            _ids["succeeded"] = element["id"] as int;
             break;
         }
       });

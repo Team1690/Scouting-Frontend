@@ -17,7 +17,7 @@ class PickListFuture extends StatefulWidget {
 class _PickListFutureState extends State<PickListFuture> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<List<PickListTeam>>(
         future: fetchTeams(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -55,8 +55,13 @@ class _PickListFutureState extends State<PickListFuture> {
       throw Exception('Grapgql error ${result.exception}');
     }
     List<PickListTeam> teams = (result.data["team"] as List<dynamic>)
-        .map<PickListTeam>((e) => PickListTeam(e['id'], e['number'], e['name'],
-            e['first_picklist_index'], e['second_picklist_index'], e['taken']))
+        .map<PickListTeam>((final dynamic e) => PickListTeam(
+            e['id'] as int,
+            e['number'] as int,
+            e['name'] as String,
+            e['first_picklist_index'] as int,
+            e['second_picklist_index'] as int,
+            e['taken'] as bool))
         .toList();
 
     teams.sort((left, right) =>

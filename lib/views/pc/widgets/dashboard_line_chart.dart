@@ -13,7 +13,7 @@ class DashboardLineChart extends StatelessWidget {
     // @required this.body,
   }) : super(key: key);
 
-  final List dataSets;
+  final List<List<List<double>>> dataSets;
   final List<Color> colors;
   // final String title;
   // final Widget body;

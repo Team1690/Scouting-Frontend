@@ -41,7 +41,9 @@ class _SideNavBarState extends State<SideNavBar> {
             ),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Specific()));
+                  context,
+                  MaterialPageRoute<Specific>(
+                      builder: (context) => Specific()));
             },
           ),
           ListTile(
@@ -54,8 +56,8 @@ class _SideNavBarState extends State<SideNavBar> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PitView()));
+              Navigator.push(context,
+                  MaterialPageRoute<PitView>(builder: (context) => PitView()));
             },
           ),
         ],

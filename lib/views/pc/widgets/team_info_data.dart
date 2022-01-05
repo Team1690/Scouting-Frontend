@@ -85,22 +85,25 @@ query MyQuery(\$team_id: Int!) {
 
     """;
     return (await client.query(QueryOptions(
-            document: gql(query), variables: {'team_id': widget.team.id})))
+            document: gql(query),
+            variables: <String, dynamic>{'team_id': widget.team.id})))
         .mapQueryResult<PitViewData>((final Map<String, dynamic> data) =>
             (data['pit_by_pk'] as Map<String, dynamic>)
                 .mapNullable<PitViewData>((final Map<String, dynamic> pit) =>
                     PitViewData(
-                        driveTrainType: pit['drive_train_type'],
-                        driveMotorAmount: pit['drive_motor_amount'],
-                        driveMotorType: pit['drive_motor_type'],
-                        driveTrainReliability: pit['drive_train_reliability'],
-                        driveWheelType: pit['drive_wheel_type'],
-                        electronicsReliability: pit['electronics_reliability'],
-                        gearbox: pit['gearbox'],
-                        shifter: pit['shifter'],
-                        notes: pit['notes'],
-                        robotReliability: pit['robot_reliability'],
-                        url: pit['url'])));
+                        driveTrainType: pit['drive_train_type'] as String,
+                        driveMotorAmount: pit['drive_motor_amount'] as int,
+                        driveMotorType: pit['drive_motor_type'] as String,
+                        driveTrainReliability:
+                            pit['drive_train_reliability'] as int,
+                        driveWheelType: pit['drive_wheel_type'] as String,
+                        electronicsReliability:
+                            pit['electronics_reliability'] as int,
+                        gearbox: pit['gearbox'] as String,
+                        shifter: pit['shifter'] as String,
+                        notes: pit['notes'] as String,
+                        robotReliability: pit['robot_reliability'] as int,
+                        url: pit['url'] as String)));
   }
 
   Future<List<SpecificData>> fetchSpesific() async {
@@ -118,7 +121,7 @@ query MyQuery(\$team_id: Int!) {
     return result.mapQueryResult((final Map<String, dynamic> data) =>
         (data['specific'] as List<dynamic>).mapNullable(
             (final List<dynamic> specificEntries) => specificEntries
-                .map((e) => SpecificData(e['message']))
+                .map((final dynamic e) => SpecificData(e['message'] as String))
                 .toList()));
   }
 
@@ -157,12 +160,12 @@ query MyQuery(\$team_id: Int!) {
     return result
         .mapQueryResult(
             (final Map<String, dynamic> data) => data['team'] as List<dynamic>)
-        .map((e) => QuickData(
-            e['balls']['aggregate']['avg']['teleop_inner'],
-            e['balls']['aggregate']['avg']['teleop_outer'],
-            e['balls']['aggregate']['avg']['auto_balls'],
-            e['climbSuccess']['aggregate']['count'],
-            e['climbFail']['aggregate']['count']))
+        .map((final dynamic e) => QuickData(
+            e['balls']['aggregate']['avg']['teleop_inner'] as double,
+            e['balls']['aggregate']['avg']['teleop_outer'] as double,
+            e['balls']['aggregate']['avg']['auto_balls'] as double,
+            e['climbSuccess']['aggregate']['count'] as double,
+            e['climbFail']['aggregate']['count'] as double))
         .toList();
   }
 
@@ -186,7 +189,7 @@ query MyQuery(\$team_id: Int!) {
                               children: [
                                 Expanded(
                                     flex: 1,
-                                    child: FutureBuilder(
+                                    child: FutureBuilder<List<QuickData>>(
                                         future: fetchQuickData(),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasError) {
@@ -227,7 +230,7 @@ query MyQuery(\$team_id: Int!) {
                       flex: 3,
                       child: DashboardCard(
                         title: 'Pit Scouting',
-                        body: FutureBuilder(
+                        body: FutureBuilder<PitViewData>(
                           future: fetchPit(),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
@@ -279,7 +282,7 @@ query MyQuery(\$team_id: Int!) {
         DashboardCard(
             title: 'Scouting Specific',
             // body: ScoutingSpecific(msg: widget.team.msg),
-            body: FutureBuilder(
+            body: FutureBuilder<List<SpecificData>>(
                 future: fetchSpesific(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -295,7 +298,7 @@ query MyQuery(\$team_id: Int!) {
                       return Text('no data yet!');
                     }
                     final List<dynamic> report =
-                        (snapshot.data as List<dynamic>)
+                        (snapshot.data as List<SpecificData>)
                             .map((e) => e.msg)
                             .toList();
                     return ScoutingSpecific(msg: report.cast<String>());

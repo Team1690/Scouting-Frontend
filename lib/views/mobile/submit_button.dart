@@ -52,7 +52,8 @@ class _SubmitButtonState extends State<SubmitButton> {
       },
       onPressed: () async {
         if (_state == ButtonState.fail) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
+          Navigator.push(context,
+              MaterialPageRoute<Scaffold>(builder: (context) {
             return Scaffold(
               appBar: AppBar(
                 title: Text('Error message'),

@@ -75,7 +75,7 @@ class _PickListScreenState extends State<PickListScreen> {
 
   """;
 
-    Map<String, dynamic> vars = {
+    Map<String, dynamic> vars = <String, dynamic>{
       "objects": teams
           .map((e) => {
                 "id": e.id,

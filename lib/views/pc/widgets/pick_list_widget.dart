@@ -50,7 +50,7 @@ class _PickListState extends State<PickList> {
                 child: ListTile(
                   onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(
+                      MaterialPageRoute<TeamInfoScreen>(
                           builder: (context) => TeamInfoScreen(
                                 chosenTeam: LightTeam(e.id, e.number, e.name),
                               ))),

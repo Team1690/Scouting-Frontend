@@ -65,7 +65,8 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
             _state = ButtonState.idle;
           });
 
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
+          Navigator.push(context,
+              MaterialPageRoute<Scaffold>(builder: (final context) {
             return Scaffold(
               appBar: AppBar(
                 title: Text('Error message'),
@@ -122,7 +123,8 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
         });
         running = false;
       } else if (event.state == TaskState.success) {
-        Map<String, dynamic> vars = Map.from(this.widget.vars.toHasuraVars());
+        Map<String, dynamic> vars =
+            Map<String, dynamic>.from(this.widget.vars.toHasuraVars());
         var url = await ref.getDownloadURL();
         vars['url'] = url;
 
