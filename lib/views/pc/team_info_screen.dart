@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
-import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
-import 'package:graphql/client.dart';
 
 class TeamInfoScreen extends StatefulWidget {
   TeamInfoScreen({Key key, this.chosenTeam}) {

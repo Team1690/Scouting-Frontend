@@ -1,11 +1,9 @@
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
 import 'package:scouting_frontend/views/pc/team_info_screen.dart';
-import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
 
 class PickList extends StatefulWidget {
   const PickList({Key key, @required this.uiList, this.screen, this.onReorder});
