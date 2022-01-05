@@ -95,8 +95,8 @@ class RoundedIconButton extends StatelessWidget {
       @required this.iconSize});
 
   final IconData icon;
-  final Function onPress;
-  final Function onLongPress;
+  final Function() onPress;
+  final Function() onLongPress;
 
   final double iconSize;
 

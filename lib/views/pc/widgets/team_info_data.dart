@@ -1,12 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
+import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
+import 'package:scouting_frontend/views/pc/widgets/scouting_pit.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
 import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
 import '../../constants.dart';
+import '../../../net/hasura_helper.dart';
 
 class QuickData {
   QuickData(this.averageInner, this.averageOuter, this.autoBalls, this.success,
@@ -23,6 +26,32 @@ class SpecificData {
   final String msg;
 }
 
+class PitViewData {
+  PitViewData(
+      {this.driveTrainType,
+      this.driveMotorAmount,
+      this.driveMotorType,
+      this.driveTrainReliability,
+      this.driveWheelType,
+      this.electronicsReliability,
+      this.gearbox,
+      this.notes,
+      this.robotReliability,
+      this.shifter,
+      this.url});
+  final String driveTrainType;
+  final int driveMotorAmount;
+  final String driveWheelType;
+  final String shifter;
+  final String gearbox;
+  final String driveMotorType;
+  final int driveTrainReliability;
+  final int electronicsReliability;
+  final int robotReliability;
+  final String notes;
+  final String url;
+}
+
 // ignore: must_be_immutable
 class TeamInfoData extends StatefulWidget {
   TeamInfoData({
@@ -30,7 +59,7 @@ class TeamInfoData extends StatefulWidget {
     @required this.team,
   }) : super(key: key);
 
-  int team;
+  LightTeam team;
 
   @override
   State<TeamInfoData> createState() => _TeamInfoDataState();
@@ -59,7 +88,7 @@ query fetchGameChart(\$teamNumber : Int) {
 
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
-        variables: <String, int>{"teamNumber": widget.team}));
+        variables: <String, int>{"teamNumber": widget.team.number}));
     if (result.hasException) {
       print(result.exception.toString());
     }
@@ -67,37 +96,83 @@ query fetchGameChart(\$teamNumber : Int) {
         result.data["team"][0]["matches"] as List<dynamic>;
     return [
       LineChartData(
-        points: matches.map((e) => e['teleop_inner']).toList().cast<double>(),
+        points: matches
+            .map<double>((dynamic e) => e['teleop_inner'] as double)
+            .toList(),
       ),
       LineChartData(
-        points: matches.map((e) => e['teleop_outer']).toList().cast<double>(),
+        points: matches
+            .map<double>((dynamic e) => e['teleop_outer'] as double)
+            .toList(),
       ),
       LineChartData(
-        points: matches.map((e) => e['auto_balls']).toList().cast<double>(),
+        points: matches
+            .map<double>((dynamic e) => e['auto_balls'] as double)
+            .toList(),
       ),
     ];
+  }
+
+  Future<PitViewData> fetchPit() async {
+    final client = getClient();
+    final String query = """
+query MyQuery(\$team_id: Int!) {
+  pit_by_pk(team_id: \$team_id) {
+    drive_motor_amount
+    drive_motor_type
+    drive_train_reliability
+    drive_train_type
+    drive_wheel_type
+    electronics_reliability
+    gearbox
+    notes
+    robot_reliability
+    team_id
+    shifter
+    url
+  }
+}
+
+    """;
+    return (await client.query(QueryOptions(
+            document: gql(query),
+            variables: <String, dynamic>{'team_id': widget.team.id})))
+        .mapQueryResult<PitViewData>((final Map<String, dynamic> data) =>
+            (data['pit_by_pk'] as Map<String, dynamic>)
+                .mapNullable<PitViewData>((final Map<String, dynamic> pit) =>
+                    PitViewData(
+                        driveTrainType: pit['drive_train_type'] as String,
+                        driveMotorAmount: pit['drive_motor_amount'] as int,
+                        driveMotorType: pit['drive_motor_type'] as String,
+                        driveTrainReliability:
+                            pit['drive_train_reliability'] as int,
+                        driveWheelType: pit['drive_wheel_type'] as String,
+                        electronicsReliability:
+                            pit['electronics_reliability'] as int,
+                        gearbox: pit['gearbox'] as String,
+                        shifter: pit['shifter'] as String,
+                        notes: pit['notes'] as String,
+                        robotReliability: pit['robot_reliability'] as int,
+                        url: pit['url'] as String)));
   }
 
   Future<List<SpecificData>> fetchSpesific() async {
     final client = getClient();
     final String query = """query MyQuery(\$teamNumber : Int){
   specific(where: {team: {number: {_eq: \$teamNumber}}}) {
-    match_id
     message
     id
   }
 }""";
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
-        variables: <String, int>{"teamNumber": widget.team}));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['specific'] as List<dynamic>)
-        .map((e) => SpecificData(
-              e['message'],
-            ))
-        .toList();
+        variables: <String, int>{"teamNumber": widget.team.number}));
+
+    return result.mapQueryResult((final Map<String, dynamic> data) =>
+        (data['specific'] as List<dynamic>).mapNullable(
+            (final List<dynamic> specificEntries) => specificEntries
+                .map((final dynamic e) => SpecificData(e['message'] as String))
+                .toList()));
   }
 
   Future<List<QuickData>> fetchQuickData() async {
@@ -131,17 +206,16 @@ query fetchGameChart(\$teamNumber : Int) {
 
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
-        variables: <String, int>{"teamNumber": widget.team}));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => QuickData(
-            e['balls']['aggregate']['avg']['teleop_inner'],
-            e['balls']['aggregate']['avg']['teleop_outer'],
-            e['balls']['aggregate']['avg']['auto_balls'],
-            e['climbSuccess']['aggregate']['count'],
-            e['climbFail']['aggregate']['count']))
+        variables: <String, int>{"teamNumber": widget.team.number}));
+    return result
+        .mapQueryResult(
+            (final Map<String, dynamic> data) => data['team'] as List<dynamic>)
+        .map((final dynamic e) => QuickData(
+            e['balls']['aggregate']['avg']['teleop_inner'] as double,
+            e['balls']['aggregate']['avg']['teleop_outer'] as double,
+            e['balls']['aggregate']['avg']['auto_balls'] as double,
+            e['climbSuccess']['aggregate']['count'] as double,
+            e['climbFail']['aggregate']['count'] as double))
         .toList();
   }
 
@@ -161,69 +235,69 @@ query fetchGameChart(\$teamNumber : Int) {
                         flex: 3,
                         child: DashboardCard(
                             title: 'Quick Data',
-                            body: Column(
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: FutureBuilder(
-                                        future: fetchQuickData(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasError) {
-                                            return Text(
-                                                'Error has happened in the future! ' +
-                                                    snapshot.error.toString());
-                                          } else if (!snapshot.hasData) {
-                                            return Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-                                          } else {
-                                            if (snapshot.data.length != 1) {
-                                              return Text(
-                                                  'data.length is shorter than 1! :(');
-                                            }
-                                            final QuickData report =
-                                                snapshot.data[0];
-                                            if (report.success +
-                                                    report.failed ==
-                                                0) {
-                                              return Center(
-                                                child: Text(
-                                                    "\nAverage inner: ${report.averageInner.round()}"
-                                                    "\nAverage outer: ${report.averageOuter.round()}"
-                                                    "\nAverage auto balls: ${report.autoBalls.round()}"
-                                                    "\nClimb Rate: 0"
-                                                    "%"),
-                                              );
-                                            }
-                                            return Center(
-                                              child: Text(
-                                                  "\nAverage inner: ${report.averageInner.round()}"
-                                                          "\nAverage outer: ${report.averageOuter.round()}"
-                                                          "\nAverage auto balls: ${report.autoBalls.round()}"
-                                                          "\nClimb Rate: " +
-                                                      (report.success /
-                                                              (report.failed +
-                                                                  report
-                                                                      .success) *
-                                                              100)
-                                                          .round()
-                                                          .toString() +
-                                                      "%"),
-                                            );
-                                          }
-                                        })),
-                              ],
-                            ))),
+                            body: FutureBuilder<List<QuickData>>(
+                                future: fetchQuickData(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text(
+                                        'Error has happened in the future! ' +
+                                            snapshot.error.toString());
+                                  } else if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else {
+                                    if (snapshot.data.length != 1) {
+                                      return Text(
+                                          'data.length is shorter than 1! :(');
+                                    }
+                                    final QuickData report = snapshot.data[0];
+                                    if (report.success + report.failed == 0) {
+                                      return Text(
+                                          "Average inner: ${report.averageInner.round()}\n"
+                                          "Average outer: ${report.averageOuter.round()}\n"
+                                          "Average auto balls: ${report.autoBalls.round()}\n"
+                                          "Climb Rate: 0"
+                                          "%");
+                                    }
+                                    return Text(
+                                        "Average inner: ${report.averageInner.round()}\n"
+                                                "Average outer: ${report.averageOuter.round()}\n"
+                                                "Average auto balls: ${report.autoBalls.round()}\n"
+                                                "Climb Rate: " +
+                                            (report.success /
+                                                    (report.failed +
+                                                        report.success) *
+                                                    100)
+                                                .round()
+                                                .toString() +
+                                            "%");
+                                  }
+                                }))),
                     SizedBox(width: defaultPadding),
                     Expanded(
                       flex: 3,
                       child: DashboardCard(
                         title: 'Pit Scouting',
-                        body: Container(
-                          child: Center(
-                            child: Text('TBD'),
-                          ),
+                        body: FutureBuilder<PitViewData>(
+                          future: fetchPit(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Error has happened in the future! ' +
+                                  snapshot.error.toString());
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.data == null) {
+                              return Text('No data yet :(');
+                            } else {
+                              final PitViewData report = snapshot.data;
+                              return ScoutingPit(report);
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -263,22 +337,23 @@ query fetchGameChart(\$teamNumber : Int) {
         DashboardCard(
             title: 'Scouting Specific',
             // body: ScoutingSpecific(msg: widget.team.msg),
-            body: FutureBuilder(
+            body: FutureBuilder<List<SpecificData>>(
                 future: fetchSpesific(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error has happened in the future! ' +
                         snapshot.error.toString());
-                  } else if (!snapshot.hasData) {
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
                   } else {
                     if (snapshot.data.length < 1) {
-                      return Text(' data.length is \nshorter than 1! :(');
+                      return Text('no data yet!');
                     }
                     final List<dynamic> report =
-                        (snapshot.data as List<dynamic>)
+                        (snapshot.data as List<SpecificData>)
                             .map((e) => e.msg)
                             .toList();
                     return ScoutingSpecific(msg: report.cast<String>());

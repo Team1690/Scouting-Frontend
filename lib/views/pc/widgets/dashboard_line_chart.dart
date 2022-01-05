@@ -9,7 +9,7 @@ class DashboardLineChart extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  final List dataSet;
+  final List<double> dataSet;
 
   @override
   Widget build(BuildContext context) {

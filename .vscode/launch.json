@@ -8,7 +8,11 @@
             "name": "Scouting-Frontend",
             "request": "launch",
             "type": "dart",
-            // "program": "lib/views/main.dart"
-        }
+            "deviceId": "chrome",
+            "args": [
+                "--web-renderer",
+                "html"
+            ]
+        },
     ]
 }

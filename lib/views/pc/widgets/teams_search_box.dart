@@ -5,27 +5,29 @@ import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 
-
-class _TeamsSearchBox extends StatefulWidget {
-  _TeamsSearchBox({
+class TeamsSearchBox extends StatefulWidget {
+  TeamsSearchBox({
     final Key key,
     @required final this.teams,
     @required final this.onChange,
+    @required final this.typeAheadController,
+    // @required final this.typeAheadController,
   }) : super(key: key);
 
   final List<LightTeam> teams;
-  final void Function(LightTeam) onChange;
+  final Function(LightTeam) onChange;
+  final TextEditingController typeAheadController;
+  // final TextEditingController typeAheadController;
 
   @override
-  _TeamsSearchBoxState createState() => _TeamsSearchBoxState();
+  TeamsSearchBoxState createState() => TeamsSearchBoxState();
 }
 
-class _TeamsSearchBoxState extends State<_TeamsSearchBox> {
+class TeamsSearchBoxState extends State<TeamsSearchBox> {
   bool isValueEmpty = false;
   bool isValueInList = true;
-  final TextEditingController _typeAheadController = TextEditingController();
 
-  List<LightTeam> updateSussestions(inputNumber) {
+  List<LightTeam> updateSussestions(String inputNumber) {
     List<LightTeam> _suggestions = List.castFrom(widget.teams);
     String _inputNumber = inputNumber;
     _suggestions.removeWhere((team) {
@@ -39,7 +41,7 @@ class _TeamsSearchBoxState extends State<_TeamsSearchBox> {
   Widget build(BuildContext context) {
     return TypeAheadField(
         textFieldConfiguration: TextFieldConfiguration(
-          controller: _typeAheadController,
+          controller: widget.typeAheadController,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.digitsOnly
           ],
@@ -70,7 +72,7 @@ class _TeamsSearchBoxState extends State<_TeamsSearchBox> {
               ),
             ),
         onSuggestionSelected: (final LightTeam suggestion) {
-          _typeAheadController.text = suggestion.number.toString();
+          widget.typeAheadController.text = suggestion.number.toString();
           widget.onChange(widget.teams[widget.teams
               .indexWhere((team) => team.number == suggestion.number)]);
         });
@@ -95,7 +97,8 @@ query FetchTeams {
     print(result.exception.toString());
   } //TODO: avoid dynamic
   return (result.data['team'] as List<dynamic>)
-      .map((e) => LightTeam(e['id'], e['number'], e['name']))
+      .map((dynamic e) =>
+          LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
       .toList();
 }
 
@@ -124,7 +127,7 @@ Widget teamSearch(void Function(LightTeam) callback) {
                 ),
               ]);
             } else {
-              return _TeamsSearchBox(
+              return TeamsSearchBox(
                 teams: snapshot.data as List<LightTeam>,
                 onChange: callback,
               );

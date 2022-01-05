@@ -7,6 +7,7 @@ import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
+import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
@@ -21,6 +22,7 @@ class CompareScreen extends StatefulWidget {
 }
 
 class _CompareScreenState extends State<CompareScreen> {
+  TextEditingController controller = TextEditingController();
   Team chosenTeam = Team();
   List<LightTeam> compareTeamsList = [];
   // List tables;
@@ -42,8 +44,9 @@ query FetchTeams {
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
-    return (result.data['team'] as List<dynamic>)
-        .map((e) => LightTeam(e['id'], e['number'], e['name']))
+    return (result.data['team'] as List<Map<String, dynamic>>)
+        .map((e) =>
+            LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
         .toList();
     //.entries.map((e) => LightTeam(e['id']);
   }
@@ -95,8 +98,8 @@ query MyQuery (\$team_id: Int){
 
   """;
 
-    final QueryResult result = await client.query(
-        QueryOptions(document: gql(query), variables: {"team_id": teamId}));
+    final QueryResult result = await client.query(QueryOptions(
+        document: gql(query), variables: <String, dynamic>{"team_id": teamId}));
     if (result.hasException) {
       print(result.exception.toString());
     } //TODO: avoid dynamic
@@ -111,18 +114,18 @@ query MyQuery (\$team_id: Int){
     // }
 
     return (result.data['team'] as List<dynamic>)
-        .map((e) => Team(
+        .map((dynamic e) => Team(
             autoGoalAverage: e['matches_aggregate']['aggregate']['avg']
-                ['auto_balls'],
+                ['auto_balls'] as double,
             teleInnerGoalAverage: e['matches_aggregate']['aggregate']['avg']
-                ['teleop_inner'],
+                ['teleop_inner'] as double,
             teleOuterGoalAverage: e['matches_aggregate']['aggregate']['avg']
-                ['teleop_outer'],
+                ['teleop_outer'] as double,
             id: teamId,
-            climbFailed: e['climbFail']['aggregate']['count'],
-            climbSuccess: e['climbSuccess']['aggregate']['count'],
+            climbFailed: e['climbFail']['aggregate']['count'] as int,
+            climbSuccess: e['climbSuccess']['aggregate']['count'] as int,
             tables: ((e['matches'] as List<dynamic>)
-                .map((g) => [
+                .map((dynamic g) => <dynamic>[
                       g['auto_balls'] + g['teleop_inner'] + g['teleop_outer'],
                       g['climb_id']
                     ])
@@ -131,8 +134,8 @@ query MyQuery (\$team_id: Int){
     //.entries.map((e) => LightTeam(e['id']);
   }
 
-  void addTeam(team) => compareTeamsList.add(team);
-  void removeTeam(index) => compareTeamsList
+  void addTeam(LightTeam team) => compareTeamsList.add(team);
+  void removeTeam(MapEntry<int, LightTeam> index) => compareTeamsList
       .removeWhere((LightTeam entry) => entry.number == index.value.number);
 
   Widget build(BuildContext context) {
@@ -144,10 +147,18 @@ query MyQuery (\$team_id: Int){
             Container(
               child: Row(
                 children: [
-                  teamSearch((LightTeam team) => {
-                        setState(() => compareTeamsList.add(
-                            new LightTeam(team.id, team.number, team.name)))
-                      }),
+                  Expanded(
+                    flex: 1,
+                    child: TeamSelectionFuture(
+                      onChange: (LightTeam team) => {
+                        setState(() => {
+                              compareTeamsList.add(
+                                  LightTeam(team.id, team.number, team.name))
+                            })
+                      },
+                      controller: controller,
+                    ),
+                  ),
                   SizedBox(width: defaultPadding),
                   Expanded(
                     flex: 2,

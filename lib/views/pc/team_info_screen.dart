@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
+import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
-import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
-import 'package:graphql/client.dart';
 
 class TeamInfoScreen extends StatefulWidget {
+  TeamInfoScreen({Key key, this.chosenTeam}) {
+    if (chosenTeam != null) {
+      controller.text = chosenTeam.number.toString();
+    }
+  }
+  LightTeam chosenTeam;
+  TextEditingController controller = TextEditingController();
   @override
   State<TeamInfoScreen> createState() => _TeamInfoScreenState();
 }
@@ -17,7 +24,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
   int chosenTeam;
 
   Future<List<LightTeam>> fetchTeams() async {
-    final client = getClient();
+    final GraphQLClient client = getClient();
     final String query = """
 query FetchTeams {
   team {
@@ -35,7 +42,8 @@ query FetchTeams {
     } //TODO: avoid dynamic
     print(result.data);
     return (result.data['team'] as List<dynamic>)
-        .map((e) => LightTeam(e['id'], e['number'], e['name']))
+        .map((dynamic e) =>
+            LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
         .toList();
     //.entries.map((e) => LightTeam(e['id']);
   }
@@ -49,8 +57,13 @@ query FetchTeams {
             child: Column(children: [
               Row(
                 children: [
-                  teamSearch((LightTeam team) =>
-                      {setState(() => chosenTeam = team.number)}),
+                  Expanded(
+                      flex: 1,
+                      child: TeamSelectionFuture(
+                        controller: widget.controller,
+                        onChange: (newTeam) =>
+                            setState(() => widget.chosenTeam = newTeam),
+                      )),
                   SizedBox(width: defaultPadding),
                   Expanded(
                       flex: 2,
@@ -67,7 +80,7 @@ query FetchTeams {
               SizedBox(height: defaultPadding),
               Expanded(
                 flex: 10,
-                child: chosenTeam == null
+                child: widget.chosenTeam == null
                     ? DashboardCard(
                         title: '',
                         body: Center(
@@ -88,7 +101,7 @@ query FetchTeams {
                             ),
                           ],
                         )))
-                    : TeamInfoData(team: chosenTeam),
+                    : TeamInfoData(team: widget.chosenTeam),
               )
             ])));
   }
