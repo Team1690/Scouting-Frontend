@@ -5,16 +5,16 @@ import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 class TeamSelectionFuture extends StatefulWidget {
-  TeamSelectionFuture({Key key, this.onChange, @required this.controller})
+  TeamSelectionFuture({Key? key, this.onChange, required this.controller})
       : super(key: key);
   final TextEditingController controller;
-  final Function(LightTeam) onChange;
+  final Function(LightTeam)? onChange;
   @override
   State<TeamSelectionFuture> createState() => _TeamSelectionFutureState();
 }
 
 class _TeamSelectionFutureState extends State<TeamSelectionFuture> {
-  Future<List<LightTeam>> fetchTeams() async {
+  Future<List<LightTeam>?> fetchTeams() async {
     final client = getClient();
     final String query = """
 query FetchTeams {
@@ -29,13 +29,15 @@ query FetchTeams {
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
     if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List)
-        .map((final dynamic e) =>
-            LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
-        .toList();
-    //.entries.map((e) => LightTeam(e['id']);
+      throw result.exception!;
+    }
+    if (result.data != null) {
+      return (result.data!['team'] as List)
+          .map((final dynamic e) => LightTeam(
+              e['id'] as int, e['number'] as int, e['name'] as String))
+          .toList();
+    }
+    return null;
   }
 
   @override
@@ -69,7 +71,7 @@ query FetchTeams {
               teams: snapshot.data as List<LightTeam>,
               onChange: (LightTeam) {
                 setState(() {
-                  widget.onChange(LightTeam);
+                  widget.onChange?.call(LightTeam);
                 });
               },
             );

@@ -6,9 +6,9 @@ import 'package:scouting_frontend/views/constants.dart';
 
 class DashboardLineChart extends StatelessWidget {
   const DashboardLineChart({
-    @required this.dataSet,
+    required this.dataSet,
     this.distanceFromHighest = 5,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final int distanceFromHighest;
@@ -60,7 +60,7 @@ class DashboardLineChart extends StatelessWidget {
           bottomTitles: SideTitles(
             showTitles: true,
             reservedSize: 16,
-            getTextStyles: (value) => const TextStyle(
+            getTextStyles: (context, value) => const TextStyle(
                 color: Color(0xff68737d),
                 fontWeight: FontWeight.bold,
                 fontSize: 16),
@@ -68,7 +68,7 @@ class DashboardLineChart extends StatelessWidget {
           ),
           leftTitles: SideTitles(
             showTitles: true,
-            getTextStyles: (value) => const TextStyle(
+            getTextStyles: (context, value) => const TextStyle(
               color: Color(0xff67727d),
               fontWeight: FontWeight.bold,
               fontSize: 16,

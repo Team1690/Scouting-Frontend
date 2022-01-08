@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const primaryColor = Color(0xFF2697FF);
@@ -35,16 +36,14 @@ final ThemeData darkModeTheme = ThemeData.dark().copyWith(
 
 bool isPC(final BuildContext context) {
   switch (Theme.of(context).platform) {
-    case TargetPlatform.windows:
-    case TargetPlatform.macOS:
-    case TargetPlatform.linux:
-      return true;
-
     case TargetPlatform.android:
     case TargetPlatform.iOS:
       return false;
 
+    case TargetPlatform.windows:
+    case TargetPlatform.macOS:
+    case TargetPlatform.linux:
     default:
-      return null;
+      return true;
   }
 }

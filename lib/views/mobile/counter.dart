@@ -6,7 +6,7 @@ class Counter extends StatelessWidget {
   final String label;
   final IconData icon;
 
-  final Function(int) onChange;
+  final void Function(int)? onChange;
 
   final int count;
   final int stepValue;
@@ -15,9 +15,9 @@ class Counter extends StatelessWidget {
   final int longPressedValue;
 
   Counter(
-      {@required final this.label,
-      @required final this.icon,
-      @required final this.count,
+      {required final this.label,
+      required final this.icon,
+      required final this.count,
       final this.onChange,
       final this.stepValue = 1,
       final this.upperLimit = 100,

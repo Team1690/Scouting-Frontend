@@ -6,11 +6,12 @@ import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
 import 'package:scouting_frontend/views/pc/team_info_screen.dart';
 
 class PickList extends StatefulWidget {
-  const PickList({Key key, @required this.uiList, this.screen, this.onReorder});
+  const PickList(
+      {Key? key, required this.uiList, required this.screen, this.onReorder});
 
   final List<PickListTeam> uiList;
   final CurrentPickList screen;
-  final Function(List<PickListTeam> list) onReorder;
+  final Function(List<PickListTeam> list)? onReorder;
 
   @override
   _PickListState createState() => _PickListState();
@@ -28,7 +29,7 @@ class _PickListState extends State<PickList> {
         widget.screen.setIndex(widget.uiList[i], i);
       }
     });
-    widget.onReorder(widget.uiList);
+    widget.onReorder?.call(widget.uiList);
   }
 
   @override
@@ -38,7 +39,7 @@ class _PickListState extends State<PickList> {
         children: <Widget>[
           ...widget.uiList.map<Widget>((e) {
             e.controller.addListener(() {
-              widget.onReorder(widget.uiList);
+              widget.onReorder?.call(widget.uiList);
             });
             return Card(
               color: bgColor,
@@ -86,14 +87,15 @@ class PickListTeam {
     } else if (name == '') {
       throw ArgumentError('Invalid Team Name');
     }
-    this.controller.value = available;
+
+    controller = ValueNotifier(available);
   }
   final int id;
   final int number;
   final String name;
   int firstListIndex;
   int secondListIndex;
-  AdvancedSwitchController controller = AdvancedSwitchController();
+  late ValueNotifier<bool> controller;
 
   @override
   String toString() {

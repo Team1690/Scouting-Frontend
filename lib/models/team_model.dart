@@ -38,9 +38,9 @@ class Team {
   final List<int> spider;
 
   Team({
-    this.id,
-    this.teamNumber,
-    this.teamName,
+    required this.id,
+    required this.teamNumber,
+    required this.teamName,
 
     //NEW ANALYTICS!!!!
     this.matchesPlayed = 0,

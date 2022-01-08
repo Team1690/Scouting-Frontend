@@ -4,11 +4,11 @@ import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:scouting_frontend/views/constants.dart';
 
 class FilePickerWidget extends StatefulWidget {
-  FilePickerWidget({Key key, @required this.controller, this.onImagePicked})
+  FilePickerWidget({Key? key, required this.controller, this.onImagePicked})
       : super(key: key);
-  FilePickerResult result;
-  final AdvancedSwitchController controller;
-  final Function(FilePickerResult) onImagePicked;
+  FilePickerResult? result;
+  final ValueNotifier<bool> controller;
+  final void Function(FilePickerResult)? onImagePicked;
 
   @override
   _FilePickerWidgetState createState() => _FilePickerWidgetState();
@@ -27,7 +27,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
                   .pickFiles(type: FileType.image, allowMultiple: false);
               if (widget.result == null) return;
               widget.controller.value = true;
-              widget.onImagePicked(widget.result);
+              widget.onImagePicked?.call(widget.result!);
             },
             child: Row(
               mainAxisSize: MainAxisSize.min,

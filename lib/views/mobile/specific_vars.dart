@@ -1,7 +1,7 @@
 import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 
 class SpecificVars implements HasuraVars {
-  int teamId;
+  int? teamId;
   String message = '';
   @override
   Map<String, dynamic> toHasuraVars() {

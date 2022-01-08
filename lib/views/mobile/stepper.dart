@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 // TODO taun shipur
 class CustomStepper extends StatefulWidget {
   CustomStepper({
-    @required this.lowerLimit,
-    @required this.upperLimit,
-    @required this.stepValue,
-    @required this.longPressStepValue,
-    @required this.iconSize,
-    @required this.value,
-    @required this.onChanged,
+    required this.lowerLimit,
+    required this.upperLimit,
+    required this.stepValue,
+    required this.longPressStepValue,
+    required this.iconSize,
+    required this.value,
+    required this.onChanged,
   });
 
   final int lowerLimit;
@@ -18,7 +18,7 @@ class CustomStepper extends StatefulWidget {
   final int longPressStepValue;
   final double iconSize;
   int value;
-  final Function onChanged;
+  final void Function(int)? onChanged;
 
   @override
   _CustomStepperState createState() => _CustomStepperState();
@@ -39,7 +39,7 @@ class _CustomStepperState extends State<CustomStepper> {
                   ? widget.lowerLimit
                   : widget.value -= widget.stepValue;
             });
-            widget.onChanged(widget.value);
+            widget.onChanged?.call(widget.value);
           },
           onLongPress: () {
             setState(() {
@@ -48,7 +48,7 @@ class _CustomStepperState extends State<CustomStepper> {
                       ? widget.lowerLimit
                       : widget.value -= widget.longPressStepValue;
             });
-            widget.onChanged(widget.value);
+            widget.onChanged?.call(widget.value);
           },
         ),
         Container(
@@ -70,7 +70,7 @@ class _CustomStepperState extends State<CustomStepper> {
                   ? widget.upperLimit
                   : widget.value += widget.stepValue;
             });
-            widget.onChanged(widget.value);
+            widget.onChanged?.call(widget.value);
           },
           onLongPress: () {
             setState(() {
@@ -79,7 +79,7 @@ class _CustomStepperState extends State<CustomStepper> {
                       ? widget.upperLimit
                       : widget.value += widget.longPressStepValue;
             });
-            widget.onChanged(widget.value);
+            widget.onChanged?.call(widget.value);
           },
         ),
       ],
@@ -89,10 +89,10 @@ class _CustomStepperState extends State<CustomStepper> {
 
 class RoundedIconButton extends StatelessWidget {
   RoundedIconButton(
-      {@required this.icon,
-      @required this.onPress,
-      @required this.onLongPress,
-      @required this.iconSize});
+      {required this.icon,
+      required this.onPress,
+      required this.onLongPress,
+      required this.iconSize});
 
   final IconData icon;
   final Function() onPress;

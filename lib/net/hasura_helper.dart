@@ -12,10 +12,10 @@ GraphQLClient getClient() {
 }
 
 extension MapNullable<A> on A {
-  B mapNullable<B>(final B Function(A) f) => this == null ? null : f(this);
+  B? mapNullable<B>(final B Function(A) f) => this == null ? null : f(this);
 }
 
 extension MapQueryResult on QueryResult {
   T mapQueryResult<T>(final T Function(Map<String, dynamic>) f) =>
-      hasException ? throw exception : f(data);
+      hasException ? throw exception! : f(data!);
 }

@@ -5,12 +5,12 @@ import 'package:scouting_frontend/models/team_model.dart';
 
 class TeamsDropdown extends StatefulWidget {
   TeamsDropdown({
-    final Key key,
-    @required final this.onChange,
-    @required final this.typeAheadController,
+    final Key? key,
+    required final this.onChange,
+    required final this.typeAheadController,
   }) : super(key: key);
 
-  final Function(int) onChange;
+  final Function(int)? onChange;
   final TextEditingController typeAheadController;
 
   @override
@@ -33,7 +33,8 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
               .map<String>((team) => team.teamNumber.toString())
               .contains(value);
 
-          if (!isValueEmpty && isValueInList) widget.onChange(int.parse(value));
+          if (!isValueEmpty && isValueInList)
+            widget.onChange?.call(int.parse(value));
         }),
         controller: widget.typeAheadController,
         inputFormatters: <TextInputFormatter>[
@@ -64,7 +65,7 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
       ),
       onSuggestionSelected: (final Team suggestion) {
         widget.typeAheadController.text = suggestion.teamNumber.toString();
-        widget.onChange(suggestion.teamNumber);
+        widget.onChange?.call(suggestion.teamNumber);
 
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
@@ -77,7 +78,7 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
           isValueInList = true;
         });
       },
-      suggestionsCallback: null,
+      suggestionsCallback: (s) => <Team>[],
     );
   }
 }

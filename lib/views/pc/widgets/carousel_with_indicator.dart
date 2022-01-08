@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class CarouselWithIndicator extends StatefulWidget {
-  CarouselWithIndicator({@required this.widgets});
+  CarouselWithIndicator({required this.widgets});
   @override
   State<StatefulWidget> createState() {
     return _CarouselWithIndicatorState();
@@ -36,22 +36,25 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: widget.widgets.asMap().entries.map((entry) =>
-          GestureDetector(
-            onTap: () => _controller.animateToPage(entry.key),
-            child: Container(
-              width: 12.0,
-              height: 12.0,
-              margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.black)
-                      .withOpacity(_current == entry.key ? 0.9 : 0.4)),
-            ),
-          )
-        ).toList(),
+        children: widget.widgets
+            .asMap()
+            .entries
+            .map((entry) => GestureDetector(
+                  onTap: () => _controller.animateToPage(entry.key),
+                  child: Container(
+                    width: 12.0,
+                    height: 12.0,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: (Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black)
+                            .withOpacity(_current == entry.key ? 0.9 : 0.4)),
+                  ),
+                ))
+            .toList(),
       ),
     ]);
   }

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class PitViewSlider extends StatefulWidget {
   PitViewSlider(
-      {Key key,
-      @required this.label,
-      @required this.value,
+      {Key? key,
+      required this.label,
+      required this.value,
       this.onChange,
-      this.divisions,
-      this.max,
-      this.min})
+      required this.divisions,
+      required this.max,
+      required this.min})
       : super(key: key);
   double value;
   final String label;
-  final Function(double) onChange;
+  final Function(double)? onChange;
   final double min;
   final double max;
   final int divisions;
@@ -34,7 +34,7 @@ class _PitViewSliderState extends State<PitViewSlider> {
           value: widget.value,
           label: widget.value.round().toString(),
           onChanged: (newVal) {
-            widget.onChange(newVal);
+            widget.onChange?.call(newVal);
             setState(() => widget.value = newVal);
           },
         )

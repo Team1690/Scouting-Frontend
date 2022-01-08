@@ -14,8 +14,8 @@ import 'package:scouting_frontend/views/mobile/section_divider.dart';
 import 'package:scouting_frontend/views/mobile/switcher.dart';
 
 class PitView extends StatelessWidget {
-  PitView({Key key}) : super(key: key);
-  LightTeam team;
+  PitView({Key? key}) : super(key: key);
+  LightTeam? team;
 
   final List<String> driveTrains = [
     'Choose a DriveTrain',
@@ -36,15 +36,14 @@ class PitView extends StatelessWidget {
     'Other',
   ];
 
-  FilePickerResult result;
+  FilePickerResult? result;
 
   PitVars vars = PitVars();
 
   final TextEditingController wheelTypeController = TextEditingController();
   final TextEditingController teamSelectionController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
-  final AdvancedSwitchController advancedSwitchController =
-      AdvancedSwitchController();
+  final ValueNotifier<bool> advancedSwitchController = ValueNotifier(false);
 
   void resetFrame(BuildContext context) {
     vars.reset();
@@ -84,8 +83,7 @@ class PitView extends StatelessWidget {
               TeamSelectionFuture(
                 controller: teamSelectionController,
                 onChange: (lightTeam) {
-                  team = lightTeam;
-                  vars.teamId = team.id;
+                  vars.teamId = lightTeam.id;
                 },
               ),
               SectionDivider(label: 'Drive Train'),
@@ -248,7 +246,7 @@ class PitView extends StatelessWidget {
                 height: 20,
               ),
               FireBaseSubmitButton(
-                result: () => result,
+                result: () => result!,
                 mutation: """
       mutation MyMutation(
           \$url: String,

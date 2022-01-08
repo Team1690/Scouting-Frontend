@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SectionDivider extends StatelessWidget {
   final String label;
 
-  SectionDivider({@required final this.label});
+  SectionDivider({required final this.label});
 
   @override
   Widget build(BuildContext context) {

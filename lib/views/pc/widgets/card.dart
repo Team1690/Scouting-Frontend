@@ -3,9 +3,9 @@ import 'package:scouting_frontend/views/constants.dart';
 
 class DashboardCard extends StatelessWidget {
   const DashboardCard(
-      {Key key,
-      @required this.title,
-      @required this.body,
+      {Key? key,
+      required this.title,
+      required this.body,
       this.titleWidgets = const []})
       : super(key: key);
 

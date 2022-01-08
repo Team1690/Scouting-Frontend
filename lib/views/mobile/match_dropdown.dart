@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MatchTextBox extends StatefulWidget {
-  MatchTextBox({Key key, @required this.onChange, @required this.controller})
+  MatchTextBox({Key? key, required this.onChange, required this.controller})
       : super(key: key);
 
   final Function(int) onChange;

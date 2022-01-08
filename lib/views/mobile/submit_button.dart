@@ -8,9 +8,13 @@ import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 class SubmitButton extends StatefulWidget {
   final HasuraVars vars;
   final String mutation;
-  final Function() resetForm;
+  final void Function() resetForm;
 
-  const SubmitButton({this.vars, this.mutation, this.resetForm, Key key})
+  const SubmitButton(
+      {required this.vars,
+      required this.mutation,
+      required this.resetForm,
+      Key? key})
       : super(key: key);
 
   @override
@@ -30,11 +34,11 @@ class _SubmitButtonState extends State<SubmitButton> {
         ButtonState.idle: IconedButton(
           text: "Submit",
           icon: Icon(Icons.send, color: Colors.white),
-          color: Colors.blue[400],
+          color: Colors.blue[400]!,
         ),
         ButtonState.loading: IconedButton(
           text: "Loading",
-          color: Colors.blue[400],
+          color: Colors.blue[400]!,
         ),
         ButtonState.fail: IconedButton(
           text: "Failed",
@@ -76,7 +80,7 @@ class _SubmitButtonState extends State<SubmitButton> {
           setState(() {
             _state = ButtonState.fail;
           });
-          _errorMessage = queryResult.exception.graphqlErrors.first.message;
+          _errorMessage = queryResult.exception!.graphqlErrors.first.message;
         } else {
           widget.resetForm();
           setState(() {

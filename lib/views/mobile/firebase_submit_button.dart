@@ -13,11 +13,15 @@ import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 
 class FireBaseSubmitButton extends StatefulWidget {
   const FireBaseSubmitButton(
-      {Key key, this.vars, this.mutation, this.resetForm, this.result})
+      {Key? key,
+      required this.vars,
+      required this.mutation,
+      required this.resetForm,
+      required this.result})
       : super(key: key);
   final HasuraVars vars;
   final String mutation;
-  final Function() resetForm;
+  final void Function() resetForm;
   final FilePickerResult Function() result;
 
   @override
@@ -36,11 +40,11 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
         ButtonState.idle: IconedButton(
           text: "Submit",
           icon: Icon(Icons.send, color: Colors.white),
-          color: Colors.blue[400],
+          color: Colors.blue[400]!,
         ),
         ButtonState.loading: IconedButton(
           text: "Loading",
-          color: Colors.blue[400],
+          color: Colors.blue[400]!,
         ),
         ButtonState.fail: IconedButton(
           text: errorMessage,
@@ -103,10 +107,10 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
     Reference ref = FirebaseStorage.instance
         .ref('/files/$teamid.${result.files.first.extension}');
 
-    UploadTask firebaseTask = kIsWeb
-        ? ref.putData(result.files.first.bytes)
+    UploadTask? firebaseTask = kIsWeb
+        ? ref.putData(result.files.first.bytes!)
         : Platform.isAndroid
-            ? ref.putFile(File(result.files.first.path))
+            ? ref.putFile(File(result.files.first.path!))
             : null;
 
     if (firebaseTask == null) {

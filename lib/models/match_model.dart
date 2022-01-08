@@ -14,7 +14,7 @@ class Match implements HasuraVars {
 
   int climbStatus;
 
-  String matchJson;
+  String? matchJson;
 
   Match({
     this.teamId = 0,
@@ -46,15 +46,15 @@ extension ClimbHelper on Match {
   static bool querySuccess = false;
   static Map<String, int> _ids = {};
 
-  static int get successId {
+  static int? get successId {
     return _ids["succeeded"];
   }
 
-  static int get noAttemptId {
+  static int? get noAttemptId {
     return _ids["noAttempt"];
   }
 
-  static int get failedId {
+  static int? get failedId {
     return _ids["failed"];
   }
 
@@ -64,12 +64,12 @@ extension ClimbHelper on Match {
     }
     switch (i) {
       case 0:
-        return successId;
+        return successId!;
       case 1:
-        return failedId;
+        return failedId!;
       case 2:
       default:
-        return noAttemptId;
+        return noAttemptId!;
     }
   }
 
@@ -87,11 +87,11 @@ extension ClimbHelper on Match {
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
     if (result.hasException) {
-      throw result.exception;
+      throw result.exception!;
     } else if (result.data == null) {
       throw Exception("no climb ids found");
     } else {
-      (result.data["climb"] as List<dynamic>).forEach((final dynamic element) {
+      (result.data!["climb"] as List<dynamic>).forEach((final dynamic element) {
         switch (element["name"] as String) {
           case "failed":
             _ids["failed"] = element["id"] as int;

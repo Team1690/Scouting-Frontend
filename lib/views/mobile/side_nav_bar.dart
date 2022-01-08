@@ -3,7 +3,7 @@ import 'package:scouting_frontend/views/mobile/screens/pit_view.dart';
 import 'package:scouting_frontend/views/mobile/screens/specific_view.dart';
 
 class SideNavBar extends StatefulWidget {
-  const SideNavBar({Key key}) : super(key: key);
+  const SideNavBar({Key? key}) : super(key: key);
 
   @override
   _SideNavBarState createState() => _SideNavBarState();

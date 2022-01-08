@@ -4,14 +4,14 @@ class PitVars implements HasuraVars {
   String driveTrainType = driveTrainInitialValue;
   String driveMotorType = driveMotorInitialValue;
   int driveMotorAmount = 2;
-  String shifter;
-  String gearbox;
+  String? shifter;
+  String? gearbox;
   String notes = '';
-  String driveWheelType;
+  String driveWheelType = '';
   double driveTrainReliability = 1;
   double electronicsReliability = 1;
   double robotReliability = 1;
-  int teamId;
+  int? teamId;
   @override
   Map<String, dynamic> toHasuraVars() {
     return <String, dynamic>{

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class Switcher extends StatefulWidget {
   final List<String> labels;
   final List<Color> colors;
-  final Function(int) onChange;
+  final Function(int)? onChange;
   final double height;
-  int selected;
+  int? selected;
 
   Switcher({
-    @required final this.labels,
-    @required final this.colors,
+    required final this.labels,
+    required final this.colors,
     final this.height = 70,
     final this.onChange,
   });
@@ -60,7 +60,7 @@ class _SwitcherState extends State<Switcher> {
                   shape: getBorder(i),
                   onPressed: () => setState(() {
                     i = i == widget.selected ? -1 : i;
-                    widget.onChange(i);
+                    widget.onChange?.call(i);
                     widget.selected = i;
                   }),
                 ),

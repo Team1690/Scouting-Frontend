@@ -5,11 +5,11 @@ import 'package:scouting_frontend/views/constants.dart';
 // ignore: must_be_immutable
 class SpiderChart extends StatefulWidget {
   SpiderChart({
-    Key key,
-    @required this.numberOfFeatures,
-    @required this.data,
-    @required this.ticks,
-    @required this.features,
+    Key? key,
+    required this.numberOfFeatures,
+    required this.data,
+    required this.ticks,
+    required this.features,
   }) : super(key: key);
 
   final double numberOfFeatures;
@@ -43,7 +43,7 @@ class _SpiderChart extends State<SpiderChart> {
         axisColor: primaryWhite,
         outlineColor: secondaryWhite,
 
-        featuresTextStyle: Theme.of(context).textTheme.bodyText2,
+        featuresTextStyle: Theme.of(context).textTheme.bodyText2!,
       ),
     );
   }

@@ -4,8 +4,8 @@ import '../../constants.dart';
 
 class ScoutingSpecific extends StatelessWidget {
   const ScoutingSpecific({
-    Key key,
-    @required this.msg,
+    Key? key,
+    required this.msg,
   }) : super(key: key);
 
   final List<String> msg;
