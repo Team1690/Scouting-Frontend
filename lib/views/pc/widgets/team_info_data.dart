@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
@@ -28,22 +29,22 @@ class SpecificData {
 
 class PitViewData {
   PitViewData(
-      {this.driveTrainType,
-      this.driveMotorAmount,
-      this.driveMotorType,
-      this.driveTrainReliability,
-      this.driveWheelType,
-      this.electronicsReliability,
-      this.gearbox,
-      this.notes,
-      this.robotReliability,
-      this.shifter,
-      this.url});
+      {required this.driveTrainType,
+      required this.driveMotorAmount,
+      required this.driveMotorType,
+      required this.driveTrainReliability,
+      required this.driveWheelType,
+      required this.electronicsReliability,
+      required this.gearbox,
+      required this.notes,
+      required this.robotReliability,
+      required this.shifter,
+      required this.url});
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;
-  final String shifter;
-  final String gearbox;
+  final String? shifter;
+  final String? gearbox;
   final String driveMotorType;
   final int driveTrainReliability;
   final int electronicsReliability;
@@ -55,8 +56,8 @@ class PitViewData {
 // ignore: must_be_immutable
 class TeamInfoData extends StatefulWidget {
   TeamInfoData({
-    Key key,
-    @required this.team,
+    Key? key,
+    required this.team,
   }) : super(key: key);
 
   LightTeam team;
@@ -66,13 +67,13 @@ class TeamInfoData extends StatefulWidget {
 }
 
 class LineChartData {
-  LineChartData({this.points, this.title});
+  LineChartData({required this.points, required this.title});
   List<double> points;
   String title = '';
 }
 
 class _TeamInfoDataState extends State<TeamInfoData> {
-  Future<List<LineChartData>> fetchGameChart() async {
+  Future<List<LineChartData>?> fetchGameChart() async {
     final client = getClient();
     final String query = """
 query fetchGameChart(\$teamNumber : Int) {
@@ -91,10 +92,13 @@ query fetchGameChart(\$teamNumber : Int) {
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
     if (result.hasException) {
-      print(result.exception.toString());
+      throw result.exception!;
+    } else if (result.data == null) {
+      return null;
     }
+
     final List<dynamic> matches =
-        result.data["team"][0]["matches"] as List<dynamic>;
+        result.data!["team"][0]["matches"] as List<dynamic>;
     return [
       LineChartData(
         title: 'Inner',
@@ -117,7 +121,7 @@ query fetchGameChart(\$teamNumber : Int) {
     ];
   }
 
-  Future<PitViewData> fetchPit() async {
+  Future<PitViewData?> fetchPit() async {
     final client = getClient();
     final String query = """
 query MyQuery(\$team_id: Int!) {
@@ -141,7 +145,7 @@ query MyQuery(\$team_id: Int!) {
     return (await client.query(QueryOptions(
             document: gql(query),
             variables: <String, dynamic>{'team_id': widget.team.id})))
-        .mapQueryResult<PitViewData>((final Map<String, dynamic> data) =>
+        .mapQueryResult<PitViewData?>((final Map<String, dynamic> data) =>
             (data['pit_by_pk'] as Map<String, dynamic>)
                 .mapNullable<PitViewData>((final Map<String, dynamic> pit) =>
                     PitViewData(
@@ -160,7 +164,7 @@ query MyQuery(\$team_id: Int!) {
                         url: pit['url'] as String)));
   }
 
-  Future<List<SpecificData>> fetchSpesific() async {
+  Future<List<SpecificData>?> fetchSpesific() async {
     final client = getClient();
     final String query = """query MyQuery(\$teamNumber : Int){
   specific(where: {team: {number: {_eq: \$teamNumber}}}) {
@@ -179,7 +183,7 @@ query MyQuery(\$team_id: Int!) {
                 .toList()));
   }
 
-  Future<List<QuickData>> fetchQuickData() async {
+  Future<List<QuickData>?> fetchQuickData() async {
     final client = getClient();
     final String query = """
   query MyQuery(\$teamNumber: Int) {
@@ -239,7 +243,7 @@ query MyQuery(\$team_id: Int!) {
                         flex: 3,
                         child: DashboardCard(
                             title: 'Quick Data',
-                            body: FutureBuilder<List<QuickData>>(
+                            body: FutureBuilder<List<QuickData>?>(
                                 future: fetchQuickData(),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) {
@@ -251,12 +255,14 @@ query MyQuery(\$team_id: Int!) {
                                     return Center(
                                       child: CircularProgressIndicator(),
                                     );
+                                  } else if (snapshot.data == null) {
+                                    return Text('No Quick Data!');
                                   } else {
-                                    if (snapshot.data.length != 1) {
+                                    if (snapshot.data!.length != 1) {
                                       return Text(
                                           'data.length is shorter than 1! :(');
                                     }
-                                    final QuickData report = snapshot.data[0];
+                                    final QuickData report = snapshot.data![0];
                                     if (report.success + report.failed == 0) {
                                       return Text(
                                           "Average inner: ${report.averageInner.round()}\n"
@@ -284,7 +290,7 @@ query MyQuery(\$team_id: Int!) {
                       flex: 3,
                       child: DashboardCard(
                         title: 'Pit Scouting',
-                        body: FutureBuilder<PitViewData>(
+                        body: FutureBuilder<PitViewData?>(
                           future: fetchPit(),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
@@ -298,7 +304,7 @@ query MyQuery(\$team_id: Int!) {
                             } else if (snapshot.data == null) {
                               return Text('No data yet :(');
                             } else {
-                              final PitViewData report = snapshot.data;
+                              final PitViewData report = snapshot.data!;
                               return ScoutingPit(report);
                             }
                           },
@@ -313,10 +319,10 @@ query MyQuery(\$team_id: Int!) {
                 flex: 5,
                 child: DashboardCard(
                     title: 'Game Chart',
-                    body: FutureBuilder(
+                    body: FutureBuilder<List<LineChartData>?>(
                         future: fetchGameChart(),
                         builder: (context,
-                            AsyncSnapshot<List<LineChartData>> snapshot) {
+                            AsyncSnapshot<List<LineChartData>?> snapshot) {
                           if (snapshot.hasError) {
                             return Text(
                                 'Error has happened in the future!   ${snapshot.error}');
@@ -326,7 +332,7 @@ query MyQuery(\$team_id: Int!) {
                             );
                           } else {
                             return CarouselWithIndicator(
-                              widgets: snapshot.data
+                              widgets: snapshot.data!
                                   .map((LineChartData chart) => Padding(
                                         padding: const EdgeInsets.only(
                                             top: 0, right: 20),
@@ -354,7 +360,7 @@ query MyQuery(\$team_id: Int!) {
         DashboardCard(
             title: 'Scouting Specific',
             // body: ScoutingSpecific(msg: widget.team.msg),
-            body: FutureBuilder<List<SpecificData>>(
+            body: FutureBuilder<List<SpecificData>?>(
                 future: fetchSpesific(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
