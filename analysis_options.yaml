@@ -1,6 +1,6 @@
-include: package:lints/flutter.yaml
-
 # TODO: combine all 3 linting styles (including multiple lints doesn't work)
+# (currently even a single include fails for some reason)
+# include: package:lints/flutter.yaml
 # include: package:lints/pedantic.yaml
 # include: package:lints/recommended.yaml
 
@@ -37,7 +37,8 @@ linter:
     - prefer_null_aware_method_calls
     - prefer_null_aware_operators
     - require_trailing_commas
-    - secure_pubspec_urls
+      # TODO: not recognized (?)
+      # - secure_pubspec_urls
     - sort_constructors_first
     - sort_pub_dependencies
     - sort_unnamed_constructors_first
@@ -46,5 +47,6 @@ linter:
     - unnecessary_await_in_return
     - unnecessary_lambdas
     - unnecessary_this
-    - unwaited_futures
+      # TODO: not recognized (?)
+      # - unwaited_futures
     - use_named_constants
