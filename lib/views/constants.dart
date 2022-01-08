@@ -18,6 +18,7 @@ const colors = [
   const Color(0xffff7b43),
   const Color(0xffff4343),
   const Color(0xffff43CA),
+  const Color(0xff982ABE),
 ];
 
 final ThemeData darkModeTheme = ThemeData.dark().copyWith(

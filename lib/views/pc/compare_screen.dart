@@ -21,6 +21,11 @@ class CompareScreen extends StatefulWidget {
   State<CompareScreen> createState() => _CompareScreenState();
 }
 
+class LineChartData {
+  LineChartData({this.points});
+  List<double> points;
+}
+
 class _CompareScreenState extends State<CompareScreen> {
   TextEditingController controller = TextEditingController();
   Team chosenTeam = Team();
@@ -49,6 +54,56 @@ query FetchTeams {
             LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
         .toList();
     //.entries.map((e) => LightTeam(e['id']);
+  }
+
+  Future<List<LineChartData>> fetchMatch(int teamNumber) async {
+    final client = getClient();
+    final String query = """
+query fetchGameChart(\$teamNumber : Int) {
+  team(where: {number: {_eq: \$teamNumber}}) {
+    matches(order_by: {number: asc}) {
+      teleop_inner
+      teleop_outer
+      auto_balls
+    }
+  }
+}
+
+""";
+
+    final QueryResult result = await client.query(QueryOptions(
+        document: gql(query),
+        variables: <String, int>{"teamNumber": teamNumber}));
+    if (result.hasException) {
+      print(result.exception.toString());
+    }
+    final List<dynamic> matches =
+        result.data["team"][0]["matches"] as List<dynamic>;
+    return [
+      LineChartData(
+        points: matches
+            .map<double>((dynamic e) => e['teleop_inner'] as double)
+            .toList(),
+      ),
+      LineChartData(
+        points: matches
+            .map<double>((dynamic e) => e['teleop_outer'] as double)
+            .toList(),
+      ),
+      LineChartData(
+        points: matches
+            .map<double>((dynamic e) => e['auto_balls'] as double)
+            .toList(),
+      ),
+    ];
+  }
+
+  Future<List<List<LineChartData>>> fetchMatches(List<int> teamnumbers) async {
+    List<List<LineChartData>> matches = [];
+    for (int i = 0; i < teamnumbers.length; i++) {
+      matches.add(await fetchMatch(teamnumbers[i]));
+    }
+    return matches;
   }
 
   Future<List<Team>> fetchGameCharts(List<int> teamId) async {
@@ -150,11 +205,13 @@ query MyQuery (\$team_id: Int){
                   Expanded(
                     flex: 1,
                     child: TeamSelectionFuture(
-                      onChange: (LightTeam team) => {
+                      onChange: (LightTeam team) {
+                        if (compareTeamsList
+                            .any((element) => element.id == team.id)) return;
                         setState(() => {
                               compareTeamsList.add(
                                   LightTeam(team.id, team.number, team.name))
-                            })
+                            });
                       },
                       controller: controller,
                     ),
@@ -180,9 +237,6 @@ query MyQuery (\$team_id: Int){
                             )
                             .toList()),
                   ),
-                  SizedBox(width: defaultPadding),
-                  Expanded(flex: 3, child: Container()),
-                  SizedBox(width: defaultPadding),
                   Align(
                       alignment: Alignment.centerRight,
                       child: ToggleButtons(
@@ -210,13 +264,92 @@ query MyQuery (\$team_id: Int){
                           child: DashboardCard(
                             title: 'Game Chart',
                             // body: Container(),
-                            body: CarouselSlider(
-                              options: CarouselOptions(
-                                height: 3500,
-                                viewportFraction: 1,
-                                // autoPlay: true,
-                              ),
-                              items: [],
+                            body: FutureBuilder(
+                              future: fetchMatches(compareTeamsList
+                                  .map((e) => e.number)
+                                  .toList()),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text(snapshot.error.toString());
+                                } else if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                if (!snapshot.hasData ||
+                                    (snapshot.data as List<List<LineChartData>>)
+                                        .isEmpty) {
+                                  return Container();
+                                }
+
+                                List<LineChartData> inner = [];
+
+                                List<LineChartData> outer = [];
+
+                                List<LineChartData> auto = [];
+                                (snapshot.data as List<List<LineChartData>>)
+                                    .forEach((item) {
+                                  inner.add(item[0]);
+                                  outer.add(item[1]);
+                                  auto.add(item[2]);
+                                });
+
+                                return CarouselSlider(
+                                  options: CarouselOptions(
+                                    height: 3500,
+                                    viewportFraction: 1,
+                                    // autoPlay: true,
+                                  ),
+                                  items: [
+                                    Stack(
+                                      children: [
+                                        Text('Inner'),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 0, right: 20),
+                                          child: DashboardLineChart(
+                                              dataSet: inner
+                                                  .map((e) => e.points)
+                                                  .toList()),
+                                        ),
+                                      ],
+                                    ),
+                                    Stack(
+                                      children: [
+                                        Align(
+                                          child: Text('Outer'),
+                                          alignment: Alignment.topLeft,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 0, right: 20),
+                                          child: DashboardLineChart(
+                                              dataSet: outer
+                                                  .map((e) => e.points)
+                                                  .toList()),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 0, right: 20),
+                                      child: Stack(
+                                        children: [
+                                          Align(
+                                            child: Text('Auto'),
+                                            alignment: Alignment.topLeft,
+                                          ),
+                                          DashboardLineChart(
+                                              dataSet: auto
+                                                  .map((e) => e.points)
+                                                  .toList())
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         )

@@ -66,8 +66,9 @@ class TeamInfoData extends StatefulWidget {
 }
 
 class LineChartData {
-  LineChartData({this.points});
+  LineChartData({this.points, this.title});
   List<double> points;
+  String title = '';
 }
 
 class _TeamInfoDataState extends State<TeamInfoData> {
@@ -96,16 +97,19 @@ query fetchGameChart(\$teamNumber : Int) {
         result.data["team"][0]["matches"] as List<dynamic>;
     return [
       LineChartData(
+        title: 'Inner',
         points: matches
             .map<double>((dynamic e) => e['teleop_inner'] as double)
             .toList(),
       ),
       LineChartData(
+        title: 'Outer',
         points: matches
             .map<double>((dynamic e) => e['teleop_outer'] as double)
             .toList(),
       ),
       LineChartData(
+        title: 'Auto',
         points: matches
             .map<double>((dynamic e) => e['auto_balls'] as double)
             .toList(),
@@ -306,7 +310,7 @@ query MyQuery(\$team_id: Int!) {
               ),
               SizedBox(height: defaultPadding),
               Expanded(
-                flex: 3,
+                flex: 5,
                 child: DashboardCard(
                     title: 'Game Chart',
                     body: FutureBuilder(
@@ -323,8 +327,21 @@ query MyQuery(\$team_id: Int!) {
                           } else {
                             return CarouselWithIndicator(
                               widgets: snapshot.data
-                                  .map((LineChartData chart) =>
-                                      DashboardLineChart(dataSet: chart.points))
+                                  .map((LineChartData chart) => Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 0, right: 20),
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              child: Text(chart.title),
+                                              alignment: Alignment.topLeft,
+                                            ),
+                                            DashboardLineChart(
+                                                distanceFromHighest: 4,
+                                                dataSet: [chart.points]),
+                                          ],
+                                        ),
+                                      ))
                                   .toList(),
                             );
                           }
