@@ -29,6 +29,7 @@ class ScoutingSpecific extends StatelessWidget {
                         width: 110,
                         child: Text(
                           e,
+                          textDirection: TextDirection.rtl,
                           style: TextStyle(color: primaryWhite, fontSize: 12),
                         ),
                       ),
