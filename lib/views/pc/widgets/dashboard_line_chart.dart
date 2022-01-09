@@ -19,6 +19,7 @@ class DashboardLineChart extends StatelessWidget {
     double highestValue = -1;
     dataSet.forEach(
         (points) => {highestValue = max(highestValue, points.reduce(max))});
+    double highestX = -1;
     return LineChart(LineChartData(
         lineBarsData: List.generate(dataSet.length, (index) {
           List<Color> chartColors = [colors[index]];
@@ -40,6 +41,8 @@ class DashboardLineChart extends StatelessWidget {
                   .toList());
         }),
         gridData: FlGridData(
+          verticalInterval: 1,
+          horizontalInterval: 1,
           show: true,
           drawVerticalLine: true,
           getDrawingHorizontalLine: (value) {
@@ -56,30 +59,28 @@ class DashboardLineChart extends StatelessWidget {
           },
         ),
         titlesData: FlTitlesData(
-          show: true,
-          bottomTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 16,
-            getTextStyles: (context, value) => const TextStyle(
-                color: Color(0xff68737d),
-                fontWeight: FontWeight.bold,
-                fontSize: 16),
-            margin: 8,
-          ),
-          leftTitles: SideTitles(
-            showTitles: true,
-            getTextStyles: (context, value) => const TextStyle(
-              color: Color(0xff67727d),
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+            show: true,
+            topTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 16,
+              getTextStyles: (context, value) =>
+                  const TextStyle(color: Colors.white, fontSize: 16),
+              margin: 8,
+              checkToShowTitle:
+                  (minValue, maxValue, sideTitles, appliedInterval, value) =>
+                      value == value.floorToDouble(),
             ),
-            reservedSize: 28,
-            margin: 12,
-            interval: 100,
-            // interval: List.from(dataSet..sort()).last,
-            //TODO: make the interval size base on the data
-          ),
-        ),
+            rightTitles: SideTitles(
+              showTitles: true,
+              getTextStyles: (context, value) => const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+              reservedSize: 28,
+              margin: 12,
+            ),
+            bottomTitles: SideTitles(showTitles: false),
+            leftTitles: SideTitles(showTitles: false)),
         borderData: FlBorderData(
             show: true,
             border: Border.all(color: const Color(0xff37434d), width: 1)),

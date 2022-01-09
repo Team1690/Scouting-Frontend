@@ -146,10 +146,10 @@ query MyQuery(\$team_id: Int!) {
             document: gql(query),
             variables: <String, dynamic>{'team_id': widget.team.id})))
         .mapQueryResult<PitViewData?>((final Map<String, dynamic> data) =>
-            (data['pit_by_pk'] as Map<String, dynamic>)
-                .mapNullable<PitViewData>((final Map<String, dynamic> pit) =>
+            (data['pit_by_pk'] as Map<String, dynamic>?)
+                .mapNullable<PitViewData>((final Map<String, dynamic>? pit) =>
                     PitViewData(
-                        driveTrainType: pit['drive_train_type'] as String,
+                        driveTrainType: pit!['drive_train_type'] as String,
                         driveMotorAmount: pit['drive_motor_amount'] as int,
                         driveMotorType: pit['drive_motor_type'] as String,
                         driveTrainReliability:
@@ -333,20 +333,19 @@ query MyQuery(\$team_id: Int!) {
                           } else {
                             return CarouselWithIndicator(
                               widgets: snapshot.data!
-                                  .map((LineChartData chart) => Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 0, right: 20),
-                                        child: Stack(
-                                          children: [
-                                            Align(
-                                              child: Text(chart.title),
-                                              alignment: Alignment.topLeft,
-                                            ),
-                                            DashboardLineChart(
+                                  .map((LineChartData chart) => Stack(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(chart.title),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: DashboardLineChart(
                                                 distanceFromHighest: 4,
                                                 dataSet: [chart.points]),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ))
                                   .toList(),
                             );
@@ -372,7 +371,7 @@ query MyQuery(\$team_id: Int!) {
                       child: CircularProgressIndicator(),
                     );
                   } else {
-                    if (snapshot.data.length < 1) {
+                    if (snapshot.data == null || snapshot.data!.length < 1) {
                       return Text('no data yet!');
                     }
                     final List<dynamic> report =

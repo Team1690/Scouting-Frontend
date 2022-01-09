@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';

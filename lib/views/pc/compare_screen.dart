@@ -22,17 +22,17 @@ class CompareScreen extends StatefulWidget {
 }
 
 class LineChartData {
-  LineChartData({this.points});
+  LineChartData({required this.points});
   List<double> points;
 }
 
 class _CompareScreenState extends State<CompareScreen> {
   TextEditingController controller = TextEditingController();
-  Team chosenTeam = Team();
+  late Team chosenTeam;
   List<LightTeam> compareTeamsList = [];
   // List tables;
 
-  Future<List<LightTeam>> fetchTeams() async {
+  Future<List<LightTeam>?> fetchTeams() async {
     final client = getClient();
     final String query = """
 query FetchTeams {
@@ -47,16 +47,18 @@ query FetchTeams {
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
     if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List<Map<String, dynamic>>)
+      throw result.exception!;
+    } else if (result.data == null) {
+      return null;
+    }
+    return (result.data!['team'] as List<Map<String, dynamic>>)
         .map((e) =>
             LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
         .toList();
     //.entries.map((e) => LightTeam(e['id']);
   }
 
-  Future<List<LineChartData>> fetchMatch(int teamNumber) async {
+  Future<List<LineChartData>?> fetchMatch(int teamNumber) async {
     final client = getClient();
     final String query = """
 query fetchGameChart(\$teamNumber : Int) {
@@ -75,10 +77,13 @@ query fetchGameChart(\$teamNumber : Int) {
         document: gql(query),
         variables: <String, int>{"teamNumber": teamNumber}));
     if (result.hasException) {
-      print(result.exception.toString());
+      throw result.exception!;
+    } else if (result.data == null) {
+      return null;
     }
+
     final List<dynamic> matches =
-        result.data["team"][0]["matches"] as List<dynamic>;
+        result.data!["team"][0]["matches"] as List<dynamic>;
     return [
       LineChartData(
         points: matches
@@ -101,7 +106,7 @@ query fetchGameChart(\$teamNumber : Int) {
   Future<List<List<LineChartData>>> fetchMatches(List<int> teamnumbers) async {
     List<List<LineChartData>> matches = [];
     for (int i = 0; i < teamnumbers.length; i++) {
-      matches.add(await fetchMatch(teamnumbers[i]));
+      matches.add((await fetchMatch(teamnumbers[i])) ?? []);
     }
     return matches;
   }
@@ -109,18 +114,19 @@ query fetchGameChart(\$teamNumber : Int) {
   Future<List<Team>> fetchGameCharts(List<int> teamId) async {
     List<Team> teamList = [];
     for (int i = 0; i < teamId.length; i++) {
-      teamList.addAll(await fetchGameChart(teamId[i]));
+      Iterable<Team>? team = await fetchGameChart(teamId[i]);
+      if (team != null) teamList.addAll(team);
     }
 
     return teamList;
   }
 
-  Future<List<Team>> fetchGameChart(int teamId) async {
+  Future<List<Team>?> fetchGameChart(int teamId) async {
     final client = getClient();
     final String query = """
-query MyQuery (\$team_id: Int){
+query MyQuery(\$team_id: Int) {
   team(where: {id: {_eq: \$team_id}}) {
-    matches_aggregate{
+    matches_aggregate {
       aggregate {
         avg {
           auto_balls
@@ -130,13 +136,12 @@ query MyQuery (\$team_id: Int){
         count(columns: id)
       }
     }
-    matches{
+    matches {
       auto_balls
       teleop_inner
       teleop_outer
       climb_id
     }
-
     climbSuccess: matches_aggregate(where: {climb: {name: {_eq: "Succeeded"}}}) {
       aggregate {
         count(columns: climb_id)
@@ -147,29 +152,25 @@ query MyQuery (\$team_id: Int){
         count(columns: climb_id)
       }
     }
+    name
+    number
   }
 }
-
 
   """;
 
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query), variables: <String, dynamic>{"team_id": teamId}));
     if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    // for(int i = 0; i < (result.data['team'][0]['matches'] as List<dynamic>).length; i++){
-    //   dynamic f = result.data['team'][0]['matches'] as List<dynamic>;
-    //   print(((f as List<dynamic>).map((g) => [
-    //                 g['auto_balls'] + g['teleop_inner'] + g['teleop_outer'],
-    //                 g['climb_id']]).toList()).runtimeType);
-    //   print([
-    //                 f[i]['auto_balls'] + f[i]['teleop_inner'] + f[i]['teleop_outer'],
-    //                 f[i]['climb_id']]);
-    // }
+      throw result.exception!;
+    } else if (result.data == null) {
+      return null;
+    }
 
-    return (result.data['team'] as List<dynamic>)
+    return (result.data!['team'] as List<dynamic>)
         .map((dynamic e) => Team(
+            teamName: e['name'] as String,
+            teamNumber: e['number'] as int,
             autoGoalAverage: e['matches_aggregate']['aggregate']['avg']
                 ['auto_balls'] as double,
             teleInnerGoalAverage: e['matches_aggregate']['aggregate']['avg']
@@ -307,7 +308,10 @@ query MyQuery (\$team_id: Int){
                                         Text('Inner'),
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                              top: 0, right: 20),
+                                              top: 20,
+                                              right: 20,
+                                              left: 20,
+                                              bottom: 20),
                                           child: DashboardLineChart(
                                               dataSet: inner
                                                   .map((e) => e.points)

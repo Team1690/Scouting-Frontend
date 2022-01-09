@@ -9,21 +9,19 @@ import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
 
 class TeamInfoScreen extends StatefulWidget {
-  TeamInfoScreen({Key key, this.chosenTeam}) {
+  TeamInfoScreen({Key? key, this.chosenTeam}) {
     if (chosenTeam != null) {
-      controller.text = chosenTeam.number.toString();
+      controller.text = chosenTeam!.number.toString();
     }
   }
-  LightTeam chosenTeam;
+  LightTeam? chosenTeam;
   TextEditingController controller = TextEditingController();
   @override
   State<TeamInfoScreen> createState() => _TeamInfoScreenState();
 }
 
 class _TeamInfoScreenState extends State<TeamInfoScreen> {
-  int chosenTeam;
-
-  Future<List<LightTeam>> fetchTeams() async {
+  Future<List<LightTeam>?> fetchTeams() async {
     final GraphQLClient client = getClient();
     final String query = """
 query FetchTeams {
@@ -38,10 +36,11 @@ query FetchTeams {
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
     if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    print(result.data);
-    return (result.data['team'] as List<dynamic>)
+      throw result.exception!;
+    } else if (result.data == null) {
+      return null;
+    }
+    return (result.data!['team'] as List<dynamic>)
         .map((dynamic e) =>
             LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
         .toList();
@@ -101,7 +100,7 @@ query FetchTeams {
                             ),
                           ],
                         )))
-                    : TeamInfoData(team: widget.chosenTeam),
+                    : TeamInfoData(team: widget.chosenTeam!),
               )
             ])));
   }
