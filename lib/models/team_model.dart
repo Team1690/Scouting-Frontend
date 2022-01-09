@@ -34,7 +34,6 @@ class Team {
   //test
   final List<String> msg;
   final int averageShots;
-  final List<dynamic> tables;
   final List<int> spider;
 
   Team({
@@ -52,7 +51,6 @@ class Team {
     this.climbFailed = 0,
     this.climbSuccess = 0,
     this.msg = const <String>[],
-    this.tables = const <dynamic>[],
     this.spider = const <int>[0, 0, 0, 0],
   });
 }

@@ -11,11 +11,11 @@ GraphQLClient getClient() {
   return GraphQLClient(link: link, cache: GraphQLCache());
 }
 
-extension MapNullable<A> on A {
-  B? mapNullable<B>(final B Function(A) f) => this == null ? null : f(this);
+extension MapNullable<A> on A? {
+  B? mapNullable<B>(final B Function(A?) f) => this == null ? null : f(this);
 }
 
 extension MapQueryResult on QueryResult {
-  T mapQueryResult<T>(final T Function(Map<String, dynamic>) f) =>
-      hasException ? throw exception! : f(data!);
+  T mapQueryResult<T>(final T Function(Map<String, dynamic>?) f) =>
+      hasException ? throw exception! : f(data);
 }

@@ -14,8 +14,6 @@ class Match implements HasuraVars {
 
   int climbStatus;
 
-  String? matchJson;
-
   Match({
     this.teamId = 0,
     this.teamNumber = 0,
@@ -46,17 +44,11 @@ extension ClimbHelper on Match {
   static bool querySuccess = false;
   static Map<String, int> _ids = {};
 
-  static int? get successId {
-    return _ids["succeeded"];
-  }
+  static int get successId => _ids["succeeded"]!;
 
-  static int? get noAttemptId {
-    return _ids["noAttempt"];
-  }
+  static int get noAttemptId => _ids["noAttempt"]!;
 
-  static int? get failedId {
-    return _ids["failed"];
-  }
+  static int get failedId => _ids["failed"]!;
 
   static int climbId(final int i) {
     if (!querySuccess) {
@@ -64,12 +56,12 @@ extension ClimbHelper on Match {
     }
     switch (i) {
       case 0:
-        return successId!;
+        return successId;
       case 1:
-        return failedId!;
+        return failedId;
       case 2:
       default:
-        return noAttemptId!;
+        return noAttemptId;
     }
   }
 

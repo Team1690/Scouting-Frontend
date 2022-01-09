@@ -47,3 +47,5 @@ bool isPC(final BuildContext context) {
       return true;
   }
 }
+
+final T Function<T>(T) ignore = <T>(final T x) => x;

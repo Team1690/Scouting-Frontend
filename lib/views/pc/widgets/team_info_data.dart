@@ -145,8 +145,8 @@ query MyQuery(\$team_id: Int!) {
     return (await client.query(QueryOptions(
             document: gql(query),
             variables: <String, dynamic>{'team_id': widget.team.id})))
-        .mapQueryResult<PitViewData?>((final Map<String, dynamic> data) =>
-            (data['pit_by_pk'] as Map<String, dynamic>?)
+        .mapQueryResult<PitViewData?>((final Map<String, dynamic>? data) =>
+            (data?['pit_by_pk'] as Map<String, dynamic>?)
                 .mapNullable<PitViewData>((final Map<String, dynamic>? pit) =>
                     PitViewData(
                         driveTrainType: pit!['drive_train_type'] as String,
@@ -176,10 +176,10 @@ query MyQuery(\$team_id: Int!) {
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
 
-    return result.mapQueryResult((final Map<String, dynamic> data) =>
-        (data['specific'] as List<dynamic>).mapNullable(
-            (final List<dynamic> specificEntries) => specificEntries
-                .map((final dynamic e) => SpecificData(e['message'] as String))
+    return result.mapQueryResult((final Map<String, dynamic>? data) =>
+        (data?['specific'] as List<dynamic>?).mapNullable<List<SpecificData>?>(
+            (final List<dynamic>? specificEntries) => specificEntries
+                ?.map((final dynamic e) => SpecificData(e['message'] as String))
                 .toList()));
   }
 
@@ -216,8 +216,8 @@ query MyQuery(\$team_id: Int!) {
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
     return result
-        .mapQueryResult(
-            (final Map<String, dynamic> data) => data['team'] as List<dynamic>)
+        .mapQueryResult((final Map<String, dynamic>? data) =>
+            data!['team'] as List<dynamic>)
         .map((final dynamic e) => QuickData(
             e['balls']['aggregate']['avg']['teleop_inner'] as double,
             e['balls']['aggregate']['avg']['teleop_outer'] as double,

@@ -7,11 +7,14 @@ import 'package:scouting_frontend/views/pc/team_info_screen.dart';
 
 class PickList extends StatefulWidget {
   const PickList(
-      {Key? key, required this.uiList, required this.screen, this.onReorder});
+      {Key? key,
+      required this.uiList,
+      required this.screen,
+      required this.onReorder});
 
   final List<PickListTeam> uiList;
   final CurrentPickList screen;
-  final Function(List<PickListTeam> list)? onReorder;
+  final Function(List<PickListTeam> list) onReorder;
 
   @override
   _PickListState createState() => _PickListState();
@@ -29,7 +32,7 @@ class _PickListState extends State<PickList> {
         widget.screen.setIndex(widget.uiList[i], i);
       }
     });
-    widget.onReorder?.call(widget.uiList);
+    widget.onReorder(widget.uiList);
   }
 
   @override
@@ -39,7 +42,7 @@ class _PickListState extends State<PickList> {
         children: <Widget>[
           ...widget.uiList.map<Widget>((e) {
             e.controller.addListener(() {
-              widget.onReorder?.call(widget.uiList);
+              widget.onReorder(widget.uiList);
             });
             return Card(
               color: bgColor,

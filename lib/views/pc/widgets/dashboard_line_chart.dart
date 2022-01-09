@@ -17,11 +17,12 @@ class DashboardLineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double highestValue = -1;
-    dataSet.forEach(
-        (points) => {highestValue = max(highestValue, points.reduce(max))});
+    dataSet.forEach((List<double> points) {
+      highestValue = max(highestValue, points.reduce(max));
+    });
     double highestX = -1;
     return LineChart(LineChartData(
-        lineBarsData: List.generate(dataSet.length, (index) {
+        lineBarsData: List.generate(dataSet.length, (int index) {
           List<Color> chartColors = [colors[index]];
           return LineChartBarData(
               isCurved: false,
@@ -31,8 +32,9 @@ class DashboardLineChart extends StatelessWidget {
               dotData: FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                colors:
-                    chartColors.map((color) => color.withOpacity(0.3)).toList(),
+                colors: chartColors
+                    .map((Color color) => color.withOpacity(0.3))
+                    .toList(),
               ),
               spots: dataSet[index]
                   .asMap()
@@ -45,7 +47,7 @@ class DashboardLineChart extends StatelessWidget {
           horizontalInterval: 1,
           show: true,
           drawVerticalLine: true,
-          getDrawingHorizontalLine: (value) {
+          getDrawingHorizontalLine: (double value) {
             return FlLine(
               color: const Color(0xff37434d),
               strokeWidth: 1,
@@ -63,16 +65,20 @@ class DashboardLineChart extends StatelessWidget {
             topTitles: SideTitles(
               showTitles: true,
               reservedSize: 16,
-              getTextStyles: (context, value) =>
+              getTextStyles: (BuildContext context, double value) =>
                   const TextStyle(color: Colors.white, fontSize: 16),
               margin: 8,
-              checkToShowTitle:
-                  (minValue, maxValue, sideTitles, appliedInterval, value) =>
-                      value == value.floorToDouble(),
+              checkToShowTitle: (double minValue,
+                      double maxValue,
+                      SideTitles sideTitles,
+                      double appliedInterval,
+                      double value) =>
+                  value == value.floorToDouble(),
             ),
             rightTitles: SideTitles(
               showTitles: true,
-              getTextStyles: (context, value) => const TextStyle(
+              getTextStyles: (BuildContext context, double value) =>
+                  const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),

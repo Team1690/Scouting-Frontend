@@ -13,7 +13,7 @@ class ScattersScreen extends StatefulWidget {
 }
 
 class _ScattersScreenState extends State<ScattersScreen> {
-  Team? displayTeam;
+  late Team displayTeam;
 
   @override
   Widget build(BuildContext context) {

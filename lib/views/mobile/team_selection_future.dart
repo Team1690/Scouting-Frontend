@@ -14,7 +14,7 @@ class TeamSelectionFuture extends StatefulWidget {
 }
 
 class _TeamSelectionFutureState extends State<TeamSelectionFuture> {
-  Future<List<LightTeam>?> fetchTeams() async {
+  Future<List<LightTeam>> fetchTeams() async {
     final client = getClient();
     final String query = """
 query FetchTeams {
@@ -28,16 +28,14 @@ query FetchTeams {
 
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      throw result.exception!;
-    }
-    if (result.data != null) {
-      return (result.data!['team'] as List)
-          .map((final dynamic e) => LightTeam(
-              e['id'] as int, e['number'] as int, e['name'] as String))
-          .toList();
-    }
-    return null;
+
+    return result.mapQueryResult((data) =>
+        data.mapNullable<List<LightTeam>>((team) =>
+            (team!['team'] as List<dynamic>)
+                .map((final dynamic e) => LightTeam(
+                    e['id'] as int, e['number'] as int, e['name'] as String))
+                .toList()) ??
+        []);
   }
 
   @override

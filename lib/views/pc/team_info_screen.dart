@@ -21,32 +21,6 @@ class TeamInfoScreen extends StatefulWidget {
 }
 
 class _TeamInfoScreenState extends State<TeamInfoScreen> {
-  Future<List<LightTeam>?> fetchTeams() async {
-    final GraphQLClient client = getClient();
-    final String query = """
-query FetchTeams {
-  team {
-    id
-    number
-    name
-  }
-}
-  """;
-
-    final QueryResult result =
-        await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      throw result.exception!;
-    } else if (result.data == null) {
-      return null;
-    }
-    return (result.data!['team'] as List<dynamic>)
-        .map((dynamic e) =>
-            LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
-        .toList();
-    //.entries.map((e) => LightTeam(e['id']);
-  }
-
   @override
   Widget build(BuildContext context) {
     // print(data[0].msg[0]);

@@ -143,23 +143,18 @@ query MyQuery(\$team_id: Int) {
 
     return (result.data!['team'] as List<dynamic>)
         .map((dynamic e) => Team(
-            teamName: e['name'] as String,
-            teamNumber: e['number'] as int,
-            autoGoalAverage: e['matches_aggregate']['aggregate']['avg']
-                ['auto_balls'] as double,
-            teleInnerGoalAverage: e['matches_aggregate']['aggregate']['avg']
-                ['teleop_inner'] as double,
-            teleOuterGoalAverage: e['matches_aggregate']['aggregate']['avg']
-                ['teleop_outer'] as double,
-            id: teamId,
-            climbFailed: e['climbFail']['aggregate']['count'] as int,
-            climbSuccess: e['climbSuccess']['aggregate']['count'] as int,
-            tables: ((e['matches'] as List<dynamic>)
-                .map((dynamic g) => <dynamic>[
-                      g['auto_balls'] + g['teleop_inner'] + g['teleop_outer'],
-                      g['climb_id']
-                    ])
-                .toList())))
+              teamName: e['name'] as String,
+              teamNumber: e['number'] as int,
+              autoGoalAverage: e['matches_aggregate']['aggregate']['avg']
+                  ['auto_balls'] as double,
+              teleInnerGoalAverage: e['matches_aggregate']['aggregate']['avg']
+                  ['teleop_inner'] as double,
+              teleOuterGoalAverage: e['matches_aggregate']['aggregate']['avg']
+                  ['teleop_outer'] as double,
+              id: teamId,
+              climbFailed: e['climbFail']['aggregate']['count'] as int,
+              climbSuccess: e['climbSuccess']['aggregate']['count'] as int,
+            ))
         .toList();
     //.entries.map((e) => LightTeam(e['id']);
   }
@@ -353,24 +348,11 @@ query MyQuery(\$team_id: Int) {
                             if (snapshot.hasError) {
                               return Text('Error has happened in the future! ' +
                                   snapshot.error.toString());
-                            } else if (!snapshot.hasData) {
-                              return Stack(
-                                  alignment: AlignmentDirectional.center,
-                                  children: [
-                                    TextField(
-                                      keyboardType: TextInputType.number,
-                                      decoration: InputDecoration(
-                                        prefixIcon: const Icon(Icons.search),
-                                        border: const OutlineInputBorder(),
-                                        hintText: 'Search Team',
-                                        enabled: false,
-                                      ),
-                                    ),
-                                    Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ]);
-
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
                               // const CircularProgressIndicator();
                             } else {
                               if ((snapshot.data as List<Team>).isNotEmpty) {

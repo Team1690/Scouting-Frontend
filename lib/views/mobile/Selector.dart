@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class Selector extends StatefulWidget {
-  Selector(
-      {Key? key,
-      required this.value,
-      required this.values,
-      required this.initialValue,
-      this.onChange})
-      : super(key: key);
-  String? value;
+  Selector({
+    final Key? key,
+    required this.value,
+    required this.values,
+    required this.initialValue,
+    required this.onChange,
+  }) : super(key: key) {}
+  String value;
   final List<String> values;
   final String initialValue;
-  final void Function(String?)? onChange;
+  final void Function(String?) onChange;
   @override
   State<Selector> createState() => _SelectorState();
 }
@@ -31,13 +31,13 @@ class _SelectorState extends State<Selector> {
         color: primaryColor,
       ),
       onChanged: (String? newValue) {
-        widget.onChange?.call(newValue);
+        widget.onChange(newValue);
         setState(() {
           if (widget.values.contains(widget.initialValue) &&
               newValue != widget.initialValue) {
             widget.values.remove(widget.initialValue);
           }
-          widget.value = newValue;
+          widget.value = newValue!;
         });
       },
       items: widget.values.map<DropdownMenuItem<String>>((String value) {
