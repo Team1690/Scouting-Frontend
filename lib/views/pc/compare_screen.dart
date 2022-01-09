@@ -32,32 +32,6 @@ class _CompareScreenState extends State<CompareScreen> {
   List<LightTeam> compareTeamsList = [];
   // List tables;
 
-  Future<List<LightTeam>?> fetchTeams() async {
-    final client = getClient();
-    final String query = """
-query FetchTeams {
-  team {
-    id
-    number
-    name
-  }
-}
-  """;
-
-    final QueryResult result =
-        await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      throw result.exception!;
-    } else if (result.data == null) {
-      return null;
-    }
-    return (result.data!['team'] as List<Map<String, dynamic>>)
-        .map((e) =>
-            LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
-        .toList();
-    //.entries.map((e) => LightTeam(e['id']);
-  }
-
   Future<List<LineChartData>?> fetchMatch(int teamNumber) async {
     final client = getClient();
     final String query = """
@@ -327,7 +301,10 @@ query MyQuery(\$team_id: Int) {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                              top: 0, right: 20),
+                                              top: 20,
+                                              right: 20,
+                                              left: 20,
+                                              bottom: 20),
                                           child: DashboardLineChart(
                                               dataSet: outer
                                                   .map((e) => e.points)
@@ -337,7 +314,10 @@ query MyQuery(\$team_id: Int) {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 0, right: 20),
+                                          top: 20,
+                                          right: 20,
+                                          bottom: 20,
+                                          left: 20),
                                       child: Stack(
                                         children: [
                                           Align(
