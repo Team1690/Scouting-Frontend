@@ -1,8 +1,8 @@
 import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 
 class PitVars implements HasuraVars {
-  String? driveTrainType = driveTrainInitialValue;
-  String? driveMotorType = driveMotorInitialValue;
+  String driveTrainType = driveTrainInitialValue;
+  String driveMotorType = driveMotorInitialValue;
   int driveMotorAmount = 2;
   String? shifter;
   String? gearbox;

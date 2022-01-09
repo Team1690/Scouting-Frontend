@@ -92,7 +92,7 @@ class PitView extends StatelessWidget {
                 values: driveTrains,
                 initialValue: PitVars.driveTrainInitialValue,
                 onChange: (newValue) {
-                  vars.driveTrainType = newValue;
+                  vars.driveTrainType = newValue ?? vars.driveTrainType;
                 },
               ),
               SizedBox(
@@ -103,7 +103,7 @@ class PitView extends StatelessWidget {
                 values: driveMotors,
                 initialValue: PitVars.driveMotorInitialValue,
                 onChange: (newValue) {
-                  vars.driveMotorType = newValue;
+                  vars.driveMotorType = newValue ?? vars.driveMotorType;
                 },
               ),
               SizedBox(

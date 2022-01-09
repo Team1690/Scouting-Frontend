@@ -59,7 +59,7 @@ class _PickListFutureState extends State<PickListFuture> {
     final result = await client.query(QueryOptions(document: gql(query)));
 
     result.mapQueryResult((data) => data.mapNullable((pickListTeams) =>
-        (pickListTeams!['team'] as List<dynamic>)
+        (pickListTeams['team'] as List<dynamic>)
             .map((dynamic e) => PickListTeam(
                 e['id'] as int,
                 e['number'] as int,

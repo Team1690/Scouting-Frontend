@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 
 class PitViewSlider extends StatefulWidget {
-  PitViewSlider(
-      {Key? key,
-      required this.label,
-      required this.value,
-      this.onChange,
-      required this.divisions,
-      required this.max,
-      required this.min})
-      : super(key: key);
+  PitViewSlider({
+    Key? key,
+    required this.label,
+    required this.value,
+    required this.divisions,
+    required this.max,
+    required this.min,
+    this.onChange,
+  }) : super(key: key);
   double value;
   final String label;
-  final Function(double)? onChange;
+  void Function(double)? onChange;
   final double min;
   final double max;
   final int divisions;

@@ -39,7 +39,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
         children: widget.widgets
             .asMap()
             .entries
-            .map((entry) => GestureDetector(
+            .map((MapEntry<int, Widget> entry) => GestureDetector(
                   onTap: () => _controller.animateToPage(entry.key),
                   child: Container(
                     width: 12.0,

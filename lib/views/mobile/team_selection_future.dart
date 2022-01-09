@@ -31,7 +31,7 @@ query FetchTeams {
 
     return result.mapQueryResult((data) =>
         data.mapNullable<List<LightTeam>>((team) =>
-            (team!['team'] as List<dynamic>)
+            (team['team'] as List<dynamic>)
                 .map((final dynamic e) => LightTeam(
                     e['id'] as int, e['number'] as int, e['name'] as String))
                 .toList()) ??

@@ -32,7 +32,7 @@ class _CompareScreenState extends State<CompareScreen> {
   List<LightTeam> compareTeamsList = [];
   // List tables;
 
-  Future<List<LineChartData>?> fetchMatch(int teamNumber) async {
+  Future<List<LineChartData>> fetchMatch(int teamNumber) async {
     final client = getClient();
     final String query = """
 query fetchGameChart(\$teamNumber : Int) {
@@ -50,14 +50,11 @@ query fetchGameChart(\$teamNumber : Int) {
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
         variables: <String, int>{"teamNumber": teamNumber}));
-    if (result.hasException) {
-      throw result.exception!;
-    } else if (result.data == null) {
-      return null;
-    }
+    final List<dynamic> matches = result.mapQueryResult((data) =>
+        data.mapNullable<List<dynamic>>(
+            (team) => team['team'][0]['matches'] as List<dynamic>) ??
+        <dynamic>[]);
 
-    final List<dynamic> matches =
-        result.data!["team"][0]["matches"] as List<dynamic>;
     return [
       LineChartData(
         points: matches
@@ -80,7 +77,7 @@ query fetchGameChart(\$teamNumber : Int) {
   Future<List<List<LineChartData>>> fetchMatches(List<int> teamnumbers) async {
     List<List<LineChartData>> matches = [];
     for (int i = 0; i < teamnumbers.length; i++) {
-      matches.add((await fetchMatch(teamnumbers[i])) ?? []);
+      matches.add((await fetchMatch(teamnumbers[i])));
     }
     return matches;
   }
@@ -95,7 +92,7 @@ query fetchGameChart(\$teamNumber : Int) {
     return teamList;
   }
 
-  Future<List<Team>?> fetchGameChart(int teamId) async {
+  Future<List<Team>> fetchGameChart(int teamId) async {
     final client = getClient();
     final String query = """
 query MyQuery(\$team_id: Int) {
@@ -135,27 +132,25 @@ query MyQuery(\$team_id: Int) {
 
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query), variables: <String, dynamic>{"team_id": teamId}));
-    if (result.hasException) {
-      throw result.exception!;
-    } else if (result.data == null) {
-      return null;
-    }
-
-    return (result.data!['team'] as List<dynamic>)
-        .map((dynamic e) => Team(
-              teamName: e['name'] as String,
-              teamNumber: e['number'] as int,
-              autoGoalAverage: e['matches_aggregate']['aggregate']['avg']
-                  ['auto_balls'] as double,
-              teleInnerGoalAverage: e['matches_aggregate']['aggregate']['avg']
-                  ['teleop_inner'] as double,
-              teleOuterGoalAverage: e['matches_aggregate']['aggregate']['avg']
-                  ['teleop_outer'] as double,
-              id: teamId,
-              climbFailed: e['climbFail']['aggregate']['count'] as int,
-              climbSuccess: e['climbSuccess']['aggregate']['count'] as int,
-            ))
-        .toList();
+    return result.mapQueryResult((final Map<String, dynamic>? data) =>
+        data.mapNullable(
+            (final Map<String, dynamic> team) => (team['team'] as List<dynamic>)
+                .map((dynamic e) => Team(
+                      teamName: e['name'] as String,
+                      teamNumber: e['number'] as int,
+                      autoGoalAverage: e['matches_aggregate']['aggregate']
+                          ['avg']['auto_balls'] as double,
+                      teleInnerGoalAverage: e['matches_aggregate']['aggregate']
+                          ['avg']['teleop_inner'] as double,
+                      teleOuterGoalAverage: e['matches_aggregate']['aggregate']
+                          ['avg']['teleop_outer'] as double,
+                      id: teamId,
+                      climbFailed: e['climbFail']['aggregate']['count'] as int,
+                      climbSuccess:
+                          e['climbSuccess']['aggregate']['count'] as int,
+                    ))
+                .toList()) ??
+        []);
     //.entries.map((e) => LightTeam(e['id']);
   }
 
@@ -234,11 +229,13 @@ query MyQuery(\$team_id: Int) {
                           child: DashboardCard(
                             title: 'Game Chart',
                             // body: Container(),
-                            body: FutureBuilder(
+                            body: FutureBuilder<List<List<LineChartData>>>(
                               future: fetchMatches(compareTeamsList
-                                  .map((e) => e.number)
+                                  .map((final LightTeam e) => e.number)
                                   .toList()),
-                              builder: (context, snapshot) {
+                              builder: (final BuildContext context,
+                                  final AsyncSnapshot<List<List<LineChartData>>>
+                                      snapshot) {
                                 if (snapshot.hasError) {
                                   return Text(snapshot.error.toString());
                                 } else if (snapshot.connectionState ==
@@ -248,9 +245,8 @@ query MyQuery(\$team_id: Int) {
                                   );
                                 }
                                 if (!snapshot.hasData ||
-                                    (snapshot.data as List<List<LineChartData>>)
-                                        .isEmpty) {
-                                  return Container();
+                                    (snapshot.data?.isEmpty ?? true)) {
+                                  return Text('No Data yet :(');
                                 }
 
                                 List<LineChartData> inner = [];
@@ -260,9 +256,11 @@ query MyQuery(\$team_id: Int) {
                                 List<LineChartData> auto = [];
                                 (snapshot.data as List<List<LineChartData>>)
                                     .forEach((item) {
-                                  inner.add(item[0]);
-                                  outer.add(item[1]);
-                                  auto.add(item[2]);
+                                  if (!item.isEmpty) {
+                                    inner.add(item[0]);
+                                    outer.add(item[1]);
+                                    auto.add(item[2]);
+                                  }
                                 });
 
                                 return CarouselSlider(
@@ -283,7 +281,8 @@ query MyQuery(\$team_id: Int) {
                                               bottom: 20),
                                           child: DashboardLineChart(
                                               dataSet: inner
-                                                  .map((e) => e.points)
+                                                  .map((LineChartData e) =>
+                                                      e.points)
                                                   .toList()),
                                         ),
                                       ],
