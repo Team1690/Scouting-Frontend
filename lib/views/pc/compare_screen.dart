@@ -13,7 +13,6 @@ import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart'
 import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
-import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 // ignore: must_be_immutable
 class CompareScreen extends StatefulWidget {

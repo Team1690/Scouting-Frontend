@@ -74,17 +74,6 @@ class Scatter extends StatelessWidget {
         []);
   }
 
-  //       e['stats']['aggregate']['avg']['teleop_inner'] as double,
-  //     e['stats']['aggregate']['avg']['teleop_outer'] as double,
-  //     e['stats']['aggregate']['stddev']['teleop_inner'] as double? ??
-  //         0,
-  //     e['stats']['aggregate']['stddev']['teleop_outer'] as double? ??
-  //         0,
-  //     e['number'] as int,
-  //     e['id'] as int,
-  //     e['name'] as String))
-  // .toList()
-
   Scatter({
     required this.onHover,
   });
