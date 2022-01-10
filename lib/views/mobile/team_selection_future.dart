@@ -7,8 +7,7 @@ import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 class TeamSelectionFuture extends StatefulWidget {
   TeamSelectionFuture(
-      {Key? key, final Function(LightTeam)? onChange, required this.controller})
-      : super(key: key) {
+      {final Function(LightTeam)? onChange, required this.controller}) {
     this.onChange = onChange ?? ignore;
   }
   final TextEditingController controller;

@@ -14,8 +14,7 @@ class SubmitButton extends StatefulWidget {
     required this.vars,
     required this.mutation,
     final void Function()? resetForm,
-    final Key? key,
-  }) : super(key: key) {
+  }) {
     this.resetForm = resetForm ?? () {};
   }
 

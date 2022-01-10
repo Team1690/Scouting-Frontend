@@ -7,8 +7,7 @@ import 'package:scouting_frontend/views/pc/team_info_screen.dart';
 
 class PickList extends StatefulWidget {
   PickList(
-      {Key? key,
-      required this.uiList,
+      {required this.uiList,
       required this.screen,
       final void Function(List<PickListTeam>)? onReorder}) {
     this.onReorder = onReorder ?? ignore;

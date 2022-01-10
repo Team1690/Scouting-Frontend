@@ -6,12 +6,11 @@ import "../constants.dart";
 
 class Selector extends StatefulWidget {
   Selector({
-    final Key? key,
     required this.value,
     required this.values,
     required this.initialValue,
     final void Function(String)? onChange,
-  }) : super(key: key) {
+  }) {
     this.onChange = onChange ?? ignore;
   }
   String value;

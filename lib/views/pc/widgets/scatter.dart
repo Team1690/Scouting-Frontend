@@ -75,9 +75,8 @@ class Scatter extends StatelessWidget {
 
   Scatter({
     required this.onHover,
-    Key? key,
     this.teams,
-  }) : super(key: key);
+  });
   List<Team>? teams;
 
   final Function(Team team) onHover;

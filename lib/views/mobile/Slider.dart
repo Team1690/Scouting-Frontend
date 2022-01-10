@@ -3,13 +3,12 @@ import 'package:scouting_frontend/views/constants.dart';
 
 class PitViewSlider extends StatefulWidget {
   PitViewSlider({
-    final Key? key,
     required this.label,
     required this.divisions,
     required this.max,
     required this.min,
     final void Function(double)? onChange,
-  }) : super(key: key) {
+  }) {
     this.onChange = onChange ?? ignore;
   }
   final String label;

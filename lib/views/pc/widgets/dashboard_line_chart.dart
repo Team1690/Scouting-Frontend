@@ -8,8 +8,7 @@ class DashboardLineChart extends StatelessWidget {
   const DashboardLineChart({
     required this.dataSet,
     this.distanceFromHighest = 5,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final int distanceFromHighest;
   final List<List<double>> dataSet;

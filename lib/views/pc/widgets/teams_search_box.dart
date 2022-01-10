@@ -7,12 +7,11 @@ import 'package:scouting_frontend/net/hasura_helper.dart';
 
 class TeamsSearchBox extends StatefulWidget {
   TeamsSearchBox({
-    final Key? key,
     required final this.teams,
     required final this.onChange,
     required final this.typeAheadController,
     // @required final this.typeAheadController,
-  }) : super(key: key);
+  });
 
   final List<LightTeam> teams;
   final void Function(LightTeam) onChange;

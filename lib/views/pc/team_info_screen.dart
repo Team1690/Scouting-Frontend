@@ -9,7 +9,7 @@ import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
 
 class TeamInfoScreen extends StatefulWidget {
-  TeamInfoScreen({Key? key, this.chosenTeam}) {
+  TeamInfoScreen({this.chosenTeam}) {
     if (chosenTeam != null) {
       controller.text = chosenTeam!.number.toString();
     }

@@ -56,9 +56,8 @@ class PitViewData {
 // ignore: must_be_immutable
 class TeamInfoData extends StatefulWidget {
   TeamInfoData({
-    Key? key,
     required this.team,
-  }) : super(key: key);
+  });
 
   LightTeam team;
 

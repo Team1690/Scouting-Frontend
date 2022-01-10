@@ -13,7 +13,7 @@ import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
 
 class PitView extends StatefulWidget {
-  PitView({final Key? key}) : super(key: key);
+  PitView();
 
   @override
   State<PitView> createState() => _PitViewState();
