@@ -3,20 +3,19 @@ import 'package:graphql/client.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 
 class SubmitButton extends StatefulWidget {
   final HasuraVars vars;
   final String mutation;
-  late final void Function() resetForm;
+  final void Function() resetForm;
 
   SubmitButton({
     required this.vars,
     required this.mutation,
-    final void Function()? resetForm,
-  }) {
-    this.resetForm = resetForm ?? () {};
-  }
+    this.resetForm = empty,
+  });
 
   @override
   _SubmitButtonState createState() => _SubmitButtonState();

@@ -7,15 +7,11 @@ import 'package:scouting_frontend/views/pc/team_info_screen.dart';
 
 class PickList extends StatefulWidget {
   PickList(
-      {required this.uiList,
-      required this.screen,
-      final void Function(List<PickListTeam>)? onReorder}) {
-    this.onReorder = onReorder ?? ignore;
-  }
+      {required this.uiList, required this.screen, this.onReorder = ignore});
 
   final List<PickListTeam> uiList;
   final CurrentPickList screen;
-  late final void Function(List<PickListTeam> list) onReorder;
+  final void Function(List<PickListTeam> list) onReorder;
 
   @override
   _PickListState createState() => _PickListState();
@@ -81,25 +77,34 @@ class _PickListState extends State<PickList> {
   }
 }
 
-class PickListTeam {
-  PickListTeam(this.id, this.number, this.name, this.firstListIndex,
-      this.secondListIndex, bool available) {
-    if (id <= 0) {
-      throw ArgumentError('Invalid ID');
-    } else if (number < 0) {
-      throw ArgumentError('Invalid Team Number');
-    } else if (name == '') {
-      throw ArgumentError('Invalid Team Name');
-    }
+int validateId(final int id) =>
+    id <= 0 ? throw ArgumentError('Invalid Id') : id;
+int validateNumber(final int number) =>
+    number < 0 ? throw ArgumentError('Invalid Team Number') : number;
+String validateName(final String name) =>
+    name == "" ? throw ArgumentError("Invalid Team Name") : name;
 
-    controller = ValueNotifier(available);
-  }
+class PickListTeam {
+  PickListTeam(final int id, final int number, final String name,
+      final int firstListIndex, final int secondListIndex, final bool available)
+      : this.controller(
+          validateId(id),
+          validateNumber(number),
+          validateName(name),
+          firstListIndex,
+          secondListIndex,
+          ValueNotifier<bool>(available),
+        );
+
+  PickListTeam.controller(this.id, this.number, this.name, this.firstListIndex,
+      this.secondListIndex, this.controller) {}
+
   final int id;
   final int number;
   final String name;
   int firstListIndex;
   int secondListIndex;
-  late ValueNotifier<bool> controller;
+  final ValueNotifier<bool> controller;
 
   @override
   String toString() {

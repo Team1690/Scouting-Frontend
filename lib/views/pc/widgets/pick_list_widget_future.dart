@@ -6,14 +6,10 @@ import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
 import 'package:scouting_frontend/views/pc/widgets/pick_list_widget.dart';
 
 class PickListFuture extends StatefulWidget {
-  PickListFuture(
-      {required this.screen,
-      final void Function(List<PickListTeam>)? onReorder}) {
-    this.onReorder = onReorder ?? ignore;
-  }
+  PickListFuture({required this.screen, this.onReorder = ignore});
 
   final CurrentPickList screen;
-  late final void Function(List<PickListTeam> list) onReorder;
+  final void Function(List<PickListTeam> list) onReorder;
   @override
   _PickListFutureState createState() => _PickListFutureState();
 }

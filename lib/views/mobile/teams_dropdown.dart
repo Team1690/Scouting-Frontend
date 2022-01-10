@@ -7,13 +7,11 @@ import 'package:scouting_frontend/views/constants.dart';
 
 class TeamsDropdown extends StatefulWidget {
   TeamsDropdown({
-    final void Function(int)? onChange,
     required final this.typeAheadController,
-  }) {
-    this.onChange = onChange ?? ignore;
-  }
+    this.onChange = ignore,
+  });
 
-  late final Function(int) onChange;
+  final void Function(int) onChange;
   final TextEditingController typeAheadController;
 
   @override

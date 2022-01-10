@@ -5,13 +5,11 @@ import 'package:scouting_frontend/views/constants.dart';
 
 class MatchTextBox extends StatefulWidget {
   MatchTextBox({
-    final void Function(int)? onChange,
+    this.onChange = ignore,
     required this.controller,
-  }) {
-    this.onChange = onChange ?? ignore;
-  }
+  }) {}
 
-  late final void Function(int) onChange;
+  final void Function(int) onChange;
   final TextEditingController controller;
 
   @override

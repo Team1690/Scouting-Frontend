@@ -27,7 +27,6 @@ class LineChartData {
 
 class _CompareScreenState extends State<CompareScreen> {
   TextEditingController controller = TextEditingController();
-  late Team chosenTeam;
   List<LightTeam> compareTeamsList = [];
   // List tables;
 

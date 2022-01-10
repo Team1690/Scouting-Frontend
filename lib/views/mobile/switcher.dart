@@ -5,7 +5,7 @@ import 'package:scouting_frontend/views/constants.dart';
 class Switcher extends StatefulWidget {
   final List<String> labels;
   final List<Color> colors;
-  late final Function(int) onChange;
+  final Function(int) onChange;
   final double height;
   int? selected;
 
@@ -13,10 +13,8 @@ class Switcher extends StatefulWidget {
     required final this.labels,
     required final this.colors,
     final this.height = 70,
-    final Function(int)? onChange,
-  }) {
-    this.onChange = onChange ?? ignore;
-  }
+    this.onChange = ignore,
+  });
   @override
   State<Switcher> createState() => _SwitcherState();
 }

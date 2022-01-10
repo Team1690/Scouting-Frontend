@@ -1,5 +1,3 @@
-// ignore_for_file: always_specify_types
-
 import "dart:io";
 
 import "package:file_picker/file_picker.dart";
@@ -11,21 +9,20 @@ import "package:graphql/client.dart";
 import "package:progress_state_button/iconed_button.dart";
 import "package:progress_state_button/progress_button.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
+import 'package:scouting_frontend/views/constants.dart';
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class FireBaseSubmitButton extends StatefulWidget {
   FireBaseSubmitButton({
     required this.vars,
     required this.mutation,
-    required this.result,
-    final void Function()? resetForm,
-  }) {
-    this.resetForm = resetForm ?? () {};
-  }
+    required this.getResult,
+    this.resetForm = empty,
+  }) {}
   final HasuraVars vars;
   final String mutation;
-  late final void Function() resetForm;
-  final FilePickerResult? Function() result;
+  final void Function() resetForm;
+  final FilePickerResult? Function() getResult;
 
   @override
   State<FireBaseSubmitButton> createState() => _FireBaseSubmitButtonState();
@@ -91,7 +88,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
         }
         uploadResult(
           widget.vars.toHasuraVars()["team_id"] as int?,
-          widget.result(),
+          widget.getResult(),
         );
       },
     );
@@ -118,16 +115,12 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
     final Reference ref = FirebaseStorage.instance
         .ref("/files/$teamid.${result.files.first.extension}");
 
-    final UploadTask? firebaseTask = kIsWeb
+    final UploadTask firebaseTask = kIsWeb
         ? ref.putData(result.files.first.bytes!)
         : Platform.isAndroid
             ? ref.putFile(File(result.files.first.path!))
-            : null;
-
-    if (firebaseTask == null) {
-      //this error will only happen if you run the app on a platform which is not web or android and i dont think you can do that
-      throw PlatformException(code: "");
-    }
+            : throw PlatformException(
+                code: "This error shouldn't happen but better safe than sorry");
 
     bool running = true;
 

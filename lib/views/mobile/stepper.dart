@@ -11,10 +11,8 @@ class CustomStepper extends StatefulWidget {
     required this.longPressStepValue,
     required this.iconSize,
     required this.value,
-    final void Function(int)? onChanged,
-  }) {
-    this.onChanged = onChanged ?? ignore;
-  }
+    this.onChanged = ignore,
+  });
 
   final int lowerLimit;
   final int upperLimit;
@@ -22,7 +20,7 @@ class CustomStepper extends StatefulWidget {
   final int longPressStepValue;
   final double iconSize;
   int value;
-  late final void Function(int) onChanged;
+  final void Function(int) onChanged;
 
   @override
   _CustomStepperState createState() => _CustomStepperState();

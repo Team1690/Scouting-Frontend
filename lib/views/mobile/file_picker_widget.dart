@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
@@ -8,13 +6,11 @@ import "package:scouting_frontend/views/constants.dart";
 class FilePickerWidget extends StatefulWidget {
   FilePickerWidget({
     required this.controller,
-    final void Function(FilePickerResult?)? onImagePicked,
-  }) {
-    this.onImagePicked = onImagePicked ?? ignore;
-  }
+    this.onImagePicked = ignore,
+  }) {}
   FilePickerResult? result;
   final ValueNotifier<bool> controller;
-  late final void Function(FilePickerResult?) onImagePicked;
+  final void Function(FilePickerResult) onImagePicked;
 
   @override
   _FilePickerWidgetState createState() => _FilePickerWidgetState();
@@ -33,7 +29,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
                   .pickFiles(type: FileType.image, allowMultiple: false);
               if (widget.result == null) return;
               widget.controller.value = true;
-              widget.onImagePicked(widget.result);
+              if (widget.result != null) widget.onImagePicked(widget.result!);
             },
             child: Row(
               mainAxisSize: MainAxisSize.min,
