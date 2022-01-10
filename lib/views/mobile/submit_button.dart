@@ -8,14 +8,16 @@ import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
 class SubmitButton extends StatefulWidget {
   final HasuraVars vars;
   final String mutation;
-  final void Function() resetForm;
+  late final void Function() resetForm;
 
-  const SubmitButton(
-      {required this.vars,
-      required this.mutation,
-      required this.resetForm,
-      Key? key})
-      : super(key: key);
+  SubmitButton({
+    required this.vars,
+    required this.mutation,
+    final void Function()? resetForm,
+    final Key? key,
+  }) : super(key: key) {
+    this.resetForm = resetForm ?? () {};
+  }
 
   @override
   _SubmitButtonState createState() => _SubmitButtonState();

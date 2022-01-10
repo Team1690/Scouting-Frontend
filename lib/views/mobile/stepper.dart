@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/constants.dart';
 
 // TODO taun shipur
 class CustomStepper extends StatefulWidget {
@@ -9,8 +11,10 @@ class CustomStepper extends StatefulWidget {
     required this.longPressStepValue,
     required this.iconSize,
     required this.value,
-    required this.onChanged,
-  });
+    final void Function(int)? onChanged,
+  }) {
+    this.onChanged = onChanged ?? ignore;
+  }
 
   final int lowerLimit;
   final int upperLimit;
@@ -18,7 +22,7 @@ class CustomStepper extends StatefulWidget {
   final int longPressStepValue;
   final double iconSize;
   int value;
-  final void Function(int)? onChanged;
+  late final void Function(int) onChanged;
 
   @override
   _CustomStepperState createState() => _CustomStepperState();
@@ -26,7 +30,7 @@ class CustomStepper extends StatefulWidget {
 
 class _CustomStepperState extends State<CustomStepper> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -39,7 +43,7 @@ class _CustomStepperState extends State<CustomStepper> {
                   ? widget.lowerLimit
                   : widget.value -= widget.stepValue;
             });
-            widget.onChanged?.call(widget.value);
+            widget.onChanged(widget.value);
           },
           onLongPress: () {
             setState(() {
@@ -48,7 +52,7 @@ class _CustomStepperState extends State<CustomStepper> {
                       ? widget.lowerLimit
                       : widget.value -= widget.longPressStepValue;
             });
-            widget.onChanged?.call(widget.value);
+            widget.onChanged(widget.value);
           },
         ),
         Container(
@@ -70,7 +74,7 @@ class _CustomStepperState extends State<CustomStepper> {
                   ? widget.upperLimit
                   : widget.value += widget.stepValue;
             });
-            widget.onChanged?.call(widget.value);
+            widget.onChanged(widget.value);
           },
           onLongPress: () {
             setState(() {
@@ -79,7 +83,7 @@ class _CustomStepperState extends State<CustomStepper> {
                       ? widget.upperLimit
                       : widget.value += widget.longPressStepValue;
             });
-            widget.onChanged?.call(widget.value);
+            widget.onChanged(widget.value);
           },
         ),
       ],

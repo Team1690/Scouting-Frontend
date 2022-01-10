@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/constants.dart';
 
 class Switcher extends StatefulWidget {
   final List<String> labels;
   final List<Color> colors;
-  final Function(int)? onChange;
+  late final Function(int) onChange;
   final double height;
   int? selected;
 
@@ -11,8 +13,10 @@ class Switcher extends StatefulWidget {
     required final this.labels,
     required final this.colors,
     final this.height = 70,
-    final this.onChange,
-  });
+    final Function(int)? onChange,
+  }) {
+    this.onChange = onChange ?? ignore;
+  }
   @override
   State<Switcher> createState() => _SwitcherState();
 }
@@ -60,7 +64,7 @@ class _SwitcherState extends State<Switcher> {
                   shape: getBorder(i),
                   onPressed: () => setState(() {
                     i = i == widget.selected ? -1 : i;
-                    widget.onChange?.call(i);
+                    widget.onChange(i);
                     widget.selected = i;
                   }),
                 ),

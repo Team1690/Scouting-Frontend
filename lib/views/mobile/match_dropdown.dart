@@ -1,11 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/constants.dart';
 
 class MatchTextBox extends StatefulWidget {
-  MatchTextBox({Key? key, required this.onChange, required this.controller})
-      : super(key: key);
+  MatchTextBox({
+    final Key? key,
+    final void Function(int)? onChange,
+    required this.controller,
+  }) : super(key: key) {
+    this.onChange = onChange ?? ignore;
+  }
 
-  final Function(int) onChange;
+  late final void Function(int) onChange;
   final TextEditingController controller;
 
   @override
@@ -16,15 +23,15 @@ class _MatchTextBoxState extends State<MatchTextBox> {
   bool _validate = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return TextField(
       controller: widget.controller,
       keyboardType: TextInputType.number,
-      onChanged: (value) => {
-        setState(() => _validate = value.isEmpty),
+      onChanged: (final String value) {
+        setState(() => _validate = value.isEmpty);
         value.isNotEmpty
             ? widget.onChange(int.parse(value))
-            : widget.onChange(100),
+            : widget.onChange(100);
       },
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly
@@ -32,8 +39,8 @@ class _MatchTextBoxState extends State<MatchTextBox> {
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.tag),
         border: OutlineInputBorder(),
-        hintText: 'Enter Match Number',
-        errorText: _validate ? 'Value can\'t be empty' : null,
+        hintText: "Enter Match Number",
+        errorText: _validate ? "Value can\'t be empty" : null,
       ),
     );
   }

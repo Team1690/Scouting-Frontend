@@ -3,6 +3,15 @@ import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class Match implements HasuraVars {
+  Match({
+    this.teamId = 0,
+    this.teamNumber = 0,
+    this.matchNumber = 0,
+    this.autoUpperGoal = 0,
+    this.teleOuter = 0,
+    this.teleInner = 0,
+    this.climbStatus = 1,
+  });
   int teamNumber;
   int matchNumber;
 
@@ -13,16 +22,6 @@ class Match implements HasuraVars {
   int teleInner = 0;
 
   int climbStatus;
-
-  Match({
-    this.teamId = 0,
-    this.teamNumber = 0,
-    this.matchNumber = 0,
-    this.autoUpperGoal = 0,
-    this.teleOuter = 0,
-    this.teleInner = 0,
-    this.climbStatus = 1,
-  });
 
   @override
   Map<String, dynamic> toHasuraVars() {
@@ -42,7 +41,7 @@ class Match implements HasuraVars {
 
 extension ClimbHelper on Match {
   static bool querySuccess = false;
-  static Map<String, int> _ids = {};
+  static Map<String, int> _ids = <String, int>{};
 
   static int get successId => _ids["succeeded"]!;
 
@@ -52,7 +51,7 @@ extension ClimbHelper on Match {
 
   static int climbId(final int i) {
     if (!querySuccess) {
-      throw GraphQLError(message: "climb id query didnt succeed");
+      throw Exception("climb id query didnt succeed");
     }
     switch (i) {
       case 0:

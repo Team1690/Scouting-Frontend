@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import "package:graphql/client.dart";
 
 GraphQLClient getClient() {
@@ -19,10 +17,6 @@ extension MapNullable<A> on A? {
 }
 
 extension MapQueryResult on QueryResult {
-  T mapQueryResult<T>(final T Function(Map<String, dynamic>?) f) =>
-      hasException ? throw exception! : f(data);
+  T mapQueryResult<T>(final T Function(Map<String, dynamic>) f) =>
+      hasException ? throw exception! : f(data!);
 }
-
-void ignore<T>(final T _) {}
-
-T identity<T>(final T x) => x;

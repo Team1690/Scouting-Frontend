@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
 import 'package:scouting_frontend/views/pc/widgets/pick_list_widget.dart';
 
 class PickListFuture extends StatefulWidget {
-  const PickListFuture(
-      {Key? key, required this.screen, required this.onReorder})
-      : super(key: key);
+  PickListFuture(
+      {Key? key,
+      required this.screen,
+      final void Function(List<PickListTeam>)? onReorder})
+      : super(key: key) {
+    this.onReorder = onReorder ?? ignore;
+  }
 
   final CurrentPickList screen;
-  final void Function(List<PickListTeam> list) onReorder;
+  late final void Function(List<PickListTeam> list) onReorder;
   @override
   _PickListFutureState createState() => _PickListFutureState();
 }

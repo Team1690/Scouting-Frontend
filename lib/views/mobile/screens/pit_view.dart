@@ -1,39 +1,44 @@
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
-import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/mobile/file_picker_widget.dart';
-import 'package:scouting_frontend/views/mobile/firebase_submit_button.dart';
-import 'package:scouting_frontend/views/mobile/pit_vars.dart';
-import 'package:scouting_frontend/views/mobile/slider.dart';
-import 'package:scouting_frontend/views/mobile/selector.dart';
-import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
-import 'package:scouting_frontend/views/mobile/counter.dart';
-import 'package:scouting_frontend/views/mobile/section_divider.dart';
-import 'package:scouting_frontend/views/mobile/switcher.dart';
+import "package:file_picker/file_picker.dart";
+import "package:flutter/material.dart";
+import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/file_picker_widget.dart";
+import "package:scouting_frontend/views/mobile/firebase_submit_button.dart";
+import "package:scouting_frontend/views/mobile/pit_vars.dart";
+import "package:scouting_frontend/views/mobile/slider.dart";
+import "package:scouting_frontend/views/mobile/selector.dart";
+import "package:scouting_frontend/views/mobile/team_selection_future.dart";
+import "package:scouting_frontend/views/mobile/counter.dart";
+import "package:scouting_frontend/views/mobile/section_divider.dart";
+import "package:scouting_frontend/views/mobile/switcher.dart";
 
-class PitView extends StatelessWidget {
-  PitView({Key? key}) : super(key: key);
+class PitView extends StatefulWidget {
+  PitView({final Key? key}) : super(key: key);
+
+  @override
+  State<PitView> createState() => _PitViewState();
+}
+
+class _PitViewState extends State<PitView> {
   LightTeam? team;
 
-  final List<String> driveTrains = [
-    'Choose a DriveTrain',
-    'Westcoast',
-    'Kit Chassis',
-    'Custom Tank',
-    'Swerve',
-    'Mecanum/H',
-    'Other',
+  final List<String> driveTrains = <String>[
+    "Choose a DriveTrain",
+    "Westcoast",
+    "Kit Chassis",
+    "Custom Tank",
+    "Swerve",
+    "Mecanum/H",
+    "Other",
   ];
 
-  final List<String> driveMotors = [
-    'Choose a Drive Motor',
-    'Falcon',
-    'Neo',
-    'CIM',
-    'Mini CIM',
-    'Other',
+  final List<String> driveMotors = <String>[
+    "Choose a Drive Motor",
+    "Falcon",
+    "Neo",
+    "CIM",
+    "Mini CIM",
+    "Other",
   ];
 
   FilePickerResult? result;
@@ -41,36 +46,40 @@ class PitView extends StatelessWidget {
   PitVars vars = PitVars();
 
   final TextEditingController wheelTypeController = TextEditingController();
+
   final TextEditingController teamSelectionController = TextEditingController();
+
   final TextEditingController notesController = TextEditingController();
-  final ValueNotifier<bool> advancedSwitchController = ValueNotifier(false);
 
-  void resetFrame(BuildContext context) {
-    vars.reset();
+  final ValueNotifier<bool> advancedSwitchController =
+      ValueNotifier<bool>(false);
 
-    if (!driveTrains.contains(PitVars.driveTrainInitialValue)) {
-      driveTrains.add(PitVars.driveTrainInitialValue);
-    }
+  void resetFrame(final BuildContext context) {
+    setState(() {
+      vars.reset();
 
-    if (!driveMotors.contains(PitVars.driveMotorInitialValue)) {
-      driveMotors.add(PitVars.driveMotorInitialValue);
-    }
+      if (!driveTrains.contains(PitVars.driveTrainInitialValue)) {
+        driveTrains.add(PitVars.driveTrainInitialValue);
+      }
 
-    notesController.clear();
-    wheelTypeController.clear();
-    teamSelectionController.clear();
-    result = null;
-    advancedSwitchController.value = false;
+      if (!driveMotors.contains(PitVars.driveMotorInitialValue)) {
+        driveMotors.add(PitVars.driveMotorInitialValue);
+      }
 
-    (context as Element).reassemble();
+      notesController.clear();
+      wheelTypeController.clear();
+      teamSelectionController.clear();
+      result = null;
+      advancedSwitchController.value = false;
+    });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Pit'),
+        title: Text("Pit"),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -79,20 +88,20 @@ class PitView extends StatelessWidget {
             vertical: 10,
           ),
           child: Column(
-            children: [
+            children: <Widget>[
               TeamSelectionFuture(
                 controller: teamSelectionController,
-                onChange: (lightTeam) {
+                onChange: (final LightTeam lightTeam) {
                   vars.teamId = lightTeam.id;
                 },
               ),
-              SectionDivider(label: 'Drive Train'),
+              SectionDivider(label: "Drive Train"),
               Selector(
                 value: vars.driveTrainType,
                 values: driveTrains,
                 initialValue: PitVars.driveTrainInitialValue,
-                onChange: (newValue) {
-                  vars.driveTrainType = newValue ?? vars.driveTrainType;
+                onChange: (final String newValue) {
+                  vars.driveTrainType = newValue;
                 },
               ),
               SizedBox(
@@ -102,22 +111,22 @@ class PitView extends StatelessWidget {
                 value: vars.driveMotorType,
                 values: driveMotors,
                 initialValue: PitVars.driveMotorInitialValue,
-                onChange: (newValue) {
-                  vars.driveMotorType = newValue ?? vars.driveMotorType;
+                onChange: (final String newValue) {
+                  vars.driveMotorType = newValue;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               Counter(
-                label: 'Drive Motors',
+                label: "Drive Motors",
                 icon: Icons.adjust,
                 count: vars.driveMotorAmount,
                 upperLimit: 10,
                 lowerLimit: 2,
                 stepValue: 2,
                 longPressedValue: 4,
-                onChange: (newValue) {
+                onChange: (final int newValue) {
                   vars.driveMotorAmount = newValue;
                 },
               ),
@@ -125,15 +134,15 @@ class PitView extends StatelessWidget {
                 height: 20,
               ),
               Switcher(
-                labels: [
-                  'Shifter',
-                  'No shifter',
+                labels: <String>[
+                  "Shifter",
+                  "No shifter",
                 ],
-                colors: [
+                colors: <Color>[
                   Colors.white,
                   Colors.white,
                 ],
-                onChange: (newValue) {
+                onChange: (final int newValue) {
                   vars.shifter = newValue == -1
                       ? null
                       : newValue == 0
@@ -145,15 +154,15 @@ class PitView extends StatelessWidget {
                 height: 20,
               ),
               Switcher(
-                labels: [
-                  'Purchased GearBox',
-                  'Custom GearBox',
+                labels: <String>[
+                  "Purchased GearBox",
+                  "Custom GearBox",
                 ],
-                colors: [
+                colors: <Color>[
                   Colors.white,
                   Colors.white,
                 ],
-                onChange: (newValue) {
+                onChange: (final int newValue) {
                   vars.gearbox = newValue == -1
                       ? null
                       : newValue == 0
@@ -166,21 +175,25 @@ class PitView extends StatelessWidget {
               ),
               TextField(
                 controller: wheelTypeController,
-                onChanged: (value) {
+                onChanged: (final String value) {
                   vars.driveWheelType = value;
                 },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.fromLTRB(
-                      10, defaultPadding, 10, defaultPadding),
-                  hintText: 'Drive Wheel type',
+                    10,
+                    defaultPadding,
+                    10,
+                    defaultPadding,
+                  ),
+                  hintText: "Drive Wheel type",
                   hintStyle: TextStyle(fontSize: 14),
                 ),
               ),
-              SectionDivider(label: 'General Robot Reliability'),
+              SectionDivider(label: "General Robot Reliability"),
               PitViewSlider(
-                label: 'Drive Train Reliablity:',
+                label: "Drive Train Reliablity:",
                 value: vars.driveTrainReliability,
-                onChange: (newVal) {
+                onChange: (final double newVal) {
                   vars.driveTrainReliability = newVal;
                 },
                 divisions: 4,
@@ -191,12 +204,12 @@ class PitView extends StatelessWidget {
                 height: 8,
               ),
               PitViewSlider(
-                label: 'Electronics Reliability',
+                label: "Electronics Reliability",
                 value: vars.electronicsReliability,
                 divisions: 4,
                 min: 1,
                 max: 5,
-                onChange: (newValue) {
+                onChange: (final double newValue) {
                   vars.electronicsReliability = newValue;
                 },
               ),
@@ -204,28 +217,29 @@ class PitView extends StatelessWidget {
                 height: 8,
               ),
               PitViewSlider(
-                label: 'Robot Reliability',
+                label: "Robot Reliability",
                 value: vars.robotReliability,
                 divisions: 9,
                 max: 10,
                 min: 1,
-                onChange: (newValue) {
+                onChange: (final double newValue) {
                   vars.robotReliability = newValue;
                 },
               ),
               SizedBox(
                 height: 8,
               ),
-              SectionDivider(label: 'Robot Image'),
+              SectionDivider(label: "Robot Image"),
               FilePickerWidget(
                 controller: advancedSwitchController,
-                onImagePicked: (newResult) => result = newResult,
+                onImagePicked: (final FilePickerResult? newResult) =>
+                    result = newResult,
               ),
-              SectionDivider(label: 'Notes'),
+              SectionDivider(label: "Notes"),
               TextField(
                 textDirection: TextDirection.rtl,
                 controller: notesController,
-                onChanged: (text) {
+                onChanged: (final String text) {
                   vars.notes = text;
                 },
                 style: TextStyle(color: Colors.white),

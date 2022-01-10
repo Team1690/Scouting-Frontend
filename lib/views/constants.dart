@@ -1,18 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import "package:flutter/material.dart";
+import "package:google_fonts/google_fonts.dart";
 
-const primaryColor = Color(0xFF2697FF);
-const secondaryColor = Color(0xFF2A2D3E);
-const bgColor = Color(0xFF212332);
-const primaryWhite = Colors.white;
-const secondaryWhite = Colors.white54;
+const Color primaryColor = Color(0xFF2697FF);
+const Color secondaryColor = Color(0xFF2A2D3E);
+const Color bgColor = Color(0xFF212332);
+const Color primaryWhite = Colors.white;
+const Color secondaryWhite = Colors.white54;
 
-const defaultPadding = 20.0;
+const double defaultPadding = 20.0;
 
-const defaultBorderRadius = BorderRadius.all(Radius.circular(10));
+const BorderRadius defaultBorderRadius = BorderRadius.all(Radius.circular(10));
 
-const colors = [
+const List<Color> colors = <Color>[
   const Color(0xff19B7E9),
   const Color(0xff02d39a),
   const Color(0xffffb443),
@@ -48,4 +47,5 @@ bool isPC(final BuildContext context) {
   }
 }
 
-final T Function<T>(T) ignore = <T>(final T x) => x;
+T identity<T>(final T x) => x;
+void ignore<T>(final T _) {}

@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: must_be_immutable
 
-import '../constants.dart';
+import "package:flutter/material.dart";
+
+import "../constants.dart";
 
 class Selector extends StatefulWidget {
   Selector({
@@ -8,12 +10,14 @@ class Selector extends StatefulWidget {
     required this.value,
     required this.values,
     required this.initialValue,
-    required this.onChange,
-  }) : super(key: key) {}
+    final void Function(String)? onChange,
+  }) : super(key: key) {
+    this.onChange = onChange ?? ignore;
+  }
   String value;
   final List<String> values;
   final String initialValue;
-  final void Function(String) onChange;
+  late final void Function(String) onChange;
   @override
   State<Selector> createState() => _SelectorState();
 }
@@ -30,7 +34,7 @@ class _SelectorState extends State<Selector> {
         height: 2,
         color: primaryColor,
       ),
-      onChanged: (String? newValue) {
+      onChanged: (final String? newValue) {
         setState(() {
           if (widget.values.contains(widget.initialValue) &&
               newValue != widget.initialValue) {
@@ -40,7 +44,7 @@ class _SelectorState extends State<Selector> {
           widget.onChange(widget.value);
         });
       },
-      items: widget.values.map<DropdownMenuItem<String>>((String value) {
+      items: widget.values.map<DropdownMenuItem<String>>((final String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(

@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class SectionDivider extends StatelessWidget {
-  final String label;
-
   SectionDivider({required final this.label});
 
+  final String label;
+
   @override
-  Widget build(BuildContext context) {
-    final line = horizontalLine();
+  Widget build(final BuildContext context) {
+    final Expanded line = horizontalLine();
 
     return Row(
       children: <Widget>[

@@ -1,42 +1,43 @@
-import 'package:flutter/material.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
+import "package:flutter/material.dart";
+import 'package:scouting_frontend/views/constants.dart';
 
 class PitViewSlider extends StatefulWidget {
   PitViewSlider({
-    Key? key,
+    final Key? key,
     required this.label,
-    required this.value,
     required this.divisions,
     required this.max,
     required this.min,
-    this.onChange,
-  }) : super(key: key);
-  double value;
+    final void Function(double)? onChange,
+  }) : super(key: key) {
+    this.onChange = onChange ?? ignore;
+  }
   final String label;
-  void Function(double)? onChange;
   final double min;
   final double max;
   final int divisions;
+  late final void Function(double) onChange;
   @override
   _PitViewSliderState createState() => _PitViewSliderState();
 }
 
 class _PitViewSliderState extends State<PitViewSlider> {
+  late double value = widget.min;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: <Widget>[
         Text(widget.label),
         Slider(
           min: widget.min,
           max: widget.max,
           divisions: widget.divisions,
-          value: widget.value,
-          label: widget.value.round().toString(),
-          onChanged: (newVal) {
-            widget.onChange?.call(newVal);
-            setState(() => widget.value = newVal);
+          value: value,
+          label: value.round().toString(),
+          onChanged: (final double newVal) {
+            widget.onChange(newVal);
+            setState(() => value = newVal);
           },
         )
       ],

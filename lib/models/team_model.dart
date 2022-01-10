@@ -17,6 +17,23 @@ class LightTeam {
 }
 
 class Team {
+  Team({
+    required this.id,
+    required this.teamNumber,
+    required this.teamName,
+
+    //NEW ANALYTICS!!!!
+    this.matchesPlayed = 0,
+    this.teleInnerGoalAverage = 0,
+    this.teleOuterGoalAverage = 0,
+    this.autoGoalAverage = 0,
+    this.averageShots = 0,
+    this.totalShotsSD = 0,
+    this.climbFailed = 0,
+    this.climbSuccess = 0,
+    this.msg = const <String>[],
+    this.spider = const <int>[0, 0, 0, 0],
+  });
   final int id;
   final int teamNumber;
   final String teamName;
@@ -35,22 +52,4 @@ class Team {
   final List<String> msg;
   final int averageShots;
   final List<int> spider;
-
-  Team({
-    required this.id,
-    required this.teamNumber,
-    required this.teamName,
-
-    //NEW ANALYTICS!!!!
-    this.matchesPlayed = 0,
-    this.teleInnerGoalAverage = 0,
-    this.teleOuterGoalAverage = 0,
-    this.autoGoalAverage = 0,
-    this.averageShots = 0,
-    this.totalShotsSD = 0,
-    this.climbFailed = 0,
-    this.climbSuccess = 0,
-    this.msg = const <String>[],
-    this.spider = const <int>[0, 0, 0, 0],
-  });
 }

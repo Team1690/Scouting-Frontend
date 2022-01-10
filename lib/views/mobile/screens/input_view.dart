@@ -9,21 +9,28 @@ import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
 
-class UserInput extends StatelessWidget {
+class UserInput extends StatefulWidget {
+  @override
+  State<UserInput> createState() => _UserInputState();
+}
+
+class _UserInputState extends State<UserInput> {
   final TextEditingController matchNumberController = TextEditingController();
 
   final TextEditingController teamNumberController = TextEditingController();
+
   Match match = Match();
-  int selectedClimbIndex = -1; // -1 means nothing
 
+  int selectedClimbIndex = -1;
+  // -1 means nothing
   void clearForm(final BuildContext context) {
-    match = new Match();
-    selectedClimbIndex = -1;
+    setState(() {
+      match = new Match();
+      selectedClimbIndex = -1;
 
-    matchNumberController.clear();
-    teamNumberController.clear();
-
-    (context as Element).reassemble();
+      matchNumberController.clear();
+      teamNumberController.clear();
+    });
   }
 
   @override

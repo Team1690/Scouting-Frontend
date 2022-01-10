@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:scouting_frontend/models/team_model.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/constants.dart';
 
 class TeamsDropdown extends StatefulWidget {
   TeamsDropdown({
     final Key? key,
-    required final this.onChange,
+    final void Function(int)? onChange,
     required final this.typeAheadController,
-  }) : super(key: key);
+  }) : super(key: key) {
+    this.onChange = onChange ?? ignore;
+  }
 
-  final Function(int)? onChange;
+  late final Function(int) onChange;
   final TextEditingController typeAheadController;
 
   @override
@@ -33,8 +37,7 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
               .map<String>((team) => team.teamNumber.toString())
               .contains(value);
 
-          if (!isValueEmpty && isValueInList)
-            widget.onChange?.call(int.parse(value));
+          if (!isValueEmpty && isValueInList) widget.onChange(int.parse(value));
         }),
         controller: widget.typeAheadController,
         inputFormatters: <TextInputFormatter>[
@@ -65,7 +68,7 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
       ),
       onSuggestionSelected: (final Team suggestion) {
         widget.typeAheadController.text = suggestion.teamNumber.toString();
-        widget.onChange?.call(suggestion.teamNumber);
+        widget.onChange(suggestion.teamNumber);
 
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()

@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
+import "package:scouting_frontend/models/team_model.dart";
 
-import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/mobile/specific_vars.dart';
-import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
-import 'package:scouting_frontend/views/mobile/submit_button.dart';
+import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/specific_vars.dart";
+import "package:scouting_frontend/views/mobile/team_selection_future.dart";
+import "package:scouting_frontend/views/mobile/submit_button.dart";
 
 class Specific extends StatefulWidget {
   @override
@@ -16,11 +17,11 @@ class _SpecificState extends State<Specific> {
   final SpecificVars vars = SpecificVars();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Specific'),
+        title: Text("Specific"),
       ),
       body: Padding(
         padding: EdgeInsets.all(14),
@@ -29,7 +30,7 @@ class _SpecificState extends State<Specific> {
             children: <Widget>[
               Padding(padding: EdgeInsets.all(15)),
               TeamSelectionFuture(
-                onChange: (team) {
+                onChange: (final LightTeam team) {
                   vars.teamId = team.id;
                 },
                 controller: teamSelectionController,
@@ -38,7 +39,7 @@ class _SpecificState extends State<Specific> {
               TextField(
                 textDirection: TextDirection.rtl,
                 controller: messageController,
-                onChanged: (text) {
+                onChanged: (final String text) {
                   vars.message = text;
                 },
                 style: TextStyle(color: Colors.white),
