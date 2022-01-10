@@ -59,34 +59,21 @@ class _PickListFutureState extends State<PickListFuture> {
 }
 
     """;
-    final result = await client.query(QueryOptions(document: gql(query)));
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
 
-    result.mapQueryResult((data) => data.mapNullable((pickListTeams) =>
-        (pickListTeams['team'] as List<dynamic>)
-            .map((dynamic e) => PickListTeam(
-                e['id'] as int,
-                e['number'] as int,
-                e['name'] as String,
-                e['first_picklist_index'] as int,
-                e['second_picklist_index'] as int,
-                e['taken'] as bool))
-            .toList()));
-
-    if (result.hasException) {
-      throw Exception('Grapgql error ${result.exception}');
-    }
-    if (result.data == null) {
-      return [];
-    }
-    List<PickListTeam> teams = (result.data!["team"] as List<dynamic>)
-        .map<PickListTeam>((final dynamic e) => PickListTeam(
-            e['id'] as int,
-            e['number'] as int,
-            e['name'] as String,
-            e['first_picklist_index'] as int,
-            e['second_picklist_index'] as int,
-            e['taken'] as bool))
-        .toList();
+    List<PickListTeam> teams = result.mapQueryResult((data) =>
+        data.mapNullable((pickListTeams) =>
+            (pickListTeams['team'] as List<dynamic>)
+                .map((dynamic e) => PickListTeam(
+                    e['id'] as int,
+                    e['number'] as int,
+                    e['name'] as String,
+                    e['first_picklist_index'] as int,
+                    e['second_picklist_index'] as int,
+                    e['taken'] as bool))
+                .toList()) ??
+        []);
 
     teams.sort((left, right) =>
         widget.screen.getIndex(left).compareTo(widget.screen.getIndex(right)));

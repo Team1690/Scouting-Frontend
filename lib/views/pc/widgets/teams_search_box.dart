@@ -19,10 +19,10 @@ class TeamsSearchBox extends StatefulWidget {
   // final TextEditingController typeAheadController;
 
   @override
-  TeamsSearchBoxState createState() => TeamsSearchBoxState();
+  _TeamsSearchBoxState createState() => _TeamsSearchBoxState();
 }
 
-class TeamsSearchBoxState extends State<TeamsSearchBox> {
+class _TeamsSearchBoxState extends State<TeamsSearchBox> {
   bool isValueEmpty = false;
   bool isValueInList = true;
 
