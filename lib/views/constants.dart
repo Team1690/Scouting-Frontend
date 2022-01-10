@@ -42,10 +42,11 @@ bool isPC(final BuildContext context) {
     case TargetPlatform.windows:
     case TargetPlatform.macOS:
     case TargetPlatform.linux:
-    default:
+    case TargetPlatform.fuchsia:
       return true;
   }
 }
 
 T identity<T>(final T x) => x;
 void ignore<T>(final T _) {}
+void empty() {}

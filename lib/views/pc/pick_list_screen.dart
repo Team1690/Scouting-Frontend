@@ -14,10 +14,11 @@ class PickListScreen extends StatefulWidget {
 }
 
 class _PickListScreenState extends State<PickListScreen> {
-  late List<PickListTeam> teams;
+  List<PickListTeam> teams = <PickListTeam>[];
+
   CurrentPickList currentScreen = CurrentPickList.FIRST;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return DashboardScaffold(
         body: Padding(
       padding: EdgeInsets.all(defaultPadding),
@@ -63,7 +64,8 @@ class _PickListScreenState extends State<PickListScreen> {
     ));
     final client = getClient();
     List<PickListTeam> teams = List.from(this.teams);
-    final String query = """
+    final String query =
+        """
   mutation M(\$objects: [team_insert_input!]!) {
   insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index]}) {
     affected_rows
