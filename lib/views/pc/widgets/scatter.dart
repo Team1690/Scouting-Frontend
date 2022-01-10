@@ -31,7 +31,7 @@ class Scatter extends StatelessWidget {
         : 0;
   }
 
-  Future<List<ScatterData>?> fetchScatter() async {
+  Future<List<ScatterData>> fetchScatter() async {
     final client = getClient();
     final String query = """query MyQuery{
   team{
@@ -57,27 +57,38 @@ class Scatter extends StatelessWidget {
 
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      throw GraphQLError(message: result.exception.toString());
-    } else if (result.data != null) {
-      return (result.data!['team'] as List<dynamic>)
-          .map((final dynamic e) => ScatterData(
-              e['stats']['aggregate']['avg']['teleop_inner'] as double,
-              e['stats']['aggregate']['avg']['teleop_outer'] as double,
-              e['stats']['aggregate']['stddev']['teleop_inner'] as double? ?? 0,
-              e['stats']['aggregate']['stddev']['teleop_outer'] as double? ?? 0,
-              e['number'] as int,
-              e['id'] as int,
-              e['name'] as String))
-          .toList();
-    } else {}
+
+    return result.mapQueryResult((final Map<String, dynamic>? data) =>
+        data.mapNullable((scatterData) => (scatterData['team'] as List<dynamic>)
+            .map((final dynamic e) => ScatterData(
+                e['stats']['aggregate']['avg']['teleop_inner'] as double,
+                e['stats']['aggregate']['avg']['teleop_outer'] as double,
+                e['stats']['aggregate']['stddev']['teleop_inner'] as double? ??
+                    0,
+                e['stats']['aggregate']['stddev']['teleop_outer'] as double? ??
+                    0,
+                e['number'] as int,
+                e['id'] as int,
+                e['name'] as String))
+            .toList()) ??
+        []);
   }
+
+  //       e['stats']['aggregate']['avg']['teleop_inner'] as double,
+  //     e['stats']['aggregate']['avg']['teleop_outer'] as double,
+  //     e['stats']['aggregate']['stddev']['teleop_inner'] as double? ??
+  //         0,
+  //     e['stats']['aggregate']['stddev']['teleop_outer'] as double? ??
+  //         0,
+  //     e['number'] as int,
+  //     e['id'] as int,
+  //     e['name'] as String))
+  // .toList()
 
   Scatter({
     required this.onHover,
-    this.teams,
   });
-  List<Team>? teams;
+  late final List<Team> teams;
 
   final Function(Team team) onHover;
 
@@ -125,12 +136,15 @@ class Scatter extends StatelessWidget {
                                 ))
                             .toList(),
                         scatterTouchData: ScatterTouchData(
-                          touchCallback: (t, p0) => {
-                            if (p0?.touchedSpot != null)
+                          touchCallback: (final FlTouchEvent event,
+                                  final ScatterTouchResponse? response) =>
                               {
-                                tooltip = teams![p0!.touchedSpot!.spotIndex]
-                                    .teamNumber
-                                    .toString(),
+                            if (response?.touchedSpot != null)
+                              {
+                                tooltip =
+                                    teams[response!.touchedSpot!.spotIndex]
+                                        .teamNumber
+                                        .toString(),
                               }
                           },
                           enabled: true,

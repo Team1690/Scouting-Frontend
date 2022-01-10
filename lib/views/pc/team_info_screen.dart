@@ -6,6 +6,7 @@ import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
 import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
+import 'package:scouting_frontend/views/pc/widgets/no_team_selected_yet.dart';
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
 
 class TeamInfoScreen extends StatefulWidget {
@@ -54,26 +55,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
               Expanded(
                 flex: 10,
                 child: widget.chosenTeam == null
-                    ? DashboardCard(
-                        title: '',
-                        body: Center(
-                            child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(),
-                            ),
-                            Icon(
-                              Icons.search,
-                              size: 100,
-                            ),
-                            SizedBox(height: defaultPadding),
-                            Text(
-                                'Please choose a team in order to display data'),
-                            Expanded(
-                              child: Container(),
-                            ),
-                          ],
-                        )))
+                    ? NoTeamSelected()
                     : TeamInfoData(team: widget.chosenTeam!),
               )
             ])));

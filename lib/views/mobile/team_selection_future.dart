@@ -11,7 +11,7 @@ class TeamSelectionFuture extends StatefulWidget {
     this.onChange = onChange ?? ignore;
   }
   final TextEditingController controller;
-  late final Function(LightTeam) onChange;
+  late final void Function(LightTeam) onChange;
   @override
   State<TeamSelectionFuture> createState() => _TeamSelectionFutureState();
 }

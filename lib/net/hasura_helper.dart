@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import "package:graphql/client.dart";
 
 GraphQLClient getClient() {
@@ -17,6 +18,16 @@ extension MapNullable<A> on A? {
 }
 
 extension MapQueryResult on QueryResult {
-  T mapQueryResult<T>(final T Function(Map<String, dynamic>) f) =>
-      hasException ? throw exception! : f(data!);
+  T mapQueryResult<T>(final T Function(Map<String, dynamic>?) f) =>
+      hasException ? throw exception! : f(data);
+}
+
+extension MapSnapshot<T> on AsyncSnapshot<T> {
+  V mapSnapshot<V>(final V Function(T) f, final V Function() onWaiting,
+          final V Function() onNoData) =>
+      hasError
+          ? throw error!
+          : (ConnectionState.waiting == connectionState
+              ? onWaiting()
+              : (hasData ? f(data!) : onNoData()));
 }

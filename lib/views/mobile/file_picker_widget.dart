@@ -7,10 +7,9 @@ import "package:scouting_frontend/views/constants.dart";
 
 class FilePickerWidget extends StatefulWidget {
   FilePickerWidget({
-    final Key? key,
     required this.controller,
     final void Function(FilePickerResult?)? onImagePicked,
-  }) : super(key: key) {
+  }) {
     this.onImagePicked = onImagePicked ?? ignore;
   }
   FilePickerResult? result;

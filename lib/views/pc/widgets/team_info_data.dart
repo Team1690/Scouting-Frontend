@@ -43,8 +43,8 @@ class PitViewData {
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;
-  final String? shifter;
-  final String? gearbox;
+  final String shifter;
+  final String gearbox;
   final String driveMotorType;
   final int driveTrainReliability;
   final int electronicsReliability;
@@ -72,7 +72,7 @@ class LineChartData {
 }
 
 class _TeamInfoDataState extends State<TeamInfoData> {
-  Future<List<LineChartData>?> fetchGameChart() async {
+  Future<List<LineChartData>> fetchGameChart() async {
     final client = getClient();
     final String query = """
 query fetchGameChart(\$teamNumber : Int) {
@@ -90,14 +90,12 @@ query fetchGameChart(\$teamNumber : Int) {
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
-    if (result.hasException) {
-      throw result.exception!;
-    } else if (result.data == null) {
-      return null;
-    }
+    final List<dynamic> matches = result.mapQueryResult(
+        (final Map<String, dynamic>? data) =>
+            data.mapNullable(
+                (team) => team["team"][0]["matches"] as List<dynamic>) ??
+            <LineChartData>[]);
 
-    final List<dynamic> matches =
-        result.data!["team"][0]["matches"] as List<dynamic>;
     return [
       LineChartData(
         title: 'Inner',
@@ -146,9 +144,9 @@ query MyQuery(\$team_id: Int!) {
             variables: <String, dynamic>{'team_id': widget.team.id})))
         .mapQueryResult<PitViewData?>((final Map<String, dynamic>? data) =>
             (data?['pit_by_pk'] as Map<String, dynamic>?)
-                .mapNullable<PitViewData>((final Map<String, dynamic>? pit) =>
+                .mapNullable<PitViewData>((final Map<String, dynamic> pit) =>
                     PitViewData(
-                        driveTrainType: pit!['drive_train_type'] as String,
+                        driveTrainType: pit['drive_train_type'] as String,
                         driveMotorAmount: pit['drive_motor_amount'] as int,
                         driveMotorType: pit['drive_motor_type'] as String,
                         driveTrainReliability:
@@ -163,7 +161,7 @@ query MyQuery(\$team_id: Int!) {
                         url: pit['url'] as String)));
   }
 
-  Future<List<SpecificData>?> fetchSpesific() async {
+  Future<List<SpecificData>> fetchSpesific() async {
     final client = getClient();
     final String query = """query MyQuery(\$teamNumber : Int){
   specific(where: {team: {number: {_eq: \$teamNumber}}}) {
@@ -176,13 +174,14 @@ query MyQuery(\$team_id: Int!) {
         variables: <String, int>{"teamNumber": widget.team.number}));
 
     return result.mapQueryResult((final Map<String, dynamic>? data) =>
-        (data?['specific'] as List<dynamic>?).mapNullable<List<SpecificData>?>(
-            (final List<dynamic>? specificEntries) => specificEntries
-                ?.map((final dynamic e) => SpecificData(e['message'] as String))
-                .toList()));
+        (data?['specific'] as List<dynamic>?).mapNullable<List<SpecificData>>(
+            (final List<dynamic> specificEntries) => specificEntries
+                .map((final dynamic e) => SpecificData(e['message'] as String))
+                .toList()) ??
+        []);
   }
 
-  Future<List<QuickData>?> fetchQuickData() async {
+  Future<List<QuickData>> fetchQuickData() async {
     final client = getClient();
     final String query = """
   query MyQuery(\$teamNumber: Int) {
@@ -242,9 +241,11 @@ query MyQuery(\$team_id: Int!) {
                         flex: 3,
                         child: DashboardCard(
                             title: 'Quick Data',
-                            body: FutureBuilder<List<QuickData>?>(
+                            body: FutureBuilder<List<QuickData>>(
                                 future: fetchQuickData(),
-                                builder: (context, snapshot) {
+                                builder: (final BuildContext context,
+                                    final AsyncSnapshot<List<QuickData>>
+                                        snapshot) {
                                   if (snapshot.hasError) {
                                     return Text(
                                         'Error has happened in the future! ' +
@@ -318,10 +319,10 @@ query MyQuery(\$team_id: Int!) {
                 flex: 5,
                 child: DashboardCard(
                     title: 'Game Chart',
-                    body: FutureBuilder<List<LineChartData>?>(
+                    body: FutureBuilder<List<LineChartData>>(
                         future: fetchGameChart(),
                         builder: (context,
-                            AsyncSnapshot<List<LineChartData>?> snapshot) {
+                            AsyncSnapshot<List<LineChartData>> snapshot) {
                           if (snapshot.hasError) {
                             return Text(
                                 'Error has happened in the future!   ${snapshot.error}');

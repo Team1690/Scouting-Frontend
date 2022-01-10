@@ -78,7 +78,7 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
   }
 }
 
-Future<List<LightTeam>?> fetchTeams() async {
+Future<List<LightTeam>> fetchTeams() async {
   final client = getClient();
   final String query = """
 query FetchTeams {
@@ -92,13 +92,11 @@ query FetchTeams {
 
   final QueryResult result =
       await client.query(QueryOptions(document: gql(query)));
-  if (result.hasException) {
-    throw result.exception!;
-  } else if (result.data == null) {
-    return null;
-  }
-  return (result.data!['team'] as List<dynamic>)
-      .map((dynamic e) =>
-          LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
-      .toList();
+
+  return result.mapQueryResult((final Map<String, dynamic>? data) =>
+          data.mapNullable((teams) => (teams['team'] as List<dynamic>)
+              .map((dynamic e) => LightTeam(
+                  e['id'] as int, e['number'] as int, e['name'] as String))
+              .toList())) ??
+      [];
 }

@@ -144,7 +144,7 @@ class _PitViewState extends State<PitView> {
                 ],
                 onChange: (final int newValue) {
                   vars.shifter = newValue == -1
-                      ? null
+                      ? "No Shifter Selected"
                       : newValue == 0
                           ? "Has a Shifter"
                           : "No Shifter";
@@ -164,7 +164,7 @@ class _PitViewState extends State<PitView> {
                 ],
                 onChange: (final int newValue) {
                   vars.gearbox = newValue == -1
-                      ? null
+                      ? "No Gearbox Selected"
                       : newValue == 0
                           ? "Purchased gearbox"
                           : "Custom gearbox";
@@ -192,7 +192,6 @@ class _PitViewState extends State<PitView> {
               SectionDivider(label: "General Robot Reliability"),
               PitViewSlider(
                 label: "Drive Train Reliablity:",
-                value: vars.driveTrainReliability,
                 onChange: (final double newVal) {
                   vars.driveTrainReliability = newVal;
                 },
@@ -205,7 +204,6 @@ class _PitViewState extends State<PitView> {
               ),
               PitViewSlider(
                 label: "Electronics Reliability",
-                value: vars.electronicsReliability,
                 divisions: 4,
                 min: 1,
                 max: 5,
@@ -218,7 +216,6 @@ class _PitViewState extends State<PitView> {
               ),
               PitViewSlider(
                 label: "Robot Reliability",
-                value: vars.robotReliability,
                 divisions: 9,
                 max: 10,
                 min: 1,

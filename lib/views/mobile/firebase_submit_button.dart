@@ -15,12 +15,11 @@ import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class FireBaseSubmitButton extends StatefulWidget {
   FireBaseSubmitButton({
-    final Key? key,
     required this.vars,
     required this.mutation,
     required this.result,
     final void Function()? resetForm,
-  }) : super(key: key) {
+  }) {
     this.resetForm = resetForm ?? () {};
   }
   final HasuraVars vars;

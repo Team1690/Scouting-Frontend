@@ -254,8 +254,7 @@ query MyQuery(\$team_id: Int) {
                                 List<LineChartData> outer = [];
 
                                 List<LineChartData> auto = [];
-                                (snapshot.data as List<List<LineChartData>>)
-                                    .forEach((item) {
+                                (snapshot.data)!.forEach((item) {
                                   if (!item.isEmpty) {
                                     inner.add(item[0]);
                                     outer.add(item[1]);
@@ -341,9 +340,11 @@ query MyQuery(\$team_id: Int) {
                         title: 'Compare Spider Chart',
                         body: Center(
                             child: FutureBuilder(
-                          future: fetchGameCharts(
-                              compareTeamsList.map((e) => e.id).toList()),
-                          builder: (context, snapshot) {
+                          future: fetchGameCharts(compareTeamsList
+                              .map((final LightTeam e) => e.id)
+                              .toList()),
+                          builder: (final BuildContext context,
+                              final AsyncSnapshot<List<Team>> snapshot) {
                             if (snapshot.hasError) {
                               return Text('Error has happened in the future! ' +
                                   snapshot.error.toString());
@@ -352,16 +353,17 @@ query MyQuery(\$team_id: Int) {
                               return Center(
                                 child: CircularProgressIndicator(),
                               );
-                              // const CircularProgressIndicator();
+                            } else if (!snapshot.hasData) {
+                              return Text('No Data yet');
                             } else {
-                              if ((snapshot.data as List<Team>).isNotEmpty) {
+                              if (snapshot.data!.isNotEmpty) {
                                 double innerRatio = 100 /
-                                    (snapshot.data as List<Team>)
+                                    (snapshot.data)!
                                         .map((e) => e.teleInnerGoalAverage)
                                         .reduce((curr, next) =>
                                             curr > next ? curr : next);
                                 double outerRatio = 100 /
-                                    (snapshot.data as List<Team>)
+                                    (snapshot.data)!
                                         .map((e) => e.teleOuterGoalAverage)
                                         .reduce((curr, next) =>
                                             curr > next ? curr : next);
@@ -372,7 +374,7 @@ query MyQuery(\$team_id: Int) {
                                             curr > next ? curr : next);
                                 return SpiderChart(
                                     numberOfFeatures: 4,
-                                    data: (snapshot.data as List<Team>)
+                                    data: (snapshot.data)!
                                         .map((e) => ([
                                               (e.teleInnerGoalAverage *
                                                       innerRatio)
