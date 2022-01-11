@@ -3,6 +3,7 @@ import "package:flutter_test/flutter_test.dart";
 import "package:graphql/client.dart";
 
 import "package:scouting_frontend/net/hasura_helper.dart";
+// ignore: prefer_double_quotes
 import 'package:scouting_frontend/views/constants.dart';
 
 void main() {
@@ -15,7 +16,8 @@ void main() {
   group("Map Extenstions", () {
     group("Map Nullable", () {
       test("Actually Null", () {
-        expect(null.mapNullable((p0) => throw Exception()), isNull);
+        expect(
+            null.mapNullable((final Object? p0) => throw Exception()), isNull);
       });
 
       test("Actually not null", () {
@@ -23,7 +25,7 @@ void main() {
       });
 
       test("Actually not null", () {
-        expect(1.mapNullable((one) => one + 1), equals(2));
+        expect(1.mapNullable((final int one) => one + 1), equals(2));
       });
     });
   });

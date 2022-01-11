@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_double_quotes
+
 import 'package:flutter/material.dart';
 import "package:graphql/client.dart";
 
@@ -23,8 +25,11 @@ extension MapQueryResult on QueryResult {
 }
 
 extension MapSnapshot<T> on AsyncSnapshot<T> {
-  V mapSnapshot<V>(final V Function(T) f, final V Function() onWaiting,
-          final V Function() onNoData) =>
+  V mapSnapshot<V>(
+    final V Function(T) f,
+    final V Function() onWaiting,
+    final V Function() onNoData,
+  ) =>
       hasError
           ? throw error!
           : (ConnectionState.waiting == connectionState
