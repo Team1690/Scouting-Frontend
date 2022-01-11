@@ -1,20 +1,23 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:graphql/client.dart';
-import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/pc/widgets/card.dart';
-import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
-import 'package:scouting_frontend/views/pc/widgets/scouting_pit.dart';
-import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
-import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
-import '../../constants.dart';
-import '../../../net/hasura_helper.dart';
+import "package:flutter/material.dart";
+import "package:graphql/client.dart";
+import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/pc/widgets/card.dart";
+import "package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart";
+import "package:scouting_frontend/views/pc/widgets/scouting_pit.dart";
+import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
+import "package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart";
+import "../../constants.dart";
+import "../../../net/hasura_helper.dart";
 
 class QuickData {
-  QuickData(this.averageInner, this.averageOuter, this.autoBalls, this.success,
-      this.failed);
+  QuickData(
+    this.averageInner,
+    this.averageOuter,
+    this.autoBalls,
+    this.success,
+    this.failed,
+  );
   final double averageInner;
   final double averageOuter;
   final double autoBalls;
@@ -28,18 +31,19 @@ class SpecificData {
 }
 
 class PitViewData {
-  PitViewData(
-      {required this.driveTrainType,
-      required this.driveMotorAmount,
-      required this.driveMotorType,
-      required this.driveTrainReliability,
-      required this.driveWheelType,
-      required this.electronicsReliability,
-      required this.gearbox,
-      required this.notes,
-      required this.robotReliability,
-      required this.shifter,
-      required this.url});
+  PitViewData({
+    required this.driveTrainType,
+    required this.driveMotorAmount,
+    required this.driveMotorType,
+    required this.driveTrainReliability,
+    required this.driveWheelType,
+    required this.electronicsReliability,
+    required this.gearbox,
+    required this.notes,
+    required this.robotReliability,
+    required this.shifter,
+    required this.url,
+  });
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;
@@ -68,12 +72,12 @@ class TeamInfoData extends StatefulWidget {
 class LineChartData {
   LineChartData({required this.points, required this.title});
   List<double> points;
-  String title = '';
+  String title = "";
 }
 
 class _TeamInfoDataState extends State<TeamInfoData> {
   Future<List<LineChartData>> fetchGameChart() async {
-    final client = getClient();
+    final GraphQLClient client = getClient();
     final String query = """
 query fetchGameChart(\$teamNumber : Int) {
   team(where: {number: {_eq: \$teamNumber}}) {
@@ -87,39 +91,45 @@ query fetchGameChart(\$teamNumber : Int) {
 
 """;
 
-    final QueryResult result = await client.query(QueryOptions(
+    final QueryResult result = await client.query(
+      QueryOptions(
         document: gql(query),
-        variables: <String, int>{"teamNumber": widget.team.number}));
+        variables: <String, int>{"teamNumber": widget.team.number},
+      ),
+    );
     final List<dynamic> matches = result.mapQueryResult(
-        (final Map<String, dynamic>? data) =>
-            data.mapNullable(
-                (team) => team["team"][0]["matches"] as List<dynamic>) ??
-            <LineChartData>[]);
+      (final Map<String, dynamic>? data) =>
+          data.mapNullable(
+            (final Map<String, dynamic> team) =>
+                team["team"][0]["matches"] as List<dynamic>,
+          ) ??
+          <LineChartData>[],
+    );
 
-    return [
+    return <LineChartData>[
       LineChartData(
-        title: 'Inner',
+        title: "Inner",
         points: matches
-            .map<double>((dynamic e) => e['teleop_inner'] as double)
+            .map<double>((final dynamic e) => e["teleop_inner"] as double)
             .toList(),
       ),
       LineChartData(
-        title: 'Outer',
+        title: "Outer",
         points: matches
-            .map<double>((dynamic e) => e['teleop_outer'] as double)
+            .map<double>((final dynamic e) => e["teleop_outer"] as double)
             .toList(),
       ),
       LineChartData(
-        title: 'Auto',
+        title: "Auto",
         points: matches
-            .map<double>((dynamic e) => e['auto_balls'] as double)
+            .map<double>((final dynamic e) => e["auto_balls"] as double)
             .toList(),
       ),
     ];
   }
 
   Future<PitViewData?> fetchPit() async {
-    final client = getClient();
+    final GraphQLClient client = getClient();
     final String query = """
 query MyQuery(\$team_id: Int!) {
   pit_by_pk(team_id: \$team_id) {
@@ -139,50 +149,65 @@ query MyQuery(\$team_id: Int!) {
 }
 
     """;
-    return (await client.query(QueryOptions(
-            document: gql(query),
-            variables: <String, dynamic>{'team_id': widget.team.id})))
-        .mapQueryResult<PitViewData?>((final Map<String, dynamic>? data) =>
-            (data?['pit_by_pk'] as Map<String, dynamic>?)
-                .mapNullable<PitViewData>((final Map<String, dynamic> pit) =>
-                    PitViewData(
-                        driveTrainType: pit['drive_train_type'] as String,
-                        driveMotorAmount: pit['drive_motor_amount'] as int,
-                        driveMotorType: pit['drive_motor_type'] as String,
-                        driveTrainReliability:
-                            pit['drive_train_reliability'] as int,
-                        driveWheelType: pit['drive_wheel_type'] as String,
-                        electronicsReliability:
-                            pit['electronics_reliability'] as int,
-                        gearbox: pit['gearbox'] as String,
-                        shifter: pit['shifter'] as String,
-                        notes: pit['notes'] as String,
-                        robotReliability: pit['robot_reliability'] as int,
-                        url: pit['url'] as String)));
+    return (await client.query(
+      QueryOptions(
+        document: gql(query),
+        variables: <String, dynamic>{
+          "team_id": widget.team.id,
+        },
+      ),
+    ))
+        .mapQueryResult<PitViewData?>(
+      (final Map<String, dynamic>? data) =>
+          (data?["pit_by_pk"] as Map<String, dynamic>?)
+              .mapNullable<PitViewData>(
+        (final Map<String, dynamic> pit) => PitViewData(
+          driveTrainType: pit["drive_train_type"] as String,
+          driveMotorAmount: pit["drive_motor_amount"] as int,
+          driveMotorType: pit["drive_motor_type"] as String,
+          driveTrainReliability: pit["drive_train_reliability"] as int,
+          driveWheelType: pit["drive_wheel_type"] as String,
+          electronicsReliability: pit["electronics_reliability"] as int,
+          gearbox: pit["gearbox"] as String,
+          shifter: pit["shifter"] as String,
+          notes: pit["notes"] as String,
+          robotReliability: pit["robot_reliability"] as int,
+          url: pit["url"] as String,
+        ),
+      ),
+    );
   }
 
   Future<List<SpecificData>> fetchSpesific() async {
-    final client = getClient();
+    final GraphQLClient client = getClient();
     final String query = """query MyQuery(\$teamNumber : Int){
   specific(where: {team: {number: {_eq: \$teamNumber}}}) {
     message
     id
   }
 }""";
-    final QueryResult result = await client.query(QueryOptions(
+    final QueryResult result = await client.query(
+      QueryOptions(
         document: gql(query),
-        variables: <String, int>{"teamNumber": widget.team.number}));
+        variables: <String, int>{
+          "teamNumber": widget.team.number,
+        },
+      ),
+    );
 
-    return result.mapQueryResult((final Map<String, dynamic>? data) =>
-        (data?['specific'] as List<dynamic>?).mapNullable<List<SpecificData>>(
+    return result.mapQueryResult(
+      (final Map<String, dynamic>? data) =>
+          (data?["specific"] as List<dynamic>?).mapNullable<List<SpecificData>>(
             (final List<dynamic> specificEntries) => specificEntries
-                .map((final dynamic e) => SpecificData(e['message'] as String))
-                .toList()) ??
-        []);
+                .map((final dynamic e) => SpecificData(e["message"] as String))
+                .toList(),
+          ) ??
+          <SpecificData>[],
+    );
   }
 
   Future<List<QuickData>> fetchQuickData() async {
-    final client = getClient();
+    final GraphQLClient client = getClient();
     final String query = """
   query MyQuery(\$teamNumber: Int) {
   team(where: {number: {_eq: \$teamNumber}}) {
@@ -210,99 +235,123 @@ query MyQuery(\$team_id: Int!) {
 }
   """;
 
-    final QueryResult result = await client.query(QueryOptions(
+    final QueryResult result = await client.query(
+      QueryOptions(
         document: gql(query),
-        variables: <String, int>{"teamNumber": widget.team.number}));
-    return result
-        .mapQueryResult((final Map<String, dynamic>? data) =>
-            data!['team'] as List<dynamic>)
-        .map((final dynamic e) => QuickData(
-            e['balls']['aggregate']['avg']['teleop_inner'] as double,
-            e['balls']['aggregate']['avg']['teleop_outer'] as double,
-            e['balls']['aggregate']['avg']['auto_balls'] as double,
-            e['climbSuccess']['aggregate']['count'] as double,
-            e['climbFail']['aggregate']['count'] as double))
-        .toList();
+        variables: <String, int>{
+          "teamNumber": widget.team.number,
+        },
+      ),
+    );
+    return result.mapQueryResult(
+      (final Map<String, dynamic>? data) =>
+          data.mapNullable(
+            (final Map<String, dynamic> team) => (team["team"] as List<dynamic>)
+                .map(
+                  (final dynamic e) => QuickData(
+                    e["balls"]["aggregate"]["avg"]["teleop_inner"] as double,
+                    e["balls"]["aggregate"]["avg"]["teleop_outer"] as double,
+                    e["balls"]["aggregate"]["avg"]["auto_balls"] as double,
+                    e["climbSuccess"]["aggregate"]["count"] as double,
+                    e["climbFail"]["aggregate"]["count"] as double,
+                  ),
+                )
+                .toList(),
+          ) ??
+          <QuickData>[],
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Row(
-      children: [
+      children: <Widget>[
         Expanded(
           flex: 4,
           child: Column(
-            children: [
+            children: <Widget>[
               Expanded(
                 flex: 4,
                 child: Row(
-                  children: [
-                    Expanded(
-                        flex: 3,
-                        child: DashboardCard(
-                            title: 'Quick Data',
-                            body: FutureBuilder<List<QuickData>>(
-                                future: fetchQuickData(),
-                                builder: (final BuildContext context,
-                                    final AsyncSnapshot<List<QuickData>>
-                                        snapshot) {
-                                  if (snapshot.hasError) {
-                                    return Text(
-                                        'Error has happened in the future! ' +
-                                            snapshot.error.toString());
-                                  } else if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  } else if (snapshot.data == null) {
-                                    return Text('No Quick Data!');
-                                  } else {
-                                    if (snapshot.data!.length != 1) {
-                                      return Text(
-                                          'data.length is shorter than 1! :(');
-                                    }
-                                    final QuickData report = snapshot.data![0];
-                                    if (report.success + report.failed == 0) {
-                                      return Text(
-                                          "Average inner: ${report.averageInner.round()}\n"
-                                          "Average outer: ${report.averageOuter.round()}\n"
-                                          "Average auto balls: ${report.autoBalls.round()}\n"
-                                          "Climb Rate: 0"
-                                          "%");
-                                    }
-                                    return Text(
-                                        "Average inner: ${report.averageInner.round()}\n"
-                                                "Average outer: ${report.averageOuter.round()}\n"
-                                                "Average auto balls: ${report.autoBalls.round()}\n"
-                                                "Climb Rate: " +
-                                            (report.success /
-                                                    (report.failed +
-                                                        report.success) *
-                                                    100)
-                                                .round()
-                                                .toString() +
-                                            "%");
-                                  }
-                                }))),
-                    SizedBox(width: defaultPadding),
+                  children: <Widget>[
                     Expanded(
                       flex: 3,
                       child: DashboardCard(
-                        title: 'Pit Scouting',
-                        body: FutureBuilder<PitViewData?>(
-                          future: fetchPit(),
-                          builder: (context, snapshot) {
+                        title: "Quick Data",
+                        body: FutureBuilder<List<QuickData>>(
+                          future: fetchQuickData(),
+                          builder: (
+                            final BuildContext context,
+                            final AsyncSnapshot<List<QuickData>> snapshot,
+                          ) {
                             if (snapshot.hasError) {
-                              return Text('Error has happened in the future! ' +
-                                  snapshot.error.toString());
+                              return Text(
+                                "Error has happened in the future! " +
+                                    snapshot.error.toString(),
+                              );
                             } else if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return Center(
                                 child: CircularProgressIndicator(),
                               );
                             } else if (snapshot.data == null) {
-                              return Text('No data yet :(');
+                              return Text("No Quick Data!");
+                            } else {
+                              if (snapshot.data!.isEmpty) {
+                                return Text(
+                                  "data.length is shorter than 1! :(",
+                                );
+                              }
+                              final QuickData report = snapshot.data![0];
+                              if (report.success + report.failed == 0) {
+                                return Text(
+                                  "Average inner: ${report.averageInner.round()}\n"
+                                  "Average outer: ${report.averageOuter.round()}\n"
+                                  "Average auto balls: ${report.autoBalls.round()}\n"
+                                  "Climb Rate: 0"
+                                  "%",
+                                );
+                              }
+                              return Text(
+                                "Average inner: ${report.averageInner.round()}\n"
+                                        "Average outer: ${report.averageOuter.round()}\n"
+                                        "Average auto balls: ${report.autoBalls.round()}\n"
+                                        "Climb Rate: " +
+                                    (report.success /
+                                            (report.failed + report.success) *
+                                            100)
+                                        .round()
+                                        .toString() +
+                                    "%",
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: defaultPadding),
+                    Expanded(
+                      flex: 3,
+                      child: DashboardCard(
+                        title: "Pit Scouting",
+                        body: FutureBuilder<PitViewData?>(
+                          future: fetchPit(),
+                          builder: (
+                            final BuildContext context,
+                            final AsyncSnapshot<PitViewData?> snapshot,
+                          ) {
+                            if (snapshot.hasError) {
+                              return Text(
+                                "Error has happened in the future! " +
+                                    snapshot.error.toString(),
+                              );
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.data == null) {
+                              return Text("No data yet :(");
                             } else {
                               final PitViewData report = snapshot.data!;
                               return ScoutingPit(report);
@@ -318,73 +367,85 @@ query MyQuery(\$team_id: Int!) {
               Expanded(
                 flex: 5,
                 child: DashboardCard(
-                    title: 'Game Chart',
-                    body: FutureBuilder<List<LineChartData>>(
-                        future: fetchGameChart(),
-                        builder: (context,
-                            AsyncSnapshot<List<LineChartData>> snapshot) {
-                          if (snapshot.hasError) {
-                            return Text(
-                                'Error has happened in the future!   ${snapshot.error}');
-                          } else if (!snapshot.hasData) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else {
-                            return CarouselWithIndicator(
-                              widgets: snapshot.data!
-                                  .map((LineChartData chart) => Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(chart.title),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(20.0),
-                                            child: DashboardLineChart(
-                                                distanceFromHighest: 4,
-                                                dataSet: [chart.points]),
-                                          ),
-                                        ],
-                                      ))
-                                  .toList(),
-                            );
-                          }
-                        })),
+                  title: "Game Chart",
+                  body: FutureBuilder<List<LineChartData>>(
+                    future: fetchGameChart(),
+                    builder: (
+                      final BuildContext context,
+                      final AsyncSnapshot<List<LineChartData>> snapshot,
+                    ) {
+                      if (snapshot.hasError) {
+                        return Text(
+                          "Error has happened in the future!   ${snapshot.error}",
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return CarouselWithIndicator(
+                          widgets: snapshot.data!
+                              .map(
+                                (final LineChartData chart) => Stack(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(chart.title),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: DashboardLineChart(
+                                        distanceFromHighest: 4,
+                                        dataSet: <List<double>>[chart.points],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                        );
+                      }
+                    },
+                  ),
+                ),
               )
             ],
           ),
         ),
         SizedBox(width: defaultPadding),
         DashboardCard(
-            title: 'Scouting Specific',
-            // body: ScoutingSpecific(msg: widget.team.msg),
-            body: FutureBuilder<List<SpecificData>>(
-                future: fetchSpesific(),
-                builder: (final BuildContext context,
-                    final AsyncSnapshot<List<SpecificData>> snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error has happened in the future! ' +
-                        snapshot.error.toString());
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    return snapshot.data.mapNullable<Widget>(
-                          (final List<SpecificData> specifics) =>
-                              specifics.isEmpty
-                                  ? Text("No Data Yet")
-                                  : ScoutingSpecific(
-                                      msg: specifics
-                                          .map((final SpecificData e) => e.msg)
-                                          .toList(),
-                                    ),
-                        ) ??
-                        Text("No Data Yet");
-                  }
-                }))
+          title: "Scouting Specific",
+          // body: ScoutingSpecific(msg: widget.team.msg),
+          body: FutureBuilder<List<SpecificData>>(
+            future: fetchSpesific(),
+            builder: (
+              final BuildContext context,
+              final AsyncSnapshot<List<SpecificData>> snapshot,
+            ) {
+              if (snapshot.hasError) {
+                return Text(
+                  "Error has happened in the future! " +
+                      snapshot.error.toString(),
+                );
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return snapshot.data.mapNullable<Widget>(
+                      (final List<SpecificData> specifics) => specifics.isEmpty
+                          ? Text("No Data Yet")
+                          : ScoutingSpecific(
+                              msg: specifics
+                                  .map((final SpecificData e) => e.msg)
+                                  .toList(),
+                            ),
+                    ) ??
+                    Text("No Data Yet");
+              }
+            },
+          ),
+        )
       ],
     );
   }

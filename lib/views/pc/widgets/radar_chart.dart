@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_radar_chart/flutter_radar_chart.dart';
-import 'package:scouting_frontend/views/constants.dart';
+import "package:flutter/material.dart";
+import "package:flutter_radar_chart/flutter_radar_chart.dart";
+import "package:scouting_frontend/views/constants.dart";
 
 // ignore: must_be_immutable
 class SpiderChart extends StatefulWidget {
@@ -24,11 +24,12 @@ class _SpiderChart extends State<SpiderChart> {
   bool useSides = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     widget.features =
         widget.features.sublist(0, widget.numberOfFeatures.floor());
     widget.data = widget.data
-        .map((graph) => graph.sublist(0, widget.numberOfFeatures.floor()))
+        .map((final List<int> graph) =>
+            graph.sublist(0, widget.numberOfFeatures.floor()))
         .toList();
 
     return Container(
