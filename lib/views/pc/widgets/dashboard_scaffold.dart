@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
-import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
+import "package:scouting_frontend/views/pc/widgets/navigation_tab.dart";
 
 class DashboardScaffold extends StatelessWidget {
   DashboardScaffold({
@@ -10,7 +10,7 @@ class DashboardScaffold extends StatelessWidget {
   final Widget body;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       // appBar: AppBar(title: Text('Orbit Scouting')),
       body: SafeArea(

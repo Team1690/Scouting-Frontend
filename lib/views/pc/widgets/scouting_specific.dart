@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
-import '../../constants.dart';
+import "../../constants.dart";
 
 class ScoutingSpecific extends StatelessWidget {
   const ScoutingSpecific({
@@ -10,12 +10,12 @@ class ScoutingSpecific extends StatelessWidget {
   final List<String> msg;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: msg
             .map(
-              (e) => Card(
+              (final String e) => Card(
                 // shape: ,
                 elevation: 10,
                 color: bgColor,
@@ -23,7 +23,7 @@ class ScoutingSpecific extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(defaultPadding),
                   child: Column(
-                    children: [
+                    children: <Widget>[
                       SizedBox(
                         width: 110,
                         child: Text(

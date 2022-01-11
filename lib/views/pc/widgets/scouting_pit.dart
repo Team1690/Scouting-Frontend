@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:scouting_frontend/views/mobile/pit_vars.dart';
-import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import "package:flutter/material.dart";
+import "package:scouting_frontend/views/mobile/pit_vars.dart";
+import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
+import "package:cached_network_image/cached_network_image.dart";
 
 class ScoutingPit extends StatelessWidget {
   ScoutingPit(this.data);
   final PitViewData data;
   @override
-  Widget build(BuildContext context) {
-    String newUrl = data.url.substring(0, data.url.length);
+  Widget build(final BuildContext context) {
+    final String newUrl = data.url.substring(0, data.url.length);
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
-        children: [
+        children: <Widget>[
           Text(
             """
           Drive Train Type: ${data.driveTrainType == PitVars.driveTrainInitialValue ? 'Not Answered' : data.driveTrainType}
@@ -31,7 +31,7 @@ class ScoutingPit extends StatelessWidget {
           CachedNetworkImage(
             width: 120,
             imageUrl: newUrl,
-            placeholder: (context, url) =>
+            placeholder: (final BuildContext context, final String url) =>
                 Center(child: CircularProgressIndicator()),
           )
         ],
