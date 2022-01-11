@@ -2,6 +2,7 @@ import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
 import "package:scouting_frontend/views/constants.dart";
+import 'package:scouting_frontend/net/hasura_helper.dart';
 
 class FilePickerWidget extends StatefulWidget {
   FilePickerWidget({
@@ -27,9 +28,11 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
             onPressed: () async {
               widget.result = await FilePicker.platform
                   .pickFiles(type: FileType.image, allowMultiple: false);
-              if (widget.result == null) return;
+              widget.result.mapNullable<void>((final FilePickerResult result) {
+                widget.controller.value = true;
+                widget.onImagePicked(result);
+              });
               widget.controller.value = true;
-              if (widget.result != null) widget.onImagePicked(widget.result!);
             },
             child: Row(
               mainAxisSize: MainAxisSize.min,

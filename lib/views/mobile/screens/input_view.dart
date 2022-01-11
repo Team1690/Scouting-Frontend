@@ -18,7 +18,6 @@ class _UserInputState extends State<UserInput> {
   final TextEditingController matchNumberController = TextEditingController();
 
   final TextEditingController teamNumberController = TextEditingController();
-
   Match match = Match();
 
   int selectedClimbIndex = -1;

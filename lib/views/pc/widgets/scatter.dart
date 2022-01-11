@@ -77,7 +77,6 @@ class Scatter extends StatelessWidget {
   Scatter({
     required this.onHover,
   });
-  final List<Team> teams = [];
 
   final Function(Team team) onHover;
 
@@ -113,8 +112,8 @@ class Scatter extends StatelessWidget {
                               e.id,
                               e.name))
                           .toList();
-                      teams.addAll(report.map((e) => Team(
-                          teamNumber: e.number, teamName: e.name, id: e.id)));
+                     final List<Team> teams = report.map((e) => Team(
+                          teamNumber: e.number, teamName: e.name, id: e.id)).toList();
                       return ScatterChart(ScatterChartData(
                         scatterSpots: report
                             .map((e) => ScatterSpot(
