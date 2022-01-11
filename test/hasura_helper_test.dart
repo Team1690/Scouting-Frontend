@@ -17,7 +17,9 @@ void main() {
     group("Map Nullable", () {
       test("Actually Null", () {
         expect(
-            null.mapNullable((final Object? p0) => throw Exception()), isNull);
+          null.mapNullable((final Object? p0) => throw Exception()),
+          isNull,
+        );
       });
 
       test("Actually not null", () {

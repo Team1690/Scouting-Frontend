@@ -15,7 +15,7 @@ class DashboardScaffold extends StatelessWidget {
       // appBar: AppBar(title: Text('Orbit Scouting')),
       body: SafeArea(
         child: Row(
-          children: [
+          children: <Widget>[
             Expanded(
               child: NavigationTab(),
             ),

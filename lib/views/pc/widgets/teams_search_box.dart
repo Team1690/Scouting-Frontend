@@ -54,8 +54,11 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
       suggestionsCallback: (final String pattern) => widget.teams,
       itemBuilder: (final BuildContext context, final LightTeam suggestion) =>
           ListTile(title: Text(suggestion.number.toString())),
-      transitionBuilder: (final BuildContext context,
-          final Widget suggestionsBox, final AnimationController? controller) {
+      transitionBuilder: (
+        final BuildContext context,
+        final Widget suggestionsBox,
+        final AnimationController? controller,
+      ) {
         return FadeTransition(
           child: suggestionsBox,
           opacity: CurvedAnimation(
@@ -77,7 +80,8 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
         widget.typeAheadController.text = suggestion.number.toString();
         widget.onChange(
           widget.teams[widget.teams.indexWhere(
-              (final LightTeam team) => team.number == suggestion.number)],
+            (final LightTeam team) => team.number == suggestion.number,
+          )],
         );
       },
     );

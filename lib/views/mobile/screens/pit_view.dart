@@ -97,7 +97,7 @@ class _PitViewState extends State<PitView> {
               ),
               SectionDivider(label: "Drive Train"),
               Selector(
-                value: vars.driveTrainType,
+                valueOnReRender: vars.driveTrainType,
                 values: driveTrains,
                 initialValue: PitVars.driveTrainInitialValue,
                 onChange: (final String newValue) {
@@ -108,7 +108,7 @@ class _PitViewState extends State<PitView> {
                 height: 20,
               ),
               Selector(
-                value: vars.driveMotorType,
+                valueOnReRender: vars.driveMotorType,
                 values: driveMotors,
                 initialValue: PitVars.driveMotorInitialValue,
                 onChange: (final String newValue) {

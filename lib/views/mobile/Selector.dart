@@ -4,13 +4,12 @@ import "../constants.dart";
 
 class Selector extends StatefulWidget {
   Selector({
-    required this.value,
+    required this.valueOnReRender,
     required this.values,
     required this.initialValue,
     this.onChange = ignore,
   });
-
-  String value;
+  final String valueOnReRender;
   final List<String> values;
   final String initialValue;
   final void Function(String) onChange;
@@ -21,9 +20,10 @@ class Selector extends StatefulWidget {
 class _SelectorState extends State<Selector> {
   @override
   Widget build(final BuildContext context) {
+    String value = widget.valueOnReRender;
     return DropdownButton<String>(
       isExpanded: true,
-      value: widget.value,
+      value: value,
       elevation: 24,
       style: const TextStyle(color: primaryColor, fontSize: 18),
       underline: Container(
@@ -36,8 +36,8 @@ class _SelectorState extends State<Selector> {
               newValue != widget.initialValue) {
             widget.values.remove(widget.initialValue);
           }
-          widget.value = newValue ?? widget.value;
-          widget.onChange(widget.value);
+          value = newValue ?? value;
+          widget.onChange(value);
         });
       },
       items: widget.values.map<DropdownMenuItem<String>>((final String value) {

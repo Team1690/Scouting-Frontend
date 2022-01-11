@@ -12,8 +12,8 @@ class TeamInfoScreen extends StatefulWidget {
       controller.text = chosenTeam!.number.toString();
     }
   }
+  final TextEditingController controller = TextEditingController();
   LightTeam? chosenTeam;
-  TextEditingController controller = TextEditingController();
   @override
   State<TeamInfoScreen> createState() => _TeamInfoScreenState();
 }

@@ -19,8 +19,10 @@ class _PickListFutureState extends State<PickListFuture> {
   Widget build(final BuildContext context) {
     return FutureBuilder<List<PickListTeam>>(
       future: fetchTeams(),
-      builder: (final BuildContext context,
-          final AsyncSnapshot<List<PickListTeam>> snapshot) {
+      builder: (
+        final BuildContext context,
+        final AsyncSnapshot<List<PickListTeam>> snapshot,
+      ) {
         if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }

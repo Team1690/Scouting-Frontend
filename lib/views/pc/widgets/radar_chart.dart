@@ -28,8 +28,10 @@ class _SpiderChart extends State<SpiderChart> {
     widget.features =
         widget.features.sublist(0, widget.numberOfFeatures.floor());
     widget.data = widget.data
-        .map((final List<int> graph) =>
-            graph.sublist(0, widget.numberOfFeatures.floor()))
+        .map(
+          (final List<int> graph) =>
+              graph.sublist(0, widget.numberOfFeatures.floor()),
+        )
         .toList();
 
     return Container(
