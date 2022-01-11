@@ -1,25 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/constants.dart';
+import "package:flutter/material.dart";
+import "package:scouting_frontend/views/constants.dart";
 
 class Switcher extends StatefulWidget {
-  final List<String> labels;
-  final List<Color> colors;
-  final Function(int) onChange;
-  final double height;
-  int? selected;
-
   Switcher({
     required final this.labels,
     required final this.colors,
     final this.height = 70,
     this.onChange = ignore,
   });
+  final List<String> labels;
+  final List<Color> colors;
+  final Function(int) onChange;
+  final double height;
+
   @override
   State<Switcher> createState() => _SwitcherState();
 }
 
 class _SwitcherState extends State<Switcher> {
+  int selected = -1;
   RoundedRectangleBorder getBorder(final int index) {
     return RoundedRectangleBorder(
       borderRadius: index == 0
@@ -45,25 +44,24 @@ class _SwitcherState extends State<Switcher> {
       height: widget.height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
+        children: <Widget>[
           for (int i = 0; i < widget.labels.length; i++)
             Expanded(
               child: SizedBox(
                 height: widget.height,
+                //TODO change to TextButton
                 child: FlatButton(
                   child: Text(
                     widget.labels[i],
                     style: const TextStyle(fontSize: 15),
                   ),
-                  textColor:
-                      widget.selected == i ? widget.colors[i] : Colors.black,
-                  splashColor:
-                      widget.selected == i ? widget.colors[i] : Colors.grey,
+                  textColor: selected == i ? widget.colors[i] : Colors.black,
+                  splashColor: selected == i ? widget.colors[i] : Colors.grey,
                   shape: getBorder(i),
                   onPressed: () => setState(() {
-                    i = i == widget.selected ? -1 : i;
+                    i = i == selected ? -1 : i;
                     widget.onChange(i);
-                    widget.selected = i;
+                    selected = i;
                   }),
                 ),
               ),
