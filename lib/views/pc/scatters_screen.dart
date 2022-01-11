@@ -4,7 +4,7 @@ import "package:scouting_frontend/views/pc/widgets/card.dart";
 import "package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/pc/widgets/scatter.dart";
 
-//TODO: need to get some fake data to test it.
+//TODo: need to get some fake data to test it.
 
 class ScattersScreen extends StatefulWidget {
   @override
