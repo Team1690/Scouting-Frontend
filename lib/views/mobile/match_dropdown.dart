@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/constants.dart';
+import "package:scouting_frontend/views/constants.dart";
 
 class MatchTextBox extends StatefulWidget {
   MatchTextBox({

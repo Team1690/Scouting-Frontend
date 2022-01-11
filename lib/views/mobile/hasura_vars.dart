@@ -1,3 +1,3 @@
-abstract class HasuraVars {
+mixin HasuraVars {
   Map<String, dynamic> toHasuraVars();
 }

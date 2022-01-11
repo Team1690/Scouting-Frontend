@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/constants.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_typeahead/flutter_typeahead.dart";
+import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/constants.dart";
 
 class TeamsDropdown extends StatefulWidget {
   TeamsDropdown({
@@ -21,17 +20,17 @@ class TeamsDropdown extends StatefulWidget {
 class _TeamsDropdownState extends State<TeamsDropdown> {
   bool isValueEmpty = false;
   bool isValueInList = true;
-  List<Team> _suggestions = [];
+  List<Team> _suggestions = <Team>[];
 
   @override
-  Widget build(BuildContext context) {
-    return TypeAheadField(
+  Widget build(final BuildContext context) {
+    return TypeAheadField<Team>(
       textFieldConfiguration: TextFieldConfiguration(
         onChanged: (final String value) => setState(() {
           isValueEmpty = value.isEmpty;
 
           isValueInList = _suggestions
-              .map<String>((team) => team.teamNumber.toString())
+              .map<String>((final Team team) => team.teamNumber.toString())
               .contains(value);
 
           if (!isValueEmpty && isValueInList) widget.onChange(int.parse(value));
@@ -44,21 +43,21 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
         decoration: InputDecoration(
           prefixIcon: const Icon(Icons.search),
           border: const OutlineInputBorder(),
-          hintText: 'Search Team',
+          hintText: "Search Team",
           errorText: isValueEmpty
-              ? 'Value can\'t be empty'
+              ? "Value can\'t be empty"
               : !isValueInList
-                  ? 'Not a valid team'
+                  ? "Not a valid team"
                   : null,
         ),
       ),
-      itemBuilder: (context, Team suggestion) =>
+      itemBuilder: (final BuildContext context, final Team suggestion) =>
           ListTile(title: Text(suggestion.teamNumber.toString())),
-      noItemsFoundBuilder: (context) => Container(
+      noItemsFoundBuilder: (final BuildContext context) => Container(
         height: 100,
         child: Center(
           child: Text(
-            'No Teams Found',
+            "No Teams Found",
             style: TextStyle(fontSize: 24),
           ),
         ),
@@ -69,16 +68,18 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
 
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
-          ..showSnackBar(SnackBar(
-            content: Text('Selected team: ${suggestion.teamNumber}'),
-          ));
+          ..showSnackBar(
+            SnackBar(
+              content: Text("Selected team: ${suggestion.teamNumber}"),
+            ),
+          );
 
         setState(() {
           isValueEmpty = false;
           isValueInList = true;
         });
       },
-      suggestionsCallback: (s) => <Team>[],
+      suggestionsCallback: (final String s) => <Team>[],
     );
   }
 }
