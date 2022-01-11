@@ -112,8 +112,10 @@ class Scatter extends StatelessWidget {
                               e.id,
                               e.name))
                           .toList();
-                     final List<Team> teams = report.map((e) => Team(
-                          teamNumber: e.number, teamName: e.name, id: e.id)).toList();
+                      final List<Team> teams = report
+                          .map((e) => Team(
+                              teamNumber: e.number, teamName: e.name, id: e.id))
+                          .toList();
                       return ScatterChart(ScatterChartData(
                         scatterSpots: report
                             .map((e) => ScatterSpot(
