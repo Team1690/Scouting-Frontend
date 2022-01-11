@@ -54,7 +54,7 @@ class Counter extends StatelessWidget {
             iconSize: 30,
             lowerLimit: lowerLimit,
             upperLimit: upperLimit,
-            value: count,
+            valueOnReRender: count,
             stepValue: stepValue,
             longPressStepValue: longPressedValue,
             onChanged: onChange,
