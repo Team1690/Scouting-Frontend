@@ -86,32 +86,36 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           );
           return;
         }
-        uploadResult(
-          widget.vars.toHasuraVars()["team_id"] as int?,
-          widget.getResult(),
-        );
+
+        final int? teamid = widget.vars.toHasuraVars()["team_id"] as int?;
+        final FilePickerResult? file = widget.getResult();
+
+        if (teamid == null || file == null) {
+          setState(() {
+            if (teamid == null && file == null) {
+              errorMessage = "Pick a Team and File";
+            } else {
+              errorMessage = teamid == null ? "Pick a Team" : "Pick a File";
+            }
+            _state = ButtonState.fail;
+          });
+
+          Future<void>.delayed(
+            Duration(seconds: 5),
+            () => setState((() => _state = ButtonState.idle)),
+          );
+          return;
+        } else {
+          uploadResult(
+            teamid,
+            file,
+          );
+        }
       },
     );
   }
 
-  void uploadResult(final int? teamid, final FilePickerResult? result) {
-    if (teamid == null || result == null) {
-      setState(() {
-        if (teamid == null && result == null) {
-          errorMessage = "Pick a Team and File";
-        } else {
-          errorMessage = teamid == null ? "Pick a Team" : "Pick a File";
-        }
-        _state = ButtonState.fail;
-      });
-
-      Future.delayed(
-        Duration(seconds: 5),
-        () => setState((() => _state = ButtonState.idle)),
-      );
-      return;
-    }
-
+  void uploadResult(final int teamid, final FilePickerResult result) {
     final Reference ref = FirebaseStorage.instance
         .ref("/files/$teamid.${result.files.first.extension}");
 

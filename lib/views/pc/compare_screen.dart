@@ -66,31 +66,21 @@ query fetchGameChart(\$teamNumber : Int) {
       ),
       LineChartData(
         points: matches
-            .map<double>((dynamic e) => e['auto_balls'] as double)
+            .map<double>((final dynamic e) => e['auto_balls'] as double)
             .toList(),
       ),
     ];
   }
 
   Future<List<List<LineChartData>>> fetchMatches(List<int> teamnumbers) async {
-    List<List<LineChartData>> matches = [];
-    for (int i = 0; i < teamnumbers.length; i++) {
-      matches.add((await fetchMatch(teamnumbers[i])));
-    }
-    return matches;
+    return Future.wait(teamnumbers.map(fetchMatch).toList());
   }
 
   Future<List<Team>> fetchGameCharts(List<int> teamId) async {
-    List<Team> teamList = [];
-    for (int i = 0; i < teamId.length; i++) {
-      Iterable<Team>? team = await fetchGameChart(teamId[i]);
-      if (team != null) teamList.addAll(team);
-    }
-
-    return teamList;
+    return Future.wait(teamId.map(fetchGameChart));
   }
 
-  Future<List<Team>> fetchGameChart(int teamId) async {
+  Future<Team> fetchGameChart(int teamId) async {
     final client = getClient();
     final String query = """
 query MyQuery(\$team_id: Int) {
@@ -130,25 +120,24 @@ query MyQuery(\$team_id: Int) {
 
     final QueryResult result = await client.query(QueryOptions(
         document: gql(query), variables: <String, dynamic>{"team_id": teamId}));
+
     return result.mapQueryResult((final Map<String, dynamic>? data) =>
-        data.mapNullable(
-            (final Map<String, dynamic> team) => (team['team'] as List<dynamic>)
-                .map((dynamic e) => Team(
-                      teamName: e['name'] as String,
-                      teamNumber: e['number'] as int,
-                      autoGoalAverage: e['matches_aggregate']['aggregate']
-                          ['avg']['auto_balls'] as double,
-                      teleInnerGoalAverage: e['matches_aggregate']['aggregate']
-                          ['avg']['teleop_inner'] as double,
-                      teleOuterGoalAverage: e['matches_aggregate']['aggregate']
-                          ['avg']['teleop_outer'] as double,
-                      id: teamId,
-                      climbFailed: e['climbFail']['aggregate']['count'] as int,
-                      climbSuccess:
-                          e['climbSuccess']['aggregate']['count'] as int,
-                    ))
-                .toList()) ??
-        []);
+        data.mapNullable((final Map<String, dynamic> team) => Team(
+              teamName: team['team'][0]['name'] as String,
+              teamNumber: team['team'][0]['number'] as int,
+              autoGoalAverage: team['team'][0]['matches_aggregate']['aggregate']
+                  ['avg']['auto_balls'] as double,
+              teleInnerGoalAverage: team['team'][0]['matches_aggregate']
+                  ['aggregate']['avg']['teleop_inner'] as double,
+              teleOuterGoalAverage: team['team'][0]['matches_aggregate']
+                  ['aggregate']['avg']['teleop_outer'] as double,
+              id: teamId,
+              climbFailed:
+                  team['team'][0]['climbFail']['aggregate']['count'] as int,
+              climbSuccess:
+                  team['team'][0]['climbSuccess']['aggregate']['count'] as int,
+            )) ??
+        (throw Exception("No team available")));
     //.entries.map((e) => LightTeam(e['id']);
   }
 
@@ -358,18 +347,15 @@ query MyQuery(\$team_id: Int) {
                                 double innerRatio = 100 /
                                     (snapshot.data)!
                                         .map((e) => e.teleInnerGoalAverage)
-                                        .reduce((curr, next) =>
-                                            curr > next ? curr : next);
+                                        .reduce(max);
                                 double outerRatio = 100 /
                                     (snapshot.data)!
                                         .map((e) => e.teleOuterGoalAverage)
-                                        .reduce((curr, next) =>
-                                            curr > next ? curr : next);
+                                        .reduce(max);
                                 double autoRatio = 100 /
                                     (snapshot.data as List<Team>)
                                         .map((e) => e.autoGoalAverage)
-                                        .reduce((curr, next) =>
-                                            curr > next ? curr : next);
+                                        .reduce(max);
                                 return SpiderChart(
                                     numberOfFeatures: 4,
                                     data: (snapshot.data)!

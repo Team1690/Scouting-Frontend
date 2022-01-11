@@ -15,10 +15,9 @@ class DashboardLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double highestValue = -1;
-    dataSet.forEach((List<double> points) {
-      highestValue = max(highestValue, points.reduce(max));
-    });
+    final double highestValue = dataSet
+        .map((final List<double> points) => points.reduce(max))
+        .reduce(max);
     double highestX = -1;
     return LineChart(LineChartData(
         lineBarsData: List.generate(dataSet.length, (int index) {

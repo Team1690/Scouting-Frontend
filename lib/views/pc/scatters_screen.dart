@@ -25,7 +25,7 @@ class _ScattersScreenState extends State<ScattersScreen> {
               child: DashboardCard(
                   title: 'Scatter',
                   body: Scatter(
-                    onHover: (team) => team,
+                    onHover: identity,
                   )),
             ),
           ],

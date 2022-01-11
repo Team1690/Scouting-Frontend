@@ -77,25 +77,23 @@ extension ClimbHelper on Match {
     """;
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      throw result.exception!;
-    } else if (result.data == null) {
-      throw Exception("no climb ids found");
-    } else {
-      (result.data!["climb"] as List<dynamic>).forEach((final dynamic element) {
-        switch (element["name"] as String) {
-          case "failed":
-            _ids["failed"] = element["id"] as int;
-            break;
-          case "No attempt":
-            _ids["noAttempt"] = element["id"] as int;
-            break;
-          case "Succeeded":
-            _ids["succeeded"] = element["id"] as int;
-            break;
-        }
-      });
-      querySuccess = true;
-    }
+
+    result.mapQueryResult((final Map<String, dynamic>? data) =>
+        data.mapNullable((final Map<String, dynamic> climb) {
+          (climb["climb"] as List<dynamic>).forEach((final dynamic element) {
+            switch (element["name"] as String) {
+              case "failed":
+                _ids["failed"] = element["id"] as int;
+                break;
+              case "No attempt":
+                _ids["noAttempt"] = element["id"] as int;
+                break;
+              case "Succeeded":
+                _ids["succeeded"] = element["id"] as int;
+                break;
+            }
+          });
+          querySuccess = true;
+        }));
   }
 }

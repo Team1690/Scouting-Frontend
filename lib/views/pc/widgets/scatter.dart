@@ -89,7 +89,7 @@ class Scatter extends StatelessWidget {
         child: Column(children: [
           Expanded(
               flex: 1,
-              child: FutureBuilder<List<ScatterData>?>(
+              child: FutureBuilder<List<ScatterData>>(
                   future: fetchScatter(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
@@ -100,7 +100,7 @@ class Scatter extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      if (snapshot.data!.length < 1) {
+                      if (snapshot.data!.isEmpty) {
                         return Text('invalid data :(');
                       }
                       final List<ScatterData> report = snapshot.data!

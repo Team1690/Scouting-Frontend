@@ -359,9 +359,10 @@ query MyQuery(\$team_id: Int!) {
         DashboardCard(
             title: 'Scouting Specific',
             // body: ScoutingSpecific(msg: widget.team.msg),
-            body: FutureBuilder<List<SpecificData>?>(
+            body: FutureBuilder<List<SpecificData>>(
                 future: fetchSpesific(),
-                builder: (context, snapshot) {
+                builder: (final BuildContext context,
+                    final AsyncSnapshot<List<SpecificData>> snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error has happened in the future! ' +
                         snapshot.error.toString());
@@ -371,14 +372,17 @@ query MyQuery(\$team_id: Int!) {
                       child: CircularProgressIndicator(),
                     );
                   } else {
-                    if (snapshot.data == null || snapshot.data!.length < 1) {
-                      return Text('no data yet!');
-                    }
-                    final List<dynamic> report =
-                        (snapshot.data as List<SpecificData>)
-                            .map((e) => e.msg)
-                            .toList();
-                    return ScoutingSpecific(msg: report.cast<String>());
+                    return snapshot.data.mapNullable<Widget>(
+                          (final List<SpecificData> specifics) =>
+                              specifics.isEmpty
+                                  ? Text("No Data Yet")
+                                  : ScoutingSpecific(
+                                      msg: specifics
+                                          .map((final SpecificData e) => e.msg)
+                                          .toList(),
+                                    ),
+                        ) ??
+                        Text("No Data Yet");
                   }
                 }))
       ],
