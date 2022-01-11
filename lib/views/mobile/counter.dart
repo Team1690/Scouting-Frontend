@@ -1,11 +1,9 @@
 // ignore_for_file: sort_constructors_first
 
 import "package:flutter/material.dart";
-import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/constants.dart';
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/stepper.dart";
 
-// TO DO improve
 class Counter extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -56,7 +54,7 @@ class Counter extends StatelessWidget {
             iconSize: 30,
             lowerLimit: lowerLimit,
             upperLimit: upperLimit,
-            value: count,
+            valueOnReRender: count,
             stepValue: stepValue,
             longPressStepValue: longPressedValue,
             onChanged: onChange,

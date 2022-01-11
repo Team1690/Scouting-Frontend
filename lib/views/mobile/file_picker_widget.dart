@@ -2,14 +2,13 @@ import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
 import "package:scouting_frontend/views/constants.dart";
-import 'package:scouting_frontend/net/hasura_helper.dart';
+import "package:scouting_frontend/net/hasura_helper.dart";
 
 class FilePickerWidget extends StatefulWidget {
   FilePickerWidget({
     required this.controller,
     this.onImagePicked = ignore,
-  }) {}
-  FilePickerResult? result;
+  });
   final ValueNotifier<bool> controller;
   final void Function(FilePickerResult) onImagePicked;
 
@@ -18,6 +17,7 @@ class FilePickerWidget extends StatefulWidget {
 }
 
 class _FilePickerWidgetState extends State<FilePickerWidget> {
+  FilePickerResult? result;
   @override
   Widget build(final BuildContext context) {
     return Column(
@@ -26,9 +26,9 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
           padding: EdgeInsets.symmetric(vertical: defaultPadding),
           child: ElevatedButton(
             onPressed: () async {
-              widget.result = await FilePicker.platform
+              result = await FilePicker.platform
                   .pickFiles(type: FileType.image, allowMultiple: false);
-              widget.result.mapNullable<void>((final FilePickerResult result) {
+              result.mapNullable<void>((final FilePickerResult result) {
                 widget.controller.value = true;
                 widget.onImagePicked(result);
               });

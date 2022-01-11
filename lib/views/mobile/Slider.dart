@@ -1,16 +1,7 @@
 import "package:flutter/material.dart";
-import 'package:scouting_frontend/views/constants.dart';
+import "package:scouting_frontend/views/constants.dart";
 
 class PitViewSlider extends StatefulWidget {
-  PitViewSlider.inner({
-    required this.label,
-    required this.divisions,
-    required this.max,
-    required this.min,
-    required this.onChange,
-    required this.value,
-  }) {}
-
   PitViewSlider({
     required final String label,
     required final int divisions,
@@ -24,13 +15,22 @@ class PitViewSlider extends StatefulWidget {
           max: max,
           min: min,
           onChange: onChange,
-          value: value ?? min,
+          valueOnReRender: value ?? min,
         );
+
+  PitViewSlider.inner({
+    required this.label,
+    required this.divisions,
+    required this.max,
+    required this.min,
+    required this.onChange,
+    required this.valueOnReRender,
+  }) {}
   final String label;
   final double min;
   final double max;
   final int divisions;
-  double value;
+  final double valueOnReRender;
   final void Function(double) onChange;
   @override
   _PitViewSliderState createState() => _PitViewSliderState();
@@ -39,6 +39,7 @@ class PitViewSlider extends StatefulWidget {
 class _PitViewSliderState extends State<PitViewSlider> {
   @override
   Widget build(final BuildContext context) {
+    double value = widget.valueOnReRender;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -47,11 +48,11 @@ class _PitViewSliderState extends State<PitViewSlider> {
           min: widget.min,
           max: widget.max,
           divisions: widget.divisions,
-          value: widget.value,
-          label: widget.value.round().toString(),
+          value: value,
+          label: value.round().toString(),
           onChanged: (final double newVal) {
             widget.onChange(newVal);
-            setState(() => widget.value = newVal);
+            setState(() => value = newVal);
           },
         )
       ],

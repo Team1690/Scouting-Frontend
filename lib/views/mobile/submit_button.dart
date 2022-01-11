@@ -1,21 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:graphql/client.dart';
-import 'package:progress_state_button/iconed_button.dart';
-import 'package:progress_state_button/progress_button.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/mobile/hasura_vars.dart';
+import "package:flutter/material.dart";
+import "package:graphql/client.dart";
+import "package:progress_state_button/iconed_button.dart";
+import "package:progress_state_button/progress_button.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class SubmitButton extends StatefulWidget {
-  final HasuraVars vars;
-  final String mutation;
-  final void Function() resetForm;
-
   SubmitButton({
     required this.vars,
     required this.mutation,
     this.resetForm = empty,
   });
+  final HasuraVars vars;
+  final String mutation;
+  final void Function() resetForm;
 
   @override
   _SubmitButtonState createState() => _SubmitButtonState();
@@ -26,11 +25,11 @@ class SubmitButton extends StatefulWidget {
 
 class _SubmitButtonState extends State<SubmitButton> {
   ButtonState _state = ButtonState.idle;
-  String _errorMessage = '';
+  String _errorMessage = "";
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ProgressButton.icon(
-      iconedButtons: {
+      iconedButtons: <ButtonState, IconedButton>{
         ButtonState.idle: IconedButton(
           text: "Submit",
           icon: Icon(Icons.send, color: Colors.white),
@@ -56,26 +55,33 @@ class _SubmitButtonState extends State<SubmitButton> {
       },
       onPressed: () async {
         if (_state == ButtonState.fail) {
-          Navigator.push(context,
-              MaterialPageRoute<Scaffold>(builder: (context) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text('Error message'),
-              ),
-              body: Center(
-                child: Text(_errorMessage),
-              ),
-            );
-          }));
+          Navigator.push(
+            context,
+            MaterialPageRoute<Scaffold>(
+              builder: (final BuildContext context) {
+                return Scaffold(
+                  appBar: AppBar(
+                    title: Text("Error message"),
+                  ),
+                  body: Center(
+                    child: Text(_errorMessage),
+                  ),
+                );
+              },
+            ),
+          );
         }
         if (_state == ButtonState.loading) return;
         setState(() {
           _state = ButtonState.loading;
         });
-        final client = getClient();
-        final queryResult = await client.mutate(MutationOptions(
+        final GraphQLClient client = getClient();
+        final QueryResult queryResult = await client.mutate(
+          MutationOptions(
             document: gql(widget.mutation),
-            variables: widget.vars.toHasuraVars()));
+            variables: widget.vars.toHasuraVars(),
+          ),
+        );
         if (queryResult.hasException) {
           setState(() {
             _state = ButtonState.fail;
@@ -87,7 +93,7 @@ class _SubmitButtonState extends State<SubmitButton> {
             _state = ButtonState.success;
           });
         }
-        Future.delayed(Duration(seconds: 5), () {
+        Future<Null>.delayed(Duration(seconds: 5), () {
           setState(() {
             _state = ButtonState.idle;
           });

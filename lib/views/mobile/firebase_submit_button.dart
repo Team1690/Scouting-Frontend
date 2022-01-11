@@ -9,7 +9,7 @@ import "package:graphql/client.dart";
 import "package:progress_state_button/iconed_button.dart";
 import "package:progress_state_button/progress_button.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import 'package:scouting_frontend/views/constants.dart';
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class FireBaseSubmitButton extends StatefulWidget {
@@ -36,7 +36,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
   @override
   Widget build(final BuildContext context) {
     return ProgressButton.icon(
-      iconedButtons: {
+      iconedButtons: <ButtonState, IconedButton>{
         ButtonState.idle: IconedButton(
           text: "Submit",
           icon: Icon(Icons.send, color: Colors.white),
@@ -72,7 +72,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           Navigator.push(
             context,
             MaterialPageRoute<Scaffold>(
-              builder: (final context) {
+              builder: (final BuildContext context) {
                 return Scaffold(
                   appBar: AppBar(
                     title: Text("Error message"),
@@ -124,11 +124,12 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
         : Platform.isAndroid
             ? ref.putFile(File(result.files.first.path!))
             : throw PlatformException(
-                code: "This error shouldn't happen but better safe than sorry");
+                code: "This error shouldn't happen but better safe than sorry",
+              );
 
     bool running = true;
 
-    firebaseTask.snapshotEvents.listen((final event) async {
+    firebaseTask.snapshotEvents.listen((final TaskSnapshot event) async {
       if (event.state == TaskState.running && running) {
         setState(() {
           _state = ButtonState.loading;
@@ -137,12 +138,12 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
       } else if (event.state == TaskState.success) {
         final Map<String, dynamic> vars =
             Map<String, dynamic>.from(widget.vars.toHasuraVars());
-        final url = await ref.getDownloadURL();
+        final String url = await ref.getDownloadURL();
         vars["url"] = url;
 
-        final client = getClient();
+        final GraphQLClient client = getClient();
 
-        final graphqlQueryResult = await client.mutate(
+        final QueryResult graphqlQueryResult = await client.mutate(
           MutationOptions(document: gql(widget.mutation), variables: vars),
         );
 
@@ -155,7 +156,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
 
           graphqlErrorMessage = graphqlQueryResult.exception.toString();
 
-          Future.delayed(
+          Future<void>.delayed(
             Duration(seconds: 5),
             () => setState((() => _state = ButtonState.idle)),
           );
@@ -164,7 +165,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           setState(() {
             _state = ButtonState.success;
           });
-          Future.delayed(
+          Future<void>.delayed(
             Duration(seconds: 5),
             () => setState((() => _state = ButtonState.idle)),
           );
@@ -174,7 +175,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           _state = ButtonState.fail;
           errorMessage = "error";
           graphqlErrorMessage = "Firebase error";
-          Future.delayed(
+          Future<void>.delayed(
             Duration(seconds: 5),
             () => setState((() => _state = ButtonState.idle)),
           );
