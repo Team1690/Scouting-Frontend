@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:scouting_frontend/views/mobile/screens/pit_view.dart';
-import 'package:scouting_frontend/views/mobile/screens/specific_view.dart';
+import "package:flutter/material.dart";
+import "package:scouting_frontend/views/mobile/screens/pit_view.dart";
+import "package:scouting_frontend/views/mobile/screens/specific_view.dart";
 
 class SideNavBar extends StatefulWidget {
-  const SideNavBar({Key key}) : super(key: key);
+  const SideNavBar();
 
   @override
   _SideNavBarState createState() => _SideNavBarState();
@@ -11,17 +11,17 @@ class SideNavBar extends StatefulWidget {
 
 class _SideNavBarState extends State<SideNavBar> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
-        children: [
+        children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
               color: Color(0xFF2A2D3E),
             ),
             child: Text(
-              'Options',
+              "Options",
               style: TextStyle(
                 fontSize: 30.0,
                 fontWeight: FontWeight.bold,
@@ -33,7 +33,7 @@ class _SideNavBarState extends State<SideNavBar> {
           ListTile(
             leading: Icon(Icons.search),
             title: const Text(
-              'Specific',
+              "Specific",
               style: TextStyle(
                 fontSize: 25.0,
                 letterSpacing: 1.0,
@@ -41,23 +41,29 @@ class _SideNavBarState extends State<SideNavBar> {
             ),
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute<Specific>(
-                      builder: (context) => Specific()));
+                context,
+                MaterialPageRoute<Specific>(
+                  builder: (final BuildContext context) => Specific(),
+                ),
+              );
             },
           ),
           ListTile(
             leading: Icon(Icons.error_outline),
             title: const Text(
-              'Pit',
+              "Pit",
               style: TextStyle(
                 fontSize: 25.0,
                 letterSpacing: 1.0,
               ),
             ),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute<PitView>(builder: (context) => PitView()));
+              Navigator.push(
+                context,
+                MaterialPageRoute<PitView>(
+                  builder: (final BuildContext context) => PitView(),
+                ),
+              );
             },
           ),
         ],

@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/widgets/teams_search_box.dart';
 
 class TeamSelectionFuture extends StatefulWidget {
-  TeamSelectionFuture({Key key, this.onChange, this.controller})
-      : super(key: key);
-  @required
+  TeamSelectionFuture({this.onChange = ignore, required this.controller});
   final TextEditingController controller;
-  final Function(LightTeam) onChange;
+  final void Function(LightTeam) onChange;
   @override
   State<TeamSelectionFuture> createState() => _TeamSelectionFutureState();
 }
@@ -29,14 +28,14 @@ query FetchTeams {
 
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      print(result.exception.toString());
-    } //TODO: avoid dynamic
-    return (result.data['team'] as List)
-        .map((final dynamic e) =>
-            LightTeam(e['id'] as int, e['number'] as int, e['name'] as String))
-        .toList();
-    //.entries.map((e) => LightTeam(e['id']);
+
+    return result.mapQueryResult((data) =>
+        data.mapNullable<List<LightTeam>>((team) =>
+            (team['team'] as List<dynamic>)
+                .map((final dynamic e) => LightTeam(
+                    e['id'] as int, e['number'] as int, e['name'] as String))
+                .toList()) ??
+        []);
   }
 
   @override

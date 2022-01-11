@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 
 class TeamsSearchBox extends StatefulWidget {
   TeamsSearchBox({
-    final Key key,
-    @required final this.teams,
-    @required final this.onChange,
-    @required final this.typeAheadController,
+    required final this.teams,
+    required final this.onChange,
+    required final this.typeAheadController,
     // @required final this.typeAheadController,
-  }) : super(key: key);
+  });
 
   final List<LightTeam> teams;
-  final Function(LightTeam) onChange;
+  final void Function(LightTeam) onChange;
   final TextEditingController typeAheadController;
   // final TextEditingController typeAheadController;
 
@@ -28,16 +29,10 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
   List<LightTeam> updateSussestions(String inputNumber) {
     List<LightTeam> _suggestions = List.castFrom(widget.teams);
     String _inputNumber = inputNumber;
-    // print(inputNumber);
-    for (LightTeam team in _suggestions) {
-      print(inputNumber.toString());
-    }
     _suggestions.removeWhere((team) {
-      // print(team.number.toString() + ' ' + _inputNumber);
       return team.number.toString().contains(_inputNumber);
     });
 
-    // print(_suggestions);
     return _suggestions;
   }
 
@@ -63,7 +58,7 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
           return FadeTransition(
             child: suggestionsBox,
             opacity: CurvedAnimation(
-                parent: controller, curve: Curves.fastOutSlowIn),
+                parent: controller!, curve: Curves.fastOutSlowIn),
           );
         },
         noItemsFoundBuilder: (context) => Container(
@@ -81,4 +76,27 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
               .indexWhere((team) => team.number == suggestion.number)]);
         });
   }
+}
+
+Future<List<LightTeam>> fetchTeams() async {
+  final client = getClient();
+  final String query = """
+query FetchTeams {
+  team {
+    id
+    number
+    name
+  }
+}
+  """;
+
+  final QueryResult result =
+      await client.query(QueryOptions(document: gql(query)));
+
+  return result.mapQueryResult((final Map<String, dynamic>? data) =>
+          data.mapNullable((teams) => (teams['team'] as List<dynamic>)
+              .map((dynamic e) => LightTeam(
+                  e['id'] as int, e['number'] as int, e['name'] as String))
+              .toList())) ??
+      [];
 }

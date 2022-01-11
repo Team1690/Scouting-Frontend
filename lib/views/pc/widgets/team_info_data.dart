@@ -1,10 +1,14 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
+import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_pit.dart';
 import 'package:scouting_frontend/views/pc/widgets/scouting_specific.dart';
+import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
 import '../../constants.dart';
 import '../../../net/hasura_helper.dart';
 
@@ -25,17 +29,17 @@ class SpecificData {
 
 class PitViewData {
   PitViewData(
-      {this.driveTrainType,
-      this.driveMotorAmount,
-      this.driveMotorType,
-      this.driveTrainReliability,
-      this.driveWheelType,
-      this.electronicsReliability,
-      this.gearbox,
-      this.notes,
-      this.robotReliability,
-      this.shifter,
-      this.url});
+      {required this.driveTrainType,
+      required this.driveMotorAmount,
+      required this.driveMotorType,
+      required this.driveTrainReliability,
+      required this.driveWheelType,
+      required this.electronicsReliability,
+      required this.gearbox,
+      required this.notes,
+      required this.robotReliability,
+      required this.shifter,
+      required this.url});
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;
@@ -52,9 +56,8 @@ class PitViewData {
 // ignore: must_be_immutable
 class TeamInfoData extends StatefulWidget {
   TeamInfoData({
-    Key key,
-    @required this.team,
-  }) : super(key: key);
+    required this.team,
+  });
 
   LightTeam team;
 
@@ -62,8 +65,60 @@ class TeamInfoData extends StatefulWidget {
   State<TeamInfoData> createState() => _TeamInfoDataState();
 }
 
+class LineChartData {
+  LineChartData({required this.points, required this.title});
+  List<double> points;
+  String title = '';
+}
+
 class _TeamInfoDataState extends State<TeamInfoData> {
-  Future<PitViewData> fetchPit() async {
+  Future<List<LineChartData>> fetchGameChart() async {
+    final client = getClient();
+    final String query = """
+query fetchGameChart(\$teamNumber : Int) {
+  team(where: {number: {_eq: \$teamNumber}}) {
+    matches(order_by: {number: asc}) {
+      teleop_inner
+      teleop_outer
+      auto_balls
+    }
+  }
+}
+
+""";
+
+    final QueryResult result = await client.query(QueryOptions(
+        document: gql(query),
+        variables: <String, int>{"teamNumber": widget.team.number}));
+    final List<dynamic> matches = result.mapQueryResult(
+        (final Map<String, dynamic>? data) =>
+            data.mapNullable(
+                (team) => team["team"][0]["matches"] as List<dynamic>) ??
+            <LineChartData>[]);
+
+    return [
+      LineChartData(
+        title: 'Inner',
+        points: matches
+            .map<double>((dynamic e) => e['teleop_inner'] as double)
+            .toList(),
+      ),
+      LineChartData(
+        title: 'Outer',
+        points: matches
+            .map<double>((dynamic e) => e['teleop_outer'] as double)
+            .toList(),
+      ),
+      LineChartData(
+        title: 'Auto',
+        points: matches
+            .map<double>((dynamic e) => e['auto_balls'] as double)
+            .toList(),
+      ),
+    ];
+  }
+
+  Future<PitViewData?> fetchPit() async {
     final client = getClient();
     final String query = """
 query MyQuery(\$team_id: Int!) {
@@ -87,8 +142,8 @@ query MyQuery(\$team_id: Int!) {
     return (await client.query(QueryOptions(
             document: gql(query),
             variables: <String, dynamic>{'team_id': widget.team.id})))
-        .mapQueryResult<PitViewData>((final Map<String, dynamic> data) =>
-            (data['pit_by_pk'] as Map<String, dynamic>)
+        .mapQueryResult<PitViewData?>((final Map<String, dynamic>? data) =>
+            (data?['pit_by_pk'] as Map<String, dynamic>?)
                 .mapNullable<PitViewData>((final Map<String, dynamic> pit) =>
                     PitViewData(
                         driveTrainType: pit['drive_train_type'] as String,
@@ -118,11 +173,12 @@ query MyQuery(\$team_id: Int!) {
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
 
-    return result.mapQueryResult((final Map<String, dynamic> data) =>
-        (data['specific'] as List<dynamic>).mapNullable(
+    return result.mapQueryResult((final Map<String, dynamic>? data) =>
+        (data?['specific'] as List<dynamic>?).mapNullable<List<SpecificData>>(
             (final List<dynamic> specificEntries) => specificEntries
                 .map((final dynamic e) => SpecificData(e['message'] as String))
-                .toList()));
+                .toList()) ??
+        []);
   }
 
   Future<List<QuickData>> fetchQuickData() async {
@@ -158,8 +214,8 @@ query MyQuery(\$team_id: Int!) {
         document: gql(query),
         variables: <String, int>{"teamNumber": widget.team.number}));
     return result
-        .mapQueryResult(
-            (final Map<String, dynamic> data) => data['team'] as List<dynamic>)
+        .mapQueryResult((final Map<String, dynamic>? data) =>
+            data!['team'] as List<dynamic>)
         .map((final dynamic e) => QuickData(
             e['balls']['aggregate']['avg']['teleop_inner'] as double,
             e['balls']['aggregate']['avg']['teleop_outer'] as double,
@@ -185,52 +241,56 @@ query MyQuery(\$team_id: Int!) {
                         flex: 3,
                         child: DashboardCard(
                             title: 'Quick Data',
-                            body: Column(
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: FutureBuilder<List<QuickData>>(
-                                        future: fetchQuickData(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasError) {
-                                            return Text(
-                                                'Error has happened in the future! ' +
-                                                    snapshot.error.toString());
-                                          } else if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-                                          } else {
-                                            if (snapshot.data.length != 1) {
-                                              return Text(
-                                                  'data.length is shorter than 1! :(');
-                                            }
-                                            final QuickData report =
-                                                snapshot.data[0];
-                                            return Text(
-                                                "\nAverage inner: ${report.averageInner.toStringAsFixed(3)}"
-                                                        "\nAverage outer: ${report.averageOuter.toStringAsFixed(3)}"
-                                                        "\nAverage auto balls: ${report.autoBalls.toStringAsFixed(3)}"
-                                                        "\nClimb Rate: " +
-                                                    (report.success /
-                                                            (report.failed +
-                                                                report
-                                                                    .success) *
-                                                            100)
-                                                        .toString() +
-                                                    "%");
-                                          }
-                                        })),
-                              ],
-                            ))),
+                            body: FutureBuilder<List<QuickData>>(
+                                future: fetchQuickData(),
+                                builder: (final BuildContext context,
+                                    final AsyncSnapshot<List<QuickData>>
+                                        snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text(
+                                        'Error has happened in the future! ' +
+                                            snapshot.error.toString());
+                                  } else if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else if (snapshot.data == null) {
+                                    return Text('No Quick Data!');
+                                  } else {
+                                    if (snapshot.data!.length != 1) {
+                                      return Text(
+                                          'data.length is shorter than 1! :(');
+                                    }
+                                    final QuickData report = snapshot.data![0];
+                                    if (report.success + report.failed == 0) {
+                                      return Text(
+                                          "Average inner: ${report.averageInner.round()}\n"
+                                          "Average outer: ${report.averageOuter.round()}\n"
+                                          "Average auto balls: ${report.autoBalls.round()}\n"
+                                          "Climb Rate: 0"
+                                          "%");
+                                    }
+                                    return Text(
+                                        "Average inner: ${report.averageInner.round()}\n"
+                                                "Average outer: ${report.averageOuter.round()}\n"
+                                                "Average auto balls: ${report.autoBalls.round()}\n"
+                                                "Climb Rate: " +
+                                            (report.success /
+                                                    (report.failed +
+                                                        report.success) *
+                                                    100)
+                                                .round()
+                                                .toString() +
+                                            "%");
+                                  }
+                                }))),
                     SizedBox(width: defaultPadding),
                     Expanded(
                       flex: 3,
                       child: DashboardCard(
                         title: 'Pit Scouting',
-                        body: FutureBuilder<PitViewData>(
+                        body: FutureBuilder<PitViewData?>(
                           future: fetchPit(),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
@@ -244,7 +304,7 @@ query MyQuery(\$team_id: Int!) {
                             } else if (snapshot.data == null) {
                               return Text('No data yet :(');
                             } else {
-                              final PitViewData report = snapshot.data;
+                              final PitViewData report = snapshot.data!;
                               return ScoutingPit(report);
                             }
                           },
@@ -256,24 +316,41 @@ query MyQuery(\$team_id: Int!) {
               ),
               SizedBox(height: defaultPadding),
               Expanded(
-                flex: 3,
+                flex: 5,
                 child: DashboardCard(
-                  title: 'Game Chart',
-                  body: Container(),
-                  // body: CarouselSlider(
-                  //   options: CarouselOptions(
-                  //     height: 3500,
-                  //     viewportFraction: 1,
-                  //     // autoPlay: true,
-                  //   ),
-                  //   items: widget.team.tables
-                  //       .map((table) => DashboardLineChart(
-                  //             colors: colors,
-                  //             dataSets: [table],
-                  //           ))
-                  //       .toList(),
-                  // ),
-                ),
+                    title: 'Game Chart',
+                    body: FutureBuilder<List<LineChartData>>(
+                        future: fetchGameChart(),
+                        builder: (context,
+                            AsyncSnapshot<List<LineChartData>> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(
+                                'Error has happened in the future!   ${snapshot.error}');
+                          } else if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            return CarouselWithIndicator(
+                              widgets: snapshot.data!
+                                  .map((LineChartData chart) => Stack(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(chart.title),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: DashboardLineChart(
+                                                distanceFromHighest: 4,
+                                                dataSet: [chart.points]),
+                                          ),
+                                        ],
+                                      ))
+                                  .toList(),
+                            );
+                          }
+                        })),
               )
             ],
           ),
@@ -284,7 +361,8 @@ query MyQuery(\$team_id: Int!) {
             // body: ScoutingSpecific(msg: widget.team.msg),
             body: FutureBuilder<List<SpecificData>>(
                 future: fetchSpesific(),
-                builder: (context, snapshot) {
+                builder: (final BuildContext context,
+                    final AsyncSnapshot<List<SpecificData>> snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error has happened in the future! ' +
                         snapshot.error.toString());
@@ -294,14 +372,17 @@ query MyQuery(\$team_id: Int!) {
                       child: CircularProgressIndicator(),
                     );
                   } else {
-                    if (snapshot.data.length < 1) {
-                      return Text('no data yet!');
-                    }
-                    final List<dynamic> report =
-                        (snapshot.data as List<SpecificData>)
-                            .map((e) => e.msg)
-                            .toList();
-                    return ScoutingSpecific(msg: report.cast<String>());
+                    return snapshot.data.mapNullable<Widget>(
+                          (final List<SpecificData> specifics) =>
+                              specifics.isEmpty
+                                  ? Text("No Data Yet")
+                                  : ScoutingSpecific(
+                                      msg: specifics
+                                          .map((final SpecificData e) => e.msg)
+                                          .toList(),
+                                    ),
+                        ) ??
+                        Text("No Data Yet");
                   }
                 }))
       ],

@@ -17,40 +17,39 @@ class LightTeam {
 }
 
 class Team {
+  Team({
+    required this.id,
+    required this.teamNumber,
+    required this.teamName,
+
+    //NEW ANALYTICS!!!!
+    this.matchesPlayed = 0,
+    this.teleInnerGoalAverage = 0,
+    this.teleOuterGoalAverage = 0,
+    this.autoGoalAverage = 0,
+    this.averageShots = 0,
+    this.totalShotsSD = 0,
+    this.climbFailed = 0,
+    this.climbSuccess = 0,
+    this.msg = const <String>[],
+    this.spider = const <int>[0, 0, 0, 0],
+  });
   final int id;
   final int teamNumber;
   final String teamName;
 
   // NEW PARAMS:
   final int matchesPlayed;
-  final double autoUpperGoalAverage;
-  final double autoBottomGoalAverage;
+  final double teleInnerGoalAverage;
+  final double teleOuterGoalAverage;
+  final double autoGoalAverage;
   // final double averageShots;
   final double totalShotsSD;
-  final double climbsPerMatches;
-  final double climbsPerAttempts;
+  final int climbFailed;
+  final int climbSuccess;
 
   //test
   final List<String> msg;
   final int averageShots;
-  final List<List<List<double>>> tables;
   final List<int> spider;
-
-  Team({
-    this.id,
-    this.teamNumber,
-    this.teamName,
-
-    //NEW ANALYTICS!!!!
-    this.matchesPlayed = 0,
-    this.autoUpperGoalAverage = 0,
-    this.autoBottomGoalAverage = 0,
-    this.averageShots = 0,
-    this.totalShotsSD = 0,
-    this.climbsPerMatches = 0,
-    this.climbsPerAttempts = 0,
-    this.msg = const <String>[],
-    this.tables = const [],
-    this.spider = const <int>[0, 0, 0, 0],
-  });
 }

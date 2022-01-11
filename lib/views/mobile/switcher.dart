@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/constants.dart';
 
 class Switcher extends StatefulWidget {
   final List<String> labels;
   final List<Color> colors;
   final Function(int) onChange;
   final double height;
-  int selected;
+  int? selected;
 
   Switcher({
-    @required final this.labels,
-    @required final this.colors,
+    required final this.labels,
+    required final this.colors,
     final this.height = 70,
-    final this.onChange,
+    this.onChange = ignore,
   });
   @override
   State<Switcher> createState() => _SwitcherState();

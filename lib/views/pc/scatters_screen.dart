@@ -13,8 +13,6 @@ class ScattersScreen extends StatefulWidget {
 }
 
 class _ScattersScreenState extends State<ScattersScreen> {
-  Team displayTeam;
-
   @override
   Widget build(BuildContext context) {
     return DashboardScaffold(
@@ -27,7 +25,7 @@ class _ScattersScreenState extends State<ScattersScreen> {
               child: DashboardCard(
                   title: 'Scatter',
                   body: Scatter(
-                    onHover: (Team team) => setState(() => displayTeam = team),
+                    onHover: identity,
                   )),
             ),
           ],

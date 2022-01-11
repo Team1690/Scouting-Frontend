@@ -6,11 +6,12 @@ import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
 import 'package:scouting_frontend/views/pc/team_info_screen.dart';
 
 class PickList extends StatefulWidget {
-  const PickList({Key key, @required this.uiList, this.screen, this.onReorder});
+  PickList(
+      {required this.uiList, required this.screen, this.onReorder = ignore});
 
   final List<PickListTeam> uiList;
   final CurrentPickList screen;
-  final Function(List<PickListTeam> list) onReorder;
+  final void Function(List<PickListTeam> list) onReorder;
 
   @override
   _PickListState createState() => _PickListState();
@@ -76,24 +77,34 @@ class _PickListState extends State<PickList> {
   }
 }
 
+int validateId(final int id) =>
+    id <= 0 ? throw ArgumentError('Invalid Id') : id;
+int validateNumber(final int number) =>
+    number < 0 ? throw ArgumentError('Invalid Team Number') : number;
+String validateName(final String name) =>
+    name == "" ? throw ArgumentError("Invalid Team Name") : name;
+
 class PickListTeam {
-  PickListTeam(this.id, this.number, this.name, this.firstListIndex,
-      this.secondListIndex, bool available) {
-    if (id <= 0) {
-      throw ArgumentError('Invalid ID');
-    } else if (number < 0) {
-      throw ArgumentError('Invalid Team Number');
-    } else if (name == '') {
-      throw ArgumentError('Invalid Team Name');
-    }
-    this.controller.value = available;
-  }
+  PickListTeam(final int id, final int number, final String name,
+      final int firstListIndex, final int secondListIndex, final bool available)
+      : this.controller(
+          validateId(id),
+          validateNumber(number),
+          validateName(name),
+          firstListIndex,
+          secondListIndex,
+          ValueNotifier<bool>(available),
+        );
+
+  PickListTeam.controller(this.id, this.number, this.name, this.firstListIndex,
+      this.secondListIndex, this.controller) {}
+
   final int id;
   final int number;
   final String name;
   int firstListIndex;
   int secondListIndex;
-  AdvancedSwitchController controller = AdvancedSwitchController();
+  final ValueNotifier<bool> controller;
 
   @override
   String toString() {

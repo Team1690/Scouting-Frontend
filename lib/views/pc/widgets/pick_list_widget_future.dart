@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
 import 'package:scouting_frontend/net/hasura_helper.dart';
+import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
 import 'package:scouting_frontend/views/pc/widgets/pick_list_widget.dart';
 
 class PickListFuture extends StatefulWidget {
-  const PickListFuture({Key key, @required this.screen, this.onReorder})
-      : super(key: key);
+  PickListFuture({required this.screen, this.onReorder = ignore});
 
   final CurrentPickList screen;
-  final Function(List<PickListTeam> list) onReorder;
+  final void Function(List<PickListTeam> list) onReorder;
   @override
   _PickListFutureState createState() => _PickListFutureState();
 }
@@ -26,10 +26,15 @@ class _PickListFutureState extends State<PickListFuture> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-          widget.onReorder(snapshot.data);
+          if (snapshot.data == null) {
+            return Center(
+              child: Text('No Teams'),
+            );
+          }
+          widget.onReorder(snapshot.data!);
           return PickList(
             onReorder: widget.onReorder,
-            uiList: snapshot.data,
+            uiList: snapshot.data!,
             screen: widget.screen,
           );
         });
@@ -50,19 +55,21 @@ class _PickListFutureState extends State<PickListFuture> {
 }
 
     """;
-    final result = await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      throw Exception('Grapgql error ${result.exception}');
-    }
-    List<PickListTeam> teams = (result.data["team"] as List<dynamic>)
-        .map<PickListTeam>((final dynamic e) => PickListTeam(
-            e['id'] as int,
-            e['number'] as int,
-            e['name'] as String,
-            e['first_picklist_index'] as int,
-            e['second_picklist_index'] as int,
-            e['taken'] as bool))
-        .toList();
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
+
+    List<PickListTeam> teams = result.mapQueryResult((data) =>
+        data.mapNullable((pickListTeams) =>
+            (pickListTeams['team'] as List<dynamic>)
+                .map((dynamic e) => PickListTeam(
+                    e['id'] as int,
+                    e['number'] as int,
+                    e['name'] as String,
+                    e['first_picklist_index'] as int,
+                    e['second_picklist_index'] as int,
+                    e['taken'] as bool))
+                .toList()) ??
+        []);
 
     teams.sort((left, right) =>
         widget.screen.getIndex(left).compareTo(widget.screen.getIndex(right)));

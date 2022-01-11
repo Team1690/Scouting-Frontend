@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:graphql/client.dart';
 import 'package:scouting_frontend/models/team_model.dart';
+import 'package:scouting_frontend/net/hasura_helper.dart';
 import 'package:scouting_frontend/views/constants.dart';
 import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
 import 'package:scouting_frontend/views/pc/widgets/card.dart';
@@ -7,12 +9,12 @@ import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
 
 class TeamInfoScreen extends StatefulWidget {
-  TeamInfoScreen({Key key, this.chosenTeam}) {
+  TeamInfoScreen({this.chosenTeam}) {
     if (chosenTeam != null) {
-      controller.text = chosenTeam.number.toString();
+      controller.text = chosenTeam!.number.toString();
     }
   }
-  LightTeam chosenTeam;
+  LightTeam? chosenTeam;
   TextEditingController controller = TextEditingController();
   @override
   State<TeamInfoScreen> createState() => _TeamInfoScreenState();
@@ -51,29 +53,32 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
               SizedBox(height: defaultPadding),
               Expanded(
                 flex: 10,
-                child: widget.chosenTeam == null
-                    ? DashboardCard(
-                        title: '',
-                        body: Center(
-                            child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(),
-                            ),
-                            Icon(
-                              Icons.search,
-                              size: 100,
-                            ),
-                            SizedBox(height: defaultPadding),
-                            Text(
-                                'Please choose a team in order to display data'),
-                            Expanded(
-                              child: Container(),
-                            ),
-                          ],
-                        )))
-                    : TeamInfoData(team: widget.chosenTeam),
+                child: widget.chosenTeam.mapNullable((final LightTeam team) =>
+                        TeamInfoScreen(chosenTeam: team)) ??
+                    noTeamSelected(),
               )
             ])));
   }
+}
+
+Widget noTeamSelected() {
+  return DashboardCard(
+      title: '',
+      body: Center(
+          child: Column(
+        children: [
+          Expanded(
+            child: Container(),
+          ),
+          Icon(
+            Icons.search,
+            size: 100,
+          ),
+          SizedBox(height: defaultPadding),
+          Text('Please choose a team in order to display data'),
+          Expanded(
+            child: Container(),
+          ),
+        ],
+      )));
 }

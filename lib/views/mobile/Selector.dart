@@ -1,21 +1,26 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
-import '../constants.dart';
+import "../constants.dart";
 
 class Selector extends StatefulWidget {
-  Selector({Key key, this.value, this.values, this.initialValue, this.onChange})
-      : super(key: key);
+  Selector({
+    required this.value,
+    required this.values,
+    required this.initialValue,
+    this.onChange = ignore,
+  });
+
   String value;
   final List<String> values;
   final String initialValue;
-  final Function(String) onChange;
+  final void Function(String) onChange;
   @override
   State<Selector> createState() => _SelectorState();
 }
 
 class _SelectorState extends State<Selector> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return DropdownButton<String>(
       isExpanded: true,
       value: widget.value,
@@ -25,17 +30,17 @@ class _SelectorState extends State<Selector> {
         height: 2,
         color: primaryColor,
       ),
-      onChanged: (String newValue) {
-        widget.onChange(newValue);
+      onChanged: (final String? newValue) {
         setState(() {
           if (widget.values.contains(widget.initialValue) &&
               newValue != widget.initialValue) {
             widget.values.remove(widget.initialValue);
           }
-          widget.value = newValue;
+          widget.value = newValue ?? widget.value;
+          widget.onChange(widget.value);
         });
       },
-      items: widget.values.map<DropdownMenuItem<String>>((String value) {
+      items: widget.values.map<DropdownMenuItem<String>>((final String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(

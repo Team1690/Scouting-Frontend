@@ -8,12 +8,14 @@ import 'package:scouting_frontend/views/constants.dart';
 
 class ScatterData {
   ScatterData(this.avgInner, this.avgOuter, this.stddevInner, this.stddevOuter,
-      this.number);
+      this.number, this.id, this.name);
   final double avgInner;
   final double avgOuter;
   final double stddevInner;
   final double stddevOuter;
   final int number;
+  final int id;
+  final String name;
 
   double get sumOfAvg {
     return avgInner + avgOuter;
@@ -47,39 +49,40 @@ class Scatter extends StatelessWidget {
       }
     }
     number
+    id
+    name
   }
 }
 """;
 
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      throw GraphQLError(message: result.exception.toString());
-    } else {
-      //TODO: avoid dynamic
-      return (result.data['team'] as List<dynamic>)
-          .map((final dynamic e) => ScatterData(
-              e['stats']['aggregate']['avg']['teleop_inner'] as double,
-              e['stats']['aggregate']['avg']['teleop_outer'] as double,
-              e['stats']['aggregate']['stddev']['teleop_inner'] as double ?? 0,
-              e['stats']['aggregate']['stddev']['teleop_outer'] as double ?? 0,
-              e['number'] as int))
-          .toList();
-    }
+
+    return result.mapQueryResult((final Map<String, dynamic>? data) =>
+        data.mapNullable((scatterData) => (scatterData['team'] as List<dynamic>)
+            .map((final dynamic e) => ScatterData(
+                e['stats']['aggregate']['avg']['teleop_inner'] as double,
+                e['stats']['aggregate']['avg']['teleop_outer'] as double,
+                e['stats']['aggregate']['stddev']['teleop_inner'] as double? ??
+                    0,
+                e['stats']['aggregate']['stddev']['teleop_outer'] as double? ??
+                    0,
+                e['number'] as int,
+                e['id'] as int,
+                e['name'] as String))
+            .toList()) ??
+        []);
   }
 
   Scatter({
-    @required this.onHover,
-    Key key,
-    List<Team> teams,
-  }) : super(key: key);
-  List<Team> teams;
+    required this.onHover,
+  });
 
   final Function(Team team) onHover;
 
   @override
   Widget build(BuildContext context) {
-    String tooltip;
+    String? tooltip;
     return Container(
         color: secondaryColor,
         child: Column(children: [
@@ -96,21 +99,21 @@ class Scatter extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      if (snapshot.data.length < 1) {
+                      if (snapshot.data!.isEmpty) {
                         return Text('invalid data :(');
                       }
-                      final List<ScatterData> report = snapshot.data
+                      final List<ScatterData> report = snapshot.data!
                           .map<ScatterData>((e) => ScatterData(
                               e.avgInner,
                               e.avgOuter,
                               e.stddevInner,
                               e.stddevOuter,
-                              e.number))
+                              e.number,
+                              e.id,
+                              e.name))
                           .toList();
-
-                      teams = report
-                          .map((e) => Team(teamNumber: e.number))
-                          .toList();
+                     final List<Team> teams = report.map((e) => Team(
+                          teamNumber: e.number, teamName: e.name, id: e.id)).toList();
                       return ScatterChart(ScatterChartData(
                         scatterSpots: report
                             .map((e) => ScatterSpot(
@@ -119,12 +122,15 @@ class Scatter extends StatelessWidget {
                                 ))
                             .toList(),
                         scatterTouchData: ScatterTouchData(
-                          touchCallback: (p0) => {
-                            if (p0.touchedSpot != null)
+                          touchCallback: (final FlTouchEvent event,
+                                  final ScatterTouchResponse? response) =>
                               {
-                                tooltip = teams[p0.touchedSpot.spotIndex]
-                                    .teamNumber
-                                    .toString(),
+                            if (response?.touchedSpot != null)
+                              {
+                                tooltip =
+                                    teams[response!.touchedSpot!.spotIndex]
+                                        .teamNumber
+                                        .toString(),
                               }
                           },
                           enabled: true,
@@ -133,9 +139,9 @@ class Scatter extends StatelessWidget {
                             tooltipBgColor: bgColor,
                             getTooltipItems: (ScatterSpot touchedBarSpot) {
                               return ScatterTooltipItem(
-                                tooltip,
-                                TextStyle(color: Colors.white),
-                                10,
+                                tooltip!,
+                                textStyle: TextStyle(color: Colors.white),
+                                bottomMargin: 10,
                               );
                             },
                           ),

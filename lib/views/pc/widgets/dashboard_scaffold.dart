@@ -4,7 +4,7 @@ import 'package:scouting_frontend/views/pc/widgets/navigation_tab.dart';
 
 class DashboardScaffold extends StatelessWidget {
   DashboardScaffold({
-    @required this.body,
+    required this.body,
   });
 
   final Widget body;

@@ -2,62 +2,50 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:scouting_frontend/views/constants.dart';
 
 class DashboardLineChart extends StatelessWidget {
   const DashboardLineChart({
-    Key key,
-    @required this.dataSets,
-    this.colors,
-    // this.colors = const [const Color(0xff23b6e6), const Color(0xff02d39a)],
-    // @required this.title,
-    // @required this.body,
-  }) : super(key: key);
+    required this.dataSet,
+    this.distanceFromHighest = 5,
+  });
 
-  final List<List<List<double>>> dataSets;
-  final List<Color> colors;
-  // final String title;
-  // final Widget body;
+  final int distanceFromHighest;
+  final List<List<double>> dataSet;
 
   @override
   Widget build(BuildContext context) {
-    // inspect(dataSets);
-
-    List<Color> _colors = [
-      Colors.primaries[Random().nextInt(Colors.primaries.length)],
-      Colors.primaries[Random().nextInt(Colors.primaries.length)]
-    ];
-    // const List<Color> colors = [
-    //   const Color(0xff23b6e6),
-    //   const Color(0xff02d39a)
-    // ];
-    return LineChart(
-      LineChartData(
-        lineBarsData: dataSets
-            .asMap()
-            .entries
-            .map((dataSet) => LineChartBarData(
-                  isCurved: true,
-                  colors: [colors[dataSet.key]],
-                  barWidth: 8,
-                  isStrokeCapRound: true,
-                  dotData: FlDotData(show: false),
-                  belowBarData: BarAreaData(
-                    show: true,
-                    colors: [colors[dataSet.key].withOpacity(0.3)],
-                    // colors.map((color) => color.withOpacity(0.3)).toList(),
-                  ),
-                  // spots: List.generate(10,
-                  //     (index) => FlSpot(index.toDouble(), Random().nextDouble())))),
-                  spots: dataSet.value
-                      .map<FlSpot>(
-                          (dataPoint) => FlSpot(dataPoint[0], dataPoint[1]))
-                      .toList(),
-                ))
-            .toList(),
+    final double highestValue = dataSet
+        .map((final List<double> points) => points.reduce(max))
+        .reduce(max);
+    double highestX = -1;
+    return LineChart(LineChartData(
+        lineBarsData: List.generate(dataSet.length, (int index) {
+          List<Color> chartColors = [colors[index]];
+          return LineChartBarData(
+              isCurved: false,
+              colors: chartColors,
+              barWidth: 8,
+              isStrokeCapRound: true,
+              dotData: FlDotData(show: false),
+              belowBarData: BarAreaData(
+                show: true,
+                colors: chartColors
+                    .map((Color color) => color.withOpacity(0.3))
+                    .toList(),
+              ),
+              spots: dataSet[index]
+                  .asMap()
+                  .entries
+                  .map((entry) => FlSpot(entry.key.toDouble(), entry.value))
+                  .toList());
+        }),
         gridData: FlGridData(
+          verticalInterval: 1,
+          horizontalInterval: 1,
           show: true,
           drawVerticalLine: true,
-          getDrawingHorizontalLine: (value) {
+          getDrawingHorizontalLine: (double value) {
             return FlLine(
               color: const Color(0xff37434d),
               strokeWidth: 1,
@@ -71,37 +59,37 @@ class DashboardLineChart extends StatelessWidget {
           },
         ),
         titlesData: FlTitlesData(
-          show: true,
-          bottomTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 16,
-            getTextStyles: (value) => const TextStyle(
-                color: Color(0xff68737d),
-                fontWeight: FontWeight.bold,
-                fontSize: 16),
-            margin: 8,
-          ),
-          leftTitles: SideTitles(
-            showTitles: true,
-            getTextStyles: (value) => const TextStyle(
-              color: Color(0xff67727d),
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+            show: true,
+            topTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 16,
+              getTextStyles: (BuildContext context, double value) =>
+                  const TextStyle(color: Colors.white, fontSize: 16),
+              margin: 8,
+              checkToShowTitle: (double minValue,
+                      double maxValue,
+                      SideTitles sideTitles,
+                      double appliedInterval,
+                      double value) =>
+                  value == value.floorToDouble(),
             ),
-            reservedSize: 28,
-            margin: 12,
-          ),
-        ),
+            rightTitles: SideTitles(
+              showTitles: true,
+              getTextStyles: (BuildContext context, double value) =>
+                  const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+              reservedSize: 28,
+              margin: 12,
+            ),
+            bottomTitles: SideTitles(showTitles: false),
+            leftTitles: SideTitles(showTitles: false)),
         borderData: FlBorderData(
             show: true,
             border: Border.all(color: const Color(0xff37434d), width: 1)),
         minX: 0,
-        // maxX: 11,
         minY: 0,
-        // maxY: 2,
-      ),
-      swapAnimationDuration: Duration(milliseconds: 500),
-      // swapAnimationCurve: Curves.easeInOutQuad  ,
-    );
+        maxY: highestValue + distanceFromHighest));
   }
 }

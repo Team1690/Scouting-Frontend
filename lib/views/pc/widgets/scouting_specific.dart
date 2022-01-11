@@ -4,9 +4,8 @@ import '../../constants.dart';
 
 class ScoutingSpecific extends StatelessWidget {
   const ScoutingSpecific({
-    Key key,
-    @required this.msg,
-  }) : super(key: key);
+    required this.msg,
+  });
 
   final List<String> msg;
 
@@ -29,6 +28,7 @@ class ScoutingSpecific extends StatelessWidget {
                         width: 110,
                         child: Text(
                           e,
+                          textDirection: TextDirection.rtl,
                           style: TextStyle(color: primaryWhite, fontSize: 12),
                         ),
                       ),

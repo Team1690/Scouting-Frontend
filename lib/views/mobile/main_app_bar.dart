@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -9,10 +9,10 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 5,
       title: Row(
-        children: [
+        children: <Widget>[
           Expanded(
             child: const Text(
-              'Orbit Scouting',
+              "Orbit Scouting",
               textAlign: TextAlign.center,
             ),
           ),

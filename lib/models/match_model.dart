@@ -3,6 +3,15 @@ import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class Match implements HasuraVars {
+  Match({
+    this.teamId = 0,
+    this.teamNumber = 0,
+    this.matchNumber = 0,
+    this.autoUpperGoal = 0,
+    this.teleOuter = 0,
+    this.teleInner = 0,
+    this.climbStatus = 1,
+  });
   int teamNumber;
   int matchNumber;
 
@@ -13,18 +22,6 @@ class Match implements HasuraVars {
   int teleInner = 0;
 
   int climbStatus;
-
-  String matchJson;
-
-  Match({
-    this.teamId = 0,
-    this.teamNumber = 0,
-    this.matchNumber = 0,
-    this.autoUpperGoal = 0,
-    this.teleOuter = 0,
-    this.teleInner = 0,
-    this.climbStatus = 1,
-  });
 
   @override
   Map<String, dynamic> toHasuraVars() {
@@ -44,23 +41,17 @@ class Match implements HasuraVars {
 
 extension ClimbHelper on Match {
   static bool querySuccess = false;
-  static Map<String, int> _ids = {};
+  static Map<String, int> _ids = <String, int>{};
 
-  static int get successId {
-    return _ids["succeeded"];
-  }
+  static int get successId => _ids["succeeded"]!;
 
-  static int get noAttemptId {
-    return _ids["noAttempt"];
-  }
+  static int get noAttemptId => _ids["noAttempt"]!;
 
-  static int get failedId {
-    return _ids["failed"];
-  }
+  static int get failedId => _ids["failed"]!;
 
   static int climbId(final int i) {
     if (!querySuccess) {
-      throw GraphQLError(message: "climb id query didnt succeed");
+      throw Exception("climb id query didnt succeed");
     }
     switch (i) {
       case 0:
@@ -86,25 +77,23 @@ extension ClimbHelper on Match {
     """;
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
-    if (result.hasException) {
-      throw result.exception;
-    } else if (result.data == null) {
-      throw Exception("no climb ids found");
-    } else {
-      (result.data["climb"] as List<dynamic>).forEach((final dynamic element) {
-        switch (element["name"] as String) {
-          case "failed":
-            _ids["failed"] = element["id"] as int;
-            break;
-          case "No attempt":
-            _ids["noAttempt"] = element["id"] as int;
-            break;
-          case "Succeeded":
-            _ids["succeeded"] = element["id"] as int;
-            break;
-        }
-      });
-      querySuccess = true;
-    }
+
+    result.mapQueryResult((final Map<String, dynamic>? data) =>
+        data.mapNullable((final Map<String, dynamic> climb) {
+          (climb["climb"] as List<dynamic>).forEach((final dynamic element) {
+            switch (element["name"] as String) {
+              case "failed":
+                _ids["failed"] = element["id"] as int;
+                break;
+              case "No attempt":
+                _ids["noAttempt"] = element["id"] as int;
+                break;
+              case "Succeeded":
+                _ids["succeeded"] = element["id"] as int;
+                break;
+            }
+          });
+          querySuccess = true;
+        }));
   }
 }
