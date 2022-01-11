@@ -1,18 +1,16 @@
-import 'dart:math';
+import "dart:math";
 
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:graphql/client.dart';
-import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
-import 'package:scouting_frontend/views/constants.dart';
-import 'package:scouting_frontend/views/mobile/team_selection_future.dart';
-import 'package:scouting_frontend/views/pc/widgets/card.dart';
-import 'package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart';
-import 'package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart';
-import 'package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart';
-import 'package:scouting_frontend/views/pc/widgets/radar_chart.dart';
+import "package:carousel_slider/carousel_slider.dart";
+import "package:flutter/material.dart";
+import "package:graphql/client.dart";
+import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/team_selection_future.dart";
+import "package:scouting_frontend/views/pc/widgets/card.dart";
+import "package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart";
+import "package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart";
+import "package:scouting_frontend/views/pc/widgets/radar_chart.dart";
 
 // ignore: must_be_immutable
 class CompareScreen extends StatefulWidget {
@@ -27,11 +25,11 @@ class LineChartData {
 
 class _CompareScreenState extends State<CompareScreen> {
   TextEditingController controller = TextEditingController();
-  List<LightTeam> compareTeamsList = [];
+  List<LightTeam> compareTeamsList = <LightTeam>[];
   // List tables;
 
-  Future<List<LineChartData>> fetchMatch(int teamNumber) async {
-    final client = getClient();
+  Future<List<LineChartData>> fetchMatch(final int teamNumber) async {
+    final GraphQLClient client = getClient();
     final String query = """
 query fetchGameChart(\$teamNumber : Int) {
   team(where: {number: {_eq: \$teamNumber}}) {
@@ -45,43 +43,52 @@ query fetchGameChart(\$teamNumber : Int) {
 
 """;
 
-    final QueryResult result = await client.query(QueryOptions(
+    final QueryResult result = await client.query(
+      QueryOptions(
         document: gql(query),
-        variables: <String, int>{"teamNumber": teamNumber}));
-    final List<dynamic> matches = result.mapQueryResult((data) =>
-        data.mapNullable<List<dynamic>>(
-            (team) => team['team'][0]['matches'] as List<dynamic>) ??
-        <dynamic>[]);
+        variables: <String, int>{"teamNumber": teamNumber},
+      ),
+    );
+    final List<dynamic> matches = result.mapQueryResult(
+      (final Map<String, dynamic>? data) =>
+          data.mapNullable<List<dynamic>>(
+            (final Map<String, dynamic> team) =>
+                team["team"][0]["matches"] as List<dynamic>,
+          ) ??
+          <dynamic>[],
+    );
 
-    return [
+    return <LineChartData>[
       LineChartData(
         points: matches
-            .map<double>((dynamic e) => e['teleop_inner'] as double)
+            .map<double>((final dynamic e) => e["teleop_inner"] as double)
             .toList(),
       ),
       LineChartData(
         points: matches
-            .map<double>((dynamic e) => e['teleop_outer'] as double)
+            .map<double>((final dynamic e) => e["teleop_outer"] as double)
             .toList(),
       ),
       LineChartData(
         points: matches
-            .map<double>((final dynamic e) => e['auto_balls'] as double)
+            .map<double>((final dynamic e) => e["auto_balls"] as double)
             .toList(),
       ),
     ];
   }
 
-  Future<List<List<LineChartData>>> fetchMatches(List<int> teamnumbers) async {
+  Future<List<List<LineChartData>>> fetchMatches(
+    final List<int> teamnumbers,
+  ) async {
     return Future.wait(teamnumbers.map(fetchMatch).toList());
   }
 
-  Future<List<Team>> fetchGameCharts(List<int> teamId) async {
+  Future<List<Team>> fetchGameCharts(final List<int> teamId) async {
     return Future.wait(teamId.map(fetchGameChart));
   }
 
-  Future<Team> fetchGameChart(int teamId) async {
-    final client = getClient();
+  Future<Team> fetchGameChart(final int teamId) async {
+    final GraphQLClient client = getClient();
     final String query = """
 query MyQuery(\$team_id: Int) {
   team(where: {id: {_eq: \$team_id}}) {
@@ -118,52 +125,64 @@ query MyQuery(\$team_id: Int) {
 
   """;
 
-    final QueryResult result = await client.query(QueryOptions(
-        document: gql(query), variables: <String, dynamic>{"team_id": teamId}));
+    final QueryResult result = await client.query(
+      QueryOptions(
+        document: gql(query),
+        variables: <String, dynamic>{"team_id": teamId},
+      ),
+    );
 
-    return result.mapQueryResult((final Map<String, dynamic>? data) =>
-        data.mapNullable((final Map<String, dynamic> team) => Team(
-              teamName: team['team'][0]['name'] as String,
-              teamNumber: team['team'][0]['number'] as int,
-              autoGoalAverage: team['team'][0]['matches_aggregate']['aggregate']
-                  ['avg']['auto_balls'] as double,
-              teleInnerGoalAverage: team['team'][0]['matches_aggregate']
-                  ['aggregate']['avg']['teleop_inner'] as double,
-              teleOuterGoalAverage: team['team'][0]['matches_aggregate']
-                  ['aggregate']['avg']['teleop_outer'] as double,
+    return result.mapQueryResult(
+      (final Map<String, dynamic>? data) =>
+          data.mapNullable(
+            (final Map<String, dynamic> team) => Team(
+              teamName: team["team"][0]["name"] as String,
+              teamNumber: team["team"][0]["number"] as int,
+              autoGoalAverage: team["team"][0]["matches_aggregate"]["aggregate"]
+                  ["avg"]["auto_balls"] as double,
+              teleInnerGoalAverage: team["team"][0]["matches_aggregate"]
+                  ["aggregate"]["avg"]["teleop_inner"] as double,
+              teleOuterGoalAverage: team["team"][0]["matches_aggregate"]
+                  ["aggregate"]["avg"]["teleop_outer"] as double,
               id: teamId,
               climbFailed:
-                  team['team'][0]['climbFail']['aggregate']['count'] as int,
+                  team["team"][0]["climbFail"]["aggregate"]["count"] as int,
               climbSuccess:
-                  team['team'][0]['climbSuccess']['aggregate']['count'] as int,
-            )) ??
-        (throw Exception("No team available")));
+                  team["team"][0]["climbSuccess"]["aggregate"]["count"] as int,
+            ),
+          ) ??
+          (throw Exception("No team available")),
+    );
     //.entries.map((e) => LightTeam(e['id']);
   }
 
-  void addTeam(LightTeam team) => compareTeamsList.add(team);
-  void removeTeam(MapEntry<int, LightTeam> index) => compareTeamsList
-      .removeWhere((LightTeam entry) => entry.number == index.value.number);
+  void addTeam(final LightTeam team) => compareTeamsList.add(team);
+  void removeTeam(final MapEntry<int, LightTeam> index) =>
+      compareTeamsList.removeWhere(
+        (final LightTeam entry) => entry.number == index.value.number,
+      );
 
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return DashboardScaffold(
       body: Padding(
         padding: const EdgeInsets.all(defaultPadding),
         child: Column(
-          children: [
+          children: <Widget>[
             Container(
               child: Row(
-                children: [
+                children: <Widget>[
                   Expanded(
                     flex: 1,
                     child: TeamSelectionFuture(
-                      onChange: (LightTeam team) {
-                        if (compareTeamsList
-                            .any((element) => element.id == team.id)) return;
-                        setState(() => {
-                              compareTeamsList.add(
-                                  LightTeam(team.id, team.number, team.name))
-                            });
+                      onChange: (final LightTeam team) {
+                        if (compareTeamsList.any(
+                          (final LightTeam element) => element.id == team.id,
+                        )) return;
+                        setState(
+                          () => compareTeamsList.add(
+                            LightTeam(team.id, team.number, team.name),
+                          ),
+                        );
                       },
                       controller: controller,
                     ),
@@ -172,33 +191,36 @@ query MyQuery(\$team_id: Int) {
                   Expanded(
                     flex: 2,
                     child: Row(
-                        children: compareTeamsList
-                            .asMap()
-                            .entries
-                            .map(
-                              (index) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: defaultPadding / 2),
-                                child: Chip(
-                                  label: Text(index.value.number.toString()),
-                                  backgroundColor: colors[index.key],
-                                  onDeleted: () =>
-                                      setState(() => removeTeam(index)),
-                                ),
+                      children: compareTeamsList
+                          .asMap()
+                          .entries
+                          .map(
+                            (final MapEntry<int, LightTeam> index) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: defaultPadding / 2,
                               ),
-                            )
-                            .toList()),
+                              child: Chip(
+                                label: Text(index.value.number.toString()),
+                                backgroundColor: colors[index.key],
+                                onDeleted: () =>
+                                    setState(() => removeTeam(index)),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ),
                   Align(
-                      alignment: Alignment.centerRight,
-                      child: ToggleButtons(
-                        children: [
-                          Icon(Icons.shield_rounded),
-                          Icon(Icons.remove_moderator_outlined),
-                        ],
-                        isSelected: [false, false],
-                        onPressed: (int index) {},
-                      )),
+                    alignment: Alignment.centerRight,
+                    child: ToggleButtons(
+                      children: <Widget>[
+                        Icon(Icons.shield_rounded),
+                        Icon(Icons.remove_moderator_outlined),
+                      ],
+                      isSelected: <bool>[false, false],
+                      onPressed: (final int index) {},
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -206,23 +228,27 @@ query MyQuery(\$team_id: Int) {
             Expanded(
               flex: 5,
               child: Row(
-                children: [
+                children: <Widget>[
                   Expanded(
                     flex: 4,
                     child: Column(
-                      children: [
+                      children: <Widget>[
                         Expanded(
                           flex: 3,
                           child: DashboardCard(
-                            title: 'Game Chart',
+                            title: "Game Chart",
                             // body: Container(),
                             body: FutureBuilder<List<List<LineChartData>>>(
-                              future: fetchMatches(compareTeamsList
-                                  .map((final LightTeam e) => e.number)
-                                  .toList()),
-                              builder: (final BuildContext context,
-                                  final AsyncSnapshot<List<List<LineChartData>>>
-                                      snapshot) {
+                              future: fetchMatches(
+                                compareTeamsList
+                                    .map((final LightTeam e) => e.number)
+                                    .toList(),
+                              ),
+                              builder: (
+                                final BuildContext context,
+                                final AsyncSnapshot<List<List<LineChartData>>>
+                                    snapshot,
+                              ) {
                                 if (snapshot.hasError) {
                                   return Text(snapshot.error.toString());
                                 } else if (snapshot.connectionState ==
@@ -233,15 +259,19 @@ query MyQuery(\$team_id: Int) {
                                 }
                                 if (!snapshot.hasData ||
                                     (snapshot.data?.isEmpty ?? true)) {
-                                  return Text('No Data yet :(');
+                                  return Text("No Data yet :(");
                                 }
 
-                                List<LineChartData> inner = [];
+                                final List<LineChartData> inner =
+                                    <LineChartData>[];
 
-                                List<LineChartData> outer = [];
+                                final List<LineChartData> outer =
+                                    <LineChartData>[];
 
-                                List<LineChartData> auto = [];
-                                (snapshot.data)!.forEach((item) {
+                                final List<LineChartData> auto =
+                                    <LineChartData>[];
+                                (snapshot.data)!
+                                    .forEach((final List<LineChartData> item) {
                                   if (!item.isEmpty) {
                                     inner.add(item[0]);
                                     outer.add(item[1]);
@@ -255,59 +285,73 @@ query MyQuery(\$team_id: Int) {
                                     viewportFraction: 1,
                                     // autoPlay: true,
                                   ),
-                                  items: [
+                                  items: <Widget>[
                                     Stack(
-                                      children: [
-                                        Text('Inner'),
+                                      children: <Widget>[
+                                        Text("Inner"),
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                              top: 20,
-                                              right: 20,
-                                              left: 20,
-                                              bottom: 20),
+                                            top: 20,
+                                            right: 20,
+                                            left: 20,
+                                            bottom: 20,
+                                          ),
                                           child: DashboardLineChart(
-                                              dataSet: inner
-                                                  .map((LineChartData e) =>
-                                                      e.points)
-                                                  .toList()),
+                                            dataSet: inner
+                                                .map(
+                                                  (final LineChartData e) =>
+                                                      e.points,
+                                                )
+                                                .toList(),
+                                          ),
                                         ),
                                       ],
                                     ),
                                     Stack(
-                                      children: [
+                                      children: <Widget>[
                                         Align(
-                                          child: Text('Outer'),
+                                          child: Text("Outer"),
                                           alignment: Alignment.topLeft,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                              top: 20,
-                                              right: 20,
-                                              left: 20,
-                                              bottom: 20),
+                                            top: 20,
+                                            right: 20,
+                                            left: 20,
+                                            bottom: 20,
+                                          ),
                                           child: DashboardLineChart(
-                                              dataSet: outer
-                                                  .map((e) => e.points)
-                                                  .toList()),
+                                            dataSet: outer
+                                                .map(
+                                                  (final LineChartData e) =>
+                                                      e.points,
+                                                )
+                                                .toList(),
+                                          ),
                                         ),
                                       ],
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 20,
-                                          right: 20,
-                                          bottom: 20,
-                                          left: 20),
+                                        top: 20,
+                                        right: 20,
+                                        bottom: 20,
+                                        left: 20,
+                                      ),
                                       child: Stack(
-                                        children: [
+                                        children: <Widget>[
                                           Align(
-                                            child: Text('Auto'),
+                                            child: Text("Auto"),
                                             alignment: Alignment.topLeft,
                                           ),
                                           DashboardLineChart(
-                                              dataSet: auto
-                                                  .map((e) => e.points)
-                                                  .toList())
+                                            dataSet: auto
+                                                .map(
+                                                  (final LineChartData e) =>
+                                                      e.points,
+                                                )
+                                                .toList(),
+                                          )
                                         ],
                                       ),
                                     )
@@ -322,79 +366,90 @@ query MyQuery(\$team_id: Int) {
                   ),
                   SizedBox(width: defaultPadding),
                   Expanded(
-                      flex: 2,
-                      child: DashboardCard(
-                        title: 'Compare Spider Chart',
-                        body: Center(
-                            child: FutureBuilder(
-                          future: fetchGameCharts(compareTeamsList
-                              .map((final LightTeam e) => e.id)
-                              .toList()),
-                          builder: (final BuildContext context,
-                              final AsyncSnapshot<List<Team>> snapshot) {
+                    flex: 2,
+                    child: DashboardCard(
+                      title: "Compare Spider Chart",
+                      body: Center(
+                        child: FutureBuilder<List<Team>>(
+                          future: fetchGameCharts(
+                            compareTeamsList
+                                .map((final LightTeam e) => e.id)
+                                .toList(),
+                          ),
+                          builder: (
+                            final BuildContext context,
+                            final AsyncSnapshot<List<Team>> snapshot,
+                          ) {
                             if (snapshot.hasError) {
-                              return Text('Error has happened in the future! ' +
-                                  snapshot.error.toString());
+                              return Text(
+                                "Error has happened in the future! " +
+                                    snapshot.error.toString(),
+                              );
                             } else if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return Center(
                                 child: CircularProgressIndicator(),
                               );
                             } else if (!snapshot.hasData) {
-                              return Text('No Data yet');
+                              return Text("No Data yet");
                             } else {
                               if (snapshot.data!.isNotEmpty) {
-                                double innerRatio = 100 /
+                                final double innerRatio = 100 /
                                     (snapshot.data)!
-                                        .map((e) => e.teleInnerGoalAverage)
+                                        .map(
+                                          (final Team e) =>
+                                              e.teleInnerGoalAverage,
+                                        )
                                         .reduce(max);
-                                double outerRatio = 100 /
+                                final double outerRatio = 100 /
                                     (snapshot.data)!
-                                        .map((e) => e.teleOuterGoalAverage)
+                                        .map(
+                                          (final Team e) =>
+                                              e.teleOuterGoalAverage,
+                                        )
                                         .reduce(max);
-                                double autoRatio = 100 /
-                                    (snapshot.data as List<Team>)
-                                        .map((e) => e.autoGoalAverage)
+                                final double autoRatio = 100 /
+                                    (snapshot.data)!
+                                        .map(
+                                          (final Team e) => e.autoGoalAverage,
+                                        )
                                         .reduce(max);
                                 return SpiderChart(
-                                    numberOfFeatures: 4,
-                                    data: (snapshot.data)!
-                                        .map((e) => ([
-                                              (e.teleInnerGoalAverage *
-                                                      innerRatio)
-                                                  .toInt(),
-                                              (e.teleOuterGoalAverage *
-                                                      outerRatio)
-                                                  .toInt(),
-                                              (e.autoGoalAverage * autoRatio)
-                                                  .toInt(),
-                                              (e.climbSuccess /
-                                                      (e.climbSuccess +
-                                                          e.climbFailed) *
-                                                      100)
-                                                  .toInt()
-                                            ]))
-                                        .toList(),
-                                    ticks: [
-                                      0,
-                                      25,
-                                      50,
-                                      75,
-                                      100
-                                    ],
-                                    features: [
-                                      "inner balls",
-                                      "outer balls",
-                                      "Auto balls",
-                                      "Climb%",
-                                    ]);
+                                  numberOfFeatures: 4,
+                                  data: (snapshot.data)!
+                                      .map(
+                                        (final Team e) => (<int>[
+                                          (e.teleInnerGoalAverage * innerRatio)
+                                              .toInt(),
+                                          (e.teleOuterGoalAverage * outerRatio)
+                                              .toInt(),
+                                          (e.autoGoalAverage * autoRatio)
+                                              .toInt(),
+                                          (e.climbSuccess /
+                                                  (e.climbSuccess +
+                                                      e.climbFailed) *
+                                                  100)
+                                              .toInt()
+                                        ]),
+                                      )
+                                      .toList(),
+                                  ticks: <int>[0, 25, 50, 75, 100],
+                                  features: <String>[
+                                    "inner balls",
+                                    "outer balls",
+                                    "Auto balls",
+                                    "Climb%",
+                                  ],
+                                );
                               } else {
                                 return Container();
                               }
                             }
                           },
-                        )),
-                      ))
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
