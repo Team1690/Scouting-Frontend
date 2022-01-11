@@ -49,19 +49,23 @@ class _SwitcherState extends State<Switcher> {
             Expanded(
               child: SizedBox(
                 height: widget.height,
-                //TODO change to TextButton
                 child: TextButton(
                   child: Text(
                     widget.labels[i],
                     style: TextStyle(
-                        fontSize: 15,
-                        color: selected == i ? widget.colors[i] : Colors.black),
+                      fontSize: 15,
+                      color: selected == i ? widget.colors[i] : Colors.black,
+                    ),
                   ),
                   style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          getBorder(i)),
-                      overlayColor: MaterialStateColor.resolveWith((states) =>
-                          selected == i ? widget.colors[i] : Colors.grey)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      getBorder(i),
+                    ),
+                    overlayColor: MaterialStateColor.resolveWith(
+                      (final Set<MaterialState> states) =>
+                          selected == i ? widget.colors[i] : Colors.grey,
+                    ),
+                  ),
                   onPressed: () => setState(() {
                     i = i == selected ? -1 : i;
                     widget.onChange(i);

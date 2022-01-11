@@ -29,9 +29,10 @@ extension MapSnapshot<T> on AsyncSnapshot<T> {
     final V Function(T) f,
     final V Function() onWaiting,
     final V Function() onNoData,
+    final V Function() onError,
   ) =>
       hasError
-          ? throw error!
+          ? onError()
           : (ConnectionState.waiting == connectionState
               ? onWaiting()
               : (hasData ? f(data!) : onNoData()));
