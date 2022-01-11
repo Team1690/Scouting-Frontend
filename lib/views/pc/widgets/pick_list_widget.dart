@@ -1,13 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/views/constants.dart';
-import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
-import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
-import 'package:scouting_frontend/views/pc/team_info_screen.dart';
+import "package:flutter/material.dart";
+import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/constants.dart";
+import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
+import "package:scouting_frontend/views/pc/pick_list_screen.dart";
+import "package:scouting_frontend/views/pc/team_info_screen.dart";
 
 class PickList extends StatefulWidget {
-  PickList(
-      {required this.uiList, required this.screen, this.onReorder = ignore});
+  PickList({
+    required this.uiList,
+    required this.screen,
+    this.onReorder = ignore,
+  });
 
   final List<PickListTeam> uiList;
   final CurrentPickList screen;
@@ -33,35 +36,41 @@ class _PickListState extends State<PickList> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       child: ReorderableListView(
         children: <Widget>[
-          ...widget.uiList.map<Widget>((e) {
+          ...widget.uiList.map<Widget>((final PickListTeam e) {
             e.controller.addListener(() {
               widget.onReorder(widget.uiList);
             });
             return Card(
               color: bgColor,
-              key: ValueKey(e.toString()),
+              key: ValueKey<String>(e.toString()),
               elevation: 2,
               child: Container(
                 padding: const EdgeInsets.fromLTRB(
-                    0, defaultPadding / 4, 0, defaultPadding / 4),
+                  0,
+                  defaultPadding / 4,
+                  0,
+                  defaultPadding / 4,
+                ),
                 child: ListTile(
                   onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute<TeamInfoScreen>(
-                          builder: (context) => TeamInfoScreen(
-                                chosenTeam: LightTeam(e.id, e.number, e.name),
-                              ))),
+                    context,
+                    MaterialPageRoute<TeamInfoScreen>(
+                      builder: (final BuildContext context) => TeamInfoScreen(
+                        chosenTeam: LightTeam(e.id, e.number, e.name),
+                      ),
+                    ),
+                  ),
                   title: Text(e.toString()),
                   leading: AdvancedSwitch(
                     controller: e.controller,
                     activeColor: Colors.red,
                     inactiveColor: primaryColor,
-                    activeChild: Text('Taken'),
-                    inactiveChild: Text('Available'),
+                    activeChild: Text("Taken"),
+                    inactiveChild: Text("Available"),
                     height: 25,
                     width: 100,
                     enabled: true,
@@ -78,16 +87,21 @@ class _PickListState extends State<PickList> {
 }
 
 int validateId(final int id) =>
-    id <= 0 ? throw ArgumentError('Invalid Id') : id;
+    id <= 0 ? throw ArgumentError("Invalid Id") : id;
 int validateNumber(final int number) =>
-    number < 0 ? throw ArgumentError('Invalid Team Number') : number;
+    number < 0 ? throw ArgumentError("Invalid Team Number") : number;
 String validateName(final String name) =>
     name == "" ? throw ArgumentError("Invalid Team Name") : name;
 
 class PickListTeam {
-  PickListTeam(final int id, final int number, final String name,
-      final int firstListIndex, final int secondListIndex, final bool available)
-      : this.controller(
+  PickListTeam(
+    final int id,
+    final int number,
+    final String name,
+    final int firstListIndex,
+    final int secondListIndex,
+    final bool available,
+  ) : this.controller(
           validateId(id),
           validateNumber(number),
           validateName(name),
@@ -96,8 +110,14 @@ class PickListTeam {
           ValueNotifier<bool>(available),
         );
 
-  PickListTeam.controller(this.id, this.number, this.name, this.firstListIndex,
-      this.secondListIndex, this.controller) {}
+  PickListTeam.controller(
+    this.id,
+    this.number,
+    this.name,
+    this.firstListIndex,
+    this.secondListIndex,
+    this.controller,
+  ) {}
 
   final int id;
   final int number;
@@ -108,6 +128,6 @@ class PickListTeam {
 
   @override
   String toString() {
-    return '${this.name} ${this.number}';
+    return "${name} ${number}";
   }
 }

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:graphql/client.dart';
-import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_typeahead/flutter_typeahead.dart";
+import "package:graphql/client.dart";
+import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
 
 class TeamsSearchBox extends StatefulWidget {
   TeamsSearchBox({
@@ -26,10 +26,10 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
   bool isValueEmpty = false;
   bool isValueInList = true;
 
-  List<LightTeam> updateSussestions(String inputNumber) {
-    List<LightTeam> _suggestions = List.castFrom(widget.teams);
-    String _inputNumber = inputNumber;
-    _suggestions.removeWhere((team) {
+  List<LightTeam> updateSussestions(final String inputNumber) {
+    final List<LightTeam> _suggestions = List.castFrom(widget.teams);
+    final String _inputNumber = inputNumber;
+    _suggestions.removeWhere((final LightTeam team) {
       return team.number.toString().contains(_inputNumber);
     });
 
@@ -37,49 +37,55 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return TypeAheadField(
-        textFieldConfiguration: TextFieldConfiguration(
-          controller: widget.typeAheadController,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.digitsOnly
-          ],
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.search),
-            border: const OutlineInputBorder(),
-            hintText: 'Search Team',
+  Widget build(final BuildContext context) {
+    return TypeAheadField<LightTeam>(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: widget.typeAheadController,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly
+        ],
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.search),
+          border: const OutlineInputBorder(),
+          hintText: "Search Team",
+        ),
+      ),
+      suggestionsCallback: (final String pattern) => widget.teams,
+      itemBuilder: (final BuildContext context, final LightTeam suggestion) =>
+          ListTile(title: Text(suggestion.number.toString())),
+      transitionBuilder: (final BuildContext context,
+          final Widget suggestionsBox, final AnimationController? controller) {
+        return FadeTransition(
+          child: suggestionsBox,
+          opacity: CurvedAnimation(
+            parent: controller!,
+            curve: Curves.fastOutSlowIn,
+          ),
+        );
+      },
+      noItemsFoundBuilder: (final BuildContext context) => Container(
+        height: 100,
+        child: Center(
+          child: Text(
+            "No Teams Found",
+            style: TextStyle(fontSize: 24),
           ),
         ),
-        suggestionsCallback: (pattern) => widget.teams,
-        itemBuilder: (context, LightTeam suggestion) =>
-            ListTile(title: Text(suggestion.number.toString())),
-        transitionBuilder: (context, suggestionsBox, controller) {
-          return FadeTransition(
-            child: suggestionsBox,
-            opacity: CurvedAnimation(
-                parent: controller!, curve: Curves.fastOutSlowIn),
-          );
-        },
-        noItemsFoundBuilder: (context) => Container(
-              height: 100,
-              child: Center(
-                child: Text(
-                  'No Teams Found',
-                  style: TextStyle(fontSize: 24),
-                ),
-              ),
-            ),
-        onSuggestionSelected: (final LightTeam suggestion) {
-          widget.typeAheadController.text = suggestion.number.toString();
-          widget.onChange(widget.teams[widget.teams
-              .indexWhere((team) => team.number == suggestion.number)]);
-        });
+      ),
+      onSuggestionSelected: (final LightTeam suggestion) {
+        widget.typeAheadController.text = suggestion.number.toString();
+        widget.onChange(
+          widget.teams[widget.teams.indexWhere(
+              (final LightTeam team) => team.number == suggestion.number)],
+        );
+      },
+    );
   }
 }
 
 Future<List<LightTeam>> fetchTeams() async {
-  final client = getClient();
+  final GraphQLClient client = getClient();
   final String query = """
 query FetchTeams {
   team {
@@ -93,10 +99,18 @@ query FetchTeams {
   final QueryResult result =
       await client.query(QueryOptions(document: gql(query)));
 
-  return result.mapQueryResult((final Map<String, dynamic>? data) =>
-          data.mapNullable((teams) => (teams['team'] as List<dynamic>)
-              .map((dynamic e) => LightTeam(
-                  e['id'] as int, e['number'] as int, e['name'] as String))
-              .toList())) ??
-      [];
+  return result.mapQueryResult(
+        (final Map<String, dynamic>? data) => data.mapNullable(
+          (final Map<String, dynamic> teams) => (teams["team"] as List<dynamic>)
+              .map(
+                (final dynamic e) => LightTeam(
+                  e["id"] as int,
+                  e["number"] as int,
+                  e["name"] as String,
+                ),
+              )
+              .toList(),
+        ),
+      ) ??
+      <LightTeam>[];
 }

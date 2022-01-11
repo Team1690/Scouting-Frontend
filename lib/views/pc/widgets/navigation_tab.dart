@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:scouting_frontend/views/pc/scatters_screen.dart';
-import 'package:scouting_frontend/views/pc/pick_list_screen.dart';
-import 'package:scouting_frontend/views/pc/team_info_screen.dart';
-import 'package:scouting_frontend/views/pc/compare_screen.dart';
+import "package:flutter/material.dart";
+import "package:scouting_frontend/views/pc/scatters_screen.dart";
+import "package:scouting_frontend/views/pc/pick_list_screen.dart";
+import "package:scouting_frontend/views/pc/team_info_screen.dart";
+import "package:scouting_frontend/views/pc/compare_screen.dart";
 
-import '../../constants.dart';
+import "../../constants.dart";
 
 class NavigationTab extends StatefulWidget {
   @override
@@ -13,11 +13,11 @@ class NavigationTab extends StatefulWidget {
 
 class _NavigationTab extends State<NavigationTab> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
-        children: [
+        children: <Widget>[
           DrawerHeader(
             // decoration: BoxDecoration(
             //   color: Colors.blue,
@@ -28,46 +28,50 @@ class _NavigationTab extends State<NavigationTab> {
             padding: EdgeInsets.symmetric(vertical: defaultPadding * 2),
           ),
           ListTile(
-            title: const Text('Team Info'),
+            title: const Text("Team Info"),
             leading: Icon(Icons.info_outline),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute<TeamInfoScreen>(
-                    builder: (context) => TeamInfoScreen()),
+                  builder: (final BuildContext context) => TeamInfoScreen(),
+                ),
               );
             },
           ),
           ListTile(
-            title: const Text('Pick List'),
+            title: const Text("Pick List"),
             leading: Icon(Icons.list),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute<PickListScreen>(
-                    builder: (context) => PickListScreen()),
+                  builder: (final BuildContext context) => PickListScreen(),
+                ),
               );
             },
           ),
           ListTile(
-            title: const Text('Compare'),
+            title: const Text("Compare"),
             leading: Icon(Icons.compare_arrows_rounded),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute<CompareScreen>(
-                    builder: (context) => CompareScreen()),
+                  builder: (final BuildContext context) => CompareScreen(),
+                ),
               );
             },
           ),
           ListTile(
-            title: const Text('General Scatter'),
+            title: const Text("General Scatter"),
             leading: Icon(Icons.bar_chart_rounded),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute<ScattersScreen>(
-                    builder: (context) => ScattersScreen()),
+                  builder: (final BuildContext context) => ScattersScreen(),
+                ),
               );
             },
           ),
