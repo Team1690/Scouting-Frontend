@@ -60,6 +60,7 @@ class _SpecificState extends State<Specific> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: SubmitButton(
+                  validate: () => true,
                   resetForm: () {
                     setState(() {
                       vars.reset();

@@ -5,6 +5,7 @@ import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/views/app.dart";
 
 import "firebase_options.dart";
+import 'models/id_helpers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,5 +14,8 @@ void main() async {
   );
   await dotenv.load(fileName: ".env");
   ClimbHelper.queryclimbId();
+  DrivetrainHelper.queryDrivetrainId();
+  DriveMotorHelper.queryDrivemotorId();
+
   runApp(App());
 }

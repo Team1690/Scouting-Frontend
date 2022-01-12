@@ -262,9 +262,9 @@ class _PitViewState extends State<PitView> {
       mutation MyMutation(
           \$url: String,
           \$drive_motor_amount: Int,
-          \$drive_motor_type: String,
+          \$drivemotor_id: Int,
           \$drive_train_reliability: Int,
-          \$drive_train_type: String,
+          \$drivetrain_id: Int,
           \$drive_wheel_type: String,
           \$electronics_reliability: Int,
           \$gearbox: String,
@@ -275,9 +275,9 @@ class _PitViewState extends State<PitView> {
       insert_pit(objects: {
       url: \$url,
       drive_motor_amount: \$drive_motor_amount,
-      drive_motor_type: \$drive_motor_type,
+      drivemotor_id: \$drivemotor_id,
       drive_train_reliability: \$drive_train_reliability,
-      drive_train_type: \$drive_train_type,
+      drivetrain_id: \$drivetrain_id,
       drive_wheel_type: \$drive_wheel_type,
       electronics_reliability: \$electronics_reliability,
       gearbox: \$gearbox,
@@ -288,9 +288,9 @@ class _PitViewState extends State<PitView> {
       }) {
           returning {
               drive_motor_amount
-      drive_motor_type
+      drivemotor_id
       drive_train_reliability
-      drive_train_type
+      drivetrain_id
       drive_wheel_type
       electronics_reliability
       gearbox

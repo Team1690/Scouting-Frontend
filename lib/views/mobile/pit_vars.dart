@@ -1,3 +1,4 @@
+import 'package:scouting_frontend/models/id_helpers.dart';
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class PitVars implements HasuraVars {
@@ -15,8 +16,8 @@ class PitVars implements HasuraVars {
   @override
   Map<String, dynamic> toHasuraVars() {
     return <String, dynamic>{
-      "drive_train_type": driveTrainType,
-      "drive_motor_type": driveMotorType,
+      "drivetrain_id": DrivetrainHelper.getDrivetrainId(driveTrainType),
+      "drivemotor_id": DriveMotorHelper.getDrivetrainId(driveMotorType),
       "drive_motor_amount": driveMotorAmount,
       "shifter": shifter,
       "gearbox": gearbox,

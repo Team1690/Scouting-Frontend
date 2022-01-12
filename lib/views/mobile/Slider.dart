@@ -30,7 +30,7 @@ class PitViewSlider extends StatefulWidget {
   final double min;
   final double max;
   final int divisions;
-  final double valueOnReRender;
+  double valueOnReRender;
   final void Function(double) onChange;
   @override
   _PitViewSliderState createState() => _PitViewSliderState();
@@ -39,7 +39,6 @@ class PitViewSlider extends StatefulWidget {
 class _PitViewSliderState extends State<PitViewSlider> {
   @override
   Widget build(final BuildContext context) {
-    double value = widget.valueOnReRender;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -48,11 +47,11 @@ class _PitViewSliderState extends State<PitViewSlider> {
           min: widget.min,
           max: widget.max,
           divisions: widget.divisions,
-          value: value,
-          label: value.round().toString(),
+          value: widget.valueOnReRender,
+          label: widget.valueOnReRender.round().toString(),
           onChanged: (final double newVal) {
             widget.onChange(newVal);
-            setState(() => value = newVal);
+            setState(() => widget.valueOnReRender = newVal);
           },
         )
       ],
