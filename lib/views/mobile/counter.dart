@@ -4,13 +4,13 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/stepper.dart";
 
-class Counter extends StatelessWidget {
+class Counter extends StatefulWidget {
   final String label;
   final IconData icon;
 
   final void Function(int) onChange;
 
-  final int count;
+  int count;
   final int stepValue;
   final int upperLimit;
   final int lowerLimit;
@@ -28,6 +28,11 @@ class Counter extends StatelessWidget {
   });
 
   @override
+  State<Counter> createState() => _CounterState();
+}
+
+class _CounterState extends State<Counter> {
+  @override
   Widget build(final BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,7 +40,7 @@ class Counter extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Icon(
-            icon,
+            widget.icon,
             color: Colors.blue,
             size: 30,
             semanticLabel: "Text to announce in accessibility modes",
@@ -44,20 +49,26 @@ class Counter extends StatelessWidget {
         Expanded(
           flex: 4,
           child: Text(
-            label,
+            widget.label,
             textScaleFactor: 1.5,
+            style: TextStyle(fontSize: 12),
           ),
         ),
         Expanded(
           flex: 4,
           child: CustomStepper(
             iconSize: 30,
-            lowerLimit: lowerLimit,
-            upperLimit: upperLimit,
-            valueOnReRender: count,
-            stepValue: stepValue,
-            longPressStepValue: longPressedValue,
-            onChanged: onChange,
+            lowerLimit: widget.lowerLimit,
+            upperLimit: widget.upperLimit,
+            valueOnReRender: widget.count,
+            stepValue: widget.stepValue,
+            longPressStepValue: widget.longPressedValue,
+            onChanged: (final int p0) {
+              setState(() {
+                widget.count = p0;
+              });
+              widget.onChange(p0);
+            },
           ),
         )
       ],
