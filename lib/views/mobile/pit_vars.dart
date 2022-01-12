@@ -1,4 +1,4 @@
-import 'package:scouting_frontend/models/id_helpers.dart';
+import "package:scouting_frontend/models/id_helpers.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class PitVars implements HasuraVars {

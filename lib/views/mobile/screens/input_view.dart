@@ -2,13 +2,12 @@ import "package:flutter/material.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import 'package:scouting_frontend/views/mobile/Selector.dart';
+import "package:scouting_frontend/views/mobile/Selector.dart";
 import "package:scouting_frontend/views/mobile/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/match_dropdown.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
-import "package:scouting_frontend/views/mobile/switcher.dart";
 
 class UserInput extends StatefulWidget {
   @override
@@ -141,7 +140,7 @@ class _UserInputState extends State<UserInput> {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Selector(
                   valueOnReRender: match.climbStatus,
-                  values: [
+                  values: <String>[
                     "Choose a climb result",
                     "No attempt",
                     "Failed",
@@ -158,18 +157,19 @@ class _UserInputState extends State<UserInput> {
                 height: 20,
               ),
               SubmitButton(
-                  resetForm: () {
-                    setState(() {
-                      match.clear();
-                      teamNumberController.clear();
-                      matchNumberController.clear();
-                    });
-                  },
-                  validate: () {
-                    return formKey.currentState!.validate();
-                  },
-                  vars: match,
-                  mutation: mutation)
+                resetForm: () {
+                  setState(() {
+                    match.clear();
+                    teamNumberController.clear();
+                    matchNumberController.clear();
+                  });
+                },
+                validate: () {
+                  return formKey.currentState!.validate();
+                },
+                vars: match,
+                mutation: mutation,
+              )
             ],
           ),
         ),
