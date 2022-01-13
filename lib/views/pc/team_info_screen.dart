@@ -56,13 +56,10 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
             Expanded(
               flex: 10,
               child: chosenTeam.mapNullable(
-                    (final LightTeam team) => TeamInfoData(
-                      team: team,
-                    ),
+                    TeamInfoDataNew.new,
                   ) ??
                   noTeamSelected(),
             ),
-            TeamInfoDataNew(LightTeam(6, 1690, "Orbit"))
           ],
         ),
       ),
