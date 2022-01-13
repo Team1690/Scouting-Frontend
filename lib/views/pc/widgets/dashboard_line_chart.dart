@@ -5,13 +5,15 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 
 class DashboardLineChart extends StatelessWidget {
-  const DashboardLineChart({
-    required this.dataSet,
-    this.distanceFromHighest = 5,
-  });
-
+  const DashboardLineChart(
+      {required this.dataSet,
+      this.distanceFromHighest = 5,
+      this.inputedColors = const <Color>[],
+      this.isClimb = false});
+  final List<Color> inputedColors;
   final int distanceFromHighest;
   final List<List<double>> dataSet;
+  final bool isClimb;
 
   @override
   Widget build(final BuildContext context) {
@@ -20,9 +22,29 @@ class DashboardLineChart extends StatelessWidget {
         .reduce(max);
     return LineChart(
       LineChartData(
+        lineTouchData: isClimb
+            ? LineTouchData(touchTooltipData: LineTouchTooltipData(
+                getTooltipItems: (final List<LineBarSpot> touchedSpots) {
+                  switch (touchedSpots[0].y.toInt()) {
+                    case -1:
+                      return [LineTooltipItem("Failed", TextStyle())];
+                    case 0:
+                      return [LineTooltipItem("No attempt", TextStyle())];
+                    default:
+                      return [
+                        LineTooltipItem(
+                            "level ${touchedSpots[0].y.toInt().toString()}",
+                            TextStyle())
+                      ];
+                  }
+                },
+              ))
+            : null,
         lineBarsData:
             List<LineChartBarData>.generate(dataSet.length, (final int index) {
-          final List<Color> chartColors = <Color>[colors[index]];
+          final List<Color> chartColors = <Color>[
+            inputedColors.isEmpty ? colors[index] : inputedColors[index]
+          ];
           return LineChartBarData(
             isCurved: false,
             colors: chartColors,
@@ -40,7 +62,7 @@ class DashboardLineChart extends StatelessWidget {
                 .entries
                 .map(
                   (final MapEntry<int, double> entry) =>
-                      FlSpot(entry.key.toDouble(), entry.value),
+                      FlSpot(entry.key.toDouble() + 1, entry.value),
                 )
                 .toList(),
           );
@@ -69,8 +91,7 @@ class DashboardLineChart extends StatelessWidget {
             showTitles: true,
             reservedSize: 16,
             getTextStyles: (final BuildContext context, final double value) =>
-                const TextStyle(color: Colors.white, fontSize: 16),
-            margin: 8,
+                TextStyle(color: Colors.white, fontSize: 16),
             checkToShowTitle: (
               final double minValue,
               final double maxValue,
@@ -81,13 +102,28 @@ class DashboardLineChart extends StatelessWidget {
                 value == value.floorToDouble(),
           ),
           rightTitles: SideTitles(
+            interval: isClimb ? 1 : 5,
+            getTitles: (final double value) {
+              if (isClimb) {
+                switch (value.toInt()) {
+                  case -1:
+                    return "No attempt";
+                  case 0:
+                    return "Failed";
+                  default:
+                    return "level ${value.toInt()}";
+                }
+              } else {
+                return value.toString();
+              }
+            },
             showTitles: true,
             getTextStyles: (final BuildContext context, final double value) =>
-                const TextStyle(
+                TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: isClimb ? 12 : 16,
             ),
-            reservedSize: 28,
+            reservedSize: isClimb ? 70 : 28,
             margin: 12,
           ),
           bottomTitles: SideTitles(showTitles: false),
@@ -97,8 +133,8 @@ class DashboardLineChart extends StatelessWidget {
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 1),
         ),
-        minX: 0,
-        minY: 0,
+        minX: 1,
+        minY: isClimb ? -1 : 0,
         maxY: highestValue + distanceFromHighest,
       ),
     );
