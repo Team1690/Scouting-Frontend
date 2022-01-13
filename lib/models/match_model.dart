@@ -1,9 +1,7 @@
-import "package:graphql/client.dart";
-import 'package:scouting_frontend/models/team_model.dart';
-import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
-import 'id_helpers.dart';
+import "id_helpers.dart";
 
 class Match implements HasuraVars {
   Match({

@@ -7,11 +7,12 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class SubmitButton extends StatefulWidget {
-  SubmitButton(
-      {required this.vars,
-      required this.mutation,
-      this.resetForm = empty,
-      required this.validate});
+  SubmitButton({
+    required this.vars,
+    required this.mutation,
+    this.resetForm = empty,
+    required this.validate,
+  });
   final bool Function() validate;
   final HasuraVars vars;
   final String mutation;
