@@ -8,7 +8,7 @@ class DashboardLineChart extends StatelessWidget {
   const DashboardLineChart({
     required this.dataSet,
     this.distanceFromHighest = 5,
-    this.inputedColors = const <Color>[],
+    this.inputedColors = colors,
     this.isClimb = false,
   });
   final List<Color> inputedColors;
@@ -27,32 +27,29 @@ class DashboardLineChart extends StatelessWidget {
             ? LineTouchData(
                 touchTooltipData: LineTouchTooltipData(
                   getTooltipItems: (final List<LineBarSpot> touchedSpots) {
-                    switch (touchedSpots[0].y.toInt()) {
-                      case -1:
-                        return <LineTooltipItem>[
-                          LineTooltipItem("Failed", TextStyle())
-                        ];
-                      case 0:
-                        return <LineTooltipItem>[
-                          LineTooltipItem("No attempt", TextStyle())
-                        ];
-                      default:
-                        return <LineTooltipItem>[
-                          LineTooltipItem(
-                            "Level ${touchedSpots[0].y.toInt().toString()}",
-                            TextStyle(),
-                          )
-                        ];
-                    }
+                    return List<LineTooltipItem>.generate(touchedSpots.length,
+                        (index) {
+                      switch (touchedSpots[index].y.toInt()) {
+                        case 0:
+                          return LineTooltipItem(
+                              "Failed", TextStyle(color: Colors.white));
+                        case -1:
+                          return LineTooltipItem(
+                              "No attempt", TextStyle(color: Colors.white));
+                        default:
+                          return LineTooltipItem(
+                            "Level ${touchedSpots[index].y.toInt().toString()}",
+                            TextStyle(color: Colors.white),
+                          );
+                      }
+                    });
                   },
                 ),
               )
             : null,
         lineBarsData:
             List<LineChartBarData>.generate(dataSet.length, (final int index) {
-          final List<Color> chartColors = <Color>[
-            inputedColors.isEmpty ? colors[index] : inputedColors[index]
-          ];
+          final List<Color> chartColors = <Color>[inputedColors[index]];
           return LineChartBarData(
             isCurved: false,
             colors: chartColors,
@@ -119,7 +116,7 @@ class DashboardLineChart extends StatelessWidget {
                   case 0:
                     return "Failed";
                   default:
-                    return "level ${value.toInt()}";
+                    return value > 4 ? "" : "level ${value.toInt()}";
                 }
               } else {
                 return value.toString();
