@@ -6,7 +6,6 @@ import "package:scouting_frontend/views/mobile/team_selection_future.dart";
 import "package:scouting_frontend/views/pc/widgets/card.dart";
 import "package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart";
 import 'package:scouting_frontend/views/pc/widgets/team_info_data.dart';
-import 'package:scouting_frontend/views/pc/widgets/team_info_data2.dart';
 
 class TeamInfoScreen extends StatefulWidget {
   TeamInfoScreen({this.initalTeam});
