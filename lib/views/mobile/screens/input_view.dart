@@ -53,19 +53,11 @@ class _UserInputState extends State<UserInput> {
               SizedBox(
                 height: 15,
               ),
-              FormField<LightTeam>(
-                validator: (final LightTeam? value) {
-                  if (value == null) return "Pick a Team";
-                  return null;
+              TeamSelectionFuture(
+                controller: teamNumberController,
+                onChange: (final LightTeam team) {
+                  match.team = team;
                 },
-                builder: (final FormFieldState<LightTeam> state) =>
-                    TeamSelectionFuture(
-                  controller: teamNumberController,
-                  onChange: (final LightTeam team) {
-                    match.team = team;
-                    state.didChange(team);
-                  },
-                ),
               ),
               SizedBox(
                 height: 20,
