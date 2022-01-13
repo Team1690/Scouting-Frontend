@@ -1,21 +1,8 @@
-// ignore_for_file: sort_constructors_first
-
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/stepper.dart";
 
 class Counter extends StatefulWidget {
-  final String label;
-  final IconData icon;
-
-  final void Function(int) onChange;
-
-  int count;
-  final int stepValue;
-  final int upperLimit;
-  final int lowerLimit;
-  final int longPressedValue;
-
   Counter({
     required final this.label,
     required final this.icon,
@@ -26,6 +13,16 @@ class Counter extends StatefulWidget {
     final this.lowerLimit = 0,
     final this.longPressedValue = 5,
   });
+  final String label;
+  final IconData icon;
+
+  final void Function(int) onChange;
+
+  int count;
+  final int stepValue;
+  final int upperLimit;
+  final int lowerLimit;
+  final int longPressedValue;
 
   @override
   State<Counter> createState() => _CounterState();

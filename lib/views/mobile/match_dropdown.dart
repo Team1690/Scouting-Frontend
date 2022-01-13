@@ -1,14 +1,13 @@
-import 'dart:ui';
-
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:scouting_frontend/views/constants.dart";
 
 class MatchTextBox extends StatefulWidget {
-  MatchTextBox(
-      {this.onChange = ignore,
-      required this.controller,
-      required this.validate}) {}
+  MatchTextBox({
+    this.onChange = ignore,
+    required this.controller,
+    required this.validate,
+  }) {}
   final String? Function(String?) validate;
   final void Function(int) onChange;
   final TextEditingController controller;

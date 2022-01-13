@@ -38,7 +38,13 @@ class _TeamsSearchBoxState extends State<TeamsSearchBox> {
 
   @override
   Widget build(final BuildContext context) {
-    return TypeAheadField<LightTeam>(
+    return TypeAheadFormField<LightTeam>(
+      validator: (final String? value) {
+        if (value == "") {
+          return "Please pick a team";
+        }
+        return null;
+      },
       textFieldConfiguration: TextFieldConfiguration(
         controller: widget.typeAheadController,
         inputFormatters: <TextInputFormatter>[
