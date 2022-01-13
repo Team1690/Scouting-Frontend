@@ -1,5 +1,5 @@
-import 'package:graphql/client.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
+import "package:graphql/client.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
 
 class ClimbHelper {
   static Map<String, int> _ids = <String, int>{};

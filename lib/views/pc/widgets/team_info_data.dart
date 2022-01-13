@@ -1,9 +1,13 @@
-import 'dart:math';
-
-import 'package:flutter/material.dart';
-import 'package:graphql/client.dart';
-import 'package:scouting_frontend/models/team_model.dart';
-import 'package:scouting_frontend/net/hasura_helper.dart';
+import "package:flutter/material.dart";
+import "package:graphql/client.dart";
+import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/pc/widgets/card.dart";
+import "package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart";
+import "package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart";
+import "package:scouting_frontend/views/pc/widgets/scouting_pit.dart";
+import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
 
 const String teamInfoQuery = """
 query MyQuery(\$id: Int!) {
@@ -127,22 +131,20 @@ class Team {
     required this.pitViewData,
     required this.quickData,
     required this.climbData,
-    required this.upperScoredMissedData,
-    required this.upperPercentData,
-    required this.lowerScoredData,
+    required this.upperScoredMissedDataTele,
+    required this.upperScoredMissedDataAuto,
   });
   final LightTeam team;
   final SpecificData specificData;
   final PitData? pitViewData;
   final QuickData quickData;
   final LineChartData climbData;
-  final LineChartData upperScoredMissedData;
-  final LineChartData upperPercentData;
-  final LineChartData lowerScoredData;
+  final LineChartData upperScoredMissedDataTele;
+  final LineChartData upperScoredMissedDataAuto;
 }
 
-class TeamInfoDataNew extends StatefulWidget {
-  TeamInfoDataNew(this.team);
+class TeamInfoData extends StatefulWidget {
+  TeamInfoData(this.team);
   LightTeam team;
 
   @override
@@ -166,13 +168,17 @@ double getClimbAverage(final List<String> climbVals) {
     }
     throw Exception("Not a climb value");
   }).toList();
-
+  if (climbVals.isEmpty) {
+    return 0;
+  } else if (climbVals.length == 1) {
+    climbPoints[0];
+  }
   return climbPoints.reduce((final int a, final int b) => a + b).toDouble() /
       climbPoints.length;
 }
 
-class _TeamInfoDataState extends State<TeamInfoDataNew> {
-  Future<Team?> fetchTeamInfo() async {
+class _TeamInfoDataState extends State<TeamInfoData> {
+  Future<Team> fetchTeamInfo() async {
     final GraphQLClient client = getClient();
 
     final QueryResult result = await client.query(
@@ -184,83 +190,316 @@ class _TeamInfoDataState extends State<TeamInfoDataNew> {
       ),
     );
 
-    result.mapQueryResult(
+    return result.mapQueryResult(
       (final Map<String, dynamic>? data) =>
           data.mapNullable((final Map<String, dynamic> team) {
-        //couldn't use map nullable because team["team_by_pk"] is dynamic
-        final Map<String, dynamic> teamByPk = team["team_by_pk"] != null
-            ? team["team_by_pk"] as Map<String, dynamic>
-            : throw Exception("that team doesnt exist");
-        final Map<String, dynamic> pit =
-            teamByPk["pit"] as Map<String, dynamic>;
+            //couldn't use map nullable because team["team_by_pk"] is dynamic
+            final Map<String, dynamic> teamByPk = team["team_by_pk"] != null
+                ? team["team_by_pk"] as Map<String, dynamic>
+                : throw Exception("that team doesnt exist");
+            final Map<String, dynamic>? pit =
+                (teamByPk["pit"] as Map<String, dynamic>?);
 
-        SpecificData specificData = SpecificData(
-          (teamByPk["specifics"] as List<dynamic>)
-              .map((final dynamic e) => e["message"] as String)
-              .toList(),
-        );
-        final PitData? pitData =
-            pit.mapNullable<PitData>((final Map<String, dynamic> p0) => PitData(
-                  driveMotorAmount: pit["drive_motor_amount"] as int,
-                  driveTrainReliability: pit["drive_train_reliability"] as int,
-                  driveWheelType: pit["drive_wheel_type"] as String,
-                  electronicsReliability: pit["electronics_reliability"] as int,
-                  gearbox: pit["gearbox"] as String,
-                  notes: pit["notes"] as String,
-                  robotReliability: pit["robot_reliability"] as int,
-                  shifter: pit["shifter"] as String,
-                  url: pit["url"] as String,
-                  driveTrainType: pit["drivetrain"]["title"] as String,
-                  driveMotorType: pit["drivemotor"]["title"] as String,
-                ));
-        final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
-                ["avg"]["auto_lower"] as double? ??
-            0;
-        final double avgAutoUpperMissed = teamByPk["matches_aggregate"]
-                ["aggregate"]["avg"]["auto_upper_missed"] as double? ??
-            0;
-        final double avgAutoUpperScored = teamByPk["matches_aggregate"]
-                ["aggregate"]["avg"]["auto_upper"] as double? ??
-            0;
-        final double avgTeleLow = teamByPk["matches_aggregate"]["aggregate"]
-                ["avg"]["tele_lower"] as double? ??
-            0;
-        final double avgTeleUpperMissed = teamByPk["matches_aggregate"]
-                ["aggregate"]["avg"]["tele_upper_missed"] as double? ??
-            0;
-        final double avgTeleUpperScored = teamByPk["matches_aggregate"]
-                ["aggregate"]["avg"]["tele_upper"] as double? ??
-            0;
+            final SpecificData specificData = SpecificData(
+              (teamByPk["specifics"] as List<dynamic>)
+                  .map((final dynamic e) => e["message"] as String)
+                  .toList(),
+            );
 
-        final List<String> climbVals = (teamByPk["matches"] as List<dynamic>)
-            .map((final dynamic e) => e["climb"]["name"] as String)
-            .toList();
+            final PitData? pitData = pit.mapNullable<PitData>(
+              (final Map<String, dynamic> p0) => PitData(
+                driveMotorAmount: p0["drive_motor_amount"] as int,
+                driveTrainReliability: p0["drive_train_reliability"] as int,
+                driveWheelType: p0["drive_wheel_type"] as String,
+                electronicsReliability: p0["electronics_reliability"] as int,
+                gearbox: p0["gearbox"] as String,
+                notes: p0["notes"] as String,
+                robotReliability: p0["robot_reliability"] as int,
+                shifter: p0["shifter"] as String,
+                url: p0["url"] as String,
+                driveTrainType: p0["drivetrain"]["title"] as String,
+                driveMotorType: p0["drivemotor"]["title"] as String,
+              ),
+            );
 
-        final QuickData quickData = QuickData(
-            avgAutoLowScored: avgAutoLow,
-            avgAutoUpperMissed: avgAutoUpperMissed,
-            avgAutoUpperScored: avgAutoUpperScored,
-            avgBallPoints: avgTeleUpperScored * 2 +
-                avgTeleLow +
-                avgAutoUpperScored * 4 +
-                avgAutoLow * 2,
-            avgClimbPoints: getClimbAverage(climbVals),
-            avgTeleLowScored: avgTeleLow,
-            avgTeleUpperMissed: avgTeleUpperMissed,
-            avgTeleUpperScored: avgTeleUpperScored,
-            scorePercentAutoUpper: (avgAutoUpperScored /
-                    (avgAutoUpperScored + avgAutoUpperMissed)) *
-                100,
-            scorePercentTeleUpper: (avgTeleUpperScored /
-                    (avgTeleUpperScored + avgTeleUpperMissed)) *
-                100);
-      }),
+            final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
+                    ["avg"]["auto_lower"] as double? ??
+                0;
+            final double avgAutoUpperMissed = teamByPk["matches_aggregate"]
+                    ["aggregate"]["avg"]["auto_upper_missed"] as double? ??
+                0;
+            final double avgAutoUpperScored = teamByPk["matches_aggregate"]
+                    ["aggregate"]["avg"]["auto_upper"] as double? ??
+                0;
+            final double avgTeleLow = teamByPk["matches_aggregate"]["aggregate"]
+                    ["avg"]["tele_lower"] as double? ??
+                0;
+            final double avgTeleUpperMissed = teamByPk["matches_aggregate"]
+                    ["aggregate"]["avg"]["tele_upper_missed"] as double? ??
+                0;
+            final double avgTeleUpperScored = teamByPk["matches_aggregate"]
+                    ["aggregate"]["avg"]["tele_upper"] as double? ??
+                0;
+
+            final List<String> climbVals =
+                (teamByPk["matches"] as List<dynamic>)
+                    .map((final dynamic e) => e["climb"]["name"] as String)
+                    .toList();
+
+            final QuickData quickData = QuickData(
+              avgAutoLowScored: avgAutoLow,
+              avgAutoUpperMissed: avgAutoUpperMissed,
+              avgAutoUpperScored: avgAutoUpperScored,
+              avgBallPoints: avgTeleUpperScored * 2 +
+                  avgTeleLow +
+                  avgAutoUpperScored * 4 +
+                  avgAutoLow * 2,
+              avgClimbPoints: getClimbAverage(climbVals),
+              avgTeleLowScored: avgTeleLow,
+              avgTeleUpperMissed: avgTeleUpperMissed,
+              avgTeleUpperScored: avgTeleUpperScored,
+              scorePercentAutoUpper: (avgAutoUpperScored /
+                      (avgAutoUpperScored + avgAutoUpperMissed)) *
+                  100,
+              scorePercentTeleUpper: (avgTeleUpperScored /
+                      (avgTeleUpperScored + avgTeleUpperMissed)) *
+                  100,
+            );
+            final List<double> climbPoints =
+                climbVals.map<double>((final String e) {
+              switch (e) {
+                case "failed":
+                  return 0;
+                case "no attempt":
+                  return -1;
+                case "level 1":
+                  return 1;
+                case "level 2":
+                  return 2;
+                case "level 3":
+                  return 3;
+                case "level 4":
+                  return 4;
+              }
+              throw Exception("Not a climb value");
+            }).toList();
+
+            final LineChartData climbData = LineChartData(
+              points: <List<double>>[climbPoints],
+              title: "climb",
+            );
+
+            final List<double> upperScoredDataTele =
+                (teamByPk["matches"] as List<dynamic>)
+                    .map((final dynamic e) => e["tele_upper"] as double)
+                    .toList();
+            final List<double> upperMissedDataTele =
+                (teamByPk["matches"] as List<dynamic>)
+                    .map((final dynamic e) => e["tele_upper_missed"] as double)
+                    .toList();
+
+            final LineChartData upperScoredMissedDataTele = LineChartData(
+              points: <List<double>>[
+                upperScoredDataTele,
+                upperMissedDataTele,
+              ],
+              title: "Upper balls Tele",
+            );
+
+            final List<double> upperScoredDataAuto =
+                (teamByPk["matches"] as List<dynamic>)
+                    .map((final dynamic e) => e["auto_upper"] as double)
+                    .toList();
+            final List<double> upperMissedDataAuto =
+                (teamByPk["matches"] as List<dynamic>)
+                    .map((final dynamic e) => e["auto_upper_missed"] as double)
+                    .toList();
+            final LineChartData upperScoredMissedDataAuto = LineChartData(
+              points: <List<double>>[
+                upperScoredDataAuto,
+                upperMissedDataAuto,
+              ],
+              title: "Upper balls Auto",
+            );
+            return Team(
+              team: widget.team,
+              specificData: specificData,
+              pitViewData: pitData,
+              quickData: quickData,
+              climbData: climbData,
+              upperScoredMissedDataTele: upperScoredMissedDataTele,
+              upperScoredMissedDataAuto: upperScoredMissedDataAuto,
+            );
+          }) ??
+          (throw Exception("No team with that id")),
     );
   }
 
   @override
   Widget build(final BuildContext context) {
-    fetchTeamInfo();
-    return Container();
+    return FutureBuilder<Team>(
+      future: fetchTeamInfo(),
+      builder:
+          (final BuildContext context, final AsyncSnapshot<Team> snapShot) {
+        if (snapShot.hasError) {
+          return Center(child: Text(snapShot.error.toString()));
+        } else if (snapShot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return Row(
+          children: <Widget>[
+            Expanded(
+              flex: 4,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 3,
+                          child: DashboardCard(
+                            title: "Quick Data",
+                            body: quickData(snapShot.data!.quickData),
+                          ),
+                        ),
+                        SizedBox(width: defaultPadding),
+                        Expanded(
+                          flex: 3,
+                          child: DashboardCard(
+                            title: "Pit Scouting",
+                            body: ScoutingPit(snapShot.data!.pitViewData),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: defaultPadding),
+                  Expanded(
+                    flex: 5,
+                    child: DashboardCard(
+                      title: "Game Chart",
+                      body: CarouselWithIndicator(
+                        widgets: <Widget>[
+                          Stack(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment(-1, -1),
+                                child: Text(
+                                  snapShot
+                                      .data!.upperScoredMissedDataTele.title,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 20.0,
+                                  left: 20.0,
+                                  right: 20.0,
+                                  top: 40,
+                                ),
+                                child: DashboardLineChart(
+                                  inputedColors: <Color>[
+                                    Colors.green,
+                                    Colors.red
+                                  ],
+                                  distanceFromHighest: 4,
+                                  dataSet: snapShot
+                                      .data!.upperScoredMissedDataTele.points,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Stack(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment(-1, -1),
+                                child: Text(
+                                  snapShot
+                                      .data!.upperScoredMissedDataAuto.title,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 20.0,
+                                  left: 20.0,
+                                  right: 20.0,
+                                  top: 40,
+                                ),
+                                child: DashboardLineChart(
+                                  inputedColors: <Color>[
+                                    Colors.green,
+                                    Colors.red
+                                  ],
+                                  distanceFromHighest: 4,
+                                  dataSet: snapShot
+                                      .data!.upperScoredMissedDataAuto.points,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Stack(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment(-1, -1),
+                                child: Text(snapShot.data!.climbData.title),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 40.0,
+                                  left: 20.0,
+                                  right: 20.0,
+                                  top: 40,
+                                ),
+                                child: DashboardLineChart(
+                                  isClimb: true,
+                                  distanceFromHighest: 0,
+                                  dataSet: snapShot.data!.climbData.points,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(width: defaultPadding),
+            DashboardCard(
+              title: "Scouting Specific",
+              // body: ScoutingSpecific(msg: widget.team.msg),
+              body: ScoutingSpecific(
+                msg: snapShot.data!.specificData.msg,
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
+}
+
+Widget quickData(final QuickData data) {
+  return SingleChildScrollView(
+    child: Text(
+      """
+Average auto upper scored: ${data.avgAutoUpperScored}
+Average auto upper missed: ${data.avgAutoUpperMissed}
+Average auto low scored: ${data.avgAutoLowScored}
+
+Average tele upper scored: ${data.avgTeleUpperScored}
+Average tele upper missed: ${data.avgAutoUpperMissed}
+Average tele low scored: ${data.avgTeleLowScored}
+
+Average points from balls: ${data.avgBallPoints}
+Average points from climb: ${data.avgClimbPoints}
+
+Upper Shooting teleop success rate: ${data.scorePercentTeleUpper.round()}%
+Upper Shooting auto success rate: ${data.scorePercentAutoUpper.round()}%
+""",
+    ),
+  );
 }

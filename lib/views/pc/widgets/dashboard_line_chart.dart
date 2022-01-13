@@ -5,11 +5,12 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 
 class DashboardLineChart extends StatelessWidget {
-  const DashboardLineChart(
-      {required this.dataSet,
-      this.distanceFromHighest = 5,
-      this.inputedColors = const <Color>[],
-      this.isClimb = false});
+  const DashboardLineChart({
+    required this.dataSet,
+    this.distanceFromHighest = 5,
+    this.inputedColors = const <Color>[],
+    this.isClimb = false,
+  });
   final List<Color> inputedColors;
   final int distanceFromHighest;
   final List<List<double>> dataSet;
@@ -23,22 +24,29 @@ class DashboardLineChart extends StatelessWidget {
     return LineChart(
       LineChartData(
         lineTouchData: isClimb
-            ? LineTouchData(touchTooltipData: LineTouchTooltipData(
-                getTooltipItems: (final List<LineBarSpot> touchedSpots) {
-                  switch (touchedSpots[0].y.toInt()) {
-                    case -1:
-                      return [LineTooltipItem("Failed", TextStyle())];
-                    case 0:
-                      return [LineTooltipItem("No attempt", TextStyle())];
-                    default:
-                      return [
-                        LineTooltipItem(
+            ? LineTouchData(
+                touchTooltipData: LineTouchTooltipData(
+                  getTooltipItems: (final List<LineBarSpot> touchedSpots) {
+                    switch (touchedSpots[0].y.toInt()) {
+                      case -1:
+                        return <LineTooltipItem>[
+                          LineTooltipItem("Failed", TextStyle())
+                        ];
+                      case 0:
+                        return <LineTooltipItem>[
+                          LineTooltipItem("No attempt", TextStyle())
+                        ];
+                      default:
+                        return <LineTooltipItem>[
+                          LineTooltipItem(
                             "level ${touchedSpots[0].y.toInt().toString()}",
-                            TextStyle())
-                      ];
-                  }
-                },
-              ))
+                            TextStyle(),
+                          )
+                        ];
+                    }
+                  },
+                ),
+              )
             : null,
         lineBarsData:
             List<LineChartBarData>.generate(dataSet.length, (final int index) {
