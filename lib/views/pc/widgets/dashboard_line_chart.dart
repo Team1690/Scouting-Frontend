@@ -28,14 +28,18 @@ class DashboardLineChart extends StatelessWidget {
                 touchTooltipData: LineTouchTooltipData(
                   getTooltipItems: (final List<LineBarSpot> touchedSpots) {
                     return List<LineTooltipItem>.generate(touchedSpots.length,
-                        (index) {
+                        (final int index) {
                       switch (touchedSpots[index].y.toInt()) {
                         case 0:
                           return LineTooltipItem(
-                              "Failed", TextStyle(color: Colors.white));
+                            "Failed",
+                            TextStyle(color: Colors.white),
+                          );
                         case -1:
                           return LineTooltipItem(
-                              "No attempt", TextStyle(color: Colors.white));
+                            "No attempt",
+                            TextStyle(color: Colors.white),
+                          );
                         default:
                           return LineTooltipItem(
                             "Level ${touchedSpots[index].y.toInt().toString()}",

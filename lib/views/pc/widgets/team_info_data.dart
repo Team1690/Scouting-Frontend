@@ -144,11 +144,11 @@ class Team {
 }
 
 class TeamInfoData extends StatefulWidget {
-  TeamInfoData(this.team);
-  LightTeam team;
+  TeamInfoData(this.onStartup);
+  final LightTeam onStartup;
 
   @override
-  _TeamInfoDataState createState() => _TeamInfoDataState();
+  _TeamInfoDataState createState() => _TeamInfoDataState(onStartup);
 }
 
 double getClimbAverage(final List<String> climbVals) {
@@ -178,6 +178,8 @@ double getClimbAverage(final List<String> climbVals) {
 }
 
 class _TeamInfoDataState extends State<TeamInfoData> {
+  _TeamInfoDataState(this.team);
+  LightTeam team;
   Future<Team> fetchTeamInfo() async {
     final GraphQLClient client = getClient();
 
@@ -185,7 +187,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
       QueryOptions(
         document: gql(teamInfoQuery),
         variables: <String, dynamic>{
-          "id": widget.team.id,
+          "id": team.id,
         },
       ),
     );
@@ -323,7 +325,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
               title: "Upper balls Auto",
             );
             return Team(
-              team: widget.team,
+              team: this.team,
               specificData: specificData,
               pitViewData: pitData,
               quickData: quickData,
