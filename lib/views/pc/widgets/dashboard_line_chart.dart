@@ -39,7 +39,7 @@ class DashboardLineChart extends StatelessWidget {
                       default:
                         return <LineTooltipItem>[
                           LineTooltipItem(
-                            "level ${touchedSpots[0].y.toInt().toString()}",
+                            "Level ${touchedSpots[0].y.toInt().toString()}",
                             TextStyle(),
                           )
                         ];

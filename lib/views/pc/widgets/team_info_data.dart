@@ -265,6 +265,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                       (avgTeleUpperScored + avgTeleUpperMissed)) *
                   100,
             );
+
             final List<double> climbPoints =
                 climbVals.map<double>((final String e) {
               switch (e) {
@@ -286,7 +287,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
 
             final LineChartData climbData = LineChartData(
               points: <List<double>>[climbPoints],
-              title: "climb",
+              title: "Climb",
             );
 
             final List<double> upperScoredDataTele =
@@ -303,7 +304,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                 upperScoredDataTele,
                 upperMissedDataTele,
               ],
-              title: "Upper balls Tele",
+              title: "Upper balls Teleop",
             );
 
             final List<double> upperScoredDataAuto =
@@ -381,87 +382,95 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                     flex: 5,
                     child: DashboardCard(
                       title: "Game Chart",
-                      body: CarouselWithIndicator(
-                        widgets: <Widget>[
-                          Stack(
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment(-1, -1),
-                                child: Text(
-                                  snapShot
-                                      .data!.upperScoredMissedDataTele.title,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 20.0,
-                                  left: 20.0,
-                                  right: 20.0,
-                                  top: 40,
-                                ),
-                                child: DashboardLineChart(
-                                  inputedColors: <Color>[
-                                    Colors.green,
-                                    Colors.red
+                      body: snapShot.data!.upperScoredMissedDataTele.points[0]
+                              .isNotEmpty
+                          ? CarouselWithIndicator(
+                              widgets: <Widget>[
+                                Stack(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment(-1, -1),
+                                      child: Text(
+                                        snapShot.data!.upperScoredMissedDataTele
+                                            .title,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 20.0,
+                                        left: 20.0,
+                                        right: 20.0,
+                                        top: 40,
+                                      ),
+                                      child: DashboardLineChart(
+                                        inputedColors: <Color>[
+                                          Colors.green,
+                                          Colors.red
+                                        ],
+                                        distanceFromHighest: 4,
+                                        dataSet: snapShot.data!
+                                            .upperScoredMissedDataTele.points,
+                                      ),
+                                    ),
                                   ],
-                                  distanceFromHighest: 4,
-                                  dataSet: snapShot
-                                      .data!.upperScoredMissedDataTele.points,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Stack(
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment(-1, -1),
-                                child: Text(
-                                  snapShot
-                                      .data!.upperScoredMissedDataAuto.title,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 20.0,
-                                  left: 20.0,
-                                  right: 20.0,
-                                  top: 40,
-                                ),
-                                child: DashboardLineChart(
-                                  inputedColors: <Color>[
-                                    Colors.green,
-                                    Colors.red
+                                Stack(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment(-1, -1),
+                                      child: Text(
+                                        snapShot.data!.upperScoredMissedDataAuto
+                                            .title,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 20.0,
+                                        left: 20.0,
+                                        right: 20.0,
+                                        top: 40,
+                                      ),
+                                      child: DashboardLineChart(
+                                        inputedColors: <Color>[
+                                          Colors.green,
+                                          Colors.red
+                                        ],
+                                        distanceFromHighest: 4,
+                                        dataSet: snapShot.data!
+                                            .upperScoredMissedDataAuto.points,
+                                      ),
+                                    ),
                                   ],
-                                  distanceFromHighest: 4,
-                                  dataSet: snapShot
-                                      .data!.upperScoredMissedDataAuto.points,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Stack(
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment(-1, -1),
-                                child: Text(snapShot.data!.climbData.title),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 40.0,
-                                  left: 20.0,
-                                  right: 20.0,
-                                  top: 40,
-                                ),
-                                child: DashboardLineChart(
-                                  isClimb: true,
-                                  distanceFromHighest: 0,
-                                  dataSet: snapShot.data!.climbData.points,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                                Stack(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment(-1, -1),
+                                      child:
+                                          Text(snapShot.data!.climbData.title),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 40.0,
+                                        left: 40.0,
+                                        right: 20.0,
+                                        top: 40,
+                                      ),
+                                      child: DashboardLineChart(
+                                        isClimb: true,
+                                        distanceFromHighest: 0,
+                                        dataSet:
+                                            snapShot.data!.climbData.points,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            )
+                          : Center(
+                              child: Text(
+                              "No data yet :(",
+                            )),
                     ),
                   )
                 ],
@@ -497,8 +506,8 @@ Average tele low scored: ${data.avgTeleLowScored}
 Average points from balls: ${data.avgBallPoints}
 Average points from climb: ${data.avgClimbPoints}
 
-Upper Shooting teleop success rate: ${data.scorePercentTeleUpper.round()}%
-Upper Shooting auto success rate: ${data.scorePercentAutoUpper.round()}%
+Upper Shooting teleop success rate: ${!data.scorePercentTeleUpper.isNaN ? data.scorePercentTeleUpper.round() : 0}%
+Upper Shooting auto success rate: ${!data.scorePercentAutoUpper.isNaN ? data.scorePercentAutoUpper.round() : 0}%
 """,
     ),
   );

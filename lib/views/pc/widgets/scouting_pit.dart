@@ -11,7 +11,6 @@ class ScoutingPit extends StatelessWidget {
     return data == null
         ? Text("No data yet :(")
         : SingleChildScrollView(
-            scrollDirection: Axis.vertical,
             child: Column(
               children: <Widget>[
                 Text(
@@ -30,7 +29,7 @@ class ScoutingPit extends StatelessWidget {
                   softWrap: false,
                 ),
                 CachedNetworkImage(
-                  width: 120,
+                  width: 150,
                   imageUrl: data!.url,
                   placeholder: (final BuildContext context, final String url) =>
                       Center(child: CircularProgressIndicator()),
