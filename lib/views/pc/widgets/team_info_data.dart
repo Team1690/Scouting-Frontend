@@ -469,8 +469,9 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                             )
                           : Center(
                               child: Text(
-                              "No data yet :(",
-                            )),
+                                "No data yet :(",
+                              ),
+                            ),
                     ),
                   )
                 ],
