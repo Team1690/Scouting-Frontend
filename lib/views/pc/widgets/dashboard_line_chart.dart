@@ -116,7 +116,9 @@ class DashboardLineChart extends StatelessWidget {
                   case 0:
                     return "Failed";
                   default:
-                    return value > 4 ? "" : "level ${value.toInt()}";
+                    return value == 5 || value == -2
+                        ? ""
+                        : "level ${value.toInt()}";
                 }
               } else {
                 return value.toString();
@@ -139,7 +141,7 @@ class DashboardLineChart extends StatelessWidget {
           border: Border.all(color: const Color(0xff37434d), width: 1),
         ),
         minX: 1,
-        minY: isClimb ? -1 : 0,
+        minY: isClimb ? -2 : 0,
         maxY: highestValue + distanceFromHighest,
       ),
     );
