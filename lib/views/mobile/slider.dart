@@ -8,14 +8,12 @@ class PitViewSlider extends StatefulWidget {
     required final double max,
     required final double min,
     final void Function(double) onChange = ignore,
-    final double? value,
   }) : this.inner(
           label: label,
           divisions: divisions,
           max: max,
           min: min,
           onChange: onChange,
-          valueOnReRender: value ?? min,
         );
 
   PitViewSlider.inner({
@@ -24,19 +22,18 @@ class PitViewSlider extends StatefulWidget {
     required this.max,
     required this.min,
     required this.onChange,
-    required this.valueOnReRender,
   }) {}
   final String label;
   final double min;
   final double max;
   final int divisions;
-  double valueOnReRender;
   final void Function(double) onChange;
   @override
   _PitViewSliderState createState() => _PitViewSliderState();
 }
 
 class _PitViewSliderState extends State<PitViewSlider> {
+  late double value = widget.min;
   @override
   Widget build(final BuildContext context) {
     return Row(
@@ -47,11 +44,12 @@ class _PitViewSliderState extends State<PitViewSlider> {
           min: widget.min,
           max: widget.max,
           divisions: widget.divisions,
-          value: widget.valueOnReRender,
-          label: widget.valueOnReRender.round().toString(),
+          value: value,
+          label: value.round().toString(),
           onChanged: (final double newVal) {
             widget.onChange(newVal);
-            setState(() => widget.valueOnReRender = newVal);
+            value = newVal;
+            setState(() {});
           },
         )
       ],
