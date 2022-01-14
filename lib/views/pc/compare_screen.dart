@@ -125,22 +125,13 @@ Future<List<CompareTeam>> fetchData(final List<int> ids) async {
                   .toList();
               final double climbAvg = getClimbAverage(climbVals);
 
-              int failedClimb = 0;
-              int succededClimb = 0;
-              climbVals.forEach((final String element) {
-                switch (element) {
-                  case "no attempt":
-                  case "failed":
-                    failedClimb++;
-                    break;
-                  case "level 1":
-                  case "level 2":
-                  case "level 3":
-                  case "level 4":
-                    succededClimb++;
-                    break;
-                }
-              });
+              final int failedClimb = climbVals
+                  .where(
+                    (final String element) =>
+                        element == "failed" || element == "no attempt",
+                  )
+                  .length;
+              final int succededClimb = climbVals.length - failedClimb;
 
               final double climbSuccessPercent =
                   (succededClimb / (succededClimb + failedClimb)) * 100;
