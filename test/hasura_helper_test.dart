@@ -1,7 +1,5 @@
 import "package:flutter_test/flutter_test.dart";
 
-import "package:graphql/client.dart";
-
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
 
