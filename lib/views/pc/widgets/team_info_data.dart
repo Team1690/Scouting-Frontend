@@ -143,14 +143,6 @@ class Team {
   final LineChartData upperScoredMissedDataAuto;
 }
 
-class TeamInfoData extends StatefulWidget {
-  TeamInfoData(this.onStartup);
-  final LightTeam onStartup;
-
-  @override
-  _TeamInfoDataState createState() => _TeamInfoDataState(onStartup);
-}
-
 double getClimbAverage(final List<String> climbVals) {
   final List<int> climbPoints = climbVals.map<int>((final String e) {
     switch (e) {
@@ -177,9 +169,9 @@ double getClimbAverage(final List<String> climbVals) {
       climbPoints.length;
 }
 
-class _TeamInfoDataState extends State<TeamInfoData> {
-  _TeamInfoDataState(this.team);
-  LightTeam team;
+class TeamInfoData extends StatelessWidget {
+  TeamInfoData(this.team);
+  final LightTeam team;
   Future<Team> fetchTeamInfo() async {
     final GraphQLClient client = getClient();
 

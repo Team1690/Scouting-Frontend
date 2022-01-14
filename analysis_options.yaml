@@ -5,7 +5,7 @@
 # include: package:lints/recommended.yaml
 
 analyzer:
-  exclude: [build/**]
+  exclude: [build/**, lib/generated_plugin_registrant.dart]
   language:
     strict-raw-types: true
   strong-mode:

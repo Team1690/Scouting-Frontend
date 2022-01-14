@@ -3,8 +3,7 @@ import "package:flutter_test/flutter_test.dart";
 import "package:graphql/client.dart";
 
 import "package:scouting_frontend/net/hasura_helper.dart";
-// ignore: prefer_double_quotes
-import 'package:scouting_frontend/views/constants.dart';
+import "package:scouting_frontend/views/constants.dart";
 
 void main() {
   group("Hasura client", () {

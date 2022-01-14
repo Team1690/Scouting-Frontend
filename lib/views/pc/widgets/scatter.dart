@@ -29,7 +29,6 @@ class ScatterData {
   }
 }
 
-// ignore: must_be_immutable
 class Scatter extends StatelessWidget {
   Scatter({
     required this.onHover,
