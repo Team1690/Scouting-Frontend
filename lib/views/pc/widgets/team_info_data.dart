@@ -498,16 +498,16 @@ Widget quickData(final QuickData data) {
   return SingleChildScrollView(
     child: Text(
       """
-Average auto upper scored: ${data.avgAutoUpperScored}
-Average auto upper missed: ${data.avgAutoUpperMissed}
-Average auto low scored: ${data.avgAutoLowScored}
+Average auto upper scored: ${data.avgAutoUpperScored.toStringAsFixed(3)}
+Average auto upper missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}
+Average auto low scored: ${data.avgAutoLowScored.toStringAsFixed(3)}
 
-Average tele upper scored: ${data.avgTeleUpperScored}
-Average tele upper missed: ${data.avgAutoUpperMissed}
-Average tele low scored: ${data.avgTeleLowScored}
+Average tele upper scored: ${data.avgTeleUpperScored.toStringAsFixed(3)}
+Average tele upper missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}
+Average tele low scored: ${data.avgTeleLowScored.toStringAsFixed(3)}
 
-Average points from balls: ${data.avgBallPoints}
-Average points from climb: ${data.avgClimbPoints}
+Average points from balls: ${data.avgBallPoints.toStringAsFixed(3)}
+Average points from climb: ${data.avgClimbPoints.toStringAsFixed(3)}
 
 Upper Shooting teleop success rate: ${!data.scorePercentTeleUpper.isNaN ? data.scorePercentTeleUpper.round() : 0}%
 Upper Shooting auto success rate: ${!data.scorePercentAutoUpper.isNaN ? data.scorePercentAutoUpper.round() : 0}%
