@@ -15,6 +15,5 @@ void main() async {
   ClimbHelper.queryclimbId();
   DrivetrainHelper.queryDrivetrainId();
   DriveMotorHelper.queryDrivemotorId();
-
-  runApp(App());
+  TeamHelper.fetchTeams().then<void>((final void _) => runApp(App()));
 }

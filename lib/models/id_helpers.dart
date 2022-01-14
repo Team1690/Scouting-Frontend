@@ -1,4 +1,5 @@
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 
 class ClimbHelper {
@@ -239,5 +240,40 @@ query MyQuery {
         },
       ),
     );
+  }
+}
+
+class TeamHelper {
+  static List<LightTeam> teams = <LightTeam>[];
+  static Future<void> fetchTeams() async {
+    final GraphQLClient client = getClient();
+    final String query = """
+query FetchTeams {
+  team {
+    id
+    number
+    name
+  }
+}
+  """;
+
+    final QueryResult result =
+        await client.query(QueryOptions(document: gql(query)));
+
+    teams = result.mapQueryResult(
+          (final Map<String, dynamic>? data) => data.mapNullable(
+            (final Map<String, dynamic> teams) =>
+                (teams["team"] as List<dynamic>)
+                    .map(
+                      (final dynamic e) => LightTeam(
+                        e["id"] as int,
+                        e["number"] as int,
+                        e["name"] as String,
+                      ),
+                    )
+                    .toList(),
+          ),
+        ) ??
+        <LightTeam>[];
   }
 }
