@@ -1,5 +1,4 @@
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 
 class ClimbHelper {
