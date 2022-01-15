@@ -1,8 +1,4 @@
-# TODO: combine all 3 linting styles (including multiple lints doesn't work)
-# (currently even a single include fails for some reason)
-# include: package:lints/flutter.yaml
-# include: package:lints/pedantic.yaml
-# include: package:lints/recommended.yaml
+include: package:lints/recommended.yaml
 
 analyzer:
   exclude: [build/**, lib/generated_plugin_registrant.dart]
