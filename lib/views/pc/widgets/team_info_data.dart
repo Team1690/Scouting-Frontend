@@ -371,7 +371,9 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                           flex: 3,
                           child: DashboardCard(
                             title: "Pit Scouting",
-                            body: ScoutingPit(snapShot.data!.pitViewData),
+                            body: snapShot.data!.pitViewData
+                                    .mapNullable(ScoutingPit.new) ??
+                                Text("No data yet :("),
                           ),
                         ),
                       ],
@@ -480,9 +482,11 @@ class _TeamInfoDataState extends State<TeamInfoData> {
             DashboardCard(
               title: "Scouting Specific",
               // body: ScoutingSpecific(msg: widget.team.msg),
-              body: ScoutingSpecific(
-                msg: snapShot.data!.specificData.msg,
-              ),
+              body: snapShot.data!.specificData.msg.isNotEmpty
+                  ? ScoutingSpecific(
+                      msg: snapShot.data!.specificData.msg,
+                    )
+                  : Text("No data yet :("),
             )
           ],
         );
