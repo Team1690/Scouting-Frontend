@@ -19,8 +19,8 @@ Future<http.Response> fetchTeamsFromTba(final String event) {
 }
 
 const String mutation = """
-mutation MyMutation(\$teams: [team_test_insert_input!]!) {
-  insert_team_test(objects: \$teams) {
+mutation MyMutation(\$teams: [team_insert_input!]!) {
+  insert_team(objects: \$teams) {
     affected_rows
   }
 }
