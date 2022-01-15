@@ -456,8 +456,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
                                         right: 20.0,
                                         top: 40,
                                       ),
-                                      child: DashboardLineChart(
-                                        isClimb: true,
+                                      child: DashBoardClimbLineChart(
                                         distanceFromHighest: 0,
                                         dataSet:
                                             snapShot.data!.climbData.points,
