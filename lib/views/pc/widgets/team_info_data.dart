@@ -349,147 +349,150 @@ class _TeamInfoDataState extends State<TeamInfoData> {
             child: CircularProgressIndicator(),
           );
         }
-        return Row(
-          children: <Widget>[
-            Expanded(
-              flex: 4,
-              child: Column(
+        return snapShot.data.mapNullable<Widget>(
+              (final Team data) => Row(
                 children: <Widget>[
                   Expanded(
                     flex: 4,
-                    child: Row(
+                    child: Column(
                       children: <Widget>[
                         Expanded(
-                          flex: 3,
-                          child: DashboardCard(
-                            title: "Quick Data",
-                            body: quickData(snapShot.data!.quickData),
+                          flex: 4,
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                flex: 3,
+                                child: DashboardCard(
+                                  title: "Quick Data",
+                                  body: quickData(data.quickData),
+                                ),
+                              ),
+                              SizedBox(width: defaultPadding),
+                              Expanded(
+                                flex: 3,
+                                child: DashboardCard(
+                                  title: "Pit Scouting",
+                                  body: data.pitViewData
+                                          .mapNullable(ScoutingPit.new) ??
+                                      Text("No data yet :("),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(width: defaultPadding),
+                        SizedBox(height: defaultPadding),
                         Expanded(
-                          flex: 3,
+                          flex: 5,
                           child: DashboardCard(
-                            title: "Pit Scouting",
-                            body: snapShot.data!.pitViewData
-                                    .mapNullable(ScoutingPit.new) ??
-                                Text("No data yet :("),
+                            title: "Game Chart",
+                            body: data.upperScoredMissedDataTele.points[0]
+                                    .isNotEmpty
+                                ? CarouselWithIndicator(
+                                    widgets: <Widget>[
+                                      Stack(
+                                        children: <Widget>[
+                                          Align(
+                                            alignment: Alignment(-1, -1),
+                                            child: Text(
+                                              data.upperScoredMissedDataTele
+                                                  .title,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 20.0,
+                                              left: 20.0,
+                                              right: 20.0,
+                                              top: 40,
+                                            ),
+                                            child: DashboardLineChart(
+                                              inputedColors: <Color>[
+                                                Colors.green,
+                                                Colors.red
+                                              ],
+                                              distanceFromHighest: 4,
+                                              dataSet: data
+                                                  .upperScoredMissedDataTele
+                                                  .points,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Stack(
+                                        children: <Widget>[
+                                          Align(
+                                            alignment: Alignment(-1, -1),
+                                            child: Text(
+                                              data.upperScoredMissedDataAuto
+                                                  .title,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 20.0,
+                                              left: 20.0,
+                                              right: 20.0,
+                                              top: 40,
+                                            ),
+                                            child: DashboardLineChart(
+                                              inputedColors: <Color>[
+                                                Colors.green,
+                                                Colors.red
+                                              ],
+                                              distanceFromHighest: 4,
+                                              dataSet: data
+                                                  .upperScoredMissedDataAuto
+                                                  .points,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Stack(
+                                        children: <Widget>[
+                                          Align(
+                                            alignment: Alignment(-1, -1),
+                                            child: Text(data.climbData.title),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 40.0,
+                                              left: 40.0,
+                                              right: 20.0,
+                                              top: 40,
+                                            ),
+                                            child: DashBoardClimbLineChart(
+                                              distanceFromHighest: 0,
+                                              dataSet: data.climbData.points,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                : Center(
+                                    child: Text(
+                                      "No data yet :(",
+                                    ),
+                                  ),
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
-                  SizedBox(height: defaultPadding),
-                  Expanded(
-                    flex: 5,
-                    child: DashboardCard(
-                      title: "Game Chart",
-                      body: snapShot.data!.upperScoredMissedDataTele.points[0]
-                              .isNotEmpty
-                          ? CarouselWithIndicator(
-                              widgets: <Widget>[
-                                Stack(
-                                  children: <Widget>[
-                                    Align(
-                                      alignment: Alignment(-1, -1),
-                                      child: Text(
-                                        snapShot.data!.upperScoredMissedDataTele
-                                            .title,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 20.0,
-                                        left: 20.0,
-                                        right: 20.0,
-                                        top: 40,
-                                      ),
-                                      child: DashboardLineChart(
-                                        inputedColors: <Color>[
-                                          Colors.green,
-                                          Colors.red
-                                        ],
-                                        distanceFromHighest: 4,
-                                        dataSet: snapShot.data!
-                                            .upperScoredMissedDataTele.points,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Stack(
-                                  children: <Widget>[
-                                    Align(
-                                      alignment: Alignment(-1, -1),
-                                      child: Text(
-                                        snapShot.data!.upperScoredMissedDataAuto
-                                            .title,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 20.0,
-                                        left: 20.0,
-                                        right: 20.0,
-                                        top: 40,
-                                      ),
-                                      child: DashboardLineChart(
-                                        inputedColors: <Color>[
-                                          Colors.green,
-                                          Colors.red
-                                        ],
-                                        distanceFromHighest: 4,
-                                        dataSet: snapShot.data!
-                                            .upperScoredMissedDataAuto.points,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Stack(
-                                  children: <Widget>[
-                                    Align(
-                                      alignment: Alignment(-1, -1),
-                                      child:
-                                          Text(snapShot.data!.climbData.title),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 40.0,
-                                        left: 40.0,
-                                        right: 20.0,
-                                        top: 40,
-                                      ),
-                                      child: DashBoardClimbLineChart(
-                                        distanceFromHighest: 0,
-                                        dataSet:
-                                            snapShot.data!.climbData.points,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )
-                          : Center(
-                              child: Text(
-                                "No data yet :(",
-                              ),
-                            ),
-                    ),
+                  SizedBox(width: defaultPadding),
+                  DashboardCard(
+                    title: "Scouting Specific",
+                    // body: ScoutingSpecific(msg: widget.team.msg),
+                    body: snapShot.data!.specificData.msg.isNotEmpty
+                        ? ScoutingSpecific(
+                            msg: snapShot.data!.specificData.msg,
+                          )
+                        : Text("No data yet :("),
                   )
                 ],
               ),
-            ),
-            SizedBox(width: defaultPadding),
-            DashboardCard(
-              title: "Scouting Specific",
-              // body: ScoutingSpecific(msg: widget.team.msg),
-              body: snapShot.data!.specificData.msg.isNotEmpty
-                  ? ScoutingSpecific(
-                      msg: snapShot.data!.specificData.msg,
-                    )
-                  : Text("No data yet :("),
-            )
-          ],
-        );
+            ) ??
+            Text("No data available");
       },
     );
   }
