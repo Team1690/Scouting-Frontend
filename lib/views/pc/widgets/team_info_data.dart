@@ -98,10 +98,9 @@ class _TeamInfoDataState extends State<TeamInfoData> {
   }
 }
 
-Widget quickData(final QuickData data) {
-  return SingleChildScrollView(
-    child: Text(
-      """
+Widget quickData(final QuickData data) => SingleChildScrollView(
+      child: Text(
+        """
 Average auto upper scored: ${data.avgAutoUpperScored.toStringAsFixed(3)}
 Average auto upper missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}
 Average auto low scored: ${data.avgAutoLowScored.toStringAsFixed(3)}
@@ -113,12 +112,11 @@ Average tele low scored: ${data.avgTeleLowScored.toStringAsFixed(3)}
 Average points from balls: ${data.avgBallPoints.toStringAsFixed(3)}
 Average points from climb: ${data.avgClimbPoints.toStringAsFixed(3)}
 
-Upper Shooting teleop success rate: ${!data.scorePercentTeleUpper.isNaN ? data.scorePercentTeleUpper.round() : 0}%
-Upper Shooting auto success rate: ${!data.scorePercentAutoUpper.isNaN ? data.scorePercentAutoUpper.round() : 0}%
+Upper Shooting teleop success rate: ${data.scorePercentTeleUpper.isNaN ? data.scorePercentTeleUpper.round() : "Not a number"}%
+Upper Shooting auto success rate: ${data.scorePercentAutoUpper.isNaN ? data.scorePercentAutoUpper.round() : "Not a number"}%
 """,
-    ),
-  );
-}
+      ),
+    );
 
 Widget gameChartWidgets(final Team data) {
   return CarouselWithIndicator(
