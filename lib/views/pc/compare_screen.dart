@@ -357,23 +357,24 @@ class _CompareScreenState extends State<CompareScreen> {
                               child: DashboardCard(
                                 title: "Compare Spider Chart",
                                 body: Builder(
-                                    builder: (final BuildContext context) {
-                                  data.removeWhere(
-                                    (final CompareTeam team) =>
-                                        team.climbPercentage.isNaN,
-                                  );
-                                  return Center(
-                                    child: teams.isEmpty || data.isEmpty
-                                        ? Container()
-                                        : snapshot.connectionState ==
-                                                ConnectionState.waiting
-                                            ? Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              )
-                                            : spiderChartWidget(data),
-                                  );
-                                },),
+                                  builder: (final BuildContext context) {
+                                    data.removeWhere(
+                                      (final CompareTeam team) =>
+                                          team.climbPercentage.isNaN,
+                                    );
+                                    return Center(
+                                      child: teams.isEmpty || data.isEmpty
+                                          ? Container()
+                                          : snapshot.connectionState ==
+                                                  ConnectionState.waiting
+                                              ? Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                )
+                                              : spiderChartWidget(data),
+                                    );
+                                  },
+                                ),
                               ),
                             )
                           ],
