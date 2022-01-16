@@ -181,7 +181,6 @@ Widget gameChartWidgets(final Team data) {
               top: 40,
             ),
             child: DashBoardClimbLineChart(
-              distanceFromHighest: 0,
               dataSet: data.climbData.points,
             ),
           ),

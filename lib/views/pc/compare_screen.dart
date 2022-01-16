@@ -95,9 +95,9 @@ Future<List<CompareTeam>> fetchData(final List<int> ids) async {
     ),
   );
 
-  return result.mapQueryResult<List<CompareTeam>>(
-    (final Map<String, dynamic>? data) =>
-        data.mapNullable<List<CompareTeam>>(
+  return result
+      .mapQueryResult<List<CompareTeam>>((final Map<String, dynamic>? data) {
+    return data.mapNullable<List<CompareTeam>>(
           (final Map<String, dynamic> teams) {
             return (teams["team"] as List<dynamic>)
                 .map<CompareTeam>((final dynamic e) {
@@ -217,8 +217,8 @@ Future<List<CompareTeam>> fetchData(final List<int> ids) async {
             }).toList();
           },
         ) ??
-        (throw Exception("Error shoudn't happen")),
-  );
+        (throw Exception("Error shoudn't happen"));
+  });
 }
 
 class CompareScreen extends StatefulWidget {
@@ -240,7 +240,7 @@ class _CompareScreenState extends State<CompareScreen> {
   Widget build(final BuildContext context) {
     return FutureBuilder<List<CompareTeam>>(
       future: teams.isEmpty
-          ? null
+          ? Future<List<CompareTeam>>.value(<CompareTeam>[])
           : fetchData(teams.map((final LightTeam e) => e.id).toList()),
       builder: (
         final BuildContext context,
@@ -356,17 +356,24 @@ class _CompareScreenState extends State<CompareScreen> {
                               flex: 2,
                               child: DashboardCard(
                                 title: "Compare Spider Chart",
-                                body: Center(
-                                  child: teams.isEmpty
-                                      ? Container()
-                                      : snapshot.connectionState ==
-                                              ConnectionState.waiting
-                                          ? Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            )
-                                          : spiderChartWidget(data),
-                                ),
+                                body: Builder(
+                                    builder: (final BuildContext context) {
+                                  data.removeWhere(
+                                    (final CompareTeam team) =>
+                                        team.climbPercentage.isNaN,
+                                  );
+                                  return Center(
+                                    child: teams.isEmpty || data.isEmpty
+                                        ? Container()
+                                        : snapshot.connectionState ==
+                                                ConnectionState.waiting
+                                            ? Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              )
+                                            : spiderChartWidget(data),
+                                  );
+                                },),
                               ),
                             )
                           ],
@@ -622,9 +629,7 @@ Widget gameChartWidget(final List<CompareTeam> data) {
                   right: 20.0,
                   top: 40,
                 ),
-                child: DashboardLineChart(
-                  isClimb: true,
-                  distanceFromHighest: 1,
+                child: DashBoardClimbLineChart(
                   dataSet: climb
                       .map(
                         (
