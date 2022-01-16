@@ -38,7 +38,7 @@ void main(final List<String> args) async {
 
   final http.Response response = await fetchTeamsFromTba(
     results["event"] as String? ??
-        (throw ArgumentError("You need to add an event code")),
+        (throw ArgumentError("You need to add an event code add -h for help")),
   );
 
   if (results.wasParsed("print")) {
