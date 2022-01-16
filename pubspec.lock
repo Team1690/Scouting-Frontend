@@ -100,7 +100,7 @@ packages:
     source: hosted
     version: "1.0.4"
   dotenv:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: dotenv
       url: "https://pub.dartlang.org"
