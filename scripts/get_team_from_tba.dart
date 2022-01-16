@@ -86,11 +86,11 @@ Future<void> sendTeams(
 }
 
 GraphQLClient getClient() {
-  final Map<String, String> headers = <String, String>{};
-  headers["x-hasura-admin-secret"] = env["HASURA_ADMIN_SECRET"]!;
   final HttpLink link = HttpLink(
     "https://orbitdb.hasura.app/v1/graphql",
-    defaultHeaders: headers,
+    defaultHeaders: <String, String>{
+      "x-hasura-admin-secret": env["HASURA_ADMIN_SECRET"]!
+    },
   );
   return GraphQLClient(link: link, cache: GraphQLCache());
 }
