@@ -1,12 +1,50 @@
 import "dart:convert";
+import "dart:io";
 
+import "package:args/args.dart";
 import "package:dotenv/dotenv.dart";
 import "package:graphql/client.dart";
 import "package:http/http.dart" as http;
 
 void main(final List<String> args) async {
+  final ArgParser arg = ArgParser()
+    ..addFlag(
+      "print",
+      abbr: "p",
+      help: "Print tba results and dont send to hasura",
+      negatable: false,
+    )
+    ..addFlag(
+      "help",
+      abbr: "h",
+      help: "Print out usage instructions",
+      negatable: false,
+    )
+    ..addOption(
+      "event",
+      abbr: "e",
+      help:
+          "Name the event code you want to get teams from.\nYou can get the event code from the url of the event on tba website",
+      valueHelp: "2021cc",
+    );
+
+  final ArgResults results = arg.parse(args);
   load(".env");
-  final http.Response response = await fetchTeamsFromTba(args[0]);
+
+  if (results.wasParsed("help")) {
+    print(arg.usage);
+    exit(0);
+  }
+
+  final http.Response response = await fetchTeamsFromTba(
+    results["event"] as String? ??
+        (throw ArgumentError("You need to add an event code")),
+  );
+
+  if (results.wasParsed("print")) {
+    print(response.body);
+    exit(0);
+  }
   final dynamic teams = jsonDecode(response.body);
   sendTeams(teams as List<dynamic>, getClient());
 }
