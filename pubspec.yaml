@@ -45,6 +45,8 @@ dependencies:
   toggle_switch: ^1.2.0
 
 dev_dependencies:
+  args: ^2.3.0
+  dotenv: ^3.0.0
   flutter_test:
     sdk: flutter
   lints: ^1.0.1
