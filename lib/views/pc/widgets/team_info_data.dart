@@ -11,7 +11,7 @@ import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
 
 class TeamInfoData extends StatefulWidget {
   TeamInfoData(this.team);
-  LightTeam team;
+  final LightTeam team;
 
   @override
   _TeamInfoDataState createState() => _TeamInfoDataState();
