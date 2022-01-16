@@ -48,7 +48,6 @@ class _SpiderChart extends State<SpiderChart> {
         // ticksTextStyle: Theme.of(context).textTheme.subtitle1,
         axisColor: primaryWhite,
         outlineColor: secondaryWhite,
-
         featuresTextStyle: Theme.of(context).textTheme.bodyText2!,
       ),
     );
