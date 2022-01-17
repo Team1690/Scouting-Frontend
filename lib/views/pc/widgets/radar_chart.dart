@@ -2,19 +2,32 @@ import "package:flutter/material.dart";
 import "package:flutter_radar_chart/flutter_radar_chart.dart";
 import "package:scouting_frontend/views/constants.dart";
 
-// ignore: must_be_immutable
 class SpiderChart extends StatefulWidget {
   SpiderChart({
-    required this.numberOfFeatures,
+    required final int numberOfFeatures,
+    required final List<List<int>> data,
+    required final List<int> ticks,
+    required final List<String> features,
+  }) : this.inner(
+          ticks: ticks,
+          numberOfFeatures: numberOfFeatures,
+          features: features.sublist(0, numberOfFeatures),
+          data: data
+              .map((final List<int> e) => e.sublist(0, numberOfFeatures))
+              .toList(),
+        );
+
+  SpiderChart.inner({
     required this.data,
-    required this.ticks,
     required this.features,
+    required this.numberOfFeatures,
+    required this.ticks,
   });
 
-  final double numberOfFeatures;
-  List<List<int>> data;
+  final int numberOfFeatures;
+  final List<List<int>> data;
   final List<int> ticks;
-  List<String> features;
+  final List<String> features;
   @override
   _SpiderChart createState() => _SpiderChart();
 }
@@ -25,15 +38,6 @@ class _SpiderChart extends State<SpiderChart> {
 
   @override
   Widget build(final BuildContext context) {
-    widget.features =
-        widget.features.sublist(0, widget.numberOfFeatures.floor());
-    widget.data = widget.data
-        .map(
-          (final List<int> graph) =>
-              graph.sublist(0, widget.numberOfFeatures.floor()),
-        )
-        .toList();
-
     return Container(
       child: RadarChart(
         graphColors: colors,
