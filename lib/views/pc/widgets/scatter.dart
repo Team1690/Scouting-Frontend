@@ -230,9 +230,9 @@ Future<List<ScatterData>> fetchScatterData() async {
                     )
                     .toList();
                 double yStddevBallPoints = 0;
-                matchBallPoints.forEach((final double element) {
+                for (final double element in matchBallPoints) {
                   yStddevBallPoints += (element - xBallPointsAvg).abs();
-                });
+                }
                 yStddevBallPoints /= matchBallPoints.length;
                 return ScatterData(xBallPointsAvg, yStddevBallPoints, team);
               })

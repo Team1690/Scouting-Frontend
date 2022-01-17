@@ -7,7 +7,7 @@ class MatchTextBox extends StatefulWidget {
     this.onChange = ignore,
     required this.controller,
     required this.validate,
-  }) {}
+  });
   final String? Function(String?) validate;
   final void Function(int) onChange;
   final TextEditingController controller;
@@ -38,7 +38,7 @@ class _MatchTextBoxState extends State<MatchTextBox> {
         prefixIcon: Icon(Icons.tag),
         border: OutlineInputBorder(),
         hintText: "Enter Match Number",
-        errorText: _validate ? "Value can\'t be empty" : null,
+        errorText: _validate ? "Value can't be empty" : null,
       ),
     );
   }

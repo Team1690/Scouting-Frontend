@@ -2,7 +2,7 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 
 class ClimbHelper {
-  static Map<String, int> _ids = <String, int>{};
+  static final Map<String, int> _ids = <String, int>{};
 
   static int get noAttemptId => _ids["no Attempt"]!;
 
@@ -52,7 +52,7 @@ class ClimbHelper {
     result.mapQueryResult(
       (final Map<String, dynamic>? data) =>
           data.mapNullable((final Map<String, dynamic> climb) {
-        (climb["climb_2022"] as List<dynamic>).forEach((final dynamic element) {
+        for (final dynamic element in (climb["climb_2022"] as List<dynamic>)) {
           switch (element["name"] as String) {
             case "failed":
               _ids["failed"] = element["id"] as int;
@@ -73,7 +73,7 @@ class ClimbHelper {
               _ids["level 4"] = element["id"] as int;
               break;
           }
-        });
+        }
       }),
     );
   }
@@ -132,8 +132,8 @@ query MyQuery {
     result.mapQueryResult(
       (final Map<String, dynamic>? data) => data.mapNullable(
         (final Map<String, dynamic> driveTrain) {
-          (driveTrain["drivetrain"] as List<dynamic>)
-              .forEach((final dynamic element) {
+          for (final dynamic element
+              in (driveTrain["drivetrain"] as List<dynamic>)) {
             switch (element["title"] as String) {
               case "Swerve":
                 _ids["swerve"] = element["id"] as int;
@@ -157,7 +157,7 @@ query MyQuery {
                 _ids["other"] = element["id"] as int;
                 break;
             }
-          });
+          }
         },
       ),
     );
@@ -213,8 +213,8 @@ query MyQuery {
     result.mapQueryResult(
       (final Map<String, dynamic>? data) => data.mapNullable(
         (final Map<String, dynamic> driveTrain) {
-          (driveTrain["drivemotor"] as List<dynamic>)
-              .forEach((final dynamic element) {
+          for (final dynamic element
+              in (driveTrain["drivemotor"] as List<dynamic>)) {
             switch (element["title"] as String) {
               case "Falcon":
                 _ids["falcon"] = element["id"] as int;
@@ -235,7 +235,7 @@ query MyQuery {
                 _ids["other"] = element["id"] as int;
                 break;
             }
-          });
+          }
         },
       ),
     );

@@ -463,7 +463,7 @@ Widget gameChartWidget(final List<CompareTeam> data) {
       final List<CompareLineChartData> autoScored = <CompareLineChartData>[];
 
       final List<CompareLineChartData> autoMissed = <CompareLineChartData>[];
-      data.forEach((final CompareTeam item) {
+      for (final CompareTeam item in data) {
         if ((item.climbData.points.length > 1)) {
           teleScored.add(
             item.upperScoredDataTele,
@@ -479,16 +479,14 @@ Widget gameChartWidget(final List<CompareTeam> data) {
           );
           climb.add(item.climbData);
         }
-      });
+      }
       int longestList = -1;
-      climb.forEach((
-        final CompareLineChartData element,
-      ) {
+      for (final CompareLineChartData element in climb) {
         longestList = max(
           longestList,
           element.points.length,
         );
-      });
+      }
       if (longestList < 2) {
         return Text(
           "Can't show team with less than 2 entries :(",

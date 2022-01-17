@@ -25,7 +25,7 @@ class PitViewSlider extends StatelessWidget {
     required this.max,
     required this.min,
     required this.onChange,
-  }) {}
+  });
   final String label;
   final double min;
   final double max;

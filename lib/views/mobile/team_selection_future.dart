@@ -29,9 +29,9 @@ class _TeamSelectionFutureState extends State<TeamSelectionFuture> {
           return TeamsSearchBox(
             typeAheadController: widget.controller,
             teams: TeamHelper._teams,
-            onChange: (final LightTeam LightTeam) {
+            onChange: (final LightTeam lightTeam) {
               setState(() {
-                widget.onChange(LightTeam);
+                widget.onChange(lightTeam);
               });
             },
           );

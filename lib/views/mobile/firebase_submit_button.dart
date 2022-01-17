@@ -18,7 +18,7 @@ class FireBaseSubmitButton extends StatefulWidget {
     required this.mutation,
     required this.getResult,
     this.resetForm = empty,
-  }) {}
+  });
   final HasuraVars vars;
   final String mutation;
   final void Function() resetForm;

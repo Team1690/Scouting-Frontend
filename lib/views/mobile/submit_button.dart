@@ -96,7 +96,7 @@ class _SubmitButtonState extends State<SubmitButton> {
             _state = ButtonState.success;
           });
         }
-        Future<Null>.delayed(Duration(seconds: 5), () {
+        Future<void>.delayed(Duration(seconds: 5), () {
           setState(() {
             _state = ButtonState.idle;
           });
