@@ -1,9 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_typeahead/flutter_typeahead.dart";
-import "package:graphql/client.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/net/hasura_helper.dart";
 
 class TeamsSearchBox extends StatelessWidget {
   TeamsSearchBox({
@@ -36,7 +34,11 @@ class TeamsSearchBox extends StatelessWidget {
           hintText: "Search Team",
         ),
       ),
-      suggestionsCallback: (final String pattern) => teams,
+      suggestionsCallback: (final String pattern) => teams.where(
+        (final LightTeam element) {
+          return element.number.toString().startsWith(pattern);
+        },
+      ),
       itemBuilder: (final BuildContext context, final LightTeam suggestion) =>
           ListTile(title: Text(suggestion.number.toString())),
       transitionBuilder: (
@@ -53,11 +55,11 @@ class TeamsSearchBox extends StatelessWidget {
         );
       },
       noItemsFoundBuilder: (final BuildContext context) => Container(
-        height: 100,
+        height: 60,
         child: Center(
           child: Text(
             "No Teams Found",
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 16),
           ),
         ),
       ),
@@ -71,35 +73,4 @@ class TeamsSearchBox extends StatelessWidget {
       },
     );
   }
-}
-
-Future<List<LightTeam>> fetchTeams() async {
-  final GraphQLClient client = getClient();
-  final String query = """
-query FetchTeams {
-  team {
-    id
-    number
-    name
-  }
-}
-  """;
-
-  final QueryResult result =
-      await client.query(QueryOptions(document: gql(query)));
-
-  return result.mapQueryResult(
-        (final Map<String, dynamic>? data) => data.mapNullable(
-          (final Map<String, dynamic> teams) => (teams["team"] as List<dynamic>)
-              .map(
-                (final dynamic e) => LightTeam(
-                  e["id"] as int,
-                  e["number"] as int,
-                  e["name"] as String,
-                ),
-              )
-              .toList(),
-        ),
-      ) ??
-      <LightTeam>[];
 }
