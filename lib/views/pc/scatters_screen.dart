@@ -23,9 +23,7 @@ class _ScattersScreenState extends State<ScattersScreen> {
               flex: 4,
               child: DashboardCard(
                 title: "Scatter",
-                body: Scatter(
-                  onHover: identity,
-                ),
+                body: Scatter(),
               ),
             ),
           ],
