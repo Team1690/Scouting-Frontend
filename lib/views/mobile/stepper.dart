@@ -1,14 +1,14 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 
-class CustomStepper extends StatefulWidget {
+class CustomStepper extends StatelessWidget {
   CustomStepper({
     required this.lowerLimit,
     required this.upperLimit,
     required this.stepValue,
     required this.longPressStepValue,
     required this.iconSize,
-    required this.valueOnReRender,
+    required this.value,
     this.onChanged = ignore,
   });
 
@@ -18,67 +18,51 @@ class CustomStepper extends StatefulWidget {
   final int longPressStepValue;
   final double iconSize;
   final void Function(int) onChanged;
-  final int valueOnReRender;
+  final int value;
 
-  @override
-  _CustomStepperState createState() => _CustomStepperState();
-}
-
-class _CustomStepperState extends State<CustomStepper> {
   @override
   Widget build(final BuildContext context) {
-    int value = widget.valueOnReRender;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         RoundedIconButton(
           icon: Icons.remove,
-          iconSize: widget.iconSize,
+          iconSize: iconSize,
           onPress: () {
-            setState(() {
-              value = value == widget.lowerLimit
-                  ? widget.lowerLimit
-                  : value -= widget.stepValue;
-            });
-            widget.onChanged(value);
+            final int newValue =
+                value == lowerLimit ? lowerLimit : value - stepValue;
+            onChanged(newValue);
           },
           onLongPress: () {
-            setState(() {
-              value = value < widget.lowerLimit + widget.longPressStepValue
-                  ? widget.lowerLimit
-                  : value -= widget.longPressStepValue;
-            });
-            widget.onChanged(value);
+            final int newValue = value < lowerLimit + longPressStepValue
+                ? lowerLimit
+                : value - longPressStepValue;
+            onChanged(newValue);
           },
         ),
         Container(
-          width: widget.iconSize * 1.5,
+          width: iconSize * 1.5,
           child: Text(
             "${value}",
             style: TextStyle(
-              fontSize: widget.iconSize * 0.8,
+              fontSize: iconSize * 0.8,
             ),
             textAlign: TextAlign.center,
           ),
         ),
         RoundedIconButton(
           icon: Icons.add,
-          iconSize: widget.iconSize,
+          iconSize: iconSize,
           onPress: () {
-            setState(() {
-              value = value == widget.upperLimit
-                  ? widget.upperLimit
-                  : value += widget.stepValue;
-            });
-            widget.onChanged(value);
+            final int newValue =
+                value == upperLimit ? upperLimit : value + stepValue;
+            onChanged(newValue);
           },
           onLongPress: () {
-            setState(() {
-              value = value > widget.upperLimit - widget.longPressStepValue
-                  ? widget.upperLimit
-                  : value += widget.longPressStepValue;
-            });
-            widget.onChanged(value);
+            final int newValue = value > upperLimit - longPressStepValue
+                ? upperLimit
+                : value + longPressStepValue;
+            onChanged(newValue);
           },
         ),
       ],

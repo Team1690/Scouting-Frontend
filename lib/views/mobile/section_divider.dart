@@ -5,10 +5,9 @@ class SectionDivider extends StatelessWidget {
 
   final String label;
 
+  Expanded get line => horizontalLine();
   @override
   Widget build(final BuildContext context) {
-    final Expanded line = horizontalLine();
-
     return Row(
       children: <Widget>[
         line,
@@ -23,7 +22,8 @@ class SectionDivider extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(left: 15.0, right: 10.0),
         child: Divider(
-          color: Colors.black,
+          thickness: 2,
+          color: Colors.black.withOpacity(0.4),
           height: 50,
         ),
       ),

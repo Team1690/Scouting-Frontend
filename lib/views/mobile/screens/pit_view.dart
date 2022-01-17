@@ -54,7 +54,7 @@ class _PitViewState extends State<PitView> {
   final ValueNotifier<bool> advancedSwitchController =
       ValueNotifier<bool>(false);
 
-  void resetFrame(final BuildContext context) {
+  void resetFrame() {
     setState(() {
       vars.reset();
 
@@ -97,37 +97,51 @@ class _PitViewState extends State<PitView> {
               ),
               SectionDivider(label: "Drive Train"),
               Selector(
-                valueOnReRender: vars.driveTrainType,
+                value: vars.driveTrainType,
                 values: driveTrains,
                 initialValue: PitVars.driveTrainInitialValue,
                 onChange: (final String newValue) {
-                  vars.driveTrainType = newValue;
+                  setState(() {
+                    if (driveTrains.contains(PitVars.driveTrainInitialValue) &&
+                        newValue != PitVars.driveTrainInitialValue) {
+                      driveTrains.remove(PitVars.driveTrainInitialValue);
+                    }
+                    vars.driveTrainType = newValue;
+                  });
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               Selector(
-                valueOnReRender: vars.driveMotorType,
+                value: vars.driveMotorType,
                 values: driveMotors,
                 initialValue: PitVars.driveMotorInitialValue,
                 onChange: (final String newValue) {
-                  vars.driveMotorType = newValue;
+                  setState(() {
+                    if (driveMotors.contains(PitVars.driveMotorInitialValue) &&
+                        newValue != PitVars.driveMotorInitialValue) {
+                      driveMotors.remove(PitVars.driveMotorInitialValue);
+                    }
+                    vars.driveMotorType = newValue;
+                  });
                 },
               ),
               SizedBox(
                 height: 20,
               ),
               Counter(
+                count: vars.driveMotorAmount,
                 label: "Drive Motors",
                 icon: Icons.adjust,
-                count: vars.driveMotorAmount,
                 upperLimit: 10,
                 lowerLimit: 2,
                 stepValue: 2,
                 longPressedValue: 4,
                 onChange: (final int newValue) {
-                  vars.driveMotorAmount = newValue;
+                  setState(() {
+                    vars.driveMotorAmount = newValue;
+                  });
                 },
               ),
               SizedBox(
@@ -191,9 +205,12 @@ class _PitViewState extends State<PitView> {
               ),
               SectionDivider(label: "General Robot Reliability"),
               PitViewSlider(
+                value: vars.driveTrainReliability,
                 label: "Drive Train Reliablity:",
                 onChange: (final double newVal) {
-                  vars.driveTrainReliability = newVal;
+                  setState(() {
+                    vars.driveTrainReliability = newVal;
+                  });
                 },
                 divisions: 4,
                 max: 5,
@@ -203,24 +220,30 @@ class _PitViewState extends State<PitView> {
                 height: 8,
               ),
               PitViewSlider(
+                value: vars.electronicsReliability,
                 label: "Electronics Reliability",
                 divisions: 4,
                 min: 1,
                 max: 5,
                 onChange: (final double newValue) {
-                  vars.electronicsReliability = newValue;
+                  setState(() {
+                    vars.electronicsReliability = newValue;
+                  });
                 },
               ),
               SizedBox(
                 height: 8,
               ),
               PitViewSlider(
+                value: vars.robotReliability,
                 label: "Robot Reliability",
                 divisions: 9,
                 max: 10,
                 min: 1,
                 onChange: (final double newValue) {
-                  vars.robotReliability = newValue;
+                  setState(() {
+                    vars.robotReliability = newValue;
+                  });
                 },
               ),
               SizedBox(
@@ -262,9 +285,9 @@ class _PitViewState extends State<PitView> {
       mutation MyMutation(
           \$url: String,
           \$drive_motor_amount: Int,
-          \$drive_motor_type: String,
+          \$drivemotor_id: Int,
           \$drive_train_reliability: Int,
-          \$drive_train_type: String,
+          \$drivetrain_id: Int,
           \$drive_wheel_type: String,
           \$electronics_reliability: Int,
           \$gearbox: String,
@@ -275,9 +298,9 @@ class _PitViewState extends State<PitView> {
       insert_pit(objects: {
       url: \$url,
       drive_motor_amount: \$drive_motor_amount,
-      drive_motor_type: \$drive_motor_type,
+      drivemotor_id: \$drivemotor_id,
       drive_train_reliability: \$drive_train_reliability,
-      drive_train_type: \$drive_train_type,
+      drivetrain_id: \$drivetrain_id,
       drive_wheel_type: \$drive_wheel_type,
       electronics_reliability: \$electronics_reliability,
       gearbox: \$gearbox,
@@ -288,9 +311,9 @@ class _PitViewState extends State<PitView> {
       }) {
           returning {
               drive_motor_amount
-      drive_motor_type
+      drivemotor_id
       drive_train_reliability
-      drive_train_type
+      drivetrain_id
       drive_wheel_type
       electronics_reliability
       gearbox
@@ -305,7 +328,7 @@ class _PitViewState extends State<PitView> {
       }
       """,
                 vars: vars,
-                resetForm: () => resetFrame(context),
+                resetForm: resetFrame,
               )
             ],
           ),

@@ -5,37 +5,35 @@ import "package:cached_network_image/cached_network_image.dart";
 
 class ScoutingPit extends StatelessWidget {
   ScoutingPit(this.data);
-  final PitViewData data;
+  final PitData data;
   @override
   Widget build(final BuildContext context) {
-    final String newUrl = data.url.substring(0, data.url.length);
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        children: <Widget>[
-          Text(
+    return Row(
+      children: <Widget>[
+        SingleChildScrollView(
+          child: Text(
             """
-          Drive Train Type: ${data.driveTrainType == PitVars.driveTrainInitialValue ? 'Not Answered' : data.driveTrainType}
-          Drive Train Motor: ${data.driveMotorType == PitVars.driveMotorInitialValue ? 'Not Answered' : data.driveMotorType}
-          Drive Motor Amount: ${data.driveMotorAmount}
-          Shifter: ${data.shifter}
-          Gearbox: ${data.gearbox}
-          Drive Wheel Type: ${data.driveWheelType}
-          DriveTrain Reliability: ${data.driveTrainReliability}
-          Electronics Reliability: ${data.electronicsReliability}
-          Robot Reliability: ${data.robotReliability}
-          Notes: ${data.notes}
-          """,
+                      Drive Train Type: ${data.driveTrainType == PitVars.driveTrainInitialValue ? 'Not Answered' : data.driveTrainType}
+                      Drive Train Motor: ${data.driveMotorType == PitVars.driveMotorInitialValue ? 'Not Answered' : data.driveMotorType}
+                      Drive Motor Amount: ${data.driveMotorAmount}
+                      Shifter: ${data.shifter}
+                      Gearbox: ${data.gearbox}
+                      Drive Wheel Type: ${data.driveWheelType}
+                      DriveTrain Reliability: ${data.driveTrainReliability}
+                      Electronics Reliability: ${data.electronicsReliability}
+                      Robot Reliability: ${data.robotReliability}
+                      Notes: ${data.notes}
+                      """,
             softWrap: false,
           ),
-          CachedNetworkImage(
-            width: 120,
-            imageUrl: newUrl,
-            placeholder: (final BuildContext context, final String url) =>
-                Center(child: CircularProgressIndicator()),
-          )
-        ],
-      ),
+        ),
+        CachedNetworkImage(
+          width: 150,
+          imageUrl: data.url,
+          placeholder: (final BuildContext context, final String url) =>
+              Center(child: CircularProgressIndicator()),
+        )
+      ],
     );
   }
 }

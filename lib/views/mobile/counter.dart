@@ -1,32 +1,29 @@
-// ignore_for_file: sort_constructors_first
-
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/stepper.dart";
 
 class Counter extends StatelessWidget {
-  final String label;
-  final IconData icon;
-
-  final void Function(int) onChange;
-
-  final int count;
-  final int stepValue;
-  final int upperLimit;
-  final int lowerLimit;
-  final int longPressedValue;
-
   Counter({
     required final this.label,
     required final this.icon,
-    required final this.count,
     this.onChange = ignore,
     final this.stepValue = 1,
     final this.upperLimit = 100,
     final this.lowerLimit = 0,
     final this.longPressedValue = 5,
+    required final this.count,
   });
+  final String label;
+  final IconData icon;
 
+  final void Function(int) onChange;
+
+  final int stepValue;
+  final int upperLimit;
+  final int lowerLimit;
+  final int longPressedValue;
+
+  final int count;
   @override
   Widget build(final BuildContext context) {
     return Row(
@@ -46,6 +43,7 @@ class Counter extends StatelessWidget {
           child: Text(
             label,
             textScaleFactor: 1.5,
+            style: TextStyle(fontSize: 12),
           ),
         ),
         Expanded(
@@ -54,7 +52,7 @@ class Counter extends StatelessWidget {
             iconSize: 30,
             lowerLimit: lowerLimit,
             upperLimit: upperLimit,
-            valueOnReRender: count,
+            value: count,
             stepValue: stepValue,
             longPressStepValue: longPressedValue,
             onChanged: onChange,
