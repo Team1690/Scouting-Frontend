@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_radar_chart/flutter_radar_chart.dart";
 import "package:scouting_frontend/views/constants.dart";
 
-class SpiderChart extends StatefulWidget {
+class SpiderChart extends StatelessWidget {
   SpiderChart({
     required final int numberOfFeatures,
     required final List<List<int>> data,
@@ -28,13 +28,8 @@ class SpiderChart extends StatefulWidget {
   final List<List<int>> data;
   final List<int> ticks;
   final List<String> features;
-  @override
-  _SpiderChart createState() => _SpiderChart();
-}
-
-class _SpiderChart extends State<SpiderChart> {
-  bool darkMode = false;
-  bool useSides = false;
+  final bool darkMode = false;
+  final bool useSides = false;
 
   @override
   Widget build(final BuildContext context) {
@@ -42,9 +37,9 @@ class _SpiderChart extends State<SpiderChart> {
       child: RadarChart(
         graphColors: colors,
         reverseAxis: false,
-        data: widget.data,
-        features: widget.features,
-        ticks: widget.ticks,
+        data: data,
+        features: features,
+        ticks: ticks,
         // ticksTextStyle: Theme.of(context).textTheme.subtitle1,
         axisColor: primaryWhite,
         outlineColor: secondaryWhite,
