@@ -11,7 +11,7 @@ import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
 
 class TeamInfoData extends StatefulWidget {
   TeamInfoData(this.team);
-  LightTeam team;
+  final LightTeam team;
 
   @override
   _TeamInfoDataState createState() => _TeamInfoDataState();
@@ -112,8 +112,8 @@ Average tele low scored: ${data.avgTeleLowScored.toStringAsFixed(3)}
 Average points from balls: ${data.avgBallPoints.toStringAsFixed(3)}
 Average points from climb: ${data.avgClimbPoints.toStringAsFixed(3)}
 
-Upper Shooting teleop success rate: ${data.scorePercentTeleUpper.isNaN ? data.scorePercentTeleUpper.round() : "Not a number"}%
-Upper Shooting auto success rate: ${data.scorePercentAutoUpper.isNaN ? data.scorePercentAutoUpper.round() : "Not a number"}%
+Upper Shooting teleop success rate: ${!data.scorePercentTeleUpper.isNaN ? data.scorePercentTeleUpper.round() : "Not a number"}%
+Upper Shooting auto success rate: ${!data.scorePercentAutoUpper.isNaN ? data.scorePercentAutoUpper.round() : "Not a number"}%
 """,
       ),
     );
@@ -181,7 +181,6 @@ Widget gameChartWidgets(final Team data) {
               top: 40,
             ),
             child: DashBoardClimbLineChart(
-              distanceFromHighest: 0,
               dataSet: data.climbData.points,
             ),
           ),

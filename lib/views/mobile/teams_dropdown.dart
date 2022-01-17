@@ -20,17 +20,17 @@ class TeamsDropdown extends StatefulWidget {
 class _TeamsDropdownState extends State<TeamsDropdown> {
   bool isValueEmpty = false;
   bool isValueInList = true;
-  List<Team> _suggestions = <Team>[];
+  List<LightTeam> _suggestions = <LightTeam>[];
 
   @override
   Widget build(final BuildContext context) {
-    return TypeAheadField<Team>(
+    return TypeAheadField<LightTeam>(
       textFieldConfiguration: TextFieldConfiguration(
         onChanged: (final String value) => setState(() {
           isValueEmpty = value.isEmpty;
 
           isValueInList = _suggestions
-              .map<String>((final Team team) => team.teamNumber.toString())
+              .map<String>((final LightTeam team) => team.number.toString())
               .contains(value);
 
           if (!isValueEmpty && isValueInList) widget.onChange(int.parse(value));
@@ -51,8 +51,8 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
                   : null,
         ),
       ),
-      itemBuilder: (final BuildContext context, final Team suggestion) =>
-          ListTile(title: Text(suggestion.teamNumber.toString())),
+      itemBuilder: (final BuildContext context, final LightTeam suggestion) =>
+          ListTile(title: Text(suggestion.number.toString())),
       noItemsFoundBuilder: (final BuildContext context) => Container(
         height: 100,
         child: Center(
@@ -62,15 +62,15 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
           ),
         ),
       ),
-      onSuggestionSelected: (final Team suggestion) {
-        widget.typeAheadController.text = suggestion.teamNumber.toString();
-        widget.onChange(suggestion.teamNumber);
+      onSuggestionSelected: (final LightTeam suggestion) {
+        widget.typeAheadController.text = suggestion.number.toString();
+        widget.onChange(suggestion.number);
 
         ScaffoldMessenger.of(context)
           ..removeCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
-              content: Text("Selected team: ${suggestion.teamNumber}"),
+              content: Text("Selected team: ${suggestion.number}"),
             ),
           );
 
@@ -79,7 +79,7 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
           isValueInList = true;
         });
       },
-      suggestionsCallback: (final String s) => <Team>[],
+      suggestionsCallback: (final String s) => <LightTeam>[],
     );
   }
 }

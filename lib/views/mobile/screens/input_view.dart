@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/mobile/Selector.dart";
+import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/match_dropdown.dart";
@@ -15,17 +15,20 @@ class UserInput extends StatefulWidget {
 }
 
 class _UserInputState extends State<UserInput> {
+  final List<String> climbs = <String>[
+    "Choose a climb result",
+    "No attempt",
+    "Failed",
+    "Level 1",
+    "Level 2",
+    "Level 3",
+    "Level 4"
+  ];
   final TextEditingController matchNumberController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   Match match = new Match();
   // -1 means nothing
-  void clearForm(final BuildContext context) {
-    setState(() {
-      matchNumberController.clear();
-      teamNumberController.clear();
-    });
-  }
 
   @override
   Widget build(final BuildContext context) {
@@ -70,16 +73,24 @@ class _UserInputState extends State<UserInput> {
                 label: "Upper scored",
                 icon: Icons.adjust,
                 count: match.autoHigh,
-                onChange: (final int p0) => match.autoHigh = p0,
+                onChange: (final int p0) {
+                  setState(() {
+                    match.autoHigh = p0;
+                  });
+                },
               ),
               SizedBox(
                 height: 10,
               ),
               Counter(
+                count: match.autoHighMissed,
                 label: "Upper missed",
                 icon: Icons.error,
-                count: match.autoHighMissed,
-                onChange: (final int p0) => match.autoHighMissed = p0,
+                onChange: (final int p0) {
+                  setState(() {
+                    match.autoHighMissed = p0;
+                  });
+                },
               ),
               SizedBox(
                 height: 10,
@@ -88,7 +99,11 @@ class _UserInputState extends State<UserInput> {
                 label: "Lower scored",
                 icon: Icons.adjust,
                 count: match.autoLow,
-                onChange: (final int p0) => match.autoLow = p0,
+                onChange: (final int p0) {
+                  setState(() {
+                    match.autoLow = p0;
+                  });
+                },
               ),
               SizedBox(
                 height: 20,
@@ -98,28 +113,40 @@ class _UserInputState extends State<UserInput> {
                 height: 20,
               ),
               Counter(
+                count: match.teleHigh,
                 label: "Upper scored",
                 icon: Icons.adjust,
-                count: match.teleHigh,
-                onChange: (final int p0) => match.teleHigh = p0,
+                onChange: (final int p0) {
+                  setState(() {
+                    match.teleHigh = p0;
+                  });
+                },
               ),
               SizedBox(
                 height: 10,
               ),
               Counter(
+                count: match.teleHighMissed,
                 label: "Upper missed",
                 icon: Icons.error,
-                count: match.teleHighMissed,
-                onChange: (final int p0) => match.teleHighMissed = p0,
+                onChange: (final int p0) {
+                  setState(() {
+                    match.teleHighMissed = p0;
+                  });
+                },
               ),
               SizedBox(
                 height: 10,
               ),
               Counter(
+                count: match.teleLow,
                 label: "Lower scored",
                 icon: Icons.adjust,
-                count: match.teleLow,
-                onChange: (final int p0) => match.teleLow = p0,
+                onChange: (final int p0) {
+                  setState(() {
+                    match.teleLow = p0;
+                  });
+                },
               ),
               SizedBox(
                 height: 20,
@@ -131,18 +158,18 @@ class _UserInputState extends State<UserInput> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Selector(
-                  valueOnReRender: match.climbStatus,
-                  values: <String>[
-                    "Choose a climb result",
-                    "No attempt",
-                    "Failed",
-                    "Level 1",
-                    "Level 2",
-                    "Level 3",
-                    "Level 4"
-                  ],
+                  value: match.climbStatus,
+                  values: climbs,
                   initialValue: "Choose a climb result",
-                  onChange: (final String p0) => match.climbStatus = p0,
+                  onChange: (final String p0) {
+                    setState(() {
+                      if (climbs.contains("Choose a climb result") &&
+                          p0 != "Choose a climb result") {
+                        climbs.remove("Choose a climb result");
+                      }
+                      match.climbStatus = p0;
+                    });
+                  },
                 ),
               ),
               SizedBox(
@@ -151,6 +178,9 @@ class _UserInputState extends State<UserInput> {
               SubmitButton(
                 resetForm: () {
                   setState(() {
+                    if (!climbs.contains("Choose a climb result")) {
+                      climbs.insert(0, "Choose a climb result");
+                    }
                     match.clear();
                     teamNumberController.clear();
                     matchNumberController.clear();

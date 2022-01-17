@@ -17,7 +17,34 @@ class TeamSelectionFuture extends StatefulWidget {
 }
 
 class _TeamSelectionFutureState extends State<TeamSelectionFuture> {
-  Future<List<LightTeam>> fetchTeams() async {
+  @override
+  Widget build(final BuildContext context) {
+    return Builder(
+      builder: (
+        final BuildContext context,
+      ) {
+        if (TeamHelper._teams.isEmpty) {
+          return Text("No teams available :(");
+        } else {
+          return TeamsSearchBox(
+            typeAheadController: widget.controller,
+            teams: TeamHelper._teams,
+            onChange: (final LightTeam LightTeam) {
+              setState(() {
+                widget.onChange(LightTeam);
+              });
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+class TeamHelper {
+  static List<LightTeam> _teams = <LightTeam>[];
+
+  static Future<void> fetchTeams() async {
     final GraphQLClient client = getClient();
     final String query = """
 query FetchTeams {
@@ -32,65 +59,20 @@ query FetchTeams {
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
 
-    return result.mapQueryResult(
-      (final Map<String, dynamic>? data) =>
-          data.mapNullable<List<LightTeam>>(
-            (final dynamic team) => (team["team"] as List<dynamic>)
-                .map(
-                  (final dynamic e) => LightTeam(
-                    e["id"] as int,
-                    e["number"] as int,
-                    e["name"] as String,
-                  ),
-                )
-                .toList(),
-          ) ??
-          <LightTeam>[],
-    );
-  }
-
-  @override
-  Widget build(final BuildContext context) {
-    return FutureBuilder<List<LightTeam>>(
-      future: fetchTeams(),
-      builder:
-          (final BuildContext context, final AsyncSnapshot<Object?> snapshot) {
-        if (snapshot.hasError) {
-          return Text(
-            "Error has happened in the future! " + snapshot.error.toString(),
-          );
-        } else if (!snapshot.hasData) {
-          return Stack(
-            alignment: AlignmentDirectional.center,
-            children: <Widget>[
-              TextField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  border: const OutlineInputBorder(),
-                  hintText: "Search Team",
-                  enabled: false,
-                ),
-              ),
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          );
-
-          // const CircularProgressIndicator();
-        } else {
-          return TeamsSearchBox(
-            typeAheadController: widget.controller,
-            teams: snapshot.data as List<LightTeam>,
-            onChange: (final LightTeam LightTeam) {
-              setState(() {
-                widget.onChange(LightTeam);
-              });
-            },
-          );
-        }
-      },
-    );
+    _teams = result.mapQueryResult(
+          (final Map<String, dynamic>? data) => data.mapNullable(
+            (final Map<String, dynamic> teams) =>
+                (teams["team"] as List<dynamic>)
+                    .map(
+                      (final dynamic e) => LightTeam(
+                        e["id"] as int,
+                        e["number"] as int,
+                        e["name"] as String,
+                      ),
+                    )
+                    .toList(),
+          ),
+        ) ??
+        <LightTeam>[];
   }
 }

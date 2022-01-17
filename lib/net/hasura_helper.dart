@@ -1,12 +1,10 @@
-// ignore_for_file: prefer_double_quotes
-
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import "package:flutter/material.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:graphql/client.dart";
 
 GraphQLClient getClient() {
   final Map<String, String> headers = new Map<String, String>();
-  headers["x-hasura-admin-secret"] = dotenv.env['HASURA_ADMIN_SECRET']!;
+  headers["x-hasura-admin-secret"] = dotenv.env["HASURA_ADMIN_SECRET"]!;
   final HttpLink link = HttpLink(
     "https://orbitdb.hasura.app/v1/graphql",
     defaultHeaders: headers,
