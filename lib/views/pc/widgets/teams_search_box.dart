@@ -1,9 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_typeahead/flutter_typeahead.dart";
-import "package:graphql/client.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/net/hasura_helper.dart";
 
 class TeamsSearchBox extends StatelessWidget {
   TeamsSearchBox({
