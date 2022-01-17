@@ -1,4 +1,4 @@
-import 'dart:math';
+import "dart:math";
 
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
