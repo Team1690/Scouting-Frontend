@@ -36,9 +36,6 @@ class TeamsSearchBox extends StatelessWidget {
       ),
       suggestionsCallback: (final String pattern) => teams.where(
         (final LightTeam element) {
-          if (element.number.toString().length < pattern.length) {
-            return false;
-          }
           return element.number.toString().startsWith(pattern);
         },
       ),
