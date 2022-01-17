@@ -29,7 +29,7 @@ void main(final List<String> args) async {
     );
 
   final ArgResults results = arg.parse(args);
-  load(".env");
+  load("dev.env");
 
   if (results.wasParsed("help")) {
     print(arg.usage);
