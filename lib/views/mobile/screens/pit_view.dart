@@ -26,7 +26,7 @@ class _PitViewState extends State<PitView> {
     "Choose a DriveTrain",
     "Westcoast",
     "Kit Chassis",
-    "Custom Tank",
+    "Custom tank",
     "Swerve",
     "Mecanum/H",
     "Other",

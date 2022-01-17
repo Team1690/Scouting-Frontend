@@ -227,7 +227,7 @@ query MyQuery(\$id: Int!) {
     }
     matches(order_by: {match_number: asc}) {
       climb {
-        name
+        title
       }
       auto_lower
       auto_upper
@@ -414,7 +414,7 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               0;
 
           final List<String> climbVals = (teamByPk["matches"] as List<dynamic>)
-              .map((final dynamic e) => e["climb"]["name"] as String)
+              .map((final dynamic e) => e["climb"]["title"] as String)
               .toList();
 
           final QuickData quickData = QuickData(

@@ -31,7 +31,7 @@ query MyQuery(\$ids: [Int!]) {
     }
     matches(order_by: {match_number: asc}) {
       climb {
-        name
+        title
       }
       auto_lower
       auto_upper
@@ -121,7 +121,7 @@ Future<List<CompareTeam>> fetchData(final List<int> ids) async {
                   100;
 
               final List<String> climbVals = (e["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["climb"]["name"] as String)
+                  .map((final dynamic e) => e["climb"]["title"] as String)
                   .toList();
               final double climbAvg = getClimbAverage(climbVals);
 
