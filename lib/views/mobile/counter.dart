@@ -10,7 +10,7 @@ class Counter extends StatelessWidget {
     final this.stepValue = 1,
     final this.upperLimit = 100,
     final this.lowerLimit = 0,
-    final this.longPressedValue = 5,
+    final this.longPressedValue = 2,
     required final this.count,
   });
   final String label;

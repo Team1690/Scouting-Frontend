@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 
@@ -28,17 +30,9 @@ class CustomStepper extends StatelessWidget {
         RoundedIconButton(
           icon: Icons.remove,
           iconSize: iconSize,
-          onPress: () {
-            final int newValue =
-                value == lowerLimit ? lowerLimit : value - stepValue;
-            onChanged(newValue);
-          },
-          onLongPress: () {
-            final int newValue = value < lowerLimit + longPressStepValue
-                ? lowerLimit
-                : value - longPressStepValue;
-            onChanged(newValue);
-          },
+          onPress: () => onChanged(max(lowerLimit, value - stepValue)),
+          onLongPress: () =>
+              onChanged(max(lowerLimit, value - longPressStepValue)),
         ),
         Container(
           width: iconSize * 1.5,
@@ -54,15 +48,10 @@ class CustomStepper extends StatelessWidget {
           icon: Icons.add,
           iconSize: iconSize,
           onPress: () {
-            final int newValue =
-                value == upperLimit ? upperLimit : value + stepValue;
-            onChanged(newValue);
+            onChanged(min(upperLimit, value - stepValue));
           },
           onLongPress: () {
-            final int newValue = value > upperLimit - longPressStepValue
-                ? upperLimit
-                : value + longPressStepValue;
-            onChanged(newValue);
+            onChanged(min(upperLimit, value + longPressStepValue));
           },
         ),
       ],
