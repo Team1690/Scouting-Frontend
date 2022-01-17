@@ -27,7 +27,7 @@ class _UserInputState extends State<UserInput> {
   final TextEditingController matchNumberController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
-  Match match = new Match();
+  Match match = Match();
   // -1 means nothing
 
   @override

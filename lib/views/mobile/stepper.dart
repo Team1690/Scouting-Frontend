@@ -43,7 +43,7 @@ class CustomStepper extends StatelessWidget {
         Container(
           width: iconSize * 1.5,
           child: Text(
-            "${value}",
+            "$value",
             style: TextStyle(
               fontSize: iconSize * 0.8,
             ),

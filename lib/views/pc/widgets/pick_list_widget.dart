@@ -117,7 +117,7 @@ class PickListTeam {
     this.firstListIndex,
     this.secondListIndex,
     this.controller,
-  ) {}
+  );
 
   final int id;
   final int number;
@@ -128,6 +128,6 @@ class PickListTeam {
 
   @override
   String toString() {
-    return "${name} ${number}";
+    return "$name $number";
   }
 }

@@ -20,7 +20,7 @@ class TeamsDropdown extends StatefulWidget {
 class _TeamsDropdownState extends State<TeamsDropdown> {
   bool isValueEmpty = false;
   bool isValueInList = true;
-  List<LightTeam> _suggestions = <LightTeam>[];
+  final List<LightTeam> _suggestions = <LightTeam>[];
 
   @override
   Widget build(final BuildContext context) {
@@ -45,7 +45,7 @@ class _TeamsDropdownState extends State<TeamsDropdown> {
           border: const OutlineInputBorder(),
           hintText: "Search Team",
           errorText: isValueEmpty
-              ? "Value can\'t be empty"
+              ? "Value can't be empty"
               : !isValueInList
                   ? "Not a valid team"
                   : null,

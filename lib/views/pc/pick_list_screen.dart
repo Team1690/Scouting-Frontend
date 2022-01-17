@@ -16,7 +16,7 @@ class PickListScreen extends StatefulWidget {
 class _PickListScreenState extends State<PickListScreen> {
   List<PickListTeam> teams = <PickListTeam>[];
 
-  CurrentPickList currentScreen = CurrentPickList.FIRST;
+  CurrentPickList currentScreen = CurrentPickList.first;
   @override
   Widget build(final BuildContext context) {
     return DashboardScaffold(
@@ -130,14 +130,14 @@ class _PickListScreenState extends State<PickListScreen> {
   }
 }
 
-enum CurrentPickList { FIRST, SECOND }
+enum CurrentPickList { first, second }
 
 extension CurrentPickListExtension on CurrentPickList {
   T map<T>(final T Function() onFirst, final T Function() onSecond) {
     switch (this) {
-      case CurrentPickList.FIRST:
+      case CurrentPickList.first:
         return onFirst();
-      case CurrentPickList.SECOND:
+      case CurrentPickList.second:
         return onSecond();
     }
   }
@@ -146,7 +146,7 @@ extension CurrentPickListExtension on CurrentPickList {
       name[0].toUpperCase() + name.substring(1).toLowerCase() + " Picklist";
 
   CurrentPickList nextScreen() =>
-      map(() => CurrentPickList.SECOND, () => CurrentPickList.FIRST);
+      map(() => CurrentPickList.second, () => CurrentPickList.first);
 
   int getIndex(final PickListTeam team) =>
       map(() => team.firstListIndex, () => team.secondListIndex);
