@@ -36,7 +36,15 @@ class TeamsSearchBox extends StatelessWidget {
           hintText: "Search Team",
         ),
       ),
-      suggestionsCallback: (final String pattern) => teams,
+      suggestionsCallback: (final String pattern) => teams.where(
+        (final LightTeam element) {
+          if (element.number.toString().length < pattern.length) {
+            return false;
+          }
+          return (element.number.toString().substring(0, pattern.length) ==
+              pattern);
+        },
+      ),
       itemBuilder: (final BuildContext context, final LightTeam suggestion) =>
           ListTile(title: Text(suggestion.number.toString())),
       transitionBuilder: (
@@ -53,11 +61,11 @@ class TeamsSearchBox extends StatelessWidget {
         );
       },
       noItemsFoundBuilder: (final BuildContext context) => Container(
-        height: 100,
+        height: 60,
         child: Center(
           child: Text(
             "No Teams Found",
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 16),
           ),
         ),
       ),
@@ -71,35 +79,4 @@ class TeamsSearchBox extends StatelessWidget {
       },
     );
   }
-}
-
-Future<List<LightTeam>> fetchTeams() async {
-  final GraphQLClient client = getClient();
-  final String query = """
-query FetchTeams {
-  team {
-    id
-    number
-    name
-  }
-}
-  """;
-
-  final QueryResult result =
-      await client.query(QueryOptions(document: gql(query)));
-
-  return result.mapQueryResult(
-        (final Map<String, dynamic>? data) => data.mapNullable(
-          (final Map<String, dynamic> teams) => (teams["team"] as List<dynamic>)
-              .map(
-                (final dynamic e) => LightTeam(
-                  e["id"] as int,
-                  e["number"] as int,
-                  e["name"] as String,
-                ),
-              )
-              .toList(),
-        ),
-      ) ??
-      <LightTeam>[];
 }
