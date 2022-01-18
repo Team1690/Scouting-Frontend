@@ -1,6 +1,7 @@
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
+import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/app.dart";
 import "package:scouting_frontend/views/mobile/team_selection_future.dart";
 
@@ -13,8 +14,19 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await dotenv.load(fileName: "dev.env");
-  ClimbHelper.queryclimbId();
-  DrivetrainHelper.queryDrivetrainId();
-  DriveMotorHelper.queryDrivemotorId();
-  TeamHelper.fetchTeams().then<void>((final void _) => runApp(App()));
+  final Map<String, int> climbs = await ClimbHelper.queryclimbId();
+  final Map<String, int> driveTrains =
+      await DrivetrainHelper.queryDrivetrainId();
+  final Map<String, int> driveMotors =
+      await DriveMotorHelper.queryDrivemotorId();
+  final List<LightTeam> teams = await TeamHelper.fetchTeams();
+
+  runApp(
+    App(
+      teams: teams,
+      drivetrainIds: driveTrains,
+      climdIds: climbs,
+      driveMotorIds: driveMotors,
+    ),
+  );
 }

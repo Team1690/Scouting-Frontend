@@ -1,55 +1,47 @@
+import "package:flutter/cupertino.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/app.dart";
 
 class ClimbHelper {
-  static final Map<String, int> _ids = <String, int>{};
-
-  static int climbId(final String i) {
+  static int climbId(final String i, final BuildContext context) {
     switch (i) {
       case "Choose a climb result":
-        return _ids["No attempt"]!;
+        return Ids.of(context).climbIds["No attempt"]!;
       default:
-        return _ids[i]!;
+        return Ids.of(context).climbIds[i]!;
     }
   }
 
-  static Future<void> queryclimbId() async {
-    _ids.addAll(await fetchEnum("climb_2022"));
-  }
+  static Future<Map<String, int>> queryclimbId() => fetchEnum("climb_2022");
 }
 
 class DrivetrainHelper {
-  static final Map<String, int> _ids = <String, int>{};
-
-  static int getDrivetrainId(final String s) {
+  static int getDrivetrainId(final String s, final BuildContext context) {
     switch (s) {
       case "Choose a DriveTrain":
-        return _ids["Not answered"]!;
+        return Ids.of(context).driveMotorIds["Not answered"]!;
       default:
-        return _ids[s]!;
+        return Ids.of(context).driveMotorIds[s]!;
     }
   }
 
-  static Future<void> queryDrivetrainId() async {
-    _ids.addAll(await fetchEnum("drivetrain"));
-  }
+  static Future<Map<String, int>> queryDrivetrainId() =>
+      fetchEnum("drivetrain");
 }
 
 class DriveMotorHelper {
-  static final Map<String, int> _ids = <String, int>{};
-
-  static int getDrivetrainId(final String s) {
+  static int getDrivetrainId(final String s, final BuildContext context) {
     switch (s) {
       case "Choose a Drive Motor":
-        return _ids["Not answered"]!;
+        return Ids.of(context).driveTrains["Not answered"]!;
       default:
-        return _ids[s]!;
+        return Ids.of(context).driveTrains[s]!;
     }
   }
 
-  static Future<void> queryDrivemotorId() async {
-    _ids.addAll(await fetchEnum("drivemotor"));
-  }
+  static Future<Map<String, int>> queryDrivemotorId() =>
+      fetchEnum("drivemotor");
 }
 
 Future<Map<String, int>> fetchEnum(final String table) async {
