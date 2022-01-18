@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -9,8 +10,6 @@ import "package:scouting_frontend/views/mobile/match_dropdown.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
 
-import "../../app.dart";
-
 class UserInput extends StatefulWidget {
   @override
   State<UserInput> createState() => _UserInputState();
@@ -18,11 +17,7 @@ class UserInput extends StatefulWidget {
 
 class _UserInputState extends State<UserInput> {
   late final List<String> climbs = List<String>.from(
-    Ids.of(context)
-        .climbIds
-        .entries
-        .map<String>((final MapEntry<String, int> e) => e.key)
-        .toList()
+    ClimbProvider.of(context).nameToId.keys.toList()
       ..insert(0, "Choose a climb result"),
   );
   final TextEditingController matchNumberController = TextEditingController();
@@ -33,6 +28,7 @@ class _UserInputState extends State<UserInput> {
 
   @override
   Widget build(final BuildContext context) {
+    print(climbs);
     return SingleChildScrollView(
       child: Form(
         key: formKey,

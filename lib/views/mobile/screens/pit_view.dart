@@ -1,5 +1,6 @@
 import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/file_picker_widget.dart";
@@ -12,8 +13,6 @@ import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
 
-import "../../app.dart";
-
 class PitView extends StatefulWidget {
   PitView();
 
@@ -25,17 +24,15 @@ class _PitViewState extends State<PitView> {
   LightTeam? team;
 
   late final List<String> driveTrains = List<String>.from(
-    Ids.of(context).driveTrains.entries.toList().map<String>(
-          (final MapEntry<String, int> e) =>
-              e.key == "Not answered" ? PitVars.driveTrainInitialValue : e.key,
-        ),
+    DrivetrainProvider.of(context).nameToId.keys.toList()
+      ..removeWhere((final String element) => element == "Not answered")
+      ..insert(0, PitVars.driveTrainInitialValue),
   );
 
   late final List<String> driveMotors = List<String>.from(
-    Ids.of(context).driveMotorIds.entries.toList().map<String>(
-          (final MapEntry<String, int> e) =>
-              e.key == "Not answered" ? PitVars.driveMotorInitialValue : e.key,
-        ),
+    DriveMotorProvider.of(context).nameToId.keys.toList()
+      ..removeWhere((final String element) => element == "Not answered")
+      ..insert(0, PitVars.driveMotorInitialValue),
   );
 
   FilePickerResult? result;

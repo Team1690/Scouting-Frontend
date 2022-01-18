@@ -14,11 +14,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await dotenv.load(fileName: "dev.env");
-  final Map<String, int> climbs = await ClimbHelper.queryclimbId();
-  final Map<String, int> driveTrains =
-      await DrivetrainHelper.queryDrivetrainId();
-  final Map<String, int> driveMotors =
-      await DriveMotorHelper.queryDrivemotorId();
+  final Map<String, int> climbs = await fetchEnum("climb_2022");
+  final Map<String, int> driveTrains = await fetchEnum("drivetrain");
+  final Map<String, int> driveMotors = await fetchEnum("drivemotor");
   final List<LightTeam> teams = await TeamHelper.fetchTeams();
 
   runApp(

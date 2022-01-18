@@ -1,5 +1,5 @@
 import "package:flutter/cupertino.dart";
-import "package:scouting_frontend/models/id_helpers.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class PitVars implements HasuraVars {
@@ -17,10 +17,12 @@ class PitVars implements HasuraVars {
   @override
   Map<String, dynamic> toHasuraVars(final BuildContext context) {
     return <String, dynamic>{
-      "drivetrain_id":
-          DrivetrainHelper.getDrivetrainId(driveTrainType, context),
-      "drivemotor_id":
-          DriveMotorHelper.getDrivetrainId(driveMotorType, context),
+      "drivetrain_id": driveTrainType == PitVars.driveTrainInitialValue
+          ? DrivetrainProvider.of(context).nameToId["Not answered"]
+          : DrivetrainProvider.of(context).nameToId[driveTrainType],
+      "drivemotor_id": driveMotorType == PitVars.driveMotorInitialValue
+          ? DriveMotorProvider.of(context).nameToId["Not answered"]
+          : DriveMotorProvider.of(context).nameToId[driveMotorType],
       "drive_motor_amount": driveMotorAmount,
       "shifter": shifter,
       "gearbox": gearbox,

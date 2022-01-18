@@ -1,11 +1,10 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/widgets/teams_search_box.dart";
-
-import "../app.dart";
 
 class TeamSelectionFuture extends StatefulWidget {
   TeamSelectionFuture({
@@ -25,12 +24,12 @@ class _TeamSelectionFutureState extends State<TeamSelectionFuture> {
       builder: (
         final BuildContext context,
       ) {
-        if (Teams.of(context).teams.isEmpty) {
+        if (TeamProvider.of(context).teams.isEmpty) {
           return Text("No teams available :(");
         } else {
           return TeamsSearchBox(
             typeAheadController: widget.controller,
-            teams: Teams.of(context).teams,
+            teams: TeamProvider.of(context).teams,
             onChange: (final LightTeam lightTeam) {
               setState(() {
                 widget.onChange(lightTeam);
