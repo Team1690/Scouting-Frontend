@@ -62,6 +62,6 @@ query {
               entry["title"] as String: entry["id"] as int
           },
         ) ??
-        (throw Exception("")),
+        (throw Exception("Query $table returned null")),
   );
 }
