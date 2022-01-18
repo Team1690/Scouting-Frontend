@@ -5,6 +5,8 @@ import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/widgets/teams_search_box.dart";
 
+import "../app.dart";
+
 class TeamSelectionFuture extends StatefulWidget {
   TeamSelectionFuture({
     this.onChange = ignore,
@@ -23,12 +25,12 @@ class _TeamSelectionFutureState extends State<TeamSelectionFuture> {
       builder: (
         final BuildContext context,
       ) {
-        if (TeamHelper._teams.isEmpty) {
+        if (Teams.of(context).teams.isEmpty) {
           return Text("No teams available :(");
         } else {
           return TeamsSearchBox(
             typeAheadController: widget.controller,
-            teams: TeamHelper._teams,
+            teams: Teams.of(context).teams,
             onChange: (final LightTeam lightTeam) {
               setState(() {
                 widget.onChange(lightTeam);
@@ -42,9 +44,7 @@ class _TeamSelectionFutureState extends State<TeamSelectionFuture> {
 }
 
 class TeamHelper {
-  static List<LightTeam> _teams = <LightTeam>[];
-
-  static Future<void> fetchTeams() async {
+  static Future<List<LightTeam>> fetchTeams() async {
     final GraphQLClient client = getClient();
     final String query = """
 query FetchTeams {
@@ -59,7 +59,7 @@ query FetchTeams {
     final QueryResult result =
         await client.query(QueryOptions(document: gql(query)));
 
-    _teams = result.mapQueryResult(
+    return result.mapQueryResult(
           (final Map<String, dynamic>? data) => data.mapNullable(
             (final Map<String, dynamic> teams) =>
                 (teams["team"] as List<dynamic>)
@@ -73,6 +73,6 @@ query FetchTeams {
                     .toList(),
           ),
         ) ??
-        <LightTeam>[];
+        (throw Exception("No teams queried"));
   }
 }

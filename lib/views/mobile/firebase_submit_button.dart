@@ -87,7 +87,8 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           return;
         }
 
-        final int? teamid = widget.vars.toHasuraVars()["team_id"] as int?;
+        final int? teamid =
+            widget.vars.toHasuraVars(context)["team_id"] as int?;
         final FilePickerResult? file = widget.getResult();
 
         if (teamid == null || file == null) {
@@ -137,7 +138,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
         running = false;
       } else if (event.state == TaskState.success) {
         final Map<String, dynamic> vars =
-            Map<String, dynamic>.from(widget.vars.toHasuraVars());
+            Map<String, dynamic>.from(widget.vars.toHasuraVars(context));
         final String url = await ref.getDownloadURL();
         vars["url"] = url;
 

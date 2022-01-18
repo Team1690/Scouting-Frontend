@@ -1,10 +1,11 @@
+import "package:flutter/cupertino.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class SpecificVars implements HasuraVars {
   int? teamId;
   String message = "";
   @override
-  Map<String, dynamic> toHasuraVars() {
+  Map<String, dynamic> toHasuraVars(final BuildContext _) {
     return <String, dynamic>{
       "team_id": teamId,
       "message": message,

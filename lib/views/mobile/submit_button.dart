@@ -82,7 +82,7 @@ class _SubmitButtonState extends State<SubmitButton> {
         final QueryResult queryResult = await client.mutate(
           MutationOptions(
             document: gql(widget.mutation),
-            variables: widget.vars.toHasuraVars(),
+            variables: widget.vars.toHasuraVars(context),
           ),
         );
         if (queryResult.hasException) {
