@@ -4,7 +4,7 @@ import "package:scouting_frontend/models/team_model.dart";
 class IdTable {
   IdTable(final Map<String, int> nameToId)
       : this._inner(
-          nameToId: nameToId,
+          nameToId: Map<String, int>.unmodifiable(nameToId),
           idToName: Map<int, String>.unmodifiable(
             <int, String>{
               for (final MapEntry<String, int> e in nameToId.entries)
