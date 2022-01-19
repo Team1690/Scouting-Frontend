@@ -5,6 +5,7 @@ import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:flutter/material.dart";
+import "package:scouting_frontend/views/pc/team_info_screen.dart";
 
 class App extends StatelessWidget {
   App({
@@ -27,11 +28,13 @@ class App extends StatelessWidget {
         drivetrainIds: drivetrainIds,
         child: MaterialApp(
           title: "Orbit Scouting",
-          home: Scaffold(
-            appBar: MainAppBar(),
-            body: UserInput(),
-            drawer: SideNavBar(),
-          ),
+          home: isPC(context)
+              ? TeamInfoScreen()
+              : Scaffold(
+                  appBar: MainAppBar(),
+                  body: UserInput(),
+                  drawer: SideNavBar(),
+                ),
           theme: darkModeTheme,
           debugShowCheckedModeBanner: false,
         ),
