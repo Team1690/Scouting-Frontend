@@ -124,11 +124,11 @@ class DashBoardClimbLineChart extends StatelessWidget {
                   touchedSpots
                       .map(
                         (final LineBarSpot e) => LineTooltipItem(
-                          e.y == 0
-                              ? "Failed"
-                              : e.y == -1
-                                  ? "No attempt"
-                                  : "Level ${e.y.toInt()}",
+                          <int, String>{
+                                0: "Failed",
+                                -1: "No attempt"
+                              }[e.y.toInt()] ??
+                              "Level ${e.y.toInt()}",
                           TextStyle(),
                         ),
                       )
