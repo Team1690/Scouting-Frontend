@@ -28,13 +28,11 @@ class App extends StatelessWidget {
         drivetrainIds: drivetrainIds,
         child: MaterialApp(
           title: "Orbit Scouting",
-          home: isPC(context)
-              ? TeamInfoScreen()
-              : Scaffold(
-                  appBar: MainAppBar(),
-                  body: UserInput(),
-                  drawer: SideNavBar(),
-                ),
+          home: Scaffold(
+            appBar: MainAppBar(),
+            body: UserInput(),
+            drawer: SideNavBar(),
+          ),
           theme: darkModeTheme,
           debugShowCheckedModeBanner: false,
         ),

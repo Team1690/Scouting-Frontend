@@ -1,39 +1,61 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/constants.dart";
 
-import "../constants.dart";
-
-class Selector extends StatelessWidget {
+class Selector<T> extends StatelessWidget {
   Selector({
-    required this.values,
+    required final List<T> options,
+    required final String placeholder,
+    final void Function(T?)? onChange,
+    required final String Function(T) makeItem,
+    required final String? Function(T?) validate,
+    required final T? value,
+  }) : this._inner(
+          validate: validate,
+          onChange: onChange ?? ignore,
+          options: options,
+          placeholder: placeholder,
+          makeItem: makeItem,
+          value: value,
+        );
+
+  Selector._inner({
+    required this.options,
+    required this.placeholder,
     required this.value,
-    this.onChange = ignore,
+    required this.makeItem,
+    required this.onChange,
+    required this.validate,
   });
-  final List<String> values;
-  final void Function(String) onChange;
-  final String value;
+
+  final List<T> options;
+  final String placeholder;
+  final void Function(T?) onChange;
+  final String Function(T) makeItem;
+  final String? Function(T?) validate;
+  final T? value;
+
   @override
   Widget build(final BuildContext context) {
-    return DropdownButton<String>(
+    DropdownMenuItem<T> itemizeRaw(final T? choice, final String title) =>
+        DropdownMenuItem<T>(
+          value: choice,
+          child: Text(title, style: TextStyle(color: Colors.white)),
+        );
+    DropdownMenuItem<T> itemize(final T choice) =>
+        itemizeRaw(choice, makeItem(choice));
+
+    final List<DropdownMenuItem<T>> choices = options.map(itemize).toList();
+    final DropdownMenuItem<T> placeholderItem = itemizeRaw(null, placeholder);
+
+    return DropdownButtonFormField<T>(
+      validator: validate,
       isExpanded: true,
       value: value,
       elevation: 24,
       style: const TextStyle(color: primaryColor, fontSize: 20),
-      underline: Container(
-        height: 2,
-        color: primaryColor,
-      ),
-      onChanged: (final String? newValue) {
-        onChange(newValue!);
-      },
-      items: values.map<DropdownMenuItem<String>>((final String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(
-            value,
-            style: TextStyle(color: Colors.white),
-          ),
-        );
-      }).toList(),
+      onChanged: onChange,
+      items: <DropdownMenuItem<T>>[placeholderItem, ...choices],
     );
   }
 }

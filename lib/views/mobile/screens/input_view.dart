@@ -3,6 +3,7 @@ import "package:scouting_frontend/models/id_providers.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import 'package:scouting_frontend/views/mobile/pit_vars.dart';
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
@@ -16,10 +17,6 @@ class UserInput extends StatefulWidget {
 }
 
 class _UserInputState extends State<UserInput> {
-  late final List<String> climbs = List<String>.from(
-    IdProvider.of(context).climb.nameToId.keys.toList()
-      ..insert(0, "Choose a climb result"),
-  );
   final TextEditingController matchNumberController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
@@ -28,7 +25,6 @@ class _UserInputState extends State<UserInput> {
 
   @override
   Widget build(final BuildContext context) {
-    print(climbs);
     return SingleChildScrollView(
       child: Form(
         key: formKey,
@@ -154,14 +150,25 @@ class _UserInputState extends State<UserInput> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Selector(
-                  value: match.climbStatus,
-                  values: climbs,
-                  onChange: (final String p0) {
+                child: Selector<int>(
+                  validate: (final int? p0) {
+                    if (match.climbStatus == null) {
+                      return "Please choose a climb option";
+                    } else {
+                      return null;
+                    }
+                  },
+                  options: IdProvider.of(context).climb.idToName.keys.toList(),
+                  placeholder: "Choose a climb result",
+                  makeItem: (final int p0) =>
+                      IdProvider.of(context).climb.idToName[p0]!,
+                  onChange: (final int? p0) {
                     setState(() {
+                      print(p0);
                       match.climbStatus = p0;
                     });
                   },
+                  value: match.climbStatus,
                 ),
               ),
               SizedBox(

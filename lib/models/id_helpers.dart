@@ -4,7 +4,7 @@ import "package:scouting_frontend/net/hasura_helper.dart";
 Future<Map<String, int>> fetchEnum(final String table) async {
   final String query = """
 query {
-    $table {
+    $table(order_by: {id: asc}) {
         id
         title
     }
