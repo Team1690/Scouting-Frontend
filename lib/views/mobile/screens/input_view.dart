@@ -163,7 +163,6 @@ class _UserInputState extends State<UserInput> {
                       IdProvider.of(context).climb.idToName[p0]!,
                   onChange: (final int? p0) {
                     setState(() {
-                      print(p0);
                       match.climbStatus = p0;
                     });
                   },
