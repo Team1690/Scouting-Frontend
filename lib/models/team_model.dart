@@ -1,14 +1,3 @@
-enum climbOptions {
-  climbed,
-  faild,
-  notAttempted,
-}
-
-enum dataPoint {
-  x,
-  y,
-}
-
 class LightTeam {
   LightTeam(this.id, this.number, this.name);
   final int id;
