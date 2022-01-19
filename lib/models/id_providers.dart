@@ -1,101 +1,54 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/team_model.dart";
 
-class ClimbProvider extends InheritedWidget {
-  ClimbProvider({
+class IdTable {
+  IdTable(final Map<String, int> nameToId)
+      : this._inner(
+          nameToId: nameToId,
+          idToName: Map<int, String>.unmodifiable(
+            <int, String>{
+              for (final MapEntry<String, int> e in nameToId.entries)
+                e.value: e.key
+            },
+          ),
+        );
+
+  const IdTable._inner({required this.idToName, required this.nameToId});
+  final Map<String, int> nameToId;
+  final Map<int, String> idToName;
+}
+
+class IdProvider extends InheritedWidget {
+  IdProvider({
     required final Widget child,
     required final Map<String, int> climbIds,
-  }) : this._inner(
-          child: child,
-          nameToId: Map<String, int>.unmodifiable(
-            climbIds,
-          ),
-          idToName: Map<int, String>.unmodifiable(<int, String>{
-            for (final MapEntry<String, int> entry in climbIds.entries)
-              entry.value: entry.key
-          }),
-        );
-  const ClimbProvider._inner({
-    required final Widget child,
-    required this.nameToId,
-    required this.idToName,
-  }) : super(child: child);
-  final Map<String, int> nameToId;
-  final Map<int, String> idToName;
-
-  @override
-  bool updateShouldNotify(final ClimbProvider oldWidget) =>
-      idToName != oldWidget.idToName || nameToId != oldWidget.nameToId;
-
-  static ClimbProvider of(final BuildContext context) {
-    final ClimbProvider? result =
-        context.dependOnInheritedWidgetOfExactType<ClimbProvider>();
-    assert(result != null, "No Teams found in context");
-    return result!;
-  }
-}
-
-class DrivetrainProvider extends InheritedWidget {
-  DrivetrainProvider({
-    required final Widget child,
     required final Map<String, int> drivetrainIds,
+    required final Map<String, int> drivemotorIds,
   }) : this._inner(
           child: child,
-          nameToId: Map<String, int>.unmodifiable(
-            drivetrainIds,
-          ),
-          idToName: Map<int, String>.unmodifiable(<int, String>{
-            for (final MapEntry<String, int> entry in drivetrainIds.entries)
-              entry.value: entry.key
-          }),
+          climb: IdTable(climbIds),
+          driveTrain: IdTable(drivetrainIds),
+          drivemotor: IdTable(drivemotorIds),
         );
-  const DrivetrainProvider._inner({
+  IdProvider._inner({
     required final Widget child,
-    required this.nameToId,
-    required this.idToName,
+    required this.climb,
+    required this.driveTrain,
+    required this.drivemotor,
   }) : super(child: child);
-  final Map<String, int> nameToId;
-  final Map<int, String> idToName;
 
+  final IdTable climb;
+  final IdTable driveTrain;
+  final IdTable drivemotor;
   @override
-  bool updateShouldNotify(final DrivetrainProvider oldWidget) =>
-      idToName != oldWidget.idToName || nameToId != oldWidget.nameToId;
+  bool updateShouldNotify(final IdProvider oldWidget) =>
+      climb != oldWidget.climb ||
+      driveTrain != oldWidget.driveTrain ||
+      drivemotor != oldWidget.drivemotor;
 
-  static DrivetrainProvider of(final BuildContext context) {
-    final DrivetrainProvider? result =
-        context.dependOnInheritedWidgetOfExactType<DrivetrainProvider>();
-    assert(result != null, "No Teams found in context");
-    return result!;
-  }
-}
-
-class DriveMotorProvider extends InheritedWidget {
-  DriveMotorProvider({
-    required final Widget child,
-    required final Map<String, int> driveMotorIds,
-  }) : this._inner(
-          child: child,
-          nameToId: Map<String, int>.unmodifiable(driveMotorIds),
-          idToName: Map<int, String>.unmodifiable(<int, String>{
-            for (final MapEntry<String, int> entry in driveMotorIds.entries)
-              entry.value: entry.key
-          }),
-        );
-  const DriveMotorProvider._inner({
-    required final Widget child,
-    required this.nameToId,
-    required this.idToName,
-  }) : super(child: child);
-  final Map<String, int> nameToId;
-  final Map<int, String> idToName;
-
-  @override
-  bool updateShouldNotify(final DriveMotorProvider oldWidget) =>
-      idToName != oldWidget.idToName || nameToId != oldWidget.nameToId;
-
-  static DriveMotorProvider of(final BuildContext context) {
-    final DriveMotorProvider? result =
-        context.dependOnInheritedWidgetOfExactType<DriveMotorProvider>();
+  static IdProvider of(final BuildContext context) {
+    final IdProvider? result =
+        context.dependOnInheritedWidgetOfExactType<IdProvider>();
     assert(result != null, "No Teams found in context");
     return result!;
   }

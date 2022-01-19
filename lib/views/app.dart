@@ -22,25 +22,21 @@ class App extends StatelessWidget {
   Widget build(final BuildContext context) {
     return TeamProvider(
       teams: teams,
-      child: ClimbProvider(
+      child: IdProvider(
         climbIds: climdIds,
-        child: DriveMotorProvider(
-          driveMotorIds: driveMotorIds,
-          child: DrivetrainProvider(
-            drivetrainIds: drivetrainIds,
-            child: MaterialApp(
-              title: "Orbit Scouting",
-              home: isPC(context)
-                  ? TeamInfoScreen()
-                  : Scaffold(
-                      appBar: MainAppBar(),
-                      body: UserInput(),
-                      drawer: SideNavBar(),
-                    ),
-              theme: darkModeTheme,
-              debugShowCheckedModeBanner: false,
-            ),
-          ),
+        drivemotorIds: driveMotorIds,
+        drivetrainIds: drivetrainIds,
+        child: MaterialApp(
+          title: "Orbit Scouting",
+          home: isPC(context)
+              ? TeamInfoScreen()
+              : Scaffold(
+                  appBar: MainAppBar(),
+                  body: UserInput(),
+                  drawer: SideNavBar(),
+                ),
+          theme: darkModeTheme,
+          debugShowCheckedModeBanner: false,
         ),
       ),
     );

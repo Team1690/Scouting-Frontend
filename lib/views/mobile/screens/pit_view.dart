@@ -24,13 +24,13 @@ class _PitViewState extends State<PitView> {
   LightTeam? team;
 
   late final List<String> driveTrains = List<String>.from(
-    DrivetrainProvider.of(context).nameToId.keys.toList()
+    IdProvider.of(context).driveTrain.nameToId.keys.toList()
       ..removeWhere((final String element) => element == "Not answered")
       ..insert(0, PitVars.driveTrainInitialValue),
   );
 
   late final List<String> driveMotors = List<String>.from(
-    DriveMotorProvider.of(context).nameToId.keys.toList()
+    IdProvider.of(context).drivemotor.nameToId.keys.toList()
       ..removeWhere((final String element) => element == "Not answered")
       ..insert(0, PitVars.driveMotorInitialValue),
   );

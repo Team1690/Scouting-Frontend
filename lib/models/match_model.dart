@@ -48,8 +48,8 @@ class Match implements HasuraVars {
       "auto_upper": autoHigh,
       "auto_upper_missed": autoHighMissed,
       "climb_id": climbStatus == "Choose a climb result"
-          ? ClimbProvider.of(context).nameToId["Not answered"]!
-          : ClimbProvider.of(context).nameToId[climbStatus]!,
+          ? IdProvider.of(context).climb.nameToId["Not answered"]!
+          : IdProvider.of(context).climb.nameToId[climbStatus]!,
       "match_number": matchNumber!,
       "team_id": team?.id,
       "tele_lower": teleLow,

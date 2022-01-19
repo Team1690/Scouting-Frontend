@@ -18,11 +18,11 @@ class PitVars implements HasuraVars {
   Map<String, dynamic> toHasuraVars(final BuildContext context) {
     return <String, dynamic>{
       "drivetrain_id": driveTrainType == PitVars.driveTrainInitialValue
-          ? DrivetrainProvider.of(context).nameToId["Not answered"]
-          : DrivetrainProvider.of(context).nameToId[driveTrainType],
+          ? IdProvider.of(context).driveTrain.nameToId["Not answered"]
+          : IdProvider.of(context).driveTrain.nameToId[driveTrainType],
       "drivemotor_id": driveMotorType == PitVars.driveMotorInitialValue
-          ? DriveMotorProvider.of(context).nameToId["Not answered"]
-          : DriveMotorProvider.of(context).nameToId[driveMotorType],
+          ? IdProvider.of(context).drivemotor.nameToId["Not answered"]
+          : IdProvider.of(context).drivemotor.nameToId[driveMotorType],
       "drive_motor_amount": driveMotorAmount,
       "shifter": shifter,
       "gearbox": gearbox,

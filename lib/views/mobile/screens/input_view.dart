@@ -17,7 +17,7 @@ class UserInput extends StatefulWidget {
 
 class _UserInputState extends State<UserInput> {
   late final List<String> climbs = List<String>.from(
-    ClimbProvider.of(context).nameToId.keys.toList()
+    IdProvider.of(context).climb.nameToId.keys.toList()
       ..insert(0, "Choose a climb result"),
   );
   final TextEditingController matchNumberController = TextEditingController();
