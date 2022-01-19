@@ -120,25 +120,19 @@ class DashBoardClimbLineChart extends StatelessWidget {
         LineChartData(
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
-              getTooltipItems: (final List<LineBarSpot> touchedSpots) {
-                switch (touchedSpots[0].y.toInt()) {
-                  case -1:
-                    return <LineTooltipItem>[
-                      LineTooltipItem("Failed", TextStyle())
-                    ];
-                  case 0:
-                    return <LineTooltipItem>[
-                      LineTooltipItem("No attempt", TextStyle())
-                    ];
-                  default:
-                    return <LineTooltipItem>[
-                      LineTooltipItem(
-                        "Level ${touchedSpots[0].y.toInt().toString()}",
-                        TextStyle(),
+              getTooltipItems: (final List<LineBarSpot> touchedSpots) =>
+                  touchedSpots
+                      .map(
+                        (final LineBarSpot e) => LineTooltipItem(
+                          e.y == 0
+                              ? "Failed"
+                              : e.y == -1
+                                  ? "No attempt"
+                                  : "Level ${e.y.toInt()}",
+                          TextStyle(),
+                        ),
                       )
-                    ];
-                }
-              },
+                      .toList(),
             ),
           ),
           lineBarsData: List<LineChartBarData>.generate(dataSet.length,
