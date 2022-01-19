@@ -1,5 +1,6 @@
 import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/file_picker_widget.dart";
@@ -22,24 +23,17 @@ class PitView extends StatefulWidget {
 class _PitViewState extends State<PitView> {
   LightTeam? team;
 
-  final List<String> driveTrains = <String>[
-    "Choose a DriveTrain",
-    "Westcoast",
-    "Kit Chassis",
-    "Custom Tank",
-    "Swerve",
-    "Mecanum/H",
-    "Other",
-  ];
+  late final List<String> driveTrains = List<String>.from(
+    IdProvider.of(context).driveTrain.nameToId.keys.toList()
+      ..removeWhere((final String element) => element == "Not answered")
+      ..insert(0, PitVars.driveTrainInitialValue),
+  );
 
-  final List<String> driveMotors = <String>[
-    "Choose a Drive Motor",
-    "Falcon",
-    "Neo",
-    "CIM",
-    "Mini CIM",
-    "Other",
-  ];
+  late final List<String> driveMotors = List<String>.from(
+    IdProvider.of(context).drivemotor.nameToId.keys.toList()
+      ..removeWhere((final String element) => element == "Not answered")
+      ..insert(0, PitVars.driveMotorInitialValue),
+  );
 
   FilePickerResult? result;
 
@@ -57,14 +51,6 @@ class _PitViewState extends State<PitView> {
   void resetFrame() {
     setState(() {
       vars.reset();
-
-      if (!driveTrains.contains(PitVars.driveTrainInitialValue)) {
-        driveTrains.add(PitVars.driveTrainInitialValue);
-      }
-
-      if (!driveMotors.contains(PitVars.driveMotorInitialValue)) {
-        driveMotors.add(PitVars.driveMotorInitialValue);
-      }
 
       notesController.clear();
       wheelTypeController.clear();
@@ -99,13 +85,8 @@ class _PitViewState extends State<PitView> {
               Selector(
                 value: vars.driveTrainType,
                 values: driveTrains,
-                initialValue: PitVars.driveTrainInitialValue,
                 onChange: (final String newValue) {
                   setState(() {
-                    if (driveTrains.contains(PitVars.driveTrainInitialValue) &&
-                        newValue != PitVars.driveTrainInitialValue) {
-                      driveTrains.remove(PitVars.driveTrainInitialValue);
-                    }
                     vars.driveTrainType = newValue;
                   });
                 },
@@ -116,13 +97,8 @@ class _PitViewState extends State<PitView> {
               Selector(
                 value: vars.driveMotorType,
                 values: driveMotors,
-                initialValue: PitVars.driveMotorInitialValue,
                 onChange: (final String newValue) {
                   setState(() {
-                    if (driveMotors.contains(PitVars.driveMotorInitialValue) &&
-                        newValue != PitVars.driveMotorInitialValue) {
-                      driveMotors.remove(PitVars.driveMotorInitialValue);
-                    }
                     vars.driveMotorType = newValue;
                   });
                 },

@@ -227,7 +227,7 @@ query MyQuery(\$id: Int!) {
     }
     matches(order_by: {match_number: asc}) {
       climb {
-        name
+        title
       }
       auto_lower
       auto_upper
@@ -327,16 +327,16 @@ class Team {
 double getClimbAverage(final List<String> climbVals) {
   final List<int> climbPoints = climbVals.map<int>((final String e) {
     switch (e) {
-      case "no attempt":
-      case "failed":
+      case "No attempt":
+      case "Failed":
         return 0;
-      case "level 1":
+      case "Level 1":
         return 4;
-      case "level 2":
+      case "Level 2":
         return 6;
-      case "level 3":
+      case "Level 3":
         return 10;
-      case "level 4":
+      case "Level 4":
         return 15;
     }
     throw Exception("Not a climb value");
@@ -414,7 +414,7 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               0;
 
           final List<String> climbVals = (teamByPk["matches"] as List<dynamic>)
-              .map((final dynamic e) => e["climb"]["name"] as String)
+              .map((final dynamic e) => e["climb"]["title"] as String)
               .toList();
 
           final QuickData quickData = QuickData(
@@ -440,17 +440,17 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
           final List<double> climbPoints =
               climbVals.map<double>((final String e) {
             switch (e) {
-              case "failed":
+              case "Failed":
                 return 0;
-              case "no attempt":
+              case "No attempt":
                 return -1;
-              case "level 1":
+              case "Level 1":
                 return 1;
-              case "level 2":
+              case "Level 2":
                 return 2;
-              case "level 3":
+              case "Level 3":
                 return 3;
-              case "level 4":
+              case "Level 4":
                 return 4;
             }
             throw Exception("Not a climb value");

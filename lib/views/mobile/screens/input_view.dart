@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -15,15 +16,10 @@ class UserInput extends StatefulWidget {
 }
 
 class _UserInputState extends State<UserInput> {
-  final List<String> climbs = <String>[
-    "Choose a climb result",
-    "No attempt",
-    "Failed",
-    "Level 1",
-    "Level 2",
-    "Level 3",
-    "Level 4"
-  ];
+  late final List<String> climbs = List<String>.from(
+    IdProvider.of(context).climb.nameToId.keys.toList()
+      ..insert(0, "Choose a climb result"),
+  );
   final TextEditingController matchNumberController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
@@ -32,6 +28,7 @@ class _UserInputState extends State<UserInput> {
 
   @override
   Widget build(final BuildContext context) {
+    print(climbs);
     return SingleChildScrollView(
       child: Form(
         key: formKey,
@@ -160,13 +157,8 @@ class _UserInputState extends State<UserInput> {
                 child: Selector(
                   value: match.climbStatus,
                   values: climbs,
-                  initialValue: "Choose a climb result",
                   onChange: (final String p0) {
                     setState(() {
-                      if (climbs.contains("Choose a climb result") &&
-                          p0 != "Choose a climb result") {
-                        climbs.remove("Choose a climb result");
-                      }
                       match.climbStatus = p0;
                     });
                   },
@@ -178,9 +170,6 @@ class _UserInputState extends State<UserInput> {
               SubmitButton(
                 resetForm: () {
                   setState(() {
-                    if (!climbs.contains("Choose a climb result")) {
-                      climbs.insert(0, "Choose a climb result");
-                    }
                     match.clear();
                     teamNumberController.clear();
                     matchNumberController.clear();

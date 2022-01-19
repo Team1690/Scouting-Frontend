@@ -5,12 +5,10 @@ import "../constants.dart";
 class Selector extends StatelessWidget {
   Selector({
     required this.values,
-    required this.initialValue,
     required this.value,
     this.onChange = ignore,
   });
   final List<String> values;
-  final String initialValue;
   final void Function(String) onChange;
   final String value;
   @override
