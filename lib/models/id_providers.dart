@@ -61,7 +61,7 @@ class TeamProvider extends InheritedWidget {
   }) : this._inner(
           child: child,
           teams: teams,
-          teamToId: <LightTeam, int>{for (final LightTeam e in teams) e: e.id},
+          teamToId: <int, LightTeam>{for (final LightTeam e in teams) e.id: e},
         );
   const TeamProvider._inner({
     required final Widget child,
@@ -69,7 +69,7 @@ class TeamProvider extends InheritedWidget {
     required final this.teamToId,
   }) : super(child: child);
   final List<LightTeam> teams;
-  final Map<LightTeam, int> teamToId;
+  final Map<int, LightTeam> teamToId;
 
   @override
   bool updateShouldNotify(final TeamProvider oldWidget) =>
