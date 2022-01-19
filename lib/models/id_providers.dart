@@ -60,20 +60,19 @@ class TeamProvider extends InheritedWidget {
     required final List<LightTeam> teams,
   }) : this._inner(
           child: child,
-          teams: teams,
-          teamToId: <int, LightTeam>{for (final LightTeam e in teams) e.id: e},
+          numberToTeam: Map<int, LightTeam>.unmodifiable(
+            <int, LightTeam>{for (final LightTeam e in teams) e.number: e},
+          ),
         );
   const TeamProvider._inner({
     required final Widget child,
-    required final this.teams,
-    required final this.teamToId,
+    required final this.numberToTeam,
   }) : super(child: child);
-  final List<LightTeam> teams;
-  final Map<int, LightTeam> teamToId;
-
+  final Map<int, LightTeam> numberToTeam;
+  List<LightTeam> get teams => numberToTeam.values.toList();
   @override
   bool updateShouldNotify(final TeamProvider oldWidget) =>
-      teamToId != oldWidget.teamToId || teams != oldWidget.teams;
+      numberToTeam != oldWidget.numberToTeam || teams != oldWidget.teams;
 
   static TeamProvider of(final BuildContext context) {
     final TeamProvider? result =
