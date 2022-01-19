@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
 
 class Selector<T> extends StatelessWidget {

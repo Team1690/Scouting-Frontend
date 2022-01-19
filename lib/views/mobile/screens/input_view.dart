@@ -3,7 +3,6 @@ import "package:scouting_frontend/models/id_providers.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import 'package:scouting_frontend/views/mobile/pit_vars.dart';
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";

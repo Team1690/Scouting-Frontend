@@ -1,5 +1,4 @@
 import "package:flutter/cupertino.dart";
-import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
