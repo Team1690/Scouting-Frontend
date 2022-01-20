@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -150,13 +151,8 @@ class _UserInputState extends State<UserInput> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Selector<int>(
-                  validate: (final int? p0) {
-                    if (match.climbStatus == null) {
-                      return "Please choose a climb option";
-                    } else {
-                      return null;
-                    }
-                  },
+                  validate: (final int? p0) =>
+                      p0.onNull("Please pick a climb result"),
                   options: IdProvider.of(context).climb.idToName.keys.toList(),
                   placeholder: "Choose a climb result",
                   makeItem: (final int p0) =>

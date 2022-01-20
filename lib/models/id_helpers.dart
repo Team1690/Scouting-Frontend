@@ -1,5 +1,6 @@
 import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 
 Future<Map<String, int>> fetchEnum(final String table) async {
   final String query = """

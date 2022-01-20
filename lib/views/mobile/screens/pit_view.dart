@@ -1,6 +1,7 @@
 import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/file_picker_widget.dart";
@@ -72,7 +73,7 @@ class _PitViewState extends State<PitView> {
                 SectionDivider(label: "Drive Train"),
                 Selector<int>(
                   validate: (final int? p0) =>
-                      p0 == null ? "Please pick drivetrain" : null,
+                      p0.onNull("Please pick a drivetrain"),
                   makeItem: (final int p0) =>
                       IdProvider.of(context).driveTrain.idToName[p0]!,
                   placeholder: "Choose a drivetrain",
@@ -90,7 +91,7 @@ class _PitViewState extends State<PitView> {
                 ),
                 Selector<int>(
                   validate: (final int? p0) =>
-                      p0 == null ? "Please pick a drivemotor" : null,
+                      p0.onNull("Please pick a drivemotor"),
                   placeholder: "Choose a drivemotor",
                   makeItem: (final int p0) =>
                       IdProvider.of(context).drivemotor.idToName[p0]!,
@@ -132,13 +133,11 @@ class _PitViewState extends State<PitView> {
                     Colors.white,
                     Colors.white,
                   ],
-                  onChange: (final int newValue) {
-                    vars.shifter = newValue == -1
-                        ? "No Shifter Selected"
-                        : newValue == 0
-                            ? "Has a Shifter"
-                            : "No Shifter";
-                  },
+                  onChange: (final int selection) => <int, String>{
+                    -1: "No shifter selected",
+                    0: "Has a shifter"
+                  }[selection]
+                      .orElse("No shifter"),
                 ),
                 SizedBox(
                   height: 20,
@@ -152,13 +151,11 @@ class _PitViewState extends State<PitView> {
                     Colors.white,
                     Colors.white,
                   ],
-                  onChange: (final int newValue) {
-                    vars.gearbox = newValue == -1
-                        ? "No Gearbox Selected"
-                        : newValue == 0
-                            ? "Purchased gearbox"
-                            : "Custom gearbox";
-                  },
+                  onChange: (final int selection) => <int, String>{
+                    1: "Custom Gearbox",
+                    0: "Purchased Greabox"
+                  }[selection]
+                      .orElse("No gearbox selected"),
                 ),
                 SizedBox(
                   height: 20,
@@ -228,7 +225,7 @@ class _PitViewState extends State<PitView> {
                 SectionDivider(label: "Robot Image"),
                 FilePickerWidget(
                   controller: advancedSwitchController,
-                  onImagePicked: (final FilePickerResult? newResult) =>
+                  onImagePicked: (final FilePickerResult newResult) =>
                       result = newResult,
                 ),
                 SectionDivider(label: "Notes"),

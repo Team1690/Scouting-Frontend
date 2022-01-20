@@ -13,6 +13,7 @@ import "package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart";
 import "package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/pc/widgets/radar_chart.dart";
 import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 
 const String query = """
 query MyQuery(\$ids: [Int!]) {
