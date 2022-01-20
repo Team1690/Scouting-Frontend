@@ -157,10 +157,11 @@ class _UserInputState extends State<UserInput> {
                   placeholder: "Choose a climb result",
                   makeItem: (final int p0) =>
                       IdProvider.of(context).climb.idToName[p0]!,
-                  onChange: (final int? p0) {
+                  onChange: (final int p0) {
                     setState(() {
                       match.climbStatus = p0;
                     });
+                    print(match.climbStatus);
                   },
                   value: match.climbStatus,
                 ),
