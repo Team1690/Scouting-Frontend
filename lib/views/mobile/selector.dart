@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/constants.dart";
 
 class Selector<T> extends StatelessWidget {
@@ -29,7 +30,7 @@ class Selector<T> extends StatelessWidget {
 
   final List<T> options;
   final String placeholder;
-  final void Function(T?) onChange;
+  final void Function(T) onChange;
   final String Function(T) makeItem;
   final String? Function(T?) validate;
   final T? value;
@@ -53,7 +54,7 @@ class Selector<T> extends StatelessWidget {
       value: value,
       elevation: 24,
       style: const TextStyle(color: primaryColor, fontSize: 20),
-      onChanged: onChange,
+      onChanged: (final T? selection) => selection.mapNullable(onChange),
       items: <DropdownMenuItem<T>>[placeholderItem, ...choices],
     );
   }
