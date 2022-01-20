@@ -47,8 +47,7 @@ class _PickListFutureState extends State<PickListFuture> {
 
   Future<List<PickListTeam>> fetchTeams() async {
     final GraphQLClient client = getClient();
-    final String query =
-        """
+    final String query = """
     query MyQuery {
   team {
     taken
