@@ -2,12 +2,11 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_typeahead/flutter_typeahead.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/constants.dart";
 
 class TeamsDropdown extends StatefulWidget {
   TeamsDropdown({
     required final this.typeAheadController,
-    this.onChange = ignore,
+    required this.onChange,
   });
 
   final void Function(int) onChange;

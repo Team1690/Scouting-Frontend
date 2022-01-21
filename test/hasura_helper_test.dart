@@ -1,6 +1,5 @@
 import "package:flutter_test/flutter_test.dart";
 
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
 void main() {

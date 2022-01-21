@@ -1,12 +1,11 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/stepper.dart";
 
 class Counter extends StatelessWidget {
   Counter({
     required final this.label,
     required final this.icon,
-    this.onChange = ignore,
+    required this.onChange,
     final this.stepValue = 1,
     final this.upperLimit = 100,
     final this.lowerLimit = 0,

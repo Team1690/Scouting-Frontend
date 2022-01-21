@@ -1,7 +1,6 @@
 import "dart:math";
 
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 
 class CustomStepper extends StatelessWidget {
   CustomStepper({
@@ -11,7 +10,7 @@ class CustomStepper extends StatelessWidget {
     required this.longPressStepValue,
     required this.iconSize,
     required this.value,
-    this.onChanged = ignore,
+    required this.onChanged,
   });
 
   final int lowerLimit;

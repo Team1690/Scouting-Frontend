@@ -3,14 +3,13 @@ import "package:graphql/client.dart";
 import "package:progress_state_button/iconed_button.dart";
 import "package:progress_state_button/progress_button.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class SubmitButton extends StatefulWidget {
   SubmitButton({
     required this.vars,
     required this.mutation,
-    this.resetForm = empty,
+    required this.resetForm,
     required this.validate,
   });
   final bool Function() validate;
@@ -21,9 +20,6 @@ class SubmitButton extends StatefulWidget {
   @override
   _SubmitButtonState createState() => _SubmitButtonState();
 }
-
-// ButtonState getResponseState(final http.Response response) =>
-//     200 == response.statusCode ? ButtonState.success : ButtonState.fail;
 
 class _SubmitButtonState extends State<SubmitButton> {
   ButtonState _state = ButtonState.idle;
@@ -56,7 +52,9 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () async {
-        if (widget.validate() == false) return;
+        if (!widget.validate()) {
+          return;
+        }
         if (_state == ButtonState.fail) {
           Navigator.push(
             context,
@@ -74,7 +72,9 @@ class _SubmitButtonState extends State<SubmitButton> {
             ),
           );
         }
-        if (_state == ButtonState.loading) return;
+        if (_state == ButtonState.loading) {
+          return;
+        }
         setState(() {
           _state = ButtonState.loading;
         });

@@ -4,22 +4,6 @@ import "package:scouting_frontend/views/constants.dart";
 
 class Selector<T> extends StatelessWidget {
   Selector({
-    required final List<T> options,
-    required final String placeholder,
-    required final void Function(T) onChange,
-    required final String Function(T) makeItem,
-    required final String? Function(T?) validate,
-    required final T? value,
-  }) : this._inner(
-          validate: validate,
-          onChange: onChange,
-          options: options,
-          placeholder: placeholder,
-          makeItem: makeItem,
-          value: value,
-        );
-
-  Selector._inner({
     required this.options,
     required this.placeholder,
     required this.value,
@@ -32,7 +16,7 @@ class Selector<T> extends StatelessWidget {
   final String placeholder;
   final void Function(T) onChange;
   final String Function(T) makeItem;
-  final String? Function(T?) validate;
+  final String? Function(T) validate;
   final T? value;
 
   @override
@@ -42,14 +26,16 @@ class Selector<T> extends StatelessWidget {
           value: choice,
           child: Text(title, style: TextStyle(color: Colors.white)),
         );
-    DropdownMenuItem<V> itemize<V>(final V choice) =>
+
+    DropdownMenuItem<V> itemize<V extends T>(final V choice) =>
         itemizeRaw(choice, makeItem(choice));
 
     final List<DropdownMenuItem<T>> choices = options.map(itemize).toList();
     final DropdownMenuItem<T?> placeholderItem = itemizeRaw(null, placeholder);
 
     return DropdownButtonFormField<T?>(
-      validator: validate,
+      validator: (final T? selection) =>
+          selection.fold(always("Cannot select placeholder"), validate),
       isExpanded: true,
       value: value,
       elevation: 24,

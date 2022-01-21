@@ -46,7 +46,3 @@ bool isPC(final BuildContext context) {
       return true;
   }
 }
-
-T identity<T>(final T x) => x;
-void ignore<T>(final T _) {}
-void empty() {}
