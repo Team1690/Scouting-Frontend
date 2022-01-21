@@ -9,7 +9,6 @@ import "package:graphql/client.dart";
 import "package:progress_state_button/iconed_button.dart";
 import "package:progress_state_button/progress_button.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class FireBaseSubmitButton extends StatefulWidget {
@@ -17,7 +16,7 @@ class FireBaseSubmitButton extends StatefulWidget {
     required this.vars,
     required this.mutation,
     required this.getResult,
-    this.resetForm = empty,
+    required this.resetForm,
   });
   final HasuraVars vars;
   final String mutation;

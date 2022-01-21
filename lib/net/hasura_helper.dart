@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 
 GraphQLClient getClient() {
   final Map<String, String> headers = <String, String>{};
@@ -11,11 +12,6 @@ GraphQLClient getClient() {
     defaultHeaders: headers,
   );
   return GraphQLClient(link: link, cache: GraphQLCache());
-}
-
-extension MapNullable<A> on A? {
-  B? mapNullable<B>(final B Function(A) f) =>
-      this == null ? null : f(this as A);
 }
 
 extension MapQueryResult on QueryResult {

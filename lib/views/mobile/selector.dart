@@ -1,39 +1,47 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
+import "package:scouting_frontend/views/constants.dart";
 
-import "../constants.dart";
-
-class Selector extends StatelessWidget {
+class Selector<T> extends StatelessWidget {
   Selector({
-    required this.values,
+    required this.options,
+    required this.placeholder,
     required this.value,
-    this.onChange = ignore,
+    required this.makeItem,
+    required this.onChange,
+    required this.validate,
   });
-  final List<String> values;
-  final void Function(String) onChange;
-  final String value;
+
+  final List<T> options;
+  final String placeholder;
+  final void Function(T) onChange;
+  final String Function(T) makeItem;
+  final String? Function(T) validate;
+  final T? value;
+
   @override
   Widget build(final BuildContext context) {
-    return DropdownButton<String>(
+    DropdownMenuItem<V> itemizeRaw<V>(final V choice, final String title) =>
+        DropdownMenuItem<V>(
+          value: choice,
+          child: Text(title, style: TextStyle(color: Colors.white)),
+        );
+
+    DropdownMenuItem<V> itemize<V extends T>(final V choice) =>
+        itemizeRaw(choice, makeItem(choice));
+
+    final List<DropdownMenuItem<T>> choices = options.map(itemize).toList();
+    final DropdownMenuItem<T?> placeholderItem = itemizeRaw(null, placeholder);
+
+    return DropdownButtonFormField<T?>(
+      validator: (final T? selection) =>
+          selection.fold(always("Cannot select placeholder"), validate),
       isExpanded: true,
       value: value,
       elevation: 24,
       style: const TextStyle(color: primaryColor, fontSize: 20),
-      underline: Container(
-        height: 2,
-        color: primaryColor,
-      ),
-      onChanged: (final String? newValue) {
-        onChange(newValue!);
-      },
-      items: values.map<DropdownMenuItem<String>>((final String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(
-            value,
-            style: TextStyle(color: Colors.white),
-          ),
-        );
-      }).toList(),
+      onChanged: (final T? selection) => selection.mapNullable(onChange),
+      items: <DropdownMenuItem<T?>>[placeholderItem, ...choices],
     );
   }
 }

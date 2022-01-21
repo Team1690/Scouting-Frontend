@@ -9,7 +9,7 @@ class PickList extends StatefulWidget {
   PickList({
     required this.uiList,
     required this.screen,
-    this.onReorder = ignore,
+    required this.onReorder,
   });
 
   final List<PickListTeam> uiList;
@@ -45,6 +45,7 @@ class _PickListState extends State<PickList> {
               widget.onReorder(widget.uiList);
             });
             return Card(
+              // TODO: move theme-related values into a dedicated InheritedWidget
               color: bgColor,
               key: ValueKey<String>(e.toString()),
               elevation: 2,

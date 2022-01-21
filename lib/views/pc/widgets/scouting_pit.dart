@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/mobile/pit_vars.dart";
 import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
 import "package:cached_network_image/cached_network_image.dart";
 
@@ -13,8 +12,8 @@ class ScoutingPit extends StatelessWidget {
         SingleChildScrollView(
           child: Text(
             """
-                      Drive Train Type: ${data.driveTrainType == PitVars.driveTrainInitialValue ? 'Not Answered' : data.driveTrainType}
-                      Drive Train Motor: ${data.driveMotorType == PitVars.driveMotorInitialValue ? 'Not Answered' : data.driveMotorType}
+                      Drive Train Type: ${data.driveTrainType}
+                      Drive Train Motor: ${data.driveMotorType}
                       Drive Motor Amount: ${data.driveMotorAmount}
                       Shifter: ${data.shifter}
                       Gearbox: ${data.gearbox}

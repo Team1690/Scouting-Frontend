@@ -8,6 +8,7 @@ import "package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart"
 import "package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart";
 import "package:scouting_frontend/views/pc/widgets/scouting_pit.dart";
 import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 
 class TeamInfoData extends StatefulWidget {
   TeamInfoData(this.team);

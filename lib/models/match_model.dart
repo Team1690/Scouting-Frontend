@@ -1,5 +1,4 @@
 import "package:flutter/cupertino.dart";
-import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
@@ -13,7 +12,6 @@ class Match implements HasuraVars {
     this.teleHigh = 0,
     this.teleHighMissed = 0,
     this.teleLow = 0,
-    this.climbStatus = "Choose a climb result",
   });
 
   void clear() {
@@ -25,7 +23,7 @@ class Match implements HasuraVars {
     teleHigh = 0;
     teleHighMissed = 0;
     teleLow = 0;
-    climbStatus = "Choose a climb result";
+    climbStatus = null;
   }
 
   int? matchNumber;
@@ -38,7 +36,7 @@ class Match implements HasuraVars {
   int teleHighMissed;
   int teleLow;
 
-  String climbStatus;
+  int? climbStatus;
 
   LightTeam? team;
   @override
@@ -47,9 +45,7 @@ class Match implements HasuraVars {
       "auto_lower": autoLow,
       "auto_upper": autoHigh,
       "auto_upper_missed": autoHighMissed,
-      "climb_id": climbStatus == "Choose a climb result"
-          ? IdProvider.of(context).climb.nameToId["Not answered"]!
-          : IdProvider.of(context).climb.nameToId[climbStatus]!,
+      "climb_id": climbStatus,
       "match_number": matchNumber!,
       "team_id": team?.id,
       "tele_lower": teleLow,

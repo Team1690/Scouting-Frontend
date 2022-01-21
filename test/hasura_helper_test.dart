@@ -1,7 +1,6 @@
 import "package:flutter_test/flutter_test.dart";
 
-import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 
 void main() {
   group("Map Extenstions", () {
