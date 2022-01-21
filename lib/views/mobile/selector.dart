@@ -37,8 +37,8 @@ class Selector<T> extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    DropdownMenuItem<T> itemizeRaw(final T? choice, final String title) =>
-        DropdownMenuItem<T>(
+    DropdownMenuItem<V> itemizeRaw<V>(final V choice, final String title) =>
+        DropdownMenuItem<V>(
           value: choice,
           child: Text(title, style: TextStyle(color: Colors.white)),
         );
@@ -46,16 +46,16 @@ class Selector<T> extends StatelessWidget {
         itemizeRaw(choice, makeItem(choice));
 
     final List<DropdownMenuItem<T>> choices = options.map(itemize).toList();
-    final DropdownMenuItem<T> placeholderItem = itemizeRaw(null, placeholder);
+    final DropdownMenuItem<T?> placeholderItem = itemizeRaw(null, placeholder);
 
-    return DropdownButtonFormField<T>(
+    return DropdownButtonFormField<T?>(
       validator: validate,
       isExpanded: true,
       value: value,
       elevation: 24,
       style: const TextStyle(color: primaryColor, fontSize: 20),
       onChanged: (final T? selection) => selection.mapNullable(onChange),
-      items: <DropdownMenuItem<T>>[placeholderItem, ...choices],
+      items: <DropdownMenuItem<T?>>[placeholderItem, ...choices],
     );
   }
 }
