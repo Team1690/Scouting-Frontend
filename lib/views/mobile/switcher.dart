@@ -1,13 +1,13 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 
 class Switcher extends StatefulWidget {
   Switcher({
     required final this.labels,
     required final this.colors,
+    required this.onChange,
     final this.height = 70,
-    this.onChange = ignore,
   });
+
   final List<String> labels;
   final List<Color> colors;
   final Function(int) onChange;

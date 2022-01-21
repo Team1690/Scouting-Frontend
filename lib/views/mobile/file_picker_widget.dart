@@ -7,8 +7,9 @@ import "package:scouting_frontend/models/map_nullable.dart";
 class FilePickerWidget extends StatefulWidget {
   FilePickerWidget({
     required this.controller,
-    this.onImagePicked = ignore,
+    required this.onImagePicked,
   });
+
   final ValueNotifier<bool> controller;
   final void Function(FilePickerResult) onImagePicked;
 

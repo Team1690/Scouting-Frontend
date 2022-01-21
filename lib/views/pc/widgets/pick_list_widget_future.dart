@@ -1,13 +1,12 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/widgets/pick_list_widget.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
 class PickListFuture extends StatefulWidget {
-  PickListFuture({required this.screen, this.onReorder = ignore});
+  PickListFuture({required this.screen, required this.onReorder});
 
   final CurrentPickList screen;
   final void Function(List<PickListTeam> list) onReorder;

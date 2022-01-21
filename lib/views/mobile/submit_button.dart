@@ -3,14 +3,13 @@ import "package:graphql/client.dart";
 import "package:progress_state_button/iconed_button.dart";
 import "package:progress_state_button/progress_button.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class SubmitButton extends StatefulWidget {
   SubmitButton({
     required this.vars,
     required this.mutation,
-    this.resetForm = empty,
+    required this.resetForm,
     required this.validate,
   });
   final bool Function() validate;

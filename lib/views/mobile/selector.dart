@@ -4,22 +4,6 @@ import "package:scouting_frontend/views/constants.dart";
 
 class Selector<T> extends StatelessWidget {
   Selector({
-    required final List<T> options,
-    required final String placeholder,
-    required final void Function(T) onChange,
-    required final String Function(T) makeItem,
-    required final String? Function(T?) validate,
-    required final T? value,
-  }) : this._inner(
-          validate: validate,
-          onChange: onChange,
-          options: options,
-          placeholder: placeholder,
-          makeItem: makeItem,
-          value: value,
-        );
-
-  Selector._inner({
     required this.options,
     required this.placeholder,
     required this.value,

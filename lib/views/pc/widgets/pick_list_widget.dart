@@ -9,7 +9,7 @@ class PickList extends StatefulWidget {
   PickList({
     required this.uiList,
     required this.screen,
-    this.onReorder = ignore,
+    required this.onReorder,
   });
 
   final List<PickListTeam> uiList;

@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 
 class PitViewSlider extends StatelessWidget {
   PitViewSlider({
@@ -7,7 +6,7 @@ class PitViewSlider extends StatelessWidget {
     required final int divisions,
     required final double max,
     required final double min,
-    final void Function(double) onChange = ignore,
+    required final void Function(double) onChange,
     required final double value,
   }) : this.inner(
           value: value,
