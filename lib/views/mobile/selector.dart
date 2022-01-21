@@ -26,7 +26,8 @@ class Selector<T> extends StatelessWidget {
           value: choice,
           child: Text(title, style: TextStyle(color: Colors.white)),
         );
-    DropdownMenuItem<V> itemize<V>(final V choice) =>
+
+    DropdownMenuItem<V> itemize<V extends T>(final V choice) =>
         itemizeRaw(choice, makeItem(choice));
 
     final List<DropdownMenuItem<T>> choices = options.map(itemize).toList();
