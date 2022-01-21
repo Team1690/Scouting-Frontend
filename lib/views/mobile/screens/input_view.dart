@@ -161,7 +161,6 @@ class _UserInputState extends State<UserInput> {
                     setState(() {
                       match.climbStatus = p0;
                     });
-                    print(match.climbStatus);
                   },
                   value: match.climbStatus,
                 ),

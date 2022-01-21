@@ -6,13 +6,13 @@ class Selector<T> extends StatelessWidget {
   Selector({
     required final List<T> options,
     required final String placeholder,
-    final void Function(T)? onChange,
+    required final void Function(T) onChange,
     required final String Function(T) makeItem,
     required final String? Function(T?) validate,
     required final T? value,
   }) : this._inner(
           validate: validate,
-          onChange: onChange ?? ignore,
+          onChange: onChange,
           options: options,
           placeholder: placeholder,
           makeItem: makeItem,

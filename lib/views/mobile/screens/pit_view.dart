@@ -80,7 +80,7 @@ class _PitViewState extends State<PitView> {
                   value: vars.driveTrainType,
                   options:
                       IdProvider.of(context).driveTrain.idToName.keys.toList(),
-                  onChange: (final int? newValue) {
+                  onChange: (final int newValue) {
                     setState(() {
                       vars.driveTrainType = newValue;
                     });
@@ -98,7 +98,7 @@ class _PitViewState extends State<PitView> {
                   value: vars.driveMotorType,
                   options:
                       IdProvider.of(context).drivemotor.idToName.keys.toList(),
-                  onChange: (final int? newValue) {
+                  onChange: (final int newValue) {
                     setState(() {
                       vars.driveMotorType = newValue;
                     });
