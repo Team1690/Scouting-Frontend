@@ -52,7 +52,9 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () async {
-        if (widget.validate() == false) return;
+        if (!widget.validate()) {
+          return;
+        }
         if (_state == ButtonState.fail) {
           Navigator.push(
             context,
@@ -70,7 +72,9 @@ class _SubmitButtonState extends State<SubmitButton> {
             ),
           );
         }
-        if (_state == ButtonState.loading) return;
+        if (_state == ButtonState.loading) {
+          return;
+        }
         setState(() {
           _state = ButtonState.loading;
         });
