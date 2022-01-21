@@ -25,7 +25,7 @@ class App extends StatelessWidget {
         drivetrainIds: drivetrainIds,
         child: MaterialApp(
           title: "Orbit Scouting",
-          home: LoginScreen(), 
+          home: LoginScreen(),
           theme: darkModeTheme,
           debugShowCheckedModeBanner: false,
         ),
