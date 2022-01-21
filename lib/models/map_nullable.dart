@@ -1,17 +1,18 @@
+T Function() always<T>(final T result) => () => result;
+T Function(I) always2<T, I>(final T result) => (final I _ignored) => result;
+T identity<T>(final T result) => result;
+
 extension MapNullable<A> on A? {
-  //call f if this isn't null and return null if it is
-  B? mapNullable<B>(final B Function(A) f) =>
-      this == null ? null : f(this as A);
+  B fold<B>(final B Function() onEmpty, final B Function(A) onSome) =>
+      this == null ? onEmpty() : onSome(this as A);
 
-  //call function if this is null and return null if it isn't
-  B? onNullDo<B>(final B Function() f) => this == null ? f() : null;
+  B? mapNullable<B>(final B Function(A) f) => fold(always(null), f);
 
-  //return value if this is null and return this if this isn't
-  B? onNull<B>(final B value) => onNullDo(() => value);
+  B? onNullDo<B>(final B Function() f) => fold(f, always2(null));
 
-  //call function if this is null and return this if it isn't
-  A orElseDo(final A Function() f) => onNullDo(f) ?? this as A;
+  B? onNull<B>(final B value) => onNullDo(always(value));
 
-  //return value if this is null and return this if it isn't
-  A orElse(final A value) => orElseDo(() => value);
+  A orElseDo(final A Function() f) => fold(f, identity);
+
+  A orElse(final A value) => orElseDo(always(value));
 }
