@@ -21,9 +21,6 @@ class SubmitButton extends StatefulWidget {
   _SubmitButtonState createState() => _SubmitButtonState();
 }
 
-// ButtonState getResponseState(final http.Response response) =>
-//     200 == response.statusCode ? ButtonState.success : ButtonState.fail;
-
 class _SubmitButtonState extends State<SubmitButton> {
   ButtonState _state = ButtonState.idle;
   String _errorMessage = "";
