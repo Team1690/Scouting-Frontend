@@ -8,12 +8,7 @@ import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/pc/team_info_screen.dart";
 
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreen extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
