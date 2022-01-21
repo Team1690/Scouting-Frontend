@@ -16,7 +16,7 @@ class Selector<T> extends StatelessWidget {
   final String placeholder;
   final void Function(T) onChange;
   final String Function(T) makeItem;
-  final String? Function(T?) validate;
+  final String? Function(T) validate;
   final T? value;
 
   @override
@@ -33,7 +33,8 @@ class Selector<T> extends StatelessWidget {
     final DropdownMenuItem<T?> placeholderItem = itemizeRaw(null, placeholder);
 
     return DropdownButtonFormField<T?>(
-      validator: validate,
+      validator: (final T? selection) =>
+          selection.fold(always("Cannot select placeholder"), validate),
       isExpanded: true,
       value: value,
       elevation: 24,
