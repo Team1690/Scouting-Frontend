@@ -85,3 +85,6 @@ then I upload the file to firebase storage.
 when using file_picker on flutter web the result path is null but the bytes variable is not null and you can upload the raw bytes to firebase storage with `ref.putData( )` and when using
 file_picker on native the path is not null but the bytes is null and in that case I make an instance of a File object and put the path as the constructor argument and send the File object with `ref.putFile()`
 
+
+## Firebase Functions
+Using Dart instead of JS/TS: https://medium.com/icnh/writing-cloud-functions-in-dart-b7e62192b3bc
