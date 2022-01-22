@@ -8,6 +8,9 @@ export const helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
+// See https://hasura.io/docs/latest/graphql/core/auth/authentication/webhook.html
+// and https://github.com/hasura/graphql-engine/tree/master/community/boilerplates/auth-webhooks/nodejs-express
+// and https://github.com/hasura/graphql-engine/blob/master/community/boilerplates/auth-webhooks/nodejs-firebase/firebase/firebaseHandler.js
 export const hasuraExample = functions.https.onRequest((request, response) => {
   functions.logger.info("Hasura example logs:", {structuredData: true});
   functions.logger.info(request);
