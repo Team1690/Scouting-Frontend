@@ -3,7 +3,7 @@ targets:
     sources:
       - node/**
       - lib/**
-  builders:
-    build_node_compilers|entrypoint:
+    builders:
       options:
-        compiler: dart2js
+        options:
+          sound_null_safety: false
