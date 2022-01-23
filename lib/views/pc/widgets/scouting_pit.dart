@@ -12,22 +12,25 @@ class ScoutingPit extends StatelessWidget {
         SingleChildScrollView(
           child: Text(
             """
-                      Drive Train Type: ${data.driveTrainType}
-                      Drive Train Motor: ${data.driveMotorType}
-                      Drive Motor Amount: ${data.driveMotorAmount}
-                      Shifter: ${data.shifter}
-                      Gearbox: ${data.gearbox}
-                      Drive Wheel Type: ${data.driveWheelType}
-                      DriveTrain Reliability: ${data.driveTrainReliability}
-                      Electronics Reliability: ${data.electronicsReliability}
-                      Robot Reliability: ${data.robotReliability}
-                      Notes: ${data.notes}
-                      """,
+Drive Train Type: ${data.driveTrainType}
+Drive Train Motor: ${data.driveMotorType}
+Drive Motor Amount: ${data.driveMotorAmount}
+Shifter: ${data.shifter}
+Gearbox: ${data.gearbox}
+Drive Wheel Type: ${data.driveWheelType}
+DriveTrain Reliability: ${data.driveTrainReliability}
+Electronics Reliability: ${data.electronicsReliability}
+Robot Reliability: ${data.robotReliability}
+Notes: ${data.notes}
+""",
             softWrap: false,
           ),
         ),
+        Expanded(
+          child: Container(),
+        ),
         CachedNetworkImage(
-          width: 150,
+          width: 240,
           imageUrl: data.url,
           placeholder: (final BuildContext context, final String url) =>
               Center(child: CircularProgressIndicator()),
