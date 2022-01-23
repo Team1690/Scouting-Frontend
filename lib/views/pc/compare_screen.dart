@@ -1,6 +1,5 @@
 import "dart:math";
 
-import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -9,6 +8,7 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/team_selection_future.dart";
 import "package:scouting_frontend/views/pc/team_info_screen.dart";
 import "package:scouting_frontend/views/pc/widgets/card.dart";
+import "package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart";
 import "package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/pc/widgets/radar_chart.dart";
@@ -393,6 +393,13 @@ class _CompareScreenState extends State<CompareScreen> {
 }
 
 Widget spiderChartWidget(final List<CompareTeam> data) {
+  if (data
+      .where(
+        (final CompareTeam element) => element.climbData.points.length < 2,
+      )
+      .isEmpty) {
+    return Container();
+  }
   return Builder(
     builder: (final BuildContext context) {
       final double autoRatio = 100 /
@@ -443,6 +450,14 @@ Widget spiderChartWidget(final List<CompareTeam> data) {
 }
 
 Widget gameChartWidget(final List<CompareTeam> data) {
+  final Iterable<CompareTeam> emptyTeams = data.where(
+    (final CompareTeam element) => element.climbData.points.length < 2,
+  );
+  if (emptyTeams.isNotEmpty) {
+    return Text(
+      "teams: ${emptyTeams.map((final CompareTeam e) => e.team.number).toString()} have insufficient data please remove them",
+    );
+  }
   return Builder(
     builder: (
       final BuildContext context,
@@ -493,13 +508,8 @@ Widget gameChartWidget(final List<CompareTeam> data) {
           "Can't show team with less than 2 entries :(",
         );
       }
-      return CarouselSlider(
-        options: CarouselOptions(
-          height: 3500,
-          viewportFraction: 1,
-          // autoPlay: true,
-        ),
-        items: <Widget>[
+      return CarouselWithIndicator(
+        widgets: <Widget>[
           Stack(
             children: <Widget>[
               Align(
