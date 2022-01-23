@@ -250,143 +250,134 @@ class _CompareScreenState extends State<CompareScreen> {
         if (snapshot.hasError) {
           return DashboardScaffold(body: Text(snapshot.error!.toString()));
         }
-        return snapshot.data.mapNullable(
-              (final List<CompareTeam> data) => DashboardScaffold(
-                body: Padding(
-                  padding: const EdgeInsets.all(defaultPadding),
-                  child: Column(
+        return DashboardScaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  child: Row(
                     children: <Widget>[
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 1,
-                              child: TeamSelectionFuture(
-                                onChange: (final LightTeam team) {
-                                  if (teams.any(
-                                    (final LightTeam element) =>
-                                        element.id == team.id,
-                                  )) return;
-                                  setState(() {
-                                    teams.add(
-                                      LightTeam(
-                                        team.id,
-                                        team.number,
-                                        team.name,
-                                      ),
-                                    );
-                                    teams.sort(
-                                        (final LightTeam a, final LightTeam b) {
-                                      return a.id.compareTo(b.id);
-                                    });
-                                  });
-                                },
-                                controller: controller,
-                              ),
-                            ),
-                            SizedBox(width: defaultPadding),
-                            Expanded(
-                              flex: 2,
-                              child: Row(
-                                children: teams
-                                    .asMap()
-                                    .entries
-                                    .map(
-                                      (final MapEntry<int, LightTeam> index) =>
-                                          Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: defaultPadding / 2,
-                                        ),
-                                        child: Chip(
-                                          label: Text(
-                                            index.value.number.toString(),
-                                          ),
-                                          backgroundColor: colors[index.key],
-                                          onDeleted: () =>
-                                              setState(() => removeTeam(index)),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: ToggleButtons(
-                                children: <Widget>[
-                                  Icon(Icons.shield_rounded),
-                                  Icon(Icons.remove_moderator_outlined),
-                                ],
-                                isSelected: <bool>[false, false],
-                                onPressed: (final int index) {},
-                              ),
-                            ),
-                          ],
+                      Expanded(
+                        flex: 1,
+                        child: TeamSelectionFuture(
+                          onChange: (final LightTeam team) {
+                            if (teams.any(
+                              (final LightTeam element) =>
+                                  element.id == team.id,
+                            )) return;
+                            setState(() {
+                              teams.add(
+                                LightTeam(
+                                  team.id,
+                                  team.number,
+                                  team.name,
+                                ),
+                              );
+                              teams
+                                  .sort((final LightTeam a, final LightTeam b) {
+                                return a.id.compareTo(b.id);
+                              });
+                            });
+                          },
+                          controller: controller,
                         ),
                       ),
-                      SizedBox(height: defaultPadding),
+                      SizedBox(width: defaultPadding),
                       Expanded(
-                        flex: 5,
+                        flex: 2,
                         child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: Column(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 3,
-                                    child: DashboardCard(
-                                      title: "Game Chart",
-                                      // body: Container(),
-                                      body: teams.isEmpty
-                                          ? noTeamSelected()
-                                          : !(snapshot.connectionState ==
-                                                  ConnectionState.waiting)
-                                              ? gameChartWidget(data)
-                                              : Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
+                          children: teams
+                              .asMap()
+                              .entries
+                              .map(
+                                (final MapEntry<int, LightTeam> index) =>
+                                    Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: defaultPadding / 2,
+                                  ),
+                                  child: Chip(
+                                    label: Text(
+                                      index.value.number.toString(),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: defaultPadding),
-                            Expanded(
-                              flex: 2,
-                              child: DashboardCard(
-                                title: "Compare Spider Chart",
-                                body: Builder(
-                                  builder: (final BuildContext context) {
-                                    data.removeWhere(
-                                      (final CompareTeam team) =>
-                                          team.climbPercentage.isNaN,
-                                    );
-                                    return Center(
-                                      child: teams.isEmpty || data.isEmpty
-                                          ? Container()
-                                          : snapshot.connectionState ==
-                                                  ConnectionState.waiting
-                                              ? Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                )
-                                              : spiderChartWidget(data),
-                                    );
-                                  },
+                                    backgroundColor: colors[index.key],
+                                    onDeleted: () =>
+                                        setState(() => removeTeam(index)),
+                                  ),
                                 ),
-                              ),
-                            )
+                              )
+                              .toList(),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ToggleButtons(
+                          children: <Widget>[
+                            Icon(Icons.shield_rounded),
+                            Icon(Icons.remove_moderator_outlined),
                           ],
+                          isSelected: <bool>[false, false],
+                          onPressed: (final int index) {},
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ) ??
-            (throw Exception("No data :("));
+                SizedBox(height: defaultPadding),
+                Expanded(
+                  flex: 5,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 3,
+                              child: DashboardCard(
+                                title: "Game Chart",
+                                // body: Container(),
+                                body: teams.isEmpty || snapshot.data == null
+                                    ? noTeamSelected()
+                                    : !(snapshot.connectionState ==
+                                            ConnectionState.waiting)
+                                        ? gameChartWidget(snapshot.data!)
+                                        : Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: defaultPadding),
+                      Expanded(
+                        flex: 2,
+                        child: DashboardCard(
+                          title: "Compare Spider Chart",
+                          body: Builder(
+                            builder: (final BuildContext context) {
+                              return Center(
+                                child: teams.isEmpty || snapshot.data == null
+                                    ? Container()
+                                    : snapshot.connectionState ==
+                                            ConnectionState.waiting
+                                        ? Center(
+                                            child: CircularProgressIndicator(),
+                                          )
+                                        : spiderChartWidget(snapshot.data!),
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
@@ -397,7 +388,7 @@ Widget spiderChartWidget(final List<CompareTeam> data) {
       .where(
         (final CompareTeam element) => element.climbData.points.length < 2,
       )
-      .isEmpty) {
+      .isNotEmpty) {
     return Container();
   }
   return Builder(
