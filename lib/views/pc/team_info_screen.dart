@@ -23,10 +23,15 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
   }
   LightTeam? chosenTeam;
   @override
-  Widget build(final BuildContext context) {
+  void initState() {
+    super.initState();
     chosenTeam.mapNullable((final LightTeam element) {
       widget.controller.text = element.number.toString();
     });
+  }
+
+  @override
+  Widget build(final BuildContext context) {
     return DashboardScaffold(
       body: Padding(
         padding: const EdgeInsets.all(defaultPadding),

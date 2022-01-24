@@ -277,10 +277,7 @@ class _CompareScreenState extends State<CompareScreen> {
                         flex: 1,
                         child: TeamSelectionFuture(
                           onChange: (final LightTeam team) {
-                            if (teams.any(
-                              (final LightTeam element) =>
-                                  element.id == team.id,
-                            )) return;
+                            if (teams.contains(team)) return;
                             setState(() {
                               teams.add(
                                 team,
@@ -399,8 +396,6 @@ Widget spiderChartWidget(final SplayTreeSet<CompareTeam> data) {
   }
   return Builder(
     builder: (final BuildContext context) {
-      if (data
-          .any((final CompareTeam element) => element.team.number == 1690)) {}
       final double autoRatio = 100 /
           data
               .map(
@@ -449,204 +444,205 @@ Widget spiderChartWidget(final SplayTreeSet<CompareTeam> data) {
 }
 
 Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
-  if (data.any(
+  final Iterable<CompareTeam> emptyTeams = data.where(
     (final CompareTeam element) => element.climbData.points.length < 2,
-  )) {
-    final Iterable<CompareTeam> emptyTeams = data.where(
-      (final CompareTeam element) => element.climbData.points.length < 2,
-    );
-    return Text(
-      "teams: ${emptyTeams.map((final CompareTeam e) => e.team.number).toString()} have insufficient data please remove them",
-    );
-  }
-  return Builder(
-    builder: (
-      final BuildContext context,
-    ) {
-      final List<CompareLineChartData> teleScored = <CompareLineChartData>[];
-
-      final List<CompareLineChartData> teleMissed = <CompareLineChartData>[];
-
-      final List<CompareLineChartData> climb = <CompareLineChartData>[];
-
-      final List<CompareLineChartData> autoScored = <CompareLineChartData>[];
-
-      final List<CompareLineChartData> autoMissed = <CompareLineChartData>[];
-      for (final CompareTeam item in data) {
-        if ((item.climbData.points.length > 1)) {
-          teleScored.add(
-            item.upperScoredDataTele,
-          );
-          teleMissed.add(
-            item.upperMissedDataTele,
-          );
-          autoScored.add(
-            item.upperScoredDataAuto,
-          );
-          autoMissed.add(
-            item.upperMissedDataAuto,
-          );
-          climb.add(item.climbData);
-        }
-      }
-      int longestList = -1;
-      for (final CompareLineChartData element in climb) {
-        longestList = max(
-          longestList,
-          element.points.length,
-        );
-      }
-      if (longestList < 2) {
-        return Text(
-          "Can't show team with less than 2 entries :(",
-        );
-      }
-      return CarouselWithIndicator(
-        widgets: <Widget>[
-          Stack(
-            children: <Widget>[
-              Align(
-                alignment: Alignment(-1, -1),
-                child: Text(
-                  "Auto upper scored",
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 20.0,
-                  left: 20.0,
-                  right: 20.0,
-                  top: 40,
-                ),
-                child: DashboardLineChart(
-                  distanceFromHighest: 4,
-                  dataSet: autoScored
-                      .map(
-                        (
-                          final CompareLineChartData e,
-                        ) =>
-                            e.points,
-                      )
-                      .toList(),
-                ),
-              ),
-            ],
-          ),
-          Stack(
-            children: <Widget>[
-              Align(
-                alignment: Alignment(-1, -1),
-                child: Text(
-                  "Auto upper missed",
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 20.0,
-                  left: 20.0,
-                  right: 20.0,
-                  top: 40,
-                ),
-                child: DashboardLineChart(
-                  distanceFromHighest: 4,
-                  dataSet: autoMissed
-                      .map(
-                        (
-                          final CompareLineChartData e,
-                        ) =>
-                            e.points,
-                      )
-                      .toList(),
-                ),
-              ),
-            ],
-          ),
-          Stack(
-            children: <Widget>[
-              Align(
-                alignment: Alignment(-1, -1),
-                child: Text(
-                  "Teleop upper scored",
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 20.0,
-                  left: 20.0,
-                  right: 20.0,
-                  top: 40,
-                ),
-                child: DashboardLineChart(
-                  distanceFromHighest: 4,
-                  dataSet: teleScored
-                      .map(
-                        (
-                          final CompareLineChartData e,
-                        ) =>
-                            e.points,
-                      )
-                      .toList(),
-                ),
-              ),
-            ],
-          ),
-          Stack(
-            children: <Widget>[
-              Align(
-                alignment: Alignment(-1, -1),
-                child: Text(
-                  "Tele upper missed",
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 20.0,
-                  left: 20.0,
-                  right: 20.0,
-                  top: 40,
-                ),
-                child: DashboardLineChart(
-                  distanceFromHighest: 4,
-                  dataSet: teleMissed
-                      .map(
-                        (
-                          final CompareLineChartData e,
-                        ) =>
-                            e.points,
-                      )
-                      .toList(),
-                ),
-              ),
-            ],
-          ),
-          Stack(
-            children: <Widget>[
-              Align(
-                alignment: Alignment(-1, -1),
-                child: Text("Climb"),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 40.0,
-                  left: 40.0,
-                  right: 20.0,
-                  top: 40,
-                ),
-                child: DashBoardClimbLineChart(
-                  dataSet: climb
-                      .map(
-                        (
-                          final CompareLineChartData e,
-                        ) =>
-                            e.points,
-                      )
-                      .toList(),
-                ),
-              ),
-            ],
-          )
-        ],
-      );
-    },
   );
+  return emptyTeams.isEmpty
+      ? Text(
+          "teams: ${emptyTeams.map((final CompareTeam e) => e.team.number).toString()} have insufficient data please remove them",
+        )
+      : Builder(
+          builder: (
+            final BuildContext context,
+          ) {
+            final List<CompareLineChartData> teleScored =
+                <CompareLineChartData>[];
+
+            final List<CompareLineChartData> teleMissed =
+                <CompareLineChartData>[];
+
+            final List<CompareLineChartData> climb = <CompareLineChartData>[];
+
+            final List<CompareLineChartData> autoScored =
+                <CompareLineChartData>[];
+
+            final List<CompareLineChartData> autoMissed =
+                <CompareLineChartData>[];
+            for (final CompareTeam item in data) {
+              if ((item.climbData.points.length > 1)) {
+                teleScored.add(
+                  item.upperScoredDataTele,
+                );
+                teleMissed.add(
+                  item.upperMissedDataTele,
+                );
+                autoScored.add(
+                  item.upperScoredDataAuto,
+                );
+                autoMissed.add(
+                  item.upperMissedDataAuto,
+                );
+                climb.add(item.climbData);
+              }
+            }
+            int longestList = -1;
+            for (final CompareLineChartData element in climb) {
+              longestList = max(
+                longestList,
+                element.points.length,
+              );
+            }
+            if (longestList < 2) {
+              return Text(
+                "Can't show team with less than 2 entries :(",
+              );
+            }
+            return CarouselWithIndicator(
+              widgets: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment(-1, -1),
+                      child: Text(
+                        "Auto upper scored",
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 20.0,
+                        left: 20.0,
+                        right: 20.0,
+                        top: 40,
+                      ),
+                      child: DashboardLineChart(
+                        distanceFromHighest: 4,
+                        dataSet: autoScored
+                            .map(
+                              (
+                                final CompareLineChartData e,
+                              ) =>
+                                  e.points,
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                ),
+                Stack(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment(-1, -1),
+                      child: Text(
+                        "Auto upper missed",
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 20.0,
+                        left: 20.0,
+                        right: 20.0,
+                        top: 40,
+                      ),
+                      child: DashboardLineChart(
+                        distanceFromHighest: 4,
+                        dataSet: autoMissed
+                            .map(
+                              (
+                                final CompareLineChartData e,
+                              ) =>
+                                  e.points,
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                ),
+                Stack(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment(-1, -1),
+                      child: Text(
+                        "Teleop upper scored",
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 20.0,
+                        left: 20.0,
+                        right: 20.0,
+                        top: 40,
+                      ),
+                      child: DashboardLineChart(
+                        distanceFromHighest: 4,
+                        dataSet: teleScored
+                            .map(
+                              (
+                                final CompareLineChartData e,
+                              ) =>
+                                  e.points,
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                ),
+                Stack(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment(-1, -1),
+                      child: Text(
+                        "Tele upper missed",
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 20.0,
+                        left: 20.0,
+                        right: 20.0,
+                        top: 40,
+                      ),
+                      child: DashboardLineChart(
+                        distanceFromHighest: 4,
+                        dataSet: teleMissed
+                            .map(
+                              (
+                                final CompareLineChartData e,
+                              ) =>
+                                  e.points,
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                ),
+                Stack(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment(-1, -1),
+                      child: Text("Climb"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 40.0,
+                        left: 40.0,
+                        right: 20.0,
+                        top: 40,
+                      ),
+                      child: DashBoardClimbLineChart(
+                        dataSet: climb
+                            .map(
+                              (
+                                final CompareLineChartData e,
+                              ) =>
+                                  e.points,
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            );
+          },
+        );
 }

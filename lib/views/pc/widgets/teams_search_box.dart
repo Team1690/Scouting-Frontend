@@ -24,11 +24,9 @@ class TeamsSearchBox extends StatelessWidget {
       },
       textFieldConfiguration: TextFieldConfiguration(
         onSubmitted: (final String number) {
-          if (teams.any(
-            (final LightTeam team) => team.number == int.parse(number),
-          )) {
+          {
             try {
-              teams.add(
+              onChange(
                 teams.firstWhere(
                   (final LightTeam team) => team.number.toString() == number,
                 ),
