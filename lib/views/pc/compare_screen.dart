@@ -1,3 +1,4 @@
+import "dart:collection";
 import "dart:math";
 
 import "package:flutter/material.dart";
@@ -84,7 +85,7 @@ class CompareLineChartData {
   List<double> points;
 }
 
-Future<List<CompareTeam>> fetchData(final List<int> ids) async {
+Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
   final GraphQLClient client = getClient();
 
   final QueryResult result = await client.query(
@@ -95,127 +96,137 @@ Future<List<CompareTeam>> fetchData(final List<int> ids) async {
       },
     ),
   );
-
-  return result
-      .mapQueryResult<List<CompareTeam>>((final Map<String, dynamic>? data) {
-    return data.mapNullable<List<CompareTeam>>(
+  return result.mapQueryResult<SplayTreeSet<CompareTeam>>(
+      (final Map<String, dynamic>? data) {
+    return data.mapNullable<SplayTreeSet<CompareTeam>>(
           (final Map<String, dynamic> teams) {
-            return (teams["team"] as List<dynamic>)
-                .map<CompareTeam>((final dynamic e) {
-              final double avgAutoUpperScored = e["matches_aggregate"]
-                      ["aggregate"]["avg"]["auto_upper"] as double? ??
-                  0;
-              final double avgAutoUpperMissed = e["matches_aggregate"]
-                      ["aggregate"]["avg"]["auto_upper_missed"] as double? ??
-                  0;
-              final double autoUpperScorePercentage = avgAutoUpperScored /
-                  (avgAutoUpperScored + avgAutoUpperMissed) *
-                  100;
-              final double avgTeleUpperScored = e["matches_aggregate"]
-                      ["aggregate"]["avg"]["tele_upper"] as double? ??
-                  0;
-              final double avgTeleUpperMissed = e["matches_aggregate"]
-                      ["aggregate"]["avg"]["tele_upper_missed"] as double? ??
-                  0;
-              final double teleUpperPointPercentage = (avgTeleUpperScored /
-                      (avgTeleUpperScored + avgTeleUpperMissed)) *
-                  100;
+            return SplayTreeSet<CompareTeam>.from(
+                (teams["team"] as List<dynamic>)
+                    .map<CompareTeam>((final dynamic e) {
+                  final double avgAutoUpperScored = e["matches_aggregate"]
+                          ["aggregate"]["avg"]["auto_upper"] as double? ??
+                      0;
+                  final double avgAutoUpperMissed = e["matches_aggregate"]
+                              ["aggregate"]["avg"]["auto_upper_missed"]
+                          as double? ??
+                      0;
+                  final double autoUpperScorePercentage = avgAutoUpperScored /
+                      (avgAutoUpperScored + avgAutoUpperMissed) *
+                      100;
+                  final double avgTeleUpperScored = e["matches_aggregate"]
+                          ["aggregate"]["avg"]["tele_upper"] as double? ??
+                      0;
+                  final double avgTeleUpperMissed = e["matches_aggregate"]
+                              ["aggregate"]["avg"]["tele_upper_missed"]
+                          as double? ??
+                      0;
+                  final double teleUpperPointPercentage = (avgTeleUpperScored /
+                          (avgTeleUpperScored + avgTeleUpperMissed)) *
+                      100;
 
-              final List<String> climbVals = (e["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["climb"]["title"] as String)
-                  .toList();
-              final double climbAvg = getClimbAverage(climbVals);
-
-              final int failedClimb = climbVals
-                  .where(
-                    (final String element) =>
-                        element == "failed" || element == "no attempt",
-                  )
-                  .length;
-              final int succededClimb = climbVals.length - failedClimb;
-
-              final double climbSuccessPercent =
-                  (succededClimb / (succededClimb + failedClimb)) * 100;
-              final List<double> climbPoints =
-                  climbVals.map<double>((final String e) {
-                switch (e) {
-                  case "Failed":
-                    return 0;
-                  case "No attempt":
-                    return -1;
-                  case "Level 1":
-                    return 1;
-                  case "Level 2":
-                    return 2;
-                  case "Level 3":
-                    return 3;
-                  case "Level 4":
-                    return 4;
-                }
-                throw Exception("Not a climb value");
-              }).toList();
-
-              final CompareLineChartData climbData = CompareLineChartData(
-                points: climbPoints,
-              );
-
-              final List<double> upperScoredDataTele =
-                  (e["matches"] as List<dynamic>)
-                      .map((final dynamic e) => e["tele_upper"] as double)
+                  final List<String> climbVals = (e["matches"] as List<dynamic>)
+                      .map((final dynamic e) => e["climb"]["title"] as String)
                       .toList();
-              final List<double> upperMissedDataTele = (e["matches"]
-                      as List<dynamic>)
-                  .map((final dynamic e) => e["tele_upper_missed"] as double)
-                  .toList();
+                  final double climbAvg = getClimbAverage(climbVals);
 
-              final CompareLineChartData upperScoredDataTeleLineChart =
-                  CompareLineChartData(
-                points: upperScoredDataTele,
-              );
+                  final int failedClimb = climbVals
+                      .where(
+                        (final String element) =>
+                            element == "failed" || element == "no attempt",
+                      )
+                      .length;
+                  final int succededClimb = climbVals.length - failedClimb;
 
-              final CompareLineChartData upperMissedDataTeleLineChart =
-                  CompareLineChartData(
-                points: upperMissedDataTele,
-              );
+                  final double climbSuccessPercent =
+                      (succededClimb / (succededClimb + failedClimb)) * 100;
+                  final List<double> climbPoints =
+                      climbVals.map<double>((final String e) {
+                    switch (e) {
+                      case "Failed":
+                        return 0;
+                      case "No attempt":
+                        return -1;
+                      case "Level 1":
+                        return 1;
+                      case "Level 2":
+                        return 2;
+                      case "Level 3":
+                        return 3;
+                      case "Level 4":
+                        return 4;
+                    }
+                    throw Exception("Not a climb value");
+                  }).toList();
 
-              final List<double> upperScoredDataAuto =
-                  (e["matches"] as List<dynamic>)
-                      .map((final dynamic e) => e["auto_upper"] as double)
-                      .toList();
-              final List<double> upperMissedDataAuto = (e["matches"]
-                      as List<dynamic>)
-                  .map((final dynamic e) => e["auto_upper_missed"] as double)
-                  .toList();
+                  final CompareLineChartData climbData = CompareLineChartData(
+                    points: climbPoints,
+                  );
 
-              final CompareLineChartData upperScoredDataAutoLinechart =
-                  CompareLineChartData(
-                points: upperScoredDataAuto,
-              );
+                  final List<double> upperScoredDataTele =
+                      (e["matches"] as List<dynamic>)
+                          .map((final dynamic e) => e["tele_upper"] as double)
+                          .toList();
+                  final List<double> upperMissedDataTele =
+                      (e["matches"] as List<dynamic>)
+                          .map(
+                            (final dynamic e) =>
+                                e["tele_upper_missed"] as double,
+                          )
+                          .toList();
 
-              final CompareLineChartData upperMissedDataAutoLinechart =
-                  CompareLineChartData(
-                points: upperMissedDataAuto,
-              );
+                  final CompareLineChartData upperScoredDataTeleLineChart =
+                      CompareLineChartData(
+                    points: upperScoredDataTele,
+                  );
 
-              return CompareTeam(
-                team: LightTeam(
-                  e["id"] as int,
-                  e["number"] as int,
-                  e["name"] as String,
-                ),
-                autoUpperScoredPercentage: autoUpperScorePercentage,
-                avgAutoUpperScored: avgAutoUpperScored,
-                avgClimbPoints: climbAvg,
-                avgTeleUpperScored: avgTeleUpperScored,
-                climbPercentage: climbSuccessPercent,
-                teleUpperScoredPercentage: teleUpperPointPercentage,
-                climbData: climbData,
-                upperScoredDataAuto: upperScoredDataAutoLinechart,
-                upperMissedDataAuto: upperMissedDataAutoLinechart,
-                upperScoredDataTele: upperScoredDataTeleLineChart,
-                upperMissedDataTele: upperMissedDataTeleLineChart,
-              );
-            }).toList();
+                  final CompareLineChartData upperMissedDataTeleLineChart =
+                      CompareLineChartData(
+                    points: upperMissedDataTele,
+                  );
+
+                  final List<double> upperScoredDataAuto =
+                      (e["matches"] as List<dynamic>)
+                          .map((final dynamic e) => e["auto_upper"] as double)
+                          .toList();
+                  final List<double> upperMissedDataAuto =
+                      (e["matches"] as List<dynamic>)
+                          .map(
+                            (final dynamic e) =>
+                                e["auto_upper_missed"] as double,
+                          )
+                          .toList();
+
+                  final CompareLineChartData upperScoredDataAutoLinechart =
+                      CompareLineChartData(
+                    points: upperScoredDataAuto,
+                  );
+
+                  final CompareLineChartData upperMissedDataAutoLinechart =
+                      CompareLineChartData(
+                    points: upperMissedDataAuto,
+                  );
+
+                  return CompareTeam(
+                    team: LightTeam(
+                      e["id"] as int,
+                      e["number"] as int,
+                      e["name"] as String,
+                    ),
+                    autoUpperScoredPercentage: autoUpperScorePercentage,
+                    avgAutoUpperScored: avgAutoUpperScored,
+                    avgClimbPoints: climbAvg,
+                    avgTeleUpperScored: avgTeleUpperScored,
+                    climbPercentage: climbSuccessPercent,
+                    teleUpperScoredPercentage: teleUpperPointPercentage,
+                    climbData: climbData,
+                    upperScoredDataAuto: upperScoredDataAutoLinechart,
+                    upperMissedDataAuto: upperMissedDataAutoLinechart,
+                    upperScoredDataTele: upperScoredDataTeleLineChart,
+                    upperMissedDataTele: upperMissedDataTeleLineChart,
+                  );
+                }), (final CompareTeam team1, final CompareTeam team2) {
+              return team1.team.id.compareTo(team2.team.id);
+            });
           },
         ) ??
         (throw Exception("Error shoudn't happen"));
@@ -228,7 +239,9 @@ class CompareScreen extends StatefulWidget {
 }
 
 class _CompareScreenState extends State<CompareScreen> {
-  final List<LightTeam> teams = <LightTeam>[];
+  final SplayTreeSet<LightTeam> teams = SplayTreeSet<LightTeam>(
+    (final LightTeam p0, final LightTeam p1) => p0.id.compareTo(p1.id),
+  );
   final TextEditingController controller = TextEditingController();
   void removeTeam(final MapEntry<int, LightTeam> index) {
     teams.removeWhere(
@@ -239,13 +252,15 @@ class _CompareScreenState extends State<CompareScreen> {
 
   @override
   Widget build(final BuildContext context) {
-    return FutureBuilder<List<CompareTeam>>(
+    return FutureBuilder<SplayTreeSet<CompareTeam>?>(
       future: teams.isEmpty
-          ? Future<List<CompareTeam>>.value(<CompareTeam>[])
+          ? Future<SplayTreeSet<CompareTeam>>(
+              always(SplayTreeSet<CompareTeam>()),
+            )
           : fetchData(teams.map((final LightTeam e) => e.id).toList()),
       builder: (
         final BuildContext context,
-        final AsyncSnapshot<List<CompareTeam>> snapshot,
+        final AsyncSnapshot<SplayTreeSet<CompareTeam>?> snapshot,
       ) {
         if (snapshot.hasError) {
           return DashboardScaffold(body: Text(snapshot.error!.toString()));
@@ -268,16 +283,8 @@ class _CompareScreenState extends State<CompareScreen> {
                             )) return;
                             setState(() {
                               teams.add(
-                                LightTeam(
-                                  team.id,
-                                  team.number,
-                                  team.name,
-                                ),
+                                team,
                               );
-                              teams
-                                  .sort((final LightTeam a, final LightTeam b) {
-                                return a.id.compareTo(b.id);
-                              });
                             });
                           },
                           controller: controller,
@@ -288,6 +295,7 @@ class _CompareScreenState extends State<CompareScreen> {
                         flex: 2,
                         child: Row(
                           children: teams
+                              .toList()
                               .asMap()
                               .entries
                               .map(
@@ -317,6 +325,7 @@ class _CompareScreenState extends State<CompareScreen> {
                             Icon(Icons.remove_moderator_outlined),
                           ],
                           isSelected: <bool>[false, false],
+                          //Currently unused feature
                           onPressed: (final int index) {},
                         ),
                       ),
@@ -336,7 +345,6 @@ class _CompareScreenState extends State<CompareScreen> {
                               flex: 3,
                               child: DashboardCard(
                                 title: "Game Chart",
-                                // body: Container(),
                                 body: teams.isEmpty || snapshot.data == null
                                     ? noTeamSelected()
                                     : !(snapshot.connectionState ==
@@ -383,16 +391,16 @@ class _CompareScreenState extends State<CompareScreen> {
   }
 }
 
-Widget spiderChartWidget(final List<CompareTeam> data) {
-  if (data
-      .where(
-        (final CompareTeam element) => element.climbData.points.length < 2,
-      )
-      .isNotEmpty) {
+Widget spiderChartWidget(final SplayTreeSet<CompareTeam> data) {
+  if (data.any(
+    (final CompareTeam element) => element.climbData.points.length < 2,
+  )) {
     return Container();
   }
   return Builder(
     builder: (final BuildContext context) {
+      if (data
+          .any((final CompareTeam element) => element.team.number == 1690)) {}
       final double autoRatio = 100 /
           data
               .map(
@@ -440,11 +448,13 @@ Widget spiderChartWidget(final List<CompareTeam> data) {
   );
 }
 
-Widget gameChartWidget(final List<CompareTeam> data) {
-  final Iterable<CompareTeam> emptyTeams = data.where(
+Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
+  if (data.any(
     (final CompareTeam element) => element.climbData.points.length < 2,
-  );
-  if (emptyTeams.isNotEmpty) {
+  )) {
+    final Iterable<CompareTeam> emptyTeams = data.where(
+      (final CompareTeam element) => element.climbData.points.length < 2,
+    );
     return Text(
       "teams: ${emptyTeams.map((final CompareTeam e) => e.team.number).toString()} have insufficient data please remove them",
     );
@@ -453,14 +463,6 @@ Widget gameChartWidget(final List<CompareTeam> data) {
     builder: (
       final BuildContext context,
     ) {
-      data.sort(
-        (
-          final CompareTeam a,
-          final CompareTeam b,
-        ) =>
-            a.team.id.compareTo(b.team.id),
-      );
-
       final List<CompareLineChartData> teleScored = <CompareLineChartData>[];
 
       final List<CompareLineChartData> teleMissed = <CompareLineChartData>[];

@@ -17,11 +17,16 @@ class TeamInfoScreen extends StatefulWidget {
 
 class _TeamInfoScreenState extends State<TeamInfoScreen> {
   _TeamInfoScreenState(final LightTeam? team) {
-    team.mapNullable((final LightTeam p0) => chosenTeam = team);
+    team.mapNullable((final LightTeam p0) {
+      chosenTeam = team;
+    });
   }
   LightTeam? chosenTeam;
   @override
   Widget build(final BuildContext context) {
+    chosenTeam.mapNullable((final LightTeam element) {
+      widget.controller.text = element.number.toString();
+    });
     return DashboardScaffold(
       body: Padding(
         padding: const EdgeInsets.all(defaultPadding),

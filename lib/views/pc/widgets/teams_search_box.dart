@@ -27,14 +27,15 @@ class TeamsSearchBox extends StatelessWidget {
           if (teams.any(
             (final LightTeam team) => team.number == int.parse(number),
           )) {
-            onChange(
-              teams
-                  .where(
-                    (final LightTeam element) =>
-                        element.number == int.parse(number),
-                  )
-                  .first,
-            );
+            try {
+              teams.add(
+                teams.firstWhere(
+                  (final LightTeam team) => team.number.toString() == number,
+                ),
+              );
+            } on StateError catch (_) {
+              //ignoed
+            }
           }
         },
         onTap: typeAheadController.clear,
