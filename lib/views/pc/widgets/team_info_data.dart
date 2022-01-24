@@ -138,7 +138,11 @@ Widget gameChartWidgets(final Team data) {
               top: 40,
             ),
             child: DashboardLineChart(
-              inputedColors: <Color>[Colors.green, Colors.red],
+              inputedColors: <Color>[
+                Colors.green,
+                Colors.red,
+                Colors.yellow[700]!
+              ],
               distanceFromHighest: 4,
               dataSet: data.upperScoredMissedDataTele.points,
             ),
@@ -161,7 +165,11 @@ Widget gameChartWidgets(final Team data) {
               top: 40,
             ),
             child: DashboardLineChart(
-              inputedColors: <Color>[Colors.green, Colors.red],
+              inputedColors: <Color>[
+                Colors.green,
+                Colors.red,
+                Colors.yellow[700]!
+              ],
               distanceFromHighest: 4,
               dataSet: data.upperScoredMissedDataAuto.points,
             ),
@@ -471,10 +479,16 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
                   .map((final dynamic e) => e["tele_upper_missed"] as double)
                   .toList();
 
+          final List<double> lowerScoredDataTele =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["tele_lower"] as double)
+                  .toList();
+
           final LineChartData upperScoredMissedDataTele = LineChartData(
             points: <List<double>>[
               upperScoredDataTele,
               upperMissedDataTele,
+              lowerScoredDataTele
             ],
             title: "Upper balls Teleop",
           );
@@ -487,10 +501,15 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["auto_upper_missed"] as double)
                   .toList();
+          final List<double> lowerScoredDataAuto =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["auto_lower"] as double)
+                  .toList();
           final LineChartData upperScoredMissedDataAuto = LineChartData(
             points: <List<double>>[
               upperScoredDataAuto,
               upperMissedDataAuto,
+              lowerScoredDataAuto
             ],
             title: "Upper balls Auto",
           );
