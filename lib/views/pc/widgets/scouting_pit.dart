@@ -10,30 +10,72 @@ class ScoutingPit extends StatelessWidget {
     return Row(
       children: <Widget>[
         SingleChildScrollView(
-          child: Text(
-            """
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: SizedBox(
+              width: 200,
+              child: Text(
+                """
 Drive Train Type: ${data.driveTrainType}
 Drive Train Motor: ${data.driveMotorType}
 Drive Motor Amount: ${data.driveMotorAmount}
+Drive Wheel Type: ${data.driveWheelType}
+
 Shifter: ${data.shifter}
 Gearbox: ${data.gearbox}
-Drive Wheel Type: ${data.driveWheelType}
+
 DriveTrain Reliability: ${data.driveTrainReliability}
 Electronics Reliability: ${data.electronicsReliability}
 Robot Reliability: ${data.robotReliability}
+
 Notes: ${data.notes}
 """,
-            softWrap: false,
+                softWrap: true,
+              ),
+            ),
           ),
         ),
         Expanded(
-          child: Container(),
-        ),
-        CachedNetworkImage(
-          width: 240,
-          imageUrl: data.url,
-          placeholder: (final BuildContext context, final String url) =>
-              Center(child: CircularProgressIndicator()),
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).push<Scaffold>(
+              PageRouteBuilder<Scaffold>(
+                reverseTransitionDuration: Duration(milliseconds: 700),
+                transitionDuration: Duration(milliseconds: 700),
+                pageBuilder: (
+                  final BuildContext context,
+                  final Animation<double> a,
+                  final Animation<double> b,
+                ) =>
+                    GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Scaffold(
+                    body: Center(
+                      child: Hero(
+                        tag: "Robot Image",
+                        child: CachedNetworkImage(
+                          imageUrl: data.url,
+                          placeholder: (
+                            final BuildContext context,
+                            final String url,
+                          ) =>
+                              Center(child: CircularProgressIndicator()),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            child: Hero(
+              tag: "Robot Image",
+              child: CachedNetworkImage(
+                width: 240,
+                imageUrl: data.url,
+                placeholder: (final BuildContext context, final String url) =>
+                    Center(child: CircularProgressIndicator()),
+              ),
+            ),
+          ),
         )
       ],
     );
