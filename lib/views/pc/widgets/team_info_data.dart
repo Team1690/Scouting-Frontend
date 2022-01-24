@@ -119,63 +119,57 @@ Upper Shooting auto success rate: ${!data.scorePercentAutoUpper.isNaN ? data.sco
       ),
     );
 
+Widget lineChart(final LineChartData data) => Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment(0.7, -1),
+          child: RichText(
+            text: TextSpan(
+              children: <InlineSpan>[
+                TextSpan(
+                  text: " Upper ",
+                  style: TextStyle(color: Colors.green),
+                ),
+                TextSpan(
+                  text: " Lower ",
+                  style: TextStyle(color: Colors.yellow),
+                ),
+                TextSpan(text: " Missed ", style: TextStyle(color: Colors.red)),
+              ],
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment(-1, -1),
+          child: Text(
+            data.title,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: 20.0,
+            left: 20.0,
+            right: 20.0,
+            top: 40,
+          ),
+          child: DashboardLineChart(
+            inputedColors: <Color>[
+              Colors.green,
+              Colors.red,
+              Colors.yellow[700]!
+            ],
+            distanceFromHighest: 4,
+            dataSet: data.points,
+          ),
+        ),
+      ],
+    );
+
 Widget gameChartWidgets(final Team data) {
   return CarouselWithIndicator(
     widgets: <Widget>[
-      Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment(-1, -1),
-            child: Text(
-              data.upperScoredMissedDataTele.title,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 20.0,
-              left: 20.0,
-              right: 20.0,
-              top: 40,
-            ),
-            child: DashboardLineChart(
-              inputedColors: <Color>[
-                Colors.green,
-                Colors.red,
-                Colors.yellow[700]!
-              ],
-              distanceFromHighest: 4,
-              dataSet: data.upperScoredMissedDataTele.points,
-            ),
-          ),
-        ],
-      ),
-      Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment(-1, -1),
-            child: Text(
-              data.upperScoredMissedDataAuto.title,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 20.0,
-              left: 20.0,
-              right: 20.0,
-              top: 40,
-            ),
-            child: DashboardLineChart(
-              inputedColors: <Color>[
-                Colors.green,
-                Colors.red,
-                Colors.yellow[700]!
-              ],
-              distanceFromHighest: 4,
-              dataSet: data.upperScoredMissedDataAuto.points,
-            ),
-          ),
-        ],
-      ),
+      lineChart(data.upperScoredMissedDataTele),
+      lineChart(data.upperScoredMissedDataAuto),
       Stack(
         children: <Widget>[
           Align(
@@ -490,7 +484,7 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               upperMissedDataTele,
               lowerScoredDataTele
             ],
-            title: "Upper balls Teleop",
+            title: "Teleoperated",
           );
 
           final List<double> upperScoredDataAuto =
@@ -511,7 +505,7 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               upperMissedDataAuto,
               lowerScoredDataAuto
             ],
-            title: "Upper balls Auto",
+            title: "Autonomoose",
           );
           return Team(
             team: teamForQuery,
