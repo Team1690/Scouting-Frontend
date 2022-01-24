@@ -252,7 +252,7 @@ class _CompareScreenState extends State<CompareScreen> {
 
   @override
   Widget build(final BuildContext context) {
-    return FutureBuilder<SplayTreeSet<CompareTeam>?>(
+    return FutureBuilder<SplayTreeSet<CompareTeam>>(
       future: teams.isEmpty
           ? Future<SplayTreeSet<CompareTeam>>(
               always(SplayTreeSet<CompareTeam>()),
@@ -389,65 +389,65 @@ class _CompareScreenState extends State<CompareScreen> {
 }
 
 Widget spiderChartWidget(final SplayTreeSet<CompareTeam> data) {
-  if (data.any(
-    (final CompareTeam element) => element.climbData.points.length < 2,
-  )) {
-    return Container();
-  }
-  return Builder(
-    builder: (final BuildContext context) {
-      final double autoRatio = 100 /
-          data
-              .map(
-                (final CompareTeam e) => e.avgAutoUpperScored,
-              )
-              .reduce(max);
-      final double teleRatio = 100 /
-          data
-              .map(
-                (final CompareTeam e) => e.avgTeleUpperScored,
-              )
-              .reduce(max);
-      final double climbPointsRatio = 100 /
-          data
-              .map(
-                (final CompareTeam e) => e.avgClimbPoints,
-              )
-              .reduce(max);
+  final Iterable<CompareTeam> emptyTeams =
+      data.where((final CompareTeam team) => team.climbData.points.length < 2);
 
-      return SpiderChart(
-        numberOfFeatures: 6,
-        data: data
-            .map<List<int>>(
-              (final CompareTeam e) => <int>[
-                (e.avgAutoUpperScored * autoRatio).toInt(),
-                e.autoUpperScoredPercentage.toInt(),
-                (e.avgTeleUpperScored * teleRatio).toInt(),
-                e.teleUpperScoredPercentage.toInt(),
-                (e.avgClimbPoints * climbPointsRatio).toInt(),
-                e.climbPercentage.toInt()
+  return emptyTeams.isNotEmpty
+      ? Container()
+      : Builder(
+          builder: (final BuildContext context) {
+            final double autoRatio = 100 /
+                data
+                    .map(
+                      (final CompareTeam e) => e.avgAutoUpperScored,
+                    )
+                    .reduce(max);
+            final double teleRatio = 100 /
+                data
+                    .map(
+                      (final CompareTeam e) => e.avgTeleUpperScored,
+                    )
+                    .reduce(max);
+            final double climbPointsRatio = 100 /
+                data
+                    .map(
+                      (final CompareTeam e) => e.avgClimbPoints,
+                    )
+                    .reduce(max);
+
+            return SpiderChart(
+              numberOfFeatures: 6,
+              data: data
+                  .map<List<int>>(
+                    (final CompareTeam e) => <int>[
+                      (e.avgAutoUpperScored * autoRatio).toInt(),
+                      e.autoUpperScoredPercentage.toInt(),
+                      (e.avgTeleUpperScored * teleRatio).toInt(),
+                      e.teleUpperScoredPercentage.toInt(),
+                      (e.avgClimbPoints * climbPointsRatio).toInt(),
+                      e.climbPercentage.toInt()
+                    ],
+                  )
+                  .toList(),
+              ticks: <int>[0, 25, 50, 75, 100],
+              features: <String>[
+                "auto upper",
+                "auto scoring%",
+                "teleop upper",
+                "teleop scoring%",
+                "climb points",
+                "climb%"
               ],
-            )
-            .toList(),
-        ticks: <int>[0, 25, 50, 75, 100],
-        features: <String>[
-          "auto upper",
-          "auto scoring%",
-          "teleop upper",
-          "teleop scoring%",
-          "climb points",
-          "climb%"
-        ],
-      );
-    },
-  );
+            );
+          },
+        );
 }
 
 Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
   final Iterable<CompareTeam> emptyTeams = data.where(
     (final CompareTeam element) => element.climbData.points.length < 2,
   );
-  return emptyTeams.isEmpty
+  return emptyTeams.isNotEmpty
       ? Text(
           "teams: ${emptyTeams.map((final CompareTeam e) => e.team.number).toString()} have insufficient data please remove them",
         )

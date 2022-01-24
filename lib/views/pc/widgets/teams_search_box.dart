@@ -24,16 +24,14 @@ class TeamsSearchBox extends StatelessWidget {
       },
       textFieldConfiguration: TextFieldConfiguration(
         onSubmitted: (final String number) {
-          {
-            try {
-              onChange(
-                teams.firstWhere(
-                  (final LightTeam team) => team.number.toString() == number,
-                ),
-              );
-            } on StateError catch (_) {
-              //ignoed
-            }
+          try {
+            onChange(
+              teams.firstWhere(
+                (final LightTeam team) => team.number.toString() == number,
+              ),
+            );
+          } on StateError catch (_) {
+            //ignoed
           }
         },
         onTap: typeAheadController.clear,
