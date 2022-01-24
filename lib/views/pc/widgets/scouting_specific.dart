@@ -25,13 +25,13 @@ class ScoutingSpecific extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       SizedBox(
-                        width: 110,
+                        width: 150,
                         child: Text(
                           e,
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
                             color: primaryWhite,
-                            fontSize: 12,
+                            fontSize: 15,
                           ),
                         ),
                       ),
