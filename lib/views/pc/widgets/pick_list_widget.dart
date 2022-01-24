@@ -57,15 +57,27 @@ class _PickListState extends State<PickList> {
                   defaultPadding / 4,
                 ),
                 child: ListTile(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute<TeamInfoScreen>(
-                      builder: (final BuildContext context) => TeamInfoScreen(
-                        initalTeam: LightTeam(e.id, e.number, e.name),
+                  title: Row(
+                    children: <Widget>[
+                      Text(e.toString()),
+                      Expanded(child: Container()),
+                      ElevatedButton(
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute<TeamInfoScreen>(
+                            builder: (final BuildContext context) =>
+                                TeamInfoScreen(
+                              initalTeam: LightTeam(e.id, e.number, e.name),
+                            ),
+                          ),
+                        ),
+                        child: Text("Team info"),
                       ),
-                    ),
+                      SizedBox(
+                        width: 20,
+                      )
+                    ],
                   ),
-                  title: Text(e.toString()),
                   leading: AdvancedSwitch(
                     controller: e.controller,
                     activeColor: Colors.red,
