@@ -100,20 +100,8 @@ class Scatter extends StatelessWidget {
                             ),
                             gridData: FlGridData(
                               show: true,
-                              horizontalInterval: report
-                                      .map(
-                                        (final ScatterData e) =>
-                                            (e.yBallPointsStddev),
-                                      )
-                                      .reduce(max) /
-                                  10,
-                              verticalInterval: report
-                                      .map(
-                                        (final ScatterData e) =>
-                                            e.yBallPointsStddev,
-                                      )
-                                      .reduce(max) /
-                                  10,
+                              horizontalInterval: 5,
+                              verticalInterval: 5,
                               drawHorizontalLine: true,
                               checkToShowHorizontalLine: (final double value) =>
                                   true,
@@ -125,8 +113,18 @@ class Scatter extends StatelessWidget {
                               getDrawingVerticalLine: (final double value) =>
                                   FlLine(color: Colors.black.withOpacity(0.1)),
                             ),
-                            axisTitleData:
-                                FlAxisTitleData(bottomTitle: AxisTitle()),
+                            axisTitleData: FlAxisTitleData(
+                              show: true,
+                              bottomTitle: AxisTitle(
+                                showTitle: true,
+                                titleText: "Average ball points",
+                              ),
+                              leftTitle: AxisTitle(
+                                showTitle: true,
+                                titleText:
+                                    "Standard devitaion from ball points",
+                              ),
+                            ),
                             borderData: FlBorderData(
                               show: true,
                             ),

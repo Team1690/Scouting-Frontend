@@ -23,6 +23,18 @@ class TeamsSearchBox extends StatelessWidget {
         return null;
       },
       textFieldConfiguration: TextFieldConfiguration(
+        onSubmitted: (final String number) {
+          try {
+            onChange(
+              teams.firstWhere(
+                (final LightTeam team) => team.number.toString() == number,
+              ),
+            );
+          } on StateError catch (_) {
+            //ignoed
+          }
+        },
+        onTap: typeAheadController.clear,
         controller: typeAheadController,
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.digitsOnly
