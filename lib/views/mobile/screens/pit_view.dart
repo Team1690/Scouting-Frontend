@@ -251,8 +251,7 @@ class _PitViewState extends State<PitView> {
                 ),
                 FireBaseSubmitButton(
                   getResult: () => result,
-                  mutation:
-                      """
+                  mutation: """
         mutation MyMutation(
             \$url: String,
             \$drive_motor_amount: Int,

@@ -267,8 +267,7 @@ Widget gameChartWidgets(final Team data) {
   );
 }
 
-const String teamInfoQuery =
-    """
+const String teamInfoQuery = """
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
     pit {
