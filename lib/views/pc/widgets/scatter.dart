@@ -161,8 +161,7 @@ class ScatterData {
   final double yBallPointsStddev;
 }
 
-const String query =
-    """
+const String query = """
 query MyQuery {
   team {
     number
