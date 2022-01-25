@@ -100,22 +100,96 @@ class _TeamInfoDataState extends State<TeamInfoData> {
 }
 
 Widget quickData(final QuickData data) => SingleChildScrollView(
-      child: Text(
-        """
-Average auto upper scored: ${data.avgAutoUpperScored.toStringAsFixed(3)}
-Average auto upper missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}
-Average auto low scored: ${data.avgAutoLowScored.toStringAsFixed(3)}
-
-Average tele upper scored: ${data.avgTeleUpperScored.toStringAsFixed(3)}
-Average tele upper missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}
-Average tele low scored: ${data.avgTeleLowScored.toStringAsFixed(3)}
-
-Average points from balls: ${data.avgBallPoints.toStringAsFixed(3)}
-Average points from climb: ${data.avgClimbPoints.toStringAsFixed(3)}
-
-Upper Shooting teleop success rate: ${!data.scorePercentTeleUpper.isNaN ? data.scorePercentTeleUpper.round() : "Not a number"}%
-Upper Shooting auto success rate: ${!data.scorePercentAutoUpper.isNaN ? data.scorePercentAutoUpper.round() : "Not a number"}%
-""",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "Auto",
+            style: TextStyle(fontSize: 18),
+          ),
+          Row(
+            children: <Widget>[
+              Spacer(),
+              Text(
+                "Upper: ${data.avgAutoUpperScored.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.green),
+              ),
+              Spacer(),
+              Text(
+                "Lower: ${data.avgAutoLowScored.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.yellow),
+              ),
+              Spacer(),
+              Text(
+                "Missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.red),
+              ),
+              Spacer()
+            ],
+          ),
+          Text(
+            "Teleop",
+            style: TextStyle(fontSize: 18),
+          ),
+          Row(
+            children: <Widget>[
+              Spacer(),
+              Text(
+                "Upper: ${data.avgTeleUpperScored.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.green),
+              ),
+              Spacer(),
+              Text(
+                "Lower: ${data.avgTeleLowScored.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.yellow),
+              ),
+              Spacer(),
+              Text(
+                "Missed: ${data.avgTeleUpperMissed.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.red),
+              ),
+              Spacer()
+            ],
+          ),
+          Text(
+            "Points",
+            style: TextStyle(fontSize: 18),
+          ),
+          Row(
+            children: <Widget>[
+              Spacer(
+                flex: 3,
+              ),
+              Text("Balls: ${data.avgBallPoints.toStringAsFixed(3)}"),
+              Spacer(),
+              Text("Climb: ${data.avgClimbPoints.toStringAsFixed(3)}"),
+              Spacer(
+                flex: 3,
+              ),
+            ],
+          ),
+          Text(
+            "Upper Aim",
+            style: TextStyle(fontSize: 18),
+          ),
+          Row(
+            children: <Widget>[
+              Spacer(
+                flex: 3,
+              ),
+              Text(
+                "Teleop: ${!data.scorePercentTeleUpper.isNaN ? "${data.scorePercentTeleUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+              ),
+              Spacer(),
+              Text(
+                "Autonomouse: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+              ),
+              Spacer(
+                flex: 3,
+              )
+            ],
+          ),
+        ],
       ),
     );
 
