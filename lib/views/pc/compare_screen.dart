@@ -82,7 +82,7 @@ class CompareTeam {
 class CompareLineChartData {
   CompareLineChartData({required this.points});
 
-  List<double> points;
+  List<int> points;
 }
 
 Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
@@ -139,8 +139,8 @@ Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
 
                   final double climbSuccessPercent =
                       (succededClimb / (succededClimb + failedClimb)) * 100;
-                  final List<double> climbPoints =
-                      climbVals.map<double>((final String e) {
+                  final List<int> climbPoints =
+                      climbVals.map<int>((final String e) {
                     switch (e) {
                       case "Failed":
                         return 0;
@@ -162,15 +162,14 @@ Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
                     points: climbPoints,
                   );
 
-                  final List<double> upperScoredDataTele =
+                  final List<int> upperScoredDataTele =
                       (e["matches"] as List<dynamic>)
-                          .map((final dynamic e) => e["tele_upper"] as double)
+                          .map((final dynamic e) => e["tele_upper"] as int)
                           .toList();
-                  final List<double> upperMissedDataTele =
+                  final List<int> upperMissedDataTele =
                       (e["matches"] as List<dynamic>)
                           .map(
-                            (final dynamic e) =>
-                                e["tele_upper_missed"] as double,
+                            (final dynamic e) => e["tele_upper_missed"] as int,
                           )
                           .toList();
 
@@ -184,15 +183,14 @@ Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
                     points: upperMissedDataTele,
                   );
 
-                  final List<double> upperScoredDataAuto =
+                  final List<int> upperScoredDataAuto =
                       (e["matches"] as List<dynamic>)
-                          .map((final dynamic e) => e["auto_upper"] as double)
+                          .map((final dynamic e) => e["auto_upper"] as int)
                           .toList();
-                  final List<double> upperMissedDataAuto =
+                  final List<int> upperMissedDataAuto =
                       (e["matches"] as List<dynamic>)
                           .map(
-                            (final dynamic e) =>
-                                e["auto_upper_missed"] as double,
+                            (final dynamic e) => e["auto_upper_missed"] as int,
                           )
                           .toList();
 
@@ -523,6 +521,10 @@ Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
                               ) =>
                                   e.points,
                             )
+                            .map(
+                              (final List<int> e) =>
+                                  e.map((final int e) => e.toDouble()).toList(),
+                            )
                             .toList(),
                       ),
                     ),
@@ -551,6 +553,10 @@ Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
                                 final CompareLineChartData e,
                               ) =>
                                   e.points,
+                            )
+                            .map(
+                              (final List<int> e) =>
+                                  e.map((final int e) => e.toDouble()).toList(),
                             )
                             .toList(),
                       ),
@@ -581,6 +587,10 @@ Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
                               ) =>
                                   e.points,
                             )
+                            .map(
+                              (final List<int> e) =>
+                                  e.map((final int e) => e.toDouble()).toList(),
+                            )
                             .toList(),
                       ),
                     ),
@@ -610,6 +620,10 @@ Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
                               ) =>
                                   e.points,
                             )
+                            .map(
+                              (final List<int> e) =>
+                                  e.map((final int e) => e.toDouble()).toList(),
+                            )
                             .toList(),
                       ),
                     ),
@@ -635,6 +649,10 @@ Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
                                 final CompareLineChartData e,
                               ) =>
                                   e.points,
+                            )
+                            .map(
+                              (final List<int> e) =>
+                                  e.map((final int e) => e.toDouble()).toList(),
                             )
                             .toList(),
                       ),

@@ -159,7 +159,12 @@ Widget lineChart(final LineChartData data) => Stack(
               Colors.yellow[700]!
             ],
             distanceFromHighest: 4,
-            dataSet: data.points,
+            dataSet: data.points
+                .map(
+                  (final List<int> e) =>
+                      e.map((final int e) => e.toDouble()).toList(),
+                )
+                .toList(),
           ),
         ),
       ],
@@ -184,7 +189,12 @@ Widget gameChartWidgets(final Team data) {
               top: 40,
             ),
             child: DashBoardClimbLineChart(
-              dataSet: data.climbData.points,
+              dataSet: data.climbData.points
+                  .map(
+                    (final List<int> e) =>
+                        e.map((final int e) => e.toDouble()).toList(),
+                  )
+                  .toList(),
             ),
           ),
         ],
@@ -193,7 +203,8 @@ Widget gameChartWidgets(final Team data) {
   );
 }
 
-const String teamInfoQuery = """
+const String teamInfoQuery =
+    """
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
     pit {
@@ -277,7 +288,7 @@ class SpecificData {
 
 class LineChartData {
   LineChartData({required this.points, required this.title});
-  List<List<double>> points;
+  List<List<int>> points;
   String title = "";
 }
 
@@ -440,8 +451,7 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
                 100,
           );
 
-          final List<double> climbPoints =
-              climbVals.map<double>((final String e) {
+          final List<int> climbPoints = climbVals.map<int>((final String e) {
             switch (e) {
               case "Failed":
                 return 0;
@@ -460,26 +470,26 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
           }).toList();
 
           final LineChartData climbData = LineChartData(
-            points: <List<double>>[climbPoints],
+            points: <List<int>>[climbPoints],
             title: "Climb",
           );
 
-          final List<double> upperScoredDataTele =
+          final List<int> upperScoredDataTele =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["tele_upper"] as double)
+                  .map((final dynamic e) => e["tele_upper"] as int)
                   .toList();
-          final List<double> upperMissedDataTele =
+          final List<int> upperMissedDataTele =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["tele_upper_missed"] as double)
+                  .map((final dynamic e) => e["tele_upper_missed"] as int)
                   .toList();
 
-          final List<double> lowerScoredDataTele =
+          final List<int> lowerScoredDataTele =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["tele_lower"] as double)
+                  .map((final dynamic e) => e["tele_lower"] as int)
                   .toList();
 
           final LineChartData upperScoredMissedDataTele = LineChartData(
-            points: <List<double>>[
+            points: <List<int>>[
               upperScoredDataTele,
               upperMissedDataTele,
               lowerScoredDataTele
@@ -487,20 +497,20 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
             title: "Teleoperated",
           );
 
-          final List<double> upperScoredDataAuto =
+          final List<int> upperScoredDataAuto =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["auto_upper"] as double)
+                  .map((final dynamic e) => e["auto_upper"] as int)
                   .toList();
-          final List<double> upperMissedDataAuto =
+          final List<int> upperMissedDataAuto =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["auto_upper_missed"] as double)
+                  .map((final dynamic e) => e["auto_upper_missed"] as int)
                   .toList();
-          final List<double> lowerScoredDataAuto =
+          final List<int> lowerScoredDataAuto =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["auto_lower"] as double)
+                  .map((final dynamic e) => e["auto_lower"] as int)
                   .toList();
           final LineChartData upperScoredMissedDataAuto = LineChartData(
-            points: <List<double>>[
+            points: <List<int>>[
               upperScoredDataAuto,
               upperMissedDataAuto,
               lowerScoredDataAuto

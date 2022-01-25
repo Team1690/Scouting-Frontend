@@ -82,7 +82,7 @@ class DashboardLineChart extends StatelessWidget {
           ),
           rightTitles: SideTitles(
             interval: 5,
-            getTitles: (final double value) => value.toString(),
+            getTitles: (final double value) => value.toInt().toString(),
             showTitles: true,
             getTextStyles: (final BuildContext context, final double value) =>
                 TextStyle(
