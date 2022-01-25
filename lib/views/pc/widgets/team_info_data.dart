@@ -299,8 +299,8 @@ class PitData {
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;
-  final bool hasShifer;
-  final bool gearboxPurchased;
+  final bool? hasShifer;
+  final bool? gearboxPurchased;
   final String driveMotorType;
   final int driveTrainReliability;
   final int electronicsReliability;
@@ -386,10 +386,10 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               driveTrainReliability: p0["drive_train_reliability"] as int,
               driveWheelType: p0["drive_wheel_type"] as String,
               electronicsReliability: p0["electronics_reliability"] as int,
-              gearboxPurchased: p0["gearbox_purchased"] as bool,
+              gearboxPurchased: p0["gearbox_purchased"] as bool?,
               notes: p0["notes"] as String,
               robotReliability: p0["robot_reliability"] as int,
-              hasShifer: p0["has_shifter"] as bool,
+              hasShifer: p0["has_shifter"] as bool?,
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
               driveMotorType: p0["drivemotor"]["title"] as String,
@@ -503,7 +503,7 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               upperMissedDataAuto,
               lowerScoredDataAuto
             ],
-            title: "Autonomoose",
+            title: "Autonomouse",
           );
           return Team(
             team: teamForQuery,
