@@ -5,8 +5,8 @@ class PitVars implements HasuraVars {
   int? driveTrainType;
   int? driveMotorType;
   int driveMotorAmount = 2;
-  String shifter = "Not Answered";
-  String gearbox = "Not Answered";
+  bool? hasShifter;
+  bool? gearboxPurchased;
   String notes = "";
   String driveWheelType = "";
   double driveTrainReliability = 1;
@@ -19,8 +19,8 @@ class PitVars implements HasuraVars {
       "drivetrain_id": driveTrainType,
       "drivemotor_id": driveMotorType,
       "drive_motor_amount": driveMotorAmount,
-      "shifter": shifter,
-      "gearbox": gearbox,
+      "has_shifter": hasShifter,
+      "gearbox_purchased": gearboxPurchased,
       "notes": notes,
       "drive_wheel_type": driveWheelType,
       "drive_train_reliability": driveTrainReliability,
@@ -34,8 +34,8 @@ class PitVars implements HasuraVars {
     driveTrainType = null;
     driveMotorType = null;
     driveMotorAmount = 2;
-    shifter = "No Shifter Selected";
-    gearbox = "No Gearbox Selected";
+    hasShifter = null;
+    gearboxPurchased = null;
     notes = "";
     driveWheelType = "";
     driveTrainReliability = 1.0;

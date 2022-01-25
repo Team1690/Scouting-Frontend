@@ -193,7 +193,8 @@ Widget gameChartWidgets(final Team data) {
   );
 }
 
-const String teamInfoQuery = """
+const String teamInfoQuery =
+    """
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
     pit {
@@ -201,10 +202,10 @@ query MyQuery(\$id: Int!) {
       drive_train_reliability
       drive_wheel_type
       electronics_reliability
-      gearbox
+      gearbox_purchased
       notes
       robot_reliability
-      shifter
+      has_shifter
       url
       drivetrain {
         title
@@ -289,17 +290,17 @@ class PitData {
     required this.driveTrainReliability,
     required this.driveWheelType,
     required this.electronicsReliability,
-    required this.gearbox,
+    required this.gearboxPurchased,
     required this.notes,
     required this.robotReliability,
-    required this.shifter,
+    required this.hasShifer,
     required this.url,
   });
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;
-  final String shifter;
-  final String gearbox;
+  final bool hasShifer;
+  final bool gearboxPurchased;
   final String driveMotorType;
   final int driveTrainReliability;
   final int electronicsReliability;
@@ -364,7 +365,6 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
       },
     ),
   );
-
   return result.mapQueryResult(
     (final Map<String, dynamic>? data) =>
         data.mapNullable((final Map<String, dynamic> team) {
@@ -374,7 +374,6 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               : throw Exception("that team doesnt exist");
           final Map<String, dynamic>? pit =
               (teamByPk["pit"] as Map<String, dynamic>?);
-
           final SpecificData specificData = SpecificData(
             (teamByPk["specifics"] as List<dynamic>)
                 .map((final dynamic e) => e["message"] as String)
@@ -387,16 +386,15 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               driveTrainReliability: p0["drive_train_reliability"] as int,
               driveWheelType: p0["drive_wheel_type"] as String,
               electronicsReliability: p0["electronics_reliability"] as int,
-              gearbox: p0["gearbox"] as String,
+              gearboxPurchased: p0["gearbox_purchased"] as bool,
               notes: p0["notes"] as String,
               robotReliability: p0["robot_reliability"] as int,
-              shifter: p0["shifter"] as String,
+              hasShifer: p0["has_shifter"] as bool,
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
               driveMotorType: p0["drivemotor"]["title"] as String,
             ),
           );
-
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["auto_lower"] as double? ??
               0;
