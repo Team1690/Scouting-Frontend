@@ -66,8 +66,7 @@ class _PickListScreenState extends State<PickListScreen> {
 
   static void saveWithoutSnackbar(final List<PickListTeam> teams) {
     final GraphQLClient client = getClient();
-    final String query =
-        """
+    final String query = """
   mutation M(\$objects: [team_insert_input!]!) {
   insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index]}) {
     affected_rows
@@ -114,8 +113,7 @@ class _PickListScreenState extends State<PickListScreen> {
       ),
     );
     final GraphQLClient client = getClient();
-    final String query =
-        """
+    final String query = """
   mutation M(\$objects: [team_insert_input!]!) {
   insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index]}) {
     affected_rows
