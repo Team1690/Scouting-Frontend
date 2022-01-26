@@ -31,6 +31,7 @@ class App extends StatelessWidget {
           home: isPC(context)
               ? TeamInfoScreen()
               : Scaffold(
+                  resizeToAvoidBottomInset: false,
                   appBar: MainAppBar(),
                   body: UserInput(),
                   drawer: SideNavBar(),
