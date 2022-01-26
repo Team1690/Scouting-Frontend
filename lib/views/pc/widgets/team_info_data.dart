@@ -21,10 +21,12 @@ class TeamInfoData extends StatefulWidget {
 class _TeamInfoDataState extends State<TeamInfoData> {
   @override
   Widget build(final BuildContext context) {
-    return FutureBuilder<Team>(
-      future: fetchTeamInfo(widget.team),
-      builder:
-          (final BuildContext context, final AsyncSnapshot<Team> snapShot) {
+    return FutureBuilder<Team<int>>(
+      future: fetchTeamInfo<int>(widget.team),
+      builder: (
+        final BuildContext context,
+        final AsyncSnapshot<Team<int>> snapShot,
+      ) {
         if (snapShot.hasError) {
           return Center(child: Text(snapShot.error.toString()));
         } else if (snapShot.connectionState == ConnectionState.waiting) {
@@ -33,7 +35,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
           );
         }
         return snapShot.data.mapNullable<Widget>(
-              (final Team data) => Row(
+              (final Team<int> data) => Row(
                 children: <Widget>[
                   Expanded(
                     flex: 4,
@@ -165,11 +167,11 @@ Widget lineChart<E extends num>(final LineChartData<E> data) => Stack(
       ],
     );
 
-Widget gameChartWidgets(final Team data) {
+Widget gameChartWidgets<E extends num>(final Team<E> data) {
   return CarouselWithIndicator(
     widgets: <Widget>[
-      lineChart(data.upperScoredMissedDataTele),
-      lineChart(data.upperScoredMissedDataAuto),
+      lineChart<E>(data.upperScoredMissedDataTele),
+      lineChart<E>(data.upperScoredMissedDataAuto),
       Stack(
         children: <Widget>[
           Align(
@@ -183,7 +185,7 @@ Widget gameChartWidgets(final Team data) {
               right: 20.0,
               top: 40,
             ),
-            child: DashBoardClimbLineChart<int>(
+            child: DashBoardClimbLineChart<E>(
               dataSet: data.climbData.points,
             ),
           ),
@@ -308,7 +310,7 @@ class PitData {
   final String url;
 }
 
-class Team {
+class Team<E extends num> {
   Team({
     required this.team,
     required this.specificData,
@@ -322,9 +324,9 @@ class Team {
   final SpecificData specificData;
   final PitData? pitViewData;
   final QuickData quickData;
-  final LineChartData<int> climbData;
-  final LineChartData<int> upperScoredMissedDataTele;
-  final LineChartData<int> upperScoredMissedDataAuto;
+  final LineChartData<E> climbData;
+  final LineChartData<E> upperScoredMissedDataTele;
+  final LineChartData<E> upperScoredMissedDataAuto;
 }
 
 double getClimbAverage(final List<String> climbVals) {
@@ -353,7 +355,9 @@ double getClimbAverage(final List<String> climbVals) {
       climbPoints.length;
 }
 
-Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
+Future<Team<E>> fetchTeamInfo<E extends num>(
+  final LightTeam teamForQuery,
+) async {
   final GraphQLClient client = getClient();
 
   final QueryResult result = await client.query(
@@ -458,28 +462,30 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
             throw Exception("Not a climb value");
           }).toList();
 
-          final LineChartData<int> climbData = LineChartData<int>(
-            points: <List<int>>[climbPoints],
+          final LineChartData<E> climbData = LineChartData<E>(
+            points: <List<E>>[climbPoints.cast<E>()],
             title: "Climb",
           );
 
-          final List<int> upperScoredDataTele =
+          final List<E> upperScoredDataTele =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["tele_upper"] as int)
+                  .cast<E>()
                   .toList();
-          final List<int> upperMissedDataTele =
+          final List<E> upperMissedDataTele =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["tele_upper_missed"] as int)
+                  .cast<E>()
                   .toList();
 
-          final List<int> lowerScoredDataTele =
+          final List<E> lowerScoredDataTele =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["tele_lower"] as int)
+                  .cast<E>()
                   .toList();
 
-          final LineChartData<int> upperScoredMissedDataTele =
-              LineChartData<int>(
-            points: <List<int>>[
+          final LineChartData<E> upperScoredMissedDataTele = LineChartData<E>(
+            points: <List<E>>[
               upperScoredDataTele,
               upperMissedDataTele,
               lowerScoredDataTele
@@ -487,28 +493,30 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
             title: "Teleoperated",
           );
 
-          final List<int> upperScoredDataAuto =
+          final List<E> upperScoredDataAuto =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["auto_upper"] as int)
-                  .toList();
-          final List<int> upperMissedDataAuto =
+                  .toList()
+                  .cast<E>();
+          final List<E> upperMissedDataAuto =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["auto_upper_missed"] as int)
+                  .cast<E>()
                   .toList();
-          final List<int> lowerScoredDataAuto =
+          final List<E> lowerScoredDataAuto =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["auto_lower"] as int)
+                  .cast<E>()
                   .toList();
-          final LineChartData<int> upperScoredMissedDataAuto =
-              LineChartData<int>(
-            points: <List<int>>[
+          final LineChartData<E> upperScoredMissedDataAuto = LineChartData<E>(
+            points: <List<E>>[
               upperScoredDataAuto,
               upperMissedDataAuto,
               lowerScoredDataAuto
             ],
             title: "Autonomoose",
           );
-          return Team(
+          return Team<E>(
             team: teamForQuery,
             specificData: specificData,
             pitViewData: pitData,
