@@ -59,10 +59,8 @@ class _PickListState extends State<PickList> {
                 child: ListTile(
                   title: Row(
                     children: <Widget>[
-                      Text(e.toString()),
-                      Expanded(child: Container()),
-                      ElevatedButton(
-                        onPressed: () => Navigator.push(
+                      GestureDetector(
+                        onTap: () => Navigator.pushReplacement(
                           context,
                           MaterialPageRoute<TeamInfoScreen>(
                             builder: (final BuildContext context) =>
@@ -71,11 +69,8 @@ class _PickListState extends State<PickList> {
                             ),
                           ),
                         ),
-                        child: Text("Team info"),
+                        child: Text(e.toString()),
                       ),
-                      SizedBox(
-                        width: 20,
-                      )
                     ],
                   ),
                   leading: AdvancedSwitch(
