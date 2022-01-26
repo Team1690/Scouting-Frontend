@@ -80,9 +80,9 @@ class CompareTeam {
 }
 
 class CompareLineChartData {
-  CompareLineChartData({required this.points});
-
-  List<int> points;
+  CompareLineChartData({required this.points, required this.title});
+  final String title;
+  final List<int> points;
 }
 
 Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
@@ -159,6 +159,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
                   }).toList();
 
                   final CompareLineChartData climbData = CompareLineChartData(
+                    title: "Climb",
                     points: climbPoints,
                   );
 
@@ -175,11 +176,13 @@ Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
 
                   final CompareLineChartData upperScoredDataTeleLineChart =
                       CompareLineChartData(
+                    title: "Teleop upper",
                     points: upperScoredDataTele,
                   );
 
                   final CompareLineChartData upperMissedDataTeleLineChart =
                       CompareLineChartData(
+                    title: "Teleop missed",
                     points: upperMissedDataTele,
                   );
 
@@ -196,11 +199,13 @@ Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
 
                   final CompareLineChartData upperScoredDataAutoLinechart =
                       CompareLineChartData(
+                    title: "Auto upper",
                     points: upperScoredDataAuto,
                   );
 
                   final CompareLineChartData upperMissedDataAutoLinechart =
                       CompareLineChartData(
+                    title: "Auto missed",
                     points: upperMissedDataAuto,
                   );
 
@@ -334,28 +339,21 @@ class _CompareScreenState extends State<CompareScreen> {
                     children: <Widget>[
                       Expanded(
                         flex: 4,
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 3,
-                              child: DashboardCard(
-                                title: "Game Chart",
-                                body: teams.isEmpty || snapshot.data == null
-                                    ? noTeamSelected()
-                                    : !(snapshot.connectionState ==
-                                            ConnectionState.waiting)
-                                        ? gameChartWidget(snapshot.data!)
-                                        : Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                              ),
-                            )
-                          ],
+                        child: DashboardCard(
+                          title: "Game Chart",
+                          body: teams.isEmpty || snapshot.data == null
+                              ? noTeamSelected()
+                              : !(snapshot.connectionState ==
+                                      ConnectionState.waiting)
+                                  ? gameChartWidget(snapshot.data!)
+                                  : Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
                         ),
                       ),
                       SizedBox(width: defaultPadding),
                       Expanded(
-                        flex: 2,
+                        flex: 4,
                         child: DashboardCard(
                           title: "Compare Spider Chart",
                           body: Builder(
@@ -368,7 +366,9 @@ class _CompareScreenState extends State<CompareScreen> {
                                         ? Center(
                                             child: CircularProgressIndicator(),
                                           )
-                                        : spiderChartWidget(snapshot.data!),
+                                        : spiderChartWidget(
+                                            snapshot.data!,
+                                          ),
                               );
                             },
                           ),
@@ -441,6 +441,69 @@ Widget spiderChartWidget(final SplayTreeSet<CompareTeam> data) {
         );
 }
 
+Widget lineChart(final List<CompareLineChartData> data) => Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment(-1, -1),
+          child: Text(data[0].title),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: 20.0,
+            left: 20.0,
+            right: 20.0,
+            top: 40,
+          ),
+          child: DashboardLineChart(
+            distanceFromHighest: 4,
+            dataSet: data
+                .map(
+                  (
+                    final CompareLineChartData e,
+                  ) =>
+                      e.points,
+                )
+                .map(
+                  (final List<int> e) =>
+                      e.map((final int e) => e.toDouble()).toList(),
+                )
+                .toList(),
+          ),
+        ),
+      ],
+    );
+
+Widget climbLineChart(final List<CompareLineChartData> data) => Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment(-1, -1),
+          child: Text(data[0].title),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: 20.0,
+            left: 40.0,
+            right: 20.0,
+            top: 40,
+          ),
+          child: DashBoardClimbLineChart(
+            dataSet: data
+                .map(
+                  (
+                    final CompareLineChartData e,
+                  ) =>
+                      e.points,
+                )
+                .map(
+                  (final List<int> e) =>
+                      e.map((final int e) => e.toDouble()).toList(),
+                )
+                .toList(),
+          ),
+        ),
+      ],
+    );
+
 Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
   final Iterable<CompareTeam> emptyTeams = data.where(
     (final CompareTeam element) => element.climbData.points.length < 2,
@@ -490,175 +553,13 @@ Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
                 element.points.length,
               );
             }
-            if (longestList < 2) {
-              return Text(
-                "Can't show team with less than 2 entries :(",
-              );
-            }
             return CarouselWithIndicator(
               widgets: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment(-1, -1),
-                      child: Text(
-                        "Auto upper scored",
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 20.0,
-                        left: 20.0,
-                        right: 20.0,
-                        top: 40,
-                      ),
-                      child: DashboardLineChart(
-                        distanceFromHighest: 4,
-                        dataSet: autoScored
-                            .map(
-                              (
-                                final CompareLineChartData e,
-                              ) =>
-                                  e.points,
-                            )
-                            .map(
-                              (final List<int> e) =>
-                                  e.map((final int e) => e.toDouble()).toList(),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                  ],
-                ),
-                Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment(-1, -1),
-                      child: Text(
-                        "Auto upper missed",
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 20.0,
-                        left: 20.0,
-                        right: 20.0,
-                        top: 40,
-                      ),
-                      child: DashboardLineChart(
-                        distanceFromHighest: 4,
-                        dataSet: autoMissed
-                            .map(
-                              (
-                                final CompareLineChartData e,
-                              ) =>
-                                  e.points,
-                            )
-                            .map(
-                              (final List<int> e) =>
-                                  e.map((final int e) => e.toDouble()).toList(),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                  ],
-                ),
-                Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment(-1, -1),
-                      child: Text(
-                        "Teleop upper scored",
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 20.0,
-                        left: 20.0,
-                        right: 20.0,
-                        top: 40,
-                      ),
-                      child: DashboardLineChart(
-                        distanceFromHighest: 4,
-                        dataSet: teleScored
-                            .map(
-                              (
-                                final CompareLineChartData e,
-                              ) =>
-                                  e.points,
-                            )
-                            .map(
-                              (final List<int> e) =>
-                                  e.map((final int e) => e.toDouble()).toList(),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                  ],
-                ),
-                Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment(-1, -1),
-                      child: Text(
-                        "Tele upper missed",
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 20.0,
-                        left: 20.0,
-                        right: 20.0,
-                        top: 40,
-                      ),
-                      child: DashboardLineChart(
-                        distanceFromHighest: 4,
-                        dataSet: teleMissed
-                            .map(
-                              (
-                                final CompareLineChartData e,
-                              ) =>
-                                  e.points,
-                            )
-                            .map(
-                              (final List<int> e) =>
-                                  e.map((final int e) => e.toDouble()).toList(),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                  ],
-                ),
-                Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment(-1, -1),
-                      child: Text("Climb"),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 40.0,
-                        left: 40.0,
-                        right: 20.0,
-                        top: 40,
-                      ),
-                      child: DashBoardClimbLineChart(
-                        dataSet: climb
-                            .map(
-                              (
-                                final CompareLineChartData e,
-                              ) =>
-                                  e.points,
-                            )
-                            .map(
-                              (final List<int> e) =>
-                                  e.map((final int e) => e.toDouble()).toList(),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                  ],
-                )
+                lineChart(autoScored),
+                lineChart(autoMissed),
+                lineChart(teleScored),
+                lineChart(teleMissed),
+                climbLineChart(climb)
               ],
             );
           },
