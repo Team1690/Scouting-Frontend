@@ -156,7 +156,9 @@ class DashBoardClimbLineChart<E extends num> extends StatelessWidget {
                   .entries
                   .map(
                     (final MapEntry<int, E> entry) => FlSpot(
-                        entry.key.toDouble() + 1, entry.value.toDouble()),
+                      entry.key.toDouble() + 1,
+                      entry.value.toDouble(),
+                    ),
                   )
                   .toList(),
             );

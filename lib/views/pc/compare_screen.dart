@@ -455,11 +455,12 @@ Widget lineChart(final List<CompareLineChartData<int>> data) => Stack(
             right: 20.0,
             top: 40,
           ),
-          child: DashboardLineChart(
+          child: DashboardLineChart<int>(
             distanceFromHighest: 4,
             dataSet: data
-                .map((final CompareLineChartData<int> e) =>
-                    e.points.cast<double>())
+                .map(
+                  (final CompareLineChartData<int> e) => e.points,
+                )
                 .toList(),
           ),
         ),
@@ -479,10 +480,11 @@ Widget climbLineChart(final List<CompareLineChartData<int>> data) => Stack(
             right: 20.0,
             top: 40,
           ),
-          child: DashBoardClimbLineChart(
+          child: DashBoardClimbLineChart<int>(
             dataSet: data
-                .map((final CompareLineChartData<int> e) =>
-                    e.points.cast<double>())
+                .map(
+                  (final CompareLineChartData<int> e) => e.points,
+                )
                 .toList(),
           ),
         ),
