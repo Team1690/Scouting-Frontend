@@ -38,28 +38,24 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: widget.widgets
-              .asMap()
-              .entries
-              .map(
-                (final MapEntry<int, Widget> entry) => GestureDetector(
-                  onTap: () => _controller.animateToPage(entry.key),
-                  child: Container(
-                    width: 12.0,
-                    height: 12.0,
-                    margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black)
-                          .withOpacity(_current == entry.key ? 0.9 : 0.4),
-                    ),
-                  ),
+          children: List<Widget>.generate(
+            widget.widgets.length,
+            (final int index) => GestureDetector(
+              onTap: () => _controller.animateToPage(index),
+              child: Container(
+                width: 12.0,
+                height: 12.0,
+                margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black)
+                      .withOpacity(_current == index ? 0.9 : 0.4),
                 ),
-              )
-              .toList(),
+              ),
+            ),
+          ).toList(),
         ),
       ],
     );
