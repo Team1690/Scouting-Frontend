@@ -220,7 +220,7 @@ Future<List<ScatterData>> fetchScatterData() async {
                 final double xBallPointsAvg =
                     avgTeleLower + avgAutoLower + avgTeleUpper + avgAutoUpper;
                 final List<dynamic> matches = e["matches"] as List<dynamic>;
-                final List<int> matchBallPoints = matches
+                final Iterable<int> matchBallPoints = matches
                     .map(
                       (final dynamic e) => ((e["auto_lower"] as int) * 2 +
                           (e["tele_lower"] as int) * 1 +
