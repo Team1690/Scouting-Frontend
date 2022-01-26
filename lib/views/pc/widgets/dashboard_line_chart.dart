@@ -4,7 +4,7 @@ import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 
-class DashboardLineChart extends StatelessWidget {
+class DashboardLineChart<E extends num> extends StatelessWidget {
   const DashboardLineChart({
     required this.dataSet,
     this.distanceFromHighest = 5,
@@ -12,13 +12,12 @@ class DashboardLineChart extends StatelessWidget {
   });
   final List<Color> inputedColors;
   final int distanceFromHighest;
-  final List<List<double>> dataSet;
+  final List<List<E>> dataSet;
 
   @override
   Widget build(final BuildContext context) {
-    final double highestValue = dataSet
-        .map((final List<double> points) => points.reduce(max))
-        .reduce(max);
+    final num highestValue =
+        dataSet.map((final List<E> points) => points.reduce(max)).reduce(max);
     return LineChart(
       LineChartData(
         lineBarsData:
@@ -40,8 +39,8 @@ class DashboardLineChart extends StatelessWidget {
                 .asMap()
                 .entries
                 .map(
-                  (final MapEntry<int, double> entry) =>
-                      FlSpot(entry.key.toDouble() + 1, entry.value),
+                  (final MapEntry<int, E> entry) =>
+                      FlSpot(entry.key.toDouble() + 1, entry.value.toDouble()),
                 )
                 .toList(),
           );
@@ -101,19 +100,19 @@ class DashboardLineChart extends StatelessWidget {
         ),
         minX: 1,
         minY: 0,
-        maxY: highestValue + distanceFromHighest,
+        maxY: highestValue.toDouble() + distanceFromHighest,
       ),
     );
   }
 }
 
-class DashBoardClimbLineChart extends StatelessWidget {
+class DashBoardClimbLineChart<E extends num> extends StatelessWidget {
   const DashBoardClimbLineChart({
     required this.dataSet,
     this.inputedColors = const <Color>[],
   });
   final List<Color> inputedColors;
-  final List<List<double>> dataSet;
+  final List<List<E>> dataSet;
 
   @override
   Widget build(final BuildContext context) => LineChart(
@@ -156,8 +155,8 @@ class DashBoardClimbLineChart extends StatelessWidget {
                   .asMap()
                   .entries
                   .map(
-                    (final MapEntry<int, double> entry) =>
-                        FlSpot(entry.key.toDouble() + 1, entry.value),
+                    (final MapEntry<int, E> entry) => FlSpot(
+                        entry.key.toDouble() + 1, entry.value.toDouble()),
                   )
                   .toList(),
             );

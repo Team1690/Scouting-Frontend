@@ -152,19 +152,14 @@ Widget lineChart(final LineChartData data) => Stack(
             right: 20.0,
             top: 40,
           ),
-          child: DashboardLineChart(
+          child: DashboardLineChart<int>(
             inputedColors: <Color>[
               Colors.green,
               Colors.red,
               Colors.yellow[700]!
             ],
             distanceFromHighest: 4,
-            dataSet: data.points
-                .map(
-                  (final List<int> e) =>
-                      e.map((final int e) => e.toDouble()).toList(),
-                )
-                .toList(),
+            dataSet: data.points,
           ),
         ),
       ],
@@ -188,13 +183,8 @@ Widget gameChartWidgets(final Team data) {
               right: 20.0,
               top: 40,
             ),
-            child: DashBoardClimbLineChart(
-              dataSet: data.climbData.points
-                  .map(
-                    (final List<int> e) =>
-                        e.map((final int e) => e.toDouble()).toList(),
-                  )
-                  .toList(),
+            child: DashBoardClimbLineChart<int>(
+              dataSet: data.climbData.points,
             ),
           ),
         ],

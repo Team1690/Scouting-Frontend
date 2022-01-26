@@ -72,17 +72,17 @@ class CompareTeam {
   final double teleUpperScoredPercentage;
   final double avgClimbPoints;
   final double climbPercentage;
-  final CompareLineChartData climbData;
-  final CompareLineChartData upperScoredDataTele;
-  final CompareLineChartData upperMissedDataTele;
-  final CompareLineChartData upperScoredDataAuto;
-  final CompareLineChartData upperMissedDataAuto;
+  final CompareLineChartData<int> climbData;
+  final CompareLineChartData<int> upperScoredDataTele;
+  final CompareLineChartData<int> upperMissedDataTele;
+  final CompareLineChartData<int> upperScoredDataAuto;
+  final CompareLineChartData<int> upperMissedDataAuto;
 }
 
-class CompareLineChartData {
+class CompareLineChartData<E extends num> {
   CompareLineChartData({required this.points, required this.title});
   final String title;
-  final List<int> points;
+  final List<E> points;
 }
 
 Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
@@ -158,7 +158,8 @@ Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
                     throw Exception("Not a climb value");
                   }).toList();
 
-                  final CompareLineChartData climbData = CompareLineChartData(
+                  final CompareLineChartData<int> climbData =
+                      CompareLineChartData<int>(
                     title: "Climb",
                     points: climbPoints,
                   );
@@ -174,14 +175,14 @@ Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
                           )
                           .toList();
 
-                  final CompareLineChartData upperScoredDataTeleLineChart =
-                      CompareLineChartData(
+                  final CompareLineChartData<int> upperScoredDataTeleLineChart =
+                      CompareLineChartData<int>(
                     title: "Teleop upper",
                     points: upperScoredDataTele,
                   );
 
-                  final CompareLineChartData upperMissedDataTeleLineChart =
-                      CompareLineChartData(
+                  final CompareLineChartData<int> upperMissedDataTeleLineChart =
+                      CompareLineChartData<int>(
                     title: "Teleop missed",
                     points: upperMissedDataTele,
                   );
@@ -197,14 +198,14 @@ Future<SplayTreeSet<CompareTeam>> fetchData(final List<int> ids) async {
                           )
                           .toList();
 
-                  final CompareLineChartData upperScoredDataAutoLinechart =
-                      CompareLineChartData(
+                  final CompareLineChartData<int> upperScoredDataAutoLinechart =
+                      CompareLineChartData<int>(
                     title: "Auto upper",
                     points: upperScoredDataAuto,
                   );
 
-                  final CompareLineChartData upperMissedDataAutoLinechart =
-                      CompareLineChartData(
+                  final CompareLineChartData<int> upperMissedDataAutoLinechart =
+                      CompareLineChartData<int>(
                     title: "Auto missed",
                     points: upperMissedDataAuto,
                   );
@@ -441,7 +442,7 @@ Widget spiderChartWidget(final SplayTreeSet<CompareTeam> data) {
         );
 }
 
-Widget lineChart(final List<CompareLineChartData> data) => Stack(
+Widget lineChart(final List<CompareLineChartData<int>> data) => Stack(
       children: <Widget>[
         Align(
           alignment: Alignment(-1, -1),
@@ -457,14 +458,15 @@ Widget lineChart(final List<CompareLineChartData> data) => Stack(
           child: DashboardLineChart(
             distanceFromHighest: 4,
             dataSet: data
-                .map((final CompareLineChartData e) => e.points.cast<double>())
+                .map((final CompareLineChartData<int> e) =>
+                    e.points.cast<double>())
                 .toList(),
           ),
         ),
       ],
     );
 
-Widget climbLineChart(final List<CompareLineChartData> data) => Stack(
+Widget climbLineChart(final List<CompareLineChartData<int>> data) => Stack(
       children: <Widget>[
         Align(
           alignment: Alignment(-1, -1),
@@ -479,7 +481,8 @@ Widget climbLineChart(final List<CompareLineChartData> data) => Stack(
           ),
           child: DashBoardClimbLineChart(
             dataSet: data
-                .map((final CompareLineChartData e) => e.points.cast<double>())
+                .map((final CompareLineChartData<int> e) =>
+                    e.points.cast<double>())
                 .toList(),
           ),
         ),
@@ -498,19 +501,20 @@ Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
           builder: (
             final BuildContext context,
           ) {
-            final List<CompareLineChartData> teleScored =
-                <CompareLineChartData>[];
+            final List<CompareLineChartData<int>> teleScored =
+                <CompareLineChartData<int>>[];
 
-            final List<CompareLineChartData> teleMissed =
-                <CompareLineChartData>[];
+            final List<CompareLineChartData<int>> teleMissed =
+                <CompareLineChartData<int>>[];
 
-            final List<CompareLineChartData> climb = <CompareLineChartData>[];
+            final List<CompareLineChartData<int>> climb =
+                <CompareLineChartData<int>>[];
 
-            final List<CompareLineChartData> autoScored =
-                <CompareLineChartData>[];
+            final List<CompareLineChartData<int>> autoScored =
+                <CompareLineChartData<int>>[];
 
-            final List<CompareLineChartData> autoMissed =
-                <CompareLineChartData>[];
+            final List<CompareLineChartData<int>> autoMissed =
+                <CompareLineChartData<int>>[];
             for (final CompareTeam item in data) {
               if ((item.climbData.points.length > 1)) {
                 teleScored.add(
@@ -529,7 +533,7 @@ Widget gameChartWidget(final SplayTreeSet<CompareTeam> data) {
               }
             }
             int longestList = -1;
-            for (final CompareLineChartData element in climb) {
+            for (final CompareLineChartData<int> element in climb) {
               longestList = max(
                 longestList,
                 element.points.length,
