@@ -10,21 +10,23 @@ import "package:scouting_frontend/views/pc/widgets/scouting_pit.dart";
 import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
-class TeamInfoData extends StatefulWidget {
+class TeamInfoData<E extends num> extends StatefulWidget {
   TeamInfoData(this.team);
   final LightTeam team;
 
   @override
-  _TeamInfoDataState createState() => _TeamInfoDataState();
+  _TeamInfoDataState<E> createState() => _TeamInfoDataState<E>();
 }
 
-class _TeamInfoDataState extends State<TeamInfoData> {
+class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
   @override
   Widget build(final BuildContext context) {
-    return FutureBuilder<Team>(
-      future: fetchTeamInfo(widget.team),
-      builder:
-          (final BuildContext context, final AsyncSnapshot<Team> snapShot) {
+    return FutureBuilder<Team<E>>(
+      future: fetchTeamInfo<E>(widget.team),
+      builder: (
+        final BuildContext context,
+        final AsyncSnapshot<Team<E>> snapShot,
+      ) {
         if (snapShot.hasError) {
           return Center(child: Text(snapShot.error.toString()));
         } else if (snapShot.connectionState == ConnectionState.waiting) {
@@ -33,7 +35,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
           );
         }
         return snapShot.data.mapNullable<Widget>(
-              (final Team data) => Row(
+              (final Team<E> data) => Row(
                 children: <Widget>[
                   Expanded(
                     flex: 4,
@@ -193,7 +195,7 @@ Widget quickData(final QuickData data) => SingleChildScrollView(
       ),
     );
 
-Widget lineChart(final LineChartData data) => Stack(
+Widget lineChart<E extends num>(final LineChartData<E> data) => Stack(
       children: <Widget>[
         Align(
           alignment: Alignment(0.7, -1),
@@ -226,7 +228,7 @@ Widget lineChart(final LineChartData data) => Stack(
             right: 20.0,
             top: 40,
           ),
-          child: DashboardLineChart(
+          child: DashboardLineChart<E>(
             inputedColors: <Color>[
               Colors.green,
               Colors.red,
@@ -239,11 +241,11 @@ Widget lineChart(final LineChartData data) => Stack(
       ],
     );
 
-Widget gameChartWidgets(final Team data) {
+Widget gameChartWidgets<E extends num>(final Team<E> data) {
   return CarouselWithIndicator(
     widgets: <Widget>[
-      lineChart(data.upperScoredMissedDataTele),
-      lineChart(data.upperScoredMissedDataAuto),
+      lineChart<E>(data.upperScoredMissedDataTele),
+      lineChart<E>(data.upperScoredMissedDataAuto),
       Stack(
         children: <Widget>[
           Align(
@@ -257,7 +259,7 @@ Widget gameChartWidgets(final Team data) {
               right: 20.0,
               top: 40,
             ),
-            child: DashBoardClimbLineChart(
+            child: DashBoardClimbLineChart<E>(
               dataSet: data.climbData.points,
             ),
           ),
@@ -349,9 +351,9 @@ class SpecificData {
   final List<String> msg;
 }
 
-class LineChartData {
+class LineChartData<E extends num> {
   LineChartData({required this.points, required this.title});
-  List<List<double>> points;
+  List<List<E>> points;
   String title = "";
 }
 
@@ -382,7 +384,7 @@ class PitData {
   final String url;
 }
 
-class Team {
+class Team<E extends num> {
   Team({
     required this.team,
     required this.specificData,
@@ -396,9 +398,9 @@ class Team {
   final SpecificData specificData;
   final PitData? pitViewData;
   final QuickData quickData;
-  final LineChartData climbData;
-  final LineChartData upperScoredMissedDataTele;
-  final LineChartData upperScoredMissedDataAuto;
+  final LineChartData<E> climbData;
+  final LineChartData<E> upperScoredMissedDataTele;
+  final LineChartData<E> upperScoredMissedDataAuto;
 }
 
 double getClimbAverage(final List<String> climbVals) {
@@ -421,13 +423,15 @@ double getClimbAverage(final List<String> climbVals) {
   if (climbVals.isEmpty) {
     return 0;
   } else if (climbVals.length == 1) {
-    climbPoints[0];
+    return climbPoints[0].toDouble();
   }
   return climbPoints.reduce((final int a, final int b) => a + b).toDouble() /
       climbPoints.length;
 }
 
-Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
+Future<Team<E>> fetchTeamInfo<E extends num>(
+  final LightTeam teamForQuery,
+) async {
   final GraphQLClient client = getClient();
 
   final QueryResult result = await client.query(
@@ -511,8 +515,7 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
                 100,
           );
 
-          final List<double> climbPoints =
-              climbVals.map<double>((final String e) {
+          final List<int> climbPoints = climbVals.map<int>((final String e) {
             switch (e) {
               case "Failed":
                 return 0;
@@ -530,27 +533,30 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
             throw Exception("Not a climb value");
           }).toList();
 
-          final LineChartData climbData = LineChartData(
-            points: <List<double>>[climbPoints],
+          final LineChartData<E> climbData = LineChartData<E>(
+            points: <List<E>>[climbPoints.cast<E>()],
             title: "Climb",
           );
 
-          final List<double> upperScoredDataTele =
+          final List<E> upperScoredDataTele =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["tele_upper"] as double)
+                  .map((final dynamic e) => e["tele_upper"] as int)
+                  .cast<E>()
                   .toList();
-          final List<double> upperMissedDataTele =
+          final List<E> upperMissedDataTele =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["tele_upper_missed"] as double)
-                  .toList();
-
-          final List<double> lowerScoredDataTele =
-              (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["tele_lower"] as double)
+                  .map((final dynamic e) => e["tele_upper_missed"] as int)
+                  .cast<E>()
                   .toList();
 
-          final LineChartData upperScoredMissedDataTele = LineChartData(
-            points: <List<double>>[
+          final List<E> lowerScoredDataTele =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["tele_lower"] as int)
+                  .cast<E>()
+                  .toList();
+
+          final LineChartData<E> upperScoredMissedDataTele = LineChartData<E>(
+            points: <List<E>>[
               upperScoredDataTele,
               upperMissedDataTele,
               lowerScoredDataTele
@@ -558,27 +564,30 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
             title: "Teleoperated",
           );
 
-          final List<double> upperScoredDataAuto =
+          final List<E> upperScoredDataAuto =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["auto_upper"] as double)
-                  .toList();
-          final List<double> upperMissedDataAuto =
+                  .map((final dynamic e) => e["auto_upper"] as int)
+                  .toList()
+                  .cast<E>();
+          final List<E> upperMissedDataAuto =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["auto_upper_missed"] as double)
+                  .map((final dynamic e) => e["auto_upper_missed"] as int)
+                  .cast<E>()
                   .toList();
-          final List<double> lowerScoredDataAuto =
+          final List<E> lowerScoredDataAuto =
               (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["auto_lower"] as double)
+                  .map((final dynamic e) => e["auto_lower"] as int)
+                  .cast<E>()
                   .toList();
-          final LineChartData upperScoredMissedDataAuto = LineChartData(
-            points: <List<double>>[
+          final LineChartData<E> upperScoredMissedDataAuto = LineChartData<E>(
+            points: <List<E>>[
               upperScoredDataAuto,
               upperMissedDataAuto,
               lowerScoredDataAuto
             ],
             title: "Autonomouse",
           );
-          return Team(
+          return Team<E>(
             team: teamForQuery,
             specificData: specificData,
             pitViewData: pitData,

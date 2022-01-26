@@ -12,6 +12,7 @@ class DashboardScaffold extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // appBar: AppBar(title: Text('Orbit Scouting')),
       body: SafeArea(
         child: Row(
