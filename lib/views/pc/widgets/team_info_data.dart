@@ -119,7 +119,7 @@ Upper Shooting auto success rate: ${!data.scorePercentAutoUpper.isNaN ? data.sco
       ),
     );
 
-Widget lineChart(final LineChartData data) => Stack(
+Widget lineChart<E extends num>(final LineChartData<E> data) => Stack(
       children: <Widget>[
         Align(
           alignment: Alignment(0.7, -1),
@@ -152,7 +152,7 @@ Widget lineChart(final LineChartData data) => Stack(
             right: 20.0,
             top: 40,
           ),
-          child: DashboardLineChart<int>(
+          child: DashboardLineChart<E>(
             inputedColors: <Color>[
               Colors.green,
               Colors.red,
@@ -275,9 +275,9 @@ class SpecificData {
   final List<String> msg;
 }
 
-class LineChartData {
+class LineChartData<E extends num> {
   LineChartData({required this.points, required this.title});
-  List<List<int>> points;
+  List<List<E>> points;
   String title = "";
 }
 
@@ -322,9 +322,9 @@ class Team {
   final SpecificData specificData;
   final PitData? pitViewData;
   final QuickData quickData;
-  final LineChartData climbData;
-  final LineChartData upperScoredMissedDataTele;
-  final LineChartData upperScoredMissedDataAuto;
+  final LineChartData<int> climbData;
+  final LineChartData<int> upperScoredMissedDataTele;
+  final LineChartData<int> upperScoredMissedDataAuto;
 }
 
 double getClimbAverage(final List<String> climbVals) {
@@ -458,7 +458,7 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
             throw Exception("Not a climb value");
           }).toList();
 
-          final LineChartData climbData = LineChartData(
+          final LineChartData<int> climbData = LineChartData<int>(
             points: <List<int>>[climbPoints],
             title: "Climb",
           );
@@ -477,7 +477,8 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
                   .map((final dynamic e) => e["tele_lower"] as int)
                   .toList();
 
-          final LineChartData upperScoredMissedDataTele = LineChartData(
+          final LineChartData<int> upperScoredMissedDataTele =
+              LineChartData<int>(
             points: <List<int>>[
               upperScoredDataTele,
               upperMissedDataTele,
@@ -498,7 +499,8 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["auto_lower"] as int)
                   .toList();
-          final LineChartData upperScoredMissedDataAuto = LineChartData(
+          final LineChartData<int> upperScoredMissedDataAuto =
+              LineChartData<int>(
             points: <List<int>>[
               upperScoredDataAuto,
               upperMissedDataAuto,
