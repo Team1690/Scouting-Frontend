@@ -57,8 +57,8 @@ class _NavigationTab extends State<NavigationTab> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute<CompareScreen>(
-                  builder: (final BuildContext context) => CompareScreen(),
+                MaterialPageRoute<CompareScreen<int>>(
+                  builder: (final BuildContext context) => CompareScreen<int>(),
                 ),
               );
             },

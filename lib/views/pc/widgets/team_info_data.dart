@@ -10,22 +10,22 @@ import "package:scouting_frontend/views/pc/widgets/scouting_pit.dart";
 import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
-class TeamInfoData extends StatefulWidget {
+class TeamInfoData<E extends num> extends StatefulWidget {
   TeamInfoData(this.team);
   final LightTeam team;
 
   @override
-  _TeamInfoDataState createState() => _TeamInfoDataState();
+  _TeamInfoDataState<E> createState() => _TeamInfoDataState<E>();
 }
 
-class _TeamInfoDataState extends State<TeamInfoData> {
+class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
   @override
   Widget build(final BuildContext context) {
-    return FutureBuilder<Team<int>>(
-      future: fetchTeamInfo<int>(widget.team),
+    return FutureBuilder<Team<E>>(
+      future: fetchTeamInfo<E>(widget.team),
       builder: (
         final BuildContext context,
-        final AsyncSnapshot<Team<int>> snapShot,
+        final AsyncSnapshot<Team<E>> snapShot,
       ) {
         if (snapShot.hasError) {
           return Center(child: Text(snapShot.error.toString()));
@@ -35,7 +35,7 @@ class _TeamInfoDataState extends State<TeamInfoData> {
           );
         }
         return snapShot.data.mapNullable<Widget>(
-              (final Team<int> data) => Row(
+              (final Team<E> data) => Row(
                 children: <Widget>[
                   Expanded(
                     flex: 4,
@@ -349,7 +349,7 @@ double getClimbAverage(final List<String> climbVals) {
   if (climbVals.isEmpty) {
     return 0;
   } else if (climbVals.length == 1) {
-    climbPoints[0];
+    return climbPoints[0].toDouble();
   }
   return climbPoints.reduce((final int a, final int b) => a + b).toDouble() /
       climbPoints.length;

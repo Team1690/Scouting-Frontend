@@ -239,12 +239,12 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
   });
 }
 
-class CompareScreen extends StatefulWidget {
+class CompareScreen<E extends num> extends StatefulWidget {
   @override
-  _CompareScreenState createState() => _CompareScreenState();
+  _CompareScreenState<E> createState() => _CompareScreenState<E>();
 }
 
-class _CompareScreenState extends State<CompareScreen> {
+class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
   final SplayTreeSet<LightTeam> teams = SplayTreeSet<LightTeam>(
     (final LightTeam p0, final LightTeam p1) => p0.id.compareTo(p1.id),
   );
@@ -258,15 +258,15 @@ class _CompareScreenState extends State<CompareScreen> {
 
   @override
   Widget build(final BuildContext context) {
-    return FutureBuilder<SplayTreeSet<CompareTeam<int>>>(
+    return FutureBuilder<SplayTreeSet<CompareTeam<E>>>(
       future: teams.isEmpty
-          ? Future<SplayTreeSet<CompareTeam<int>>>(
-              always(SplayTreeSet<CompareTeam<int>>()),
+          ? Future<SplayTreeSet<CompareTeam<E>>>(
+              always(SplayTreeSet<CompareTeam<E>>()),
             )
-          : fetchData<int>(teams.map((final LightTeam e) => e.id).toList()),
+          : fetchData<E>(teams.map((final LightTeam e) => e.id).toList()),
       builder: (
         final BuildContext context,
-        final AsyncSnapshot<SplayTreeSet<CompareTeam<int>>?> snapshot,
+        final AsyncSnapshot<SplayTreeSet<CompareTeam<E>>?> snapshot,
       ) {
         if (snapshot.hasError) {
           return DashboardScaffold(body: Text(snapshot.error!.toString()));
