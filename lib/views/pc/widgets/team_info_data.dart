@@ -100,22 +100,96 @@ class _TeamInfoDataState extends State<TeamInfoData> {
 }
 
 Widget quickData(final QuickData data) => SingleChildScrollView(
-      child: Text(
-        """
-Average auto upper scored: ${data.avgAutoUpperScored.toStringAsFixed(3)}
-Average auto upper missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}
-Average auto low scored: ${data.avgAutoLowScored.toStringAsFixed(3)}
-
-Average tele upper scored: ${data.avgTeleUpperScored.toStringAsFixed(3)}
-Average tele upper missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}
-Average tele low scored: ${data.avgTeleLowScored.toStringAsFixed(3)}
-
-Average points from balls: ${data.avgBallPoints.toStringAsFixed(3)}
-Average points from climb: ${data.avgClimbPoints.toStringAsFixed(3)}
-
-Upper Shooting teleop success rate: ${!data.scorePercentTeleUpper.isNaN ? data.scorePercentTeleUpper.round() : "Not a number"}%
-Upper Shooting auto success rate: ${!data.scorePercentAutoUpper.isNaN ? data.scorePercentAutoUpper.round() : "Not a number"}%
-""",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "Auto",
+            style: TextStyle(fontSize: 18),
+          ),
+          Row(
+            children: <Widget>[
+              Spacer(),
+              Text(
+                "Upper: ${data.avgAutoUpperScored.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.green),
+              ),
+              Spacer(),
+              Text(
+                "Lower: ${data.avgAutoLowScored.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.yellow),
+              ),
+              Spacer(),
+              Text(
+                "Missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.red),
+              ),
+              Spacer()
+            ],
+          ),
+          Text(
+            "Teleop",
+            style: TextStyle(fontSize: 18),
+          ),
+          Row(
+            children: <Widget>[
+              Spacer(),
+              Text(
+                "Upper: ${data.avgTeleUpperScored.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.green),
+              ),
+              Spacer(),
+              Text(
+                "Lower: ${data.avgTeleLowScored.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.yellow),
+              ),
+              Spacer(),
+              Text(
+                "Missed: ${data.avgTeleUpperMissed.toStringAsFixed(3)}",
+                style: TextStyle(color: Colors.red),
+              ),
+              Spacer()
+            ],
+          ),
+          Text(
+            "Points",
+            style: TextStyle(fontSize: 18),
+          ),
+          Row(
+            children: <Widget>[
+              Spacer(
+                flex: 3,
+              ),
+              Text("Balls: ${data.avgBallPoints.toStringAsFixed(3)}"),
+              Spacer(),
+              Text("Climb: ${data.avgClimbPoints.toStringAsFixed(3)}"),
+              Spacer(
+                flex: 3,
+              ),
+            ],
+          ),
+          Text(
+            "Upper Aim",
+            style: TextStyle(fontSize: 18),
+          ),
+          Row(
+            children: <Widget>[
+              Spacer(
+                flex: 3,
+              ),
+              Text(
+                "Teleop: ${!data.scorePercentTeleUpper.isNaN ? "${data.scorePercentTeleUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+              ),
+              Spacer(),
+              Text(
+                "Autonomouse: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+              ),
+              Spacer(
+                flex: 3,
+              )
+            ],
+          ),
+        ],
       ),
     );
 
@@ -201,10 +275,10 @@ query MyQuery(\$id: Int!) {
       drive_train_reliability
       drive_wheel_type
       electronics_reliability
-      gearbox
+      gearbox_purchased
       notes
       robot_reliability
-      shifter
+      has_shifter
       url
       drivetrain {
         title
@@ -289,17 +363,17 @@ class PitData {
     required this.driveTrainReliability,
     required this.driveWheelType,
     required this.electronicsReliability,
-    required this.gearbox,
+    required this.gearboxPurchased,
     required this.notes,
     required this.robotReliability,
-    required this.shifter,
+    required this.hasShifer,
     required this.url,
   });
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;
-  final String shifter;
-  final String gearbox;
+  final bool? hasShifer;
+  final bool? gearboxPurchased;
   final String driveMotorType;
   final int driveTrainReliability;
   final int electronicsReliability;
@@ -364,7 +438,6 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
       },
     ),
   );
-
   return result.mapQueryResult(
     (final Map<String, dynamic>? data) =>
         data.mapNullable((final Map<String, dynamic> team) {
@@ -374,7 +447,6 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               : throw Exception("that team doesnt exist");
           final Map<String, dynamic>? pit =
               (teamByPk["pit"] as Map<String, dynamic>?);
-
           final SpecificData specificData = SpecificData(
             (teamByPk["specifics"] as List<dynamic>)
                 .map((final dynamic e) => e["message"] as String)
@@ -387,16 +459,15 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               driveTrainReliability: p0["drive_train_reliability"] as int,
               driveWheelType: p0["drive_wheel_type"] as String,
               electronicsReliability: p0["electronics_reliability"] as int,
-              gearbox: p0["gearbox"] as String,
+              gearboxPurchased: p0["gearbox_purchased"] as bool?,
               notes: p0["notes"] as String,
               robotReliability: p0["robot_reliability"] as int,
-              shifter: p0["shifter"] as String,
+              hasShifer: p0["has_shifter"] as bool?,
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
               driveMotorType: p0["drivemotor"]["title"] as String,
             ),
           );
-
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["auto_lower"] as double? ??
               0;
@@ -505,7 +576,7 @@ Future<Team> fetchTeamInfo(final LightTeam teamForQuery) async {
               upperMissedDataAuto,
               lowerScoredDataAuto
             ],
-            title: "Autonomoose",
+            title: "Autonomouse",
           );
           return Team(
             team: teamForQuery,

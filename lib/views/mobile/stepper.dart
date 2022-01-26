@@ -47,7 +47,7 @@ class CustomStepper extends StatelessWidget {
           icon: Icons.add,
           iconSize: iconSize,
           onPress: () {
-            onChanged(min(upperLimit, value - stepValue));
+            onChanged(min(upperLimit, value + stepValue));
           },
           onLongPress: () {
             onChanged(min(upperLimit, value + longPressStepValue));

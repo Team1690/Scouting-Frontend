@@ -133,11 +133,9 @@ class _PitViewState extends State<PitView> {
                     Colors.white,
                     Colors.white,
                   ],
-                  onChange: (final int selection) => <int, String>{
-                    -1: "No shifter selected",
-                    0: "Has a shifter"
-                  }[selection]
-                      .orElse("No shifter"),
+                  onChange: (final int selection) {
+                    vars.hasShifter = <int, bool>{1: false, 0: true}[selection];
+                  },
                 ),
                 SizedBox(
                   height: 20,
@@ -151,11 +149,10 @@ class _PitViewState extends State<PitView> {
                     Colors.white,
                     Colors.white,
                   ],
-                  onChange: (final int selection) => <int, String>{
-                    1: "Custom Gearbox",
-                    0: "Purchased Greabox"
-                  }[selection]
-                      .orElse("No gearbox selected"),
+                  onChange: (final int selection) {
+                    vars.gearboxPurchased =
+                        <int, bool>{1: false, 0: true}[selection];
+                  },
                 ),
                 SizedBox(
                   height: 20,
@@ -263,10 +260,10 @@ class _PitViewState extends State<PitView> {
             \$drivetrain_id: Int,
             \$drive_wheel_type: String,
             \$electronics_reliability: Int,
-            \$gearbox: String,
+            \$gearbox_purchased: Boolean,
             \$notes:String, 
             \$robot_reliability:Int,
-            \$shifter:String,
+            \$has_shifter:Boolean,
             \$team_id:Int) {
         insert_pit(objects: {
         url: \$url,
@@ -276,26 +273,14 @@ class _PitViewState extends State<PitView> {
         drivetrain_id: \$drivetrain_id,
         drive_wheel_type: \$drive_wheel_type,
         electronics_reliability: \$electronics_reliability,
-        gearbox: \$gearbox,
+        gearbox_purchased: \$gearbox_purchased,
         notes: \$notes,
         robot_reliability: \$robot_reliability,
-        shifter: \$shifter,
+        has_shifter: \$has_shifter,
         team_id: \$team_id
         }) {
             returning {
-                drive_motor_amount
-        drivemotor_id
-        drive_train_reliability
-        drivetrain_id
-        drive_wheel_type
-        electronics_reliability
-        gearbox
-        id
-        notes
-        robot_reliability
-        shifter
-        team_id
-        url
+              url
             }
         }
         }
