@@ -10,7 +10,6 @@ class SpiderChart extends StatelessWidget {
     required final List<String> features,
   }) : this.inner(
           ticks: ticks,
-          numberOfFeatures: numberOfFeatures,
           features: features.sublist(0, numberOfFeatures),
           data: data
               .map((final List<int> e) => e.sublist(0, numberOfFeatures))
@@ -20,11 +19,9 @@ class SpiderChart extends StatelessWidget {
   SpiderChart.inner({
     required this.data,
     required this.features,
-    required this.numberOfFeatures,
     required this.ticks,
   });
 
-  final int numberOfFeatures;
   final List<List<int>> data;
   final List<int> ticks;
   final List<String> features;
@@ -40,7 +37,6 @@ class SpiderChart extends StatelessWidget {
         data: data,
         features: features,
         ticks: ticks,
-        // ticksTextStyle: Theme.of(context).textTheme.subtitle1,
         axisColor: primaryWhite,
         outlineColor: secondaryWhite,
         featuresTextStyle: Theme.of(context).textTheme.bodyText2!,

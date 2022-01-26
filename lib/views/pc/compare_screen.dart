@@ -431,12 +431,12 @@ Widget spiderChartWidget(final SplayTreeSet<CompareTeam> data) {
                   .toList(),
               ticks: <int>[0, 25, 50, 75, 100],
               features: <String>[
-                "auto upper",
-                "auto scoring%",
-                "teleop upper",
-                "teleop scoring%",
-                "climb points",
-                "climb%"
+                "Auto upper",
+                "Auto scoring%",
+                "Teleop upper",
+                "Teleop scoring%",
+                "Climb points",
+                "Climb%"
               ],
             );
           },
