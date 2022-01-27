@@ -352,7 +352,7 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                       ),
                       SizedBox(width: defaultPadding),
                       Expanded(
-                        flex: 4,
+                        flex: 3,
                         child: DashboardCard(
                           title: "Compare Spider Chart",
                           body: Builder(
@@ -365,8 +365,13 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                                         ? Center(
                                             child: CircularProgressIndicator(),
                                           )
-                                        : spiderChartWidget(
-                                            snapshot.data!,
+                                        : Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 40.0,
+                                            ),
+                                            child: spiderChartWidget(
+                                              snapshot.data!,
+                                            ),
                                           ),
                               );
                             },
