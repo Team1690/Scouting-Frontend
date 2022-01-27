@@ -384,7 +384,7 @@ Widget teamData(final CoachViewTeam team) {
                 Text(
                   team.teleopBallAim.isNaN
                       ? "No data :("
-                      : "${team.teleopBallAim.toStringAsFixed(3)}%",
+                      : "${team.autoBallAim.toStringAsFixed(3)}%",
                 )
               ],
             )
