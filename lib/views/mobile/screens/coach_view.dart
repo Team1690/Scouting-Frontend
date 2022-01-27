@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
@@ -76,7 +78,6 @@ class _CoachViewState extends State<CoachView> {
                         ],
                       ),
                     ),
-                    Spacer()
                   ],
                 ),
               ) ??
@@ -94,34 +95,137 @@ query MyQuery {
       id
       name
       number
+      matches_aggregate {
+        aggregate {
+          avg {
+            auto_upper
+            auto_lower
+            tele_lower
+            tele_upper
+            tele_upper_missed
+            auto_upper_missed
+          }
+        }
+        nodes {
+          climb {
+            points
+          }
+        }
+      }
     }
     blue_1_team {
       id
       name
       number
+            matches_aggregate {
+        aggregate {
+          avg {
+            auto_upper
+            auto_lower
+            tele_lower
+            tele_upper
+            tele_upper_missed
+            auto_upper_missed
+          }
+        }
+        nodes {
+          climb {
+            points
+          }
+        }
+      }
     }
     blue_2_team {
       id
       name
       number
+            matches_aggregate {
+        aggregate {
+          avg {
+            auto_upper
+            auto_lower
+            tele_lower
+            tele_upper
+            tele_upper_missed
+            auto_upper_missed
+          }
+        }
+        nodes {
+          climb {
+            points
+          }
+        }
+      }
     }
     red_0_team {
       id
       name
       number
+            matches_aggregate {
+        aggregate {
+          avg {
+            auto_upper
+            auto_lower
+            tele_lower
+            tele_upper
+            tele_upper_missed
+            auto_upper_missed
+          }
+        }
+        nodes {
+          climb {
+            points
+          }
+        }
+      }
     }
     red_1_team {
       id
       name
       number
+            matches_aggregate {
+        aggregate {
+          avg {
+            auto_upper
+            auto_lower
+            tele_lower
+            tele_upper
+            tele_upper_missed
+            auto_upper_missed
+          }
+        }
+        nodes {
+          climb {
+            points
+          }
+        }
+      }
     }
     red_2_team {
       id
       name
       number
+            matches_aggregate {
+        aggregate {
+          avg {
+            auto_upper
+            auto_lower
+            tele_lower
+            tele_upper
+            tele_upper_missed
+            auto_upper_missed
+          }
+        }
+        nodes {
+          climb {
+            points
+          }
+        }
+      }
     }
   }
 }
+
 
 """;
 Future<CoachData> fetchMatch() async {
@@ -131,54 +235,162 @@ Future<CoachData> fetchMatch() async {
   return result.mapQueryResult(
     (final Map<String, dynamic>? data) =>
         data.mapNullable((final Map<String, dynamic> data) {
-          print(data);
           final dynamic match = (data["orbit_matches"] as List<dynamic>).first;
-          final List<LightTeam> blueAlliance = <LightTeam>[
-            LightTeam(
-              match["blue_0_team"]["id"] as int,
-              match["blue_0_team"]["number"] as int,
-              match["blue_0_team"]["name"] as String,
-            ),
-            LightTeam(
-              match["blue_1_team"]["id"] as int,
-              match["blue_1_team"]["number"] as int,
-              match["blue_1_team"]["name"] as String,
-            ),
-            LightTeam(
-              match["blue_2_team"]["id"] as int,
-              match["blue_2_team"]["number"] as int,
-              match["blue_2_team"]["name"] as String,
-            )
-          ];
-          final List<LightTeam> redAlliance = <LightTeam>[
-            LightTeam(
-              match["red_0_team"]["id"] as int,
-              match["red_0_team"]["number"] as int,
-              match["red_0_team"]["name"] as String,
-            ),
-            LightTeam(
-              match["red_1_team"]["id"] as int,
-              match["red_1_team"]["number"] as int,
-              match["red_1_team"]["name"] as String,
-            ),
-            LightTeam(
-              match["red_2_team"]["id"] as int,
-              match["red_2_team"]["number"] as int,
-              match["red_2_team"]["name"] as String,
-            )
-          ];
-          return CoachData(blueAlliance, redAlliance);
+          final List<CoachViewTeam> teams =
+              teamValues.map<CoachViewTeam>((final String e) {
+            final LightTeam team = LightTeam(
+              match[e]["id"] as int,
+              match[e]["number"] as int,
+              match[e]["name"] as String,
+            );
+            final double autoLower = (match[e]["matches_aggregate"]["aggregate"]
+                    ["avg"]["auto_lower"] as double?) ??
+                double.nan;
+
+            final double autoUpper = (match[e]["matches_aggregate"]["aggregate"]
+                    ["avg"]["auto_upper"] as double?) ??
+                double.nan;
+            final double teleLower = (match[e]["matches_aggregate"]["aggregate"]
+                    ["avg"]["tele_lower"] as double?) ??
+                double.nan;
+            final double teleUpper = (match[e]["matches_aggregate"]["aggregate"]
+                    ["avg"]["tele_upper"] as double?) ??
+                double.nan;
+            final double avgBallPoints =
+                autoLower * 2 + autoUpper * 4 + teleLower + teleUpper * 2;
+            final Iterable<int> climb =
+                (match[e]["matches_aggregate"]["nodes"] as List<dynamic>)
+                    .map<int>((final dynamic e) => e["climb"]["points"] as int);
+
+            final double climbAvg = climb.isEmpty
+                ? double.nan
+                : climb.length == 1
+                    ? climb.first.toDouble()
+                    : climb.reduce(
+                          (final int value, final int element) =>
+                              value + element,
+                        ) /
+                        climb.length;
+            final dynamic avg =
+                match[e]["matches_aggregate"]["aggregate"]["avg"];
+            final double autoAim =
+                (((avg["auto_upper"] as double?) ?? double.nan) /
+                        (((avg["auto_upper"] as double?) ?? double.nan) +
+                            ((avg["auto_lower"] as double?) ?? double.nan))) *
+                    100;
+            final double teleAim =
+                (((avg["tele_upper"] as double?) ?? double.nan) /
+                        (((avg["tele_upper"] as double?) ?? double.nan) +
+                            ((avg["tele_lower"] as double?) ?? double.nan))) *
+                    100;
+            return CoachViewTeam(
+              avgBallPoints: avgBallPoints,
+              team: team,
+              avgClimbPoints: climbAvg,
+              autoBallAim: autoAim,
+              teleopBallAim: teleAim,
+            );
+          }).toList();
+
+          return CoachData(teams.sublist(0, 3), teams.sublist(3));
         }) ??
         (throw Exception("No data :(")),
   );
 }
 
-class CoachData {
-  const CoachData(this.blueAlliance, this.redAlliance);
-  final List<LightTeam> blueAlliance;
-  final List<LightTeam> redAlliance;
+const List<String> teamValues = <String>[
+  "blue_0_team",
+  "blue_1_team",
+  "blue_2_team",
+  "red_0_team",
+  "red_1_team",
+  "red_2_team"
+];
+
+class CoachViewTeam {
+  const CoachViewTeam({
+    required this.autoBallAim,
+    required this.avgBallPoints,
+    required this.avgClimbPoints,
+    required this.teleopBallAim,
+    required this.team,
+  });
+  final double avgBallPoints;
+  final double avgClimbPoints;
+  final double teleopBallAim;
+  final double autoBallAim;
+  final LightTeam team;
 }
 
-Widget teamData(final LightTeam team) {
-  return Text(team.number.toString());
+class CoachData {
+  const CoachData(this.blueAlliance, this.redAlliance);
+  final List<CoachViewTeam> blueAlliance;
+  final List<CoachViewTeam> redAlliance;
+}
+
+Widget teamData(final CoachViewTeam team) {
+  if (team.autoBallAim.isNaN) {
+    return Column(
+      children: [
+        Text(
+          team.team.number.toString(),
+          style: TextStyle(fontSize: 20),
+        ),
+        Text("No data :(")
+      ],
+    );
+  }
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Align(
+        alignment: Alignment.center,
+        child: Text(
+          team.team.number.toString(),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight:
+                team.team.number == 1690 ? FontWeight.w900 : FontWeight.normal,
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: Column(
+          children: [
+            Row(
+              children: <Widget>[
+                Text("Ball points: "),
+                Text(team.avgBallPoints.toString()),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text("Climb points: "),
+                Text(team.avgClimbPoints.toStringAsFixed(3)),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text("Teleop aim: "),
+                Text(team.teleopBallAim.isNaN
+                    ? "No data :("
+                    : "${team.teleopBallAim.toStringAsFixed(3)}%")
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text("Auto aim: "),
+                Text(
+                  team.teleopBallAim.isNaN
+                      ? "No data :("
+                      : "${team.teleopBallAim.toStringAsFixed(3)}%",
+                )
+              ],
+            )
+          ],
+        ),
+      )
+    ],
+  );
 }
