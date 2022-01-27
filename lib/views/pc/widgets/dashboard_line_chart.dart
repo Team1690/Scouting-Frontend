@@ -35,14 +35,13 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
                   .map((final Color color) => color.withOpacity(0.3))
                   .toList(),
             ),
-            spots: dataSet[index]
-                .asMap()
-                .entries
-                .map(
-                  (final MapEntry<int, E> entry) =>
-                      FlSpot(entry.key.toDouble() + 1, entry.value.toDouble()),
-                )
-                .toList(),
+            spots: List<FlSpot>.generate(
+              dataSet[index].length,
+              (final int inner) => FlSpot(
+                inner.toDouble() + 1,
+                dataSet[index][inner].toDouble(),
+              ),
+            ),
           );
         }),
         gridData: FlGridData(
@@ -151,16 +150,13 @@ class DashBoardClimbLineChart<E extends num> extends StatelessWidget {
                     .map((final Color color) => color.withOpacity(0.3))
                     .toList(),
               ),
-              spots: dataSet[index]
-                  .asMap()
-                  .entries
-                  .map(
-                    (final MapEntry<int, E> entry) => FlSpot(
-                      entry.key.toDouble() + 1,
-                      entry.value.toDouble(),
-                    ),
-                  )
-                  .toList(),
+              spots: List<FlSpot>.generate(
+                dataSet[index].length,
+                (final int inner) => FlSpot(
+                  inner.toDouble() + 1,
+                  dataSet[index][inner].toDouble(),
+                ),
+              ),
             );
           }),
           gridData: FlGridData(

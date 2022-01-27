@@ -297,27 +297,23 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                       Expanded(
                         flex: 2,
                         child: Row(
-                          children: teams
-                              .toList()
-                              .asMap()
-                              .entries
-                              .map(
-                                (final MapEntry<int, LightTeam> index) =>
-                                    Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: defaultPadding / 2,
-                                  ),
-                                  child: Chip(
-                                    label: Text(
-                                      index.value.number.toString(),
-                                    ),
-                                    backgroundColor: colors[index.key],
-                                    onDeleted: () =>
-                                        setState(() => removeTeam(index)),
-                                  ),
+                          children: List<Padding>.generate(
+                            teams.length,
+                            (final int index) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: defaultPadding / 2,
+                              ),
+                              child: Chip(
+                                label: Text(
+                                  teams.elementAt(index).number.toString(),
                                 ),
-                              )
-                              .toList(),
+                                backgroundColor: colors[index],
+                                onDeleted: () => setState(
+                                  () => teams.remove(teams.elementAt(index)),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       Align(
