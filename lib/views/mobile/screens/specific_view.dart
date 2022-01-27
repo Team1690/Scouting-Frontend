@@ -20,6 +20,7 @@ class _SpecificState extends State<Specific> {
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         title: Text("Specific"),

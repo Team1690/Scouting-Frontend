@@ -585,7 +585,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               upperMissedDataAuto,
               lowerScoredDataAuto
             ],
-            title: "Autonomouse",
+            title: "Autonomous",
           );
           return Team<E>(
             team: teamForQuery,
