@@ -31,7 +31,7 @@ class _NavigationTab extends State<NavigationTab> {
             title: const Text("Team Info"),
             leading: Icon(Icons.info_outline),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<TeamInfoScreen>(
                   builder: (final BuildContext context) => TeamInfoScreen(),
@@ -43,7 +43,7 @@ class _NavigationTab extends State<NavigationTab> {
             title: const Text("Pick List"),
             leading: Icon(Icons.list),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<PickListScreen>(
                   builder: (final BuildContext context) => PickListScreen(),
@@ -55,7 +55,7 @@ class _NavigationTab extends State<NavigationTab> {
             title: const Text("Compare"),
             leading: Icon(Icons.compare_arrows_rounded),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<CompareScreen<int>>(
                   builder: (final BuildContext context) => CompareScreen<int>(),
@@ -67,7 +67,7 @@ class _NavigationTab extends State<NavigationTab> {
             title: const Text("General Scatter"),
             leading: Icon(Icons.bar_chart_rounded),
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<ScattersScreen>(
                   builder: (final BuildContext context) => ScattersScreen(),

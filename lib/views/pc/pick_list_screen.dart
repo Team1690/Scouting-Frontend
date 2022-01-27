@@ -16,6 +16,12 @@ class PickListScreen extends StatefulWidget {
 class _PickListScreenState extends State<PickListScreen> {
   List<PickListTeam> teams = <PickListTeam>[];
 
+  @override
+  void dispose() {
+    saveWithoutSnackbar(teams);
+    super.dispose();
+  }
+
   CurrentPickList currentScreen = CurrentPickList.first;
   @override
   Widget build(final BuildContext context) {
@@ -36,7 +42,8 @@ class _PickListScreenState extends State<PickListScreen> {
                     icon: Icon(Icons.swap_horiz),
                   ),
                   IconButton(
-                    onPressed: save,
+                    onPressed: () =>
+                        save(context, List<PickListTeam>.from(teams)),
                     icon: Icon(Icons.save),
                   ),
                   IconButton(
@@ -57,7 +64,42 @@ class _PickListScreenState extends State<PickListScreen> {
     );
   }
 
-  void save() async {
+  static void saveWithoutSnackbar(final List<PickListTeam> teams) {
+    final GraphQLClient client = getClient();
+    final String query = """
+  mutation M(\$objects: [team_insert_input!]!) {
+  insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index]}) {
+    affected_rows
+    returning {
+      id
+    }
+  }
+}
+
+  """;
+
+    final Map<String, dynamic> vars = <String, dynamic>{
+      "objects": teams
+          .map(
+            (final PickListTeam e) => <String, dynamic>{
+              "id": e.id,
+              "name": e.name,
+              "number": e.number,
+              "first_picklist_index": e.firstListIndex,
+              "second_picklist_index": e.secondListIndex,
+              "taken": e.controller.value
+            },
+          )
+          .toList()
+    };
+
+    client.mutate(MutationOptions(document: gql(query), variables: vars));
+  }
+
+  static void save(
+    final BuildContext context,
+    final List<PickListTeam> teams,
+  ) async {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: Duration(seconds: 5),
@@ -71,7 +113,6 @@ class _PickListScreenState extends State<PickListScreen> {
       ),
     );
     final GraphQLClient client = getClient();
-    final List<PickListTeam> teams = List<PickListTeam>.from(this.teams);
     final String query = """
   mutation M(\$objects: [team_insert_input!]!) {
   insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index]}) {
