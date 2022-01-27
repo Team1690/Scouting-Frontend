@@ -184,7 +184,7 @@ Widget quickData(final QuickData data) => SingleChildScrollView(
               ),
               Spacer(),
               Text(
-                "Autonomouse: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+                "Autonomous: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
               ),
               Spacer(
                 flex: 3,
