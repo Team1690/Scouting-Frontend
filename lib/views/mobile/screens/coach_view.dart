@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
@@ -331,7 +329,7 @@ class CoachData {
 Widget teamData(final CoachViewTeam team) {
   if (team.autoBallAim.isNaN) {
     return Column(
-      children: [
+      children: <Text>[
         Text(
           team.team.number.toString(),
           style: TextStyle(fontSize: 20),
@@ -357,7 +355,7 @@ Widget teamData(final CoachViewTeam team) {
       Padding(
         padding: const EdgeInsets.only(left: 8.0),
         child: Column(
-          children: [
+          children: <Row>[
             Row(
               children: <Widget>[
                 Text("Ball points: "),
@@ -373,9 +371,11 @@ Widget teamData(final CoachViewTeam team) {
             Row(
               children: <Widget>[
                 Text("Teleop aim: "),
-                Text(team.teleopBallAim.isNaN
-                    ? "No data :("
-                    : "${team.teleopBallAim.toStringAsFixed(3)}%")
+                Text(
+                  team.teleopBallAim.isNaN
+                      ? "No data :("
+                      : "${team.teleopBallAim.toStringAsFixed(3)}%",
+                )
               ],
             ),
             Row(
