@@ -35,7 +35,7 @@ class _SideNavBarState extends State<SideNavBar> {
           ListTile(
             leading: Icon(Icons.error_outline),
             title: const Text(
-              "Game input",
+              "Match",
               style: TextStyle(
                 fontSize: 25.0,
                 letterSpacing: 1.0,
