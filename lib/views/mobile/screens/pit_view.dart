@@ -4,7 +4,7 @@ import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/views/mobile/file_picker_widget.dart";
+import "package:scouting_frontend/views/mobile/image_picker_widget.dart";
 import "package:scouting_frontend/views/mobile/firebase_submit_button.dart";
 import "package:scouting_frontend/views/mobile/pit_vars.dart";
 import "package:scouting_frontend/views/mobile/slider.dart";
@@ -27,7 +27,7 @@ class _PitViewState extends State<PitView> {
   XFile? result;
 
   PitVars vars = PitVars();
-
+  final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController wheelTypeController = TextEditingController();
 
   final TextEditingController teamSelectionController = TextEditingController();
@@ -57,6 +57,7 @@ class _PitViewState extends State<PitView> {
         title: Text("Pit"),
       ),
       body: Form(
+        key: formKey,
         child: SingleChildScrollView(
           child: Container(
             margin: const EdgeInsets.symmetric(
@@ -126,6 +127,9 @@ class _PitViewState extends State<PitView> {
                   height: 20,
                 ),
                 Switcher(
+                  selected: vars.hasShifter
+                          .mapNullable((final bool p0) => p0 ? 0 : 1) ??
+                      -1,
                   labels: <String>[
                     "Shifter",
                     "No shifter",
@@ -135,13 +139,19 @@ class _PitViewState extends State<PitView> {
                     Colors.white,
                   ],
                   onChange: (final int selection) {
-                    vars.hasShifter = <int, bool>{1: false, 0: true}[selection];
+                    setState(() {
+                      vars.hasShifter =
+                          <int, bool>{1: false, 0: true}[selection];
+                    });
                   },
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Switcher(
+                  selected: vars.gearboxPurchased
+                          .mapNullable((final bool p0) => p0 ? 0 : 1) ??
+                      -1,
                   labels: <String>[
                     "Purchased GearBox",
                     "Custom GearBox",
@@ -151,8 +161,10 @@ class _PitViewState extends State<PitView> {
                     Colors.white,
                   ],
                   onChange: (final int selection) {
-                    vars.gearboxPurchased =
-                        <int, bool>{1: false, 0: true}[selection];
+                    setState(() {
+                      vars.gearboxPurchased =
+                          <int, bool>{1: false, 0: true}[selection];
+                    });
                   },
                 ),
                 SizedBox(
@@ -221,7 +233,9 @@ class _PitViewState extends State<PitView> {
                   height: 8,
                 ),
                 SectionDivider(label: "Robot Image"),
-                FilePickerWidget(
+                ImagePickerWidget(
+                  validate: (final XFile? p0) =>
+                      p0.onNull("Please pick an Image"),
                   controller: advancedSwitchController,
                   onImagePicked: (final XFile newResult) => result = newResult,
                 ),
@@ -250,6 +264,7 @@ class _PitViewState extends State<PitView> {
                   height: 20,
                 ),
                 FireBaseSubmitButton(
+                  validate: () => formKey.currentState!.validate(),
                   getResult: () => result,
                   mutation: """
         mutation MyMutation(

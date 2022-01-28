@@ -13,9 +13,11 @@ class FireBaseSubmitButton extends StatefulWidget {
     required this.mutation,
     required this.getResult,
     required this.resetForm,
+    required this.validate,
   });
   final HasuraVars vars;
   final String mutation;
+  final bool Function() validate;
   final void Function() resetForm;
   final XFile? Function() getResult;
 
@@ -86,13 +88,9 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
             widget.vars.toHasuraVars(context)["team_id"] as int?;
         final XFile? file = widget.getResult();
 
-        if (teamid == null || file == null) {
+        if (!widget.validate()) {
           setState(() {
-            if (teamid == null && file == null) {
-              errorMessage = "Pick a Team and File";
-            } else {
-              errorMessage = teamid == null ? "Pick a Team" : "Pick a File";
-            }
+            errorMessage = "Input Error";
             _state = ButtonState.fail;
           });
 
@@ -103,8 +101,8 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           return;
         } else {
           uploadResult(
-            teamid,
-            file,
+            teamid!,
+            file!,
           );
         }
       },
