@@ -110,13 +110,12 @@ void sendMatches(
     },
   );
 
-  final a = client.mutate(
+  client.mutate(
     MutationOptions(
       document: gql(mutation),
       variables: <String, dynamic>{"matches": vars.toList()},
     ),
   );
-  a.then(print);
 }
 
 class Match {
