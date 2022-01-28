@@ -7,6 +7,7 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/image_picker_widget.dart";
 import "package:scouting_frontend/views/mobile/firebase_submit_button.dart";
 import "package:scouting_frontend/views/mobile/pit_vars.dart";
+import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/slider.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/team_selection_future.dart";
@@ -53,6 +54,7 @@ class _PitViewState extends State<PitView> {
     return GestureDetector(
       onTap: node.unfocus,
       child: Scaffold(
+        drawer: SideNavBar(),
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
