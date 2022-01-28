@@ -33,49 +33,42 @@ class _CoachViewState extends State<CoachView> {
             );
           }
           return snapshot.data.mapNullable(
-                (final CoachData data) => Column(
+                (final CoachData data) => Row(
                   children: <Widget>[
                     Expanded(
-                      flex: 3,
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                child: Column(
-                                  children: List<Widget>.generate(
-                                    3,
-                                    (final int index) => Expanded(
-                                      flex: 2,
-                                      child: teamData(data.blueAlliance[index]),
-                                    ),
-                                  )..insert(0, Spacer()),
-                                ),
-                                color: Colors.blue,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Column(
+                            children: List<Widget>.generate(
+                              3,
+                              (final int index) => Expanded(
+                                flex: 2,
+                                child: teamData(data.blueAlliance[index]),
                               ),
-                            ),
+                            )..insert(0, Spacer()),
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                child: Column(
-                                  children: List<Widget>.generate(
-                                    3,
-                                    (final int index) => Expanded(
-                                      flex: 2,
-                                      child: teamData(data.redAlliance[index]),
-                                    ),
-                                  )..insert(0, Spacer()),
-                                ),
-                                color: Colors.red,
-                              ),
-                            ),
-                          )
-                        ],
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Column(
+                            children: List<Widget>.generate(
+                              3,
+                              (final int index) => Expanded(
+                                flex: 2,
+                                child: teamData(data.redAlliance[index]),
+                              ),
+                            )..insert(0, Spacer()),
+                          ),
+                          color: Colors.red,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ) ??
@@ -241,19 +234,17 @@ Future<CoachData> fetchMatch() async {
               match[e]["number"] as int,
               match[e]["name"] as String,
             );
-            final double autoLower = (match[e]["matches_aggregate"]["aggregate"]
-                    ["avg"]["auto_lower"] as double?) ??
-                double.nan;
+            final dynamic avg =
+                match[e]["matches_aggregate"]["aggregate"]["avg"];
+            final double autoLower =
+                (avg["auto_lower"] as double?) ?? double.nan;
 
-            final double autoUpper = (match[e]["matches_aggregate"]["aggregate"]
-                    ["avg"]["auto_upper"] as double?) ??
-                double.nan;
-            final double teleLower = (match[e]["matches_aggregate"]["aggregate"]
-                    ["avg"]["tele_lower"] as double?) ??
-                double.nan;
-            final double teleUpper = (match[e]["matches_aggregate"]["aggregate"]
-                    ["avg"]["tele_upper"] as double?) ??
-                double.nan;
+            final double autoUpper =
+                (avg["auto_upper"] as double?) ?? double.nan;
+            final double teleLower =
+                (avg["tele_lower"] as double?) ?? double.nan;
+            final double teleUpper =
+                (avg["tele_upper"] as double?) ?? double.nan;
             final double avgBallPoints =
                 autoLower * 2 + autoUpper * 4 + teleLower + teleUpper * 2;
             final Iterable<int> climb =
@@ -269,8 +260,7 @@ Future<CoachData> fetchMatch() async {
                               value + element,
                         ) /
                         climb.length;
-            final dynamic avg =
-                match[e]["matches_aggregate"]["aggregate"]["avg"];
+
             final double autoAim =
                 (((avg["auto_upper"] as double?) ?? double.nan) /
                         (((avg["auto_upper"] as double?) ?? double.nan) +
