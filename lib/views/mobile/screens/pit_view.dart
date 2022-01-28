@@ -1,5 +1,5 @@
-import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
+import "package:image_picker/image_picker.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -24,7 +24,7 @@ class PitView extends StatefulWidget {
 class _PitViewState extends State<PitView> {
   LightTeam? team;
 
-  FilePickerResult? result;
+  XFile? result;
 
   PitVars vars = PitVars();
 
@@ -223,8 +223,7 @@ class _PitViewState extends State<PitView> {
                 SectionDivider(label: "Robot Image"),
                 FilePickerWidget(
                   controller: advancedSwitchController,
-                  onImagePicked: (final FilePickerResult newResult) =>
-                      result = newResult,
+                  onImagePicked: (final XFile newResult) => result = newResult,
                 ),
                 SectionDivider(label: "Notes"),
                 TextField(
