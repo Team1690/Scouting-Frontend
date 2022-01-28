@@ -7,6 +7,7 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/file_picker_widget.dart";
 import "package:scouting_frontend/views/mobile/firebase_submit_button.dart";
 import "package:scouting_frontend/views/mobile/pit_vars.dart";
+import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/slider.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/team_selection_future.dart";
@@ -51,6 +52,7 @@ class _PitViewState extends State<PitView> {
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
+      drawer: SideNavBar(),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
