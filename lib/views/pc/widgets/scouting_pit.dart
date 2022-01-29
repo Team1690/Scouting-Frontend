@@ -4,11 +4,13 @@ import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
 import "package:cached_network_image/cached_network_image.dart";
 
 class ScoutingPit extends StatelessWidget {
-  ScoutingPit(this.data);
+  ScoutingPit(this.data, [this.isPhone = false]);
   final PitData data;
+  final bool isPhone;
   @override
   Widget build(final BuildContext context) {
-    return Row(
+    return Flex(
+      direction: isPhone ? Axis.vertical : Axis.horizontal,
       children: <Widget>[
         SingleChildScrollView(
           child: Padding(

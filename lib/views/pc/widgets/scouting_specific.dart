@@ -3,12 +3,10 @@ import "package:flutter/material.dart";
 import "../../constants.dart";
 
 class ScoutingSpecific extends StatelessWidget {
-  const ScoutingSpecific({
-    required this.msg,
-  });
+  const ScoutingSpecific({required this.msg, this.phone = false});
 
   final List<String> msg;
-
+  final bool phone;
   @override
   Widget build(final BuildContext context) {
     return SingleChildScrollView(
@@ -25,7 +23,7 @@ class ScoutingSpecific extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       SizedBox(
-                        width: 150,
+                        width: phone ? double.infinity : 150,
                         child: Text(
                           e,
                           textDirection: TextDirection.rtl,
