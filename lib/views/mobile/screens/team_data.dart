@@ -1,3 +1,4 @@
+import "package:cached_network_image/cached_network_image.dart";
 import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
@@ -5,7 +6,6 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/widgets/card.dart";
-import "package:scouting_frontend/views/pc/widgets/scouting_pit.dart";
 import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
 import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
 
@@ -48,7 +48,8 @@ class CoachTeamData extends StatelessWidget {
                         child: DashboardCard(
                           title: "Pit Scouting",
                           body: data.pitData.mapNullable(
-                                (final PitData pit) => ScoutingPit(pit, true),
+                                (final PitData pit) =>
+                                    pitScouting(pit, context),
                               ) ??
                               Text("No data"),
                         ),
@@ -318,3 +319,111 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
         (throw Exception("No data")),
   );
 }
+
+Widget pitScouting(final PitData data, final BuildContext context) =>
+    SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              "Drivetrain",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          Text("Drivetrain: ${data.driveTrainType}"),
+          Text("Drive motor: ${data.driveMotorType}"),
+          Text("Drive motor amount: ${data.driveMotorAmount}"),
+          Text("Drive wheel: ${data.driveWheelType}"),
+          Row(
+            children: <Widget>[
+              Text("Has shifter:"),
+              data.hasShifer.mapNullable(
+                    (final bool hasShifter) => hasShifter
+                        ? Icon(
+                            Icons.done,
+                            color: Colors.lightGreen,
+                          )
+                        : Icon(
+                            Icons.close,
+                            color: Colors.red,
+                          ),
+                  ) ??
+                  Text(" Not answered"),
+            ],
+          ),
+          Text(
+            "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              "Reliability",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          Text("Drivetrain: ${data.driveTrainReliability}"),
+          Text("Electronics: ${data.electronicsReliability}"),
+          Text("Robot: ${data.robotReliability}"),
+          Align(
+            alignment: Alignment.center,
+            child: Text("Notes"),
+          ),
+          Text(
+            data.notes,
+            softWrap: true,
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Align(
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).push<Scaffold>(
+                  PageRouteBuilder<Scaffold>(
+                    reverseTransitionDuration: Duration(milliseconds: 700),
+                    transitionDuration: Duration(milliseconds: 700),
+                    pageBuilder: (
+                      final BuildContext context,
+                      final Animation<double> a,
+                      final Animation<double> b,
+                    ) =>
+                        GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Scaffold(
+                        body: Center(
+                          child: Hero(
+                            tag: "Robot Image",
+                            child: CachedNetworkImage(
+                              imageUrl: data.url,
+                              placeholder: (
+                                final BuildContext context,
+                                final String url,
+                              ) =>
+                                  Center(child: CircularProgressIndicator()),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                child: Hero(
+                  tag: "Robot Image",
+                  child: CachedNetworkImage(
+                    imageUrl: data.url,
+                    placeholder:
+                        (final BuildContext context, final String url) =>
+                            Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
