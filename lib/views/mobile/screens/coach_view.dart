@@ -3,6 +3,7 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/mobile/screens/team_data.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 
 class CoachView extends StatefulWidget {
@@ -44,7 +45,8 @@ class _CoachViewState extends State<CoachView> {
                               3,
                               (final int index) => Expanded(
                                 flex: 2,
-                                child: teamData(data.blueAlliance[index]),
+                                child:
+                                    teamData(data.blueAlliance[index], context),
                               ),
                             )..insert(0, Spacer()),
                           ),
@@ -61,7 +63,8 @@ class _CoachViewState extends State<CoachView> {
                               3,
                               (final int index) => Expanded(
                                 flex: 2,
-                                child: teamData(data.redAlliance[index]),
+                                child:
+                                    teamData(data.redAlliance[index], context),
                               ),
                             )..insert(0, Spacer()),
                           ),
@@ -227,8 +230,8 @@ Future<CoachData> fetchMatch() async {
     (final Map<String, dynamic>? data) =>
         data.mapNullable((final Map<String, dynamic> data) {
           final dynamic match = (data["orbit_matches"] as List<dynamic>).first;
-          final List<CoachViewTeam> teams =
-              teamValues.map<CoachViewTeam>((final String e) {
+          final List<CoachViewLightTeam> teams =
+              teamValues.map<CoachViewLightTeam>((final String e) {
             final LightTeam team = LightTeam(
               match[e]["id"] as int,
               match[e]["number"] as int,
@@ -264,14 +267,16 @@ Future<CoachData> fetchMatch() async {
             final double autoAim =
                 (((avg["auto_upper"] as double?) ?? double.nan) /
                         (((avg["auto_upper"] as double?) ?? double.nan) +
-                            ((avg["auto_lower"] as double?) ?? double.nan))) *
+                            ((avg["auto_upper_missed"] as double?) ??
+                                double.nan))) *
                     100;
             final double teleAim =
                 (((avg["tele_upper"] as double?) ?? double.nan) /
                         (((avg["tele_upper"] as double?) ?? double.nan) +
-                            ((avg["tele_lower"] as double?) ?? double.nan))) *
+                            ((avg["tele_upper_missed"] as double?) ??
+                                double.nan))) *
                     100;
-            return CoachViewTeam(
+            return CoachViewLightTeam(
               avgBallPoints: avgBallPoints,
               team: team,
               avgClimbPoints: climbAvg,
@@ -295,8 +300,8 @@ const List<String> teamValues = <String>[
   "red_2_team"
 ];
 
-class CoachViewTeam {
-  const CoachViewTeam({
+class CoachViewLightTeam {
+  const CoachViewLightTeam({
     required this.autoBallAim,
     required this.avgBallPoints,
     required this.avgClimbPoints,
@@ -312,12 +317,15 @@ class CoachViewTeam {
 
 class CoachData {
   const CoachData(this.blueAlliance, this.redAlliance);
-  final List<CoachViewTeam> blueAlliance;
-  final List<CoachViewTeam> redAlliance;
+  final List<CoachViewLightTeam> blueAlliance;
+  final List<CoachViewLightTeam> redAlliance;
 }
 
-Widget teamData(final CoachViewTeam team) {
-  if (team.autoBallAim.isNaN) {
+Widget teamData(final CoachViewLightTeam team, final BuildContext context) {
+  if (team.autoBallAim.isNaN ||
+      team.avgBallPoints.isNaN ||
+      team.avgClimbPoints.isNaN ||
+      team.teleopBallAim.isNaN) {
     return Column(
       children: <Text>[
         Text(
@@ -331,14 +339,23 @@ Widget teamData(final CoachViewTeam team) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
-      Align(
-        alignment: Alignment.center,
-        child: Text(
-          team.team.number.toString(),
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight:
-                team.team.number == 1690 ? FontWeight.w900 : FontWeight.normal,
+      GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute<CoachTeamData>(
+            builder: (final BuildContext context) => CoachTeamData(team.team),
+          ),
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            team.team.number.toString(),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: team.team.number == 1690
+                  ? FontWeight.w900
+                  : FontWeight.normal,
+            ),
           ),
         ),
       ),
