@@ -1,11 +1,7 @@
-import "dart:io";
-
-import "package:file_picker/file_picker.dart";
 import "package:firebase_storage/firebase_storage.dart";
-import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:graphql/client.dart";
+import "package:image_picker/image_picker.dart";
 import "package:progress_state_button/iconed_button.dart";
 import "package:progress_state_button/progress_button.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -17,11 +13,13 @@ class FireBaseSubmitButton extends StatefulWidget {
     required this.mutation,
     required this.getResult,
     required this.resetForm,
+    required this.validate,
   });
   final HasuraVars vars;
   final String mutation;
+  final bool Function() validate;
   final void Function() resetForm;
-  final FilePickerResult? Function() getResult;
+  final XFile? Function() getResult;
 
   @override
   State<FireBaseSubmitButton> createState() => _FireBaseSubmitButtonState();
@@ -88,15 +86,11 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
 
         final int? teamid =
             widget.vars.toHasuraVars(context)["team_id"] as int?;
-        final FilePickerResult? file = widget.getResult();
+        final XFile? file = widget.getResult();
 
-        if (teamid == null || file == null) {
+        if (!widget.validate()) {
           setState(() {
-            if (teamid == null && file == null) {
-              errorMessage = "Pick a Team and File";
-            } else {
-              errorMessage = teamid == null ? "Pick a Team" : "Pick a File";
-            }
+            errorMessage = "Input Error";
             _state = ButtonState.fail;
           });
 
@@ -107,25 +101,20 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           return;
         } else {
           uploadResult(
-            teamid,
-            file,
+            teamid!,
+            file!,
           );
         }
       },
     );
   }
 
-  void uploadResult(final int teamid, final FilePickerResult result) {
-    final Reference ref = FirebaseStorage.instance
-        .ref("/files/$teamid.${result.files.first.extension}");
+  void uploadResult(final int teamid, final XFile result) async {
+    final int a = result.name.lastIndexOf(".");
+    final String ext = result.name.substring(a + 1);
+    final Reference ref = FirebaseStorage.instance.ref("/files/$teamid.$ext");
 
-    final UploadTask firebaseTask = kIsWeb
-        ? ref.putData(result.files.first.bytes!)
-        : Platform.isAndroid
-            ? ref.putFile(File(result.files.first.path!))
-            : throw PlatformException(
-                code: "This error shouldn't happen but better safe than sorry",
-              );
+    final UploadTask firebaseTask = ref.putData(await result.readAsBytes());
 
     bool running = true;
 

@@ -1,31 +1,27 @@
 import "package:flutter/material.dart";
 
-class Switcher extends StatefulWidget {
+class Switcher extends StatelessWidget {
   Switcher({
     required final this.labels,
     required final this.colors,
     required this.onChange,
     final this.height = 70,
+    required this.selected,
   });
 
   final List<String> labels;
   final List<Color> colors;
   final Function(int) onChange;
   final double height;
+  final int selected;
 
-  @override
-  State<Switcher> createState() => _SwitcherState();
-}
-
-class _SwitcherState extends State<Switcher> {
-  int selected = -1;
   RoundedRectangleBorder getBorder(final int index) {
     return RoundedRectangleBorder(
       borderRadius: index == 0
           ? BorderRadius.horizontal(
               left: Radius.circular(20),
             )
-          : index == widget.labels.length - 1
+          : index == labels.length - 1
               ? BorderRadius.horizontal(
                   right: Radius.circular(20),
                 )
@@ -41,20 +37,20 @@ class _SwitcherState extends State<Switcher> {
         border: Border.all(color: Colors.grey, width: 1),
       ),
       width: MediaQuery.of(context).size.width,
-      height: widget.height,
+      height: height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          for (int i = 0; i < widget.labels.length; i++)
+          for (int i = 0; i < labels.length; i++)
             Expanded(
               child: SizedBox(
-                height: widget.height,
+                height: height,
                 child: TextButton(
                   child: Text(
-                    widget.labels[i],
+                    labels[i],
                     style: TextStyle(
                       fontSize: 15,
-                      color: selected == i ? widget.colors[i] : Colors.black,
+                      color: selected == i ? colors[i] : Colors.black,
                     ),
                   ),
                   style: ButtonStyle(
@@ -63,14 +59,13 @@ class _SwitcherState extends State<Switcher> {
                     ),
                     overlayColor: MaterialStateColor.resolveWith(
                       (final Set<MaterialState> states) =>
-                          selected == i ? widget.colors[i] : Colors.grey,
+                          selected == i ? colors[i] : Colors.grey,
                     ),
                   ),
-                  onPressed: () => setState(() {
+                  onPressed: () {
                     i = i == selected ? -1 : i;
-                    widget.onChange(i);
-                    selected = i;
-                  }),
+                    onChange(i);
+                  },
                 ),
               ),
             ),
