@@ -38,11 +38,14 @@ class Counter extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 4,
-          child: Text(
-            label,
-            textScaleFactor: 1.5,
-            style: TextStyle(fontSize: 12),
+          flex: 3,
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              label,
+              maxLines: 1,
+              textScaleFactor: 1.5,
+            ),
           ),
         ),
         Expanded(
