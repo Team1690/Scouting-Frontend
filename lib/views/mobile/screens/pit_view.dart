@@ -253,6 +253,7 @@ class _PitViewState extends State<PitView> {
                   ),
                   SectionDivider(label: "Notes"),
                   TextField(
+                    focusNode: node,
                     textDirection: TextDirection.rtl,
                     controller: notesController,
                     onChanged: (final String text) {
