@@ -82,89 +82,91 @@ class CoachTeamData extends StatelessWidget {
   }
 }
 
-Widget quickData(final QuickData data) => SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(1.0),
-            child: Text(
-              "Auto",
-              style: TextStyle(fontSize: 18),
+Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
+    ? Text("No data")
+    : SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Text(
+                "Auto",
+                style: TextStyle(fontSize: 18),
+              ),
             ),
-          ),
-          Column(
-            children: <Widget>[
-              Text(
-                "Upper: ${data.avgAutoUpperScored.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.green[300]),
-              ),
-              Text(
-                "Lower: ${data.avgAutoLowScored.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.yellow),
-              ),
-              Text(
-                "Missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.red),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              "Teleop",
-              style: TextStyle(fontSize: 18),
+            Column(
+              children: <Widget>[
+                Text(
+                  "Upper: ${data.avgAutoUpperScored.toStringAsFixed(3)}",
+                  style: TextStyle(color: Colors.green[300]),
+                ),
+                Text(
+                  "Lower: ${data.avgAutoLowScored.toStringAsFixed(3)}",
+                  style: TextStyle(color: Colors.yellow),
+                ),
+                Text(
+                  "Missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}",
+                  style: TextStyle(color: Colors.red),
+                ),
+              ],
             ),
-          ),
-          Column(
-            children: <Widget>[
-              Text(
-                "Upper: ${data.avgTeleUpperScored.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.green[300]),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                "Teleop",
+                style: TextStyle(fontSize: 18),
               ),
-              Text(
-                "Lower: ${data.avgTeleLowScored.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.yellow),
-              ),
-              Text(
-                "Missed: ${data.avgTeleUpperMissed.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.red),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              "Points",
-              style: TextStyle(fontSize: 18),
             ),
-          ),
-          Column(
-            children: <Widget>[
-              Text("Balls: ${data.avgBallPoints.toStringAsFixed(3)}"),
-              Text("Climb: ${data.avgClimbPoints.toStringAsFixed(3)}"),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              "Upper Aim",
-              style: TextStyle(fontSize: 18),
+            Column(
+              children: <Widget>[
+                Text(
+                  "Upper: ${data.avgTeleUpperScored.toStringAsFixed(3)}",
+                  style: TextStyle(color: Colors.green[300]),
+                ),
+                Text(
+                  "Lower: ${data.avgTeleLowScored.toStringAsFixed(3)}",
+                  style: TextStyle(color: Colors.yellow),
+                ),
+                Text(
+                  "Missed: ${data.avgTeleUpperMissed.toStringAsFixed(3)}",
+                  style: TextStyle(color: Colors.red),
+                ),
+              ],
             ),
-          ),
-          Column(
-            children: <Widget>[
-              Text(
-                "Teleop: ${!data.scorePercentTeleUpper.isNaN ? "${data.scorePercentTeleUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                "Points",
+                style: TextStyle(fontSize: 18),
               ),
-              Text(
-                "Autonomous: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+            ),
+            Column(
+              children: <Widget>[
+                Text("Balls: ${data.avgBallPoints.toStringAsFixed(3)}"),
+                Text("Climb: ${data.avgClimbPoints.toStringAsFixed(3)}"),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                "Upper Aim",
+                style: TextStyle(fontSize: 18),
               ),
-            ],
-          ),
-        ],
-      ),
-    );
+            ),
+            Column(
+              children: <Widget>[
+                Text(
+                  "Teleop: ${!data.scorePercentTeleUpper.isNaN ? "${data.scorePercentTeleUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+                ),
+                Text(
+                  "Autonomous: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 
 const String query = """
 
@@ -264,33 +266,34 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
           );
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["auto_lower"] as double? ??
-              0;
+              double.nan;
           final double avgAutoUpperMissed = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["auto_upper_missed"] as double? ??
-              0;
+              double.nan;
           final double avgAutoUpperScored = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["auto_upper"] as double? ??
-              0;
+              double.nan;
           final double avgTeleLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["tele_lower"] as double? ??
-              0;
+              double.nan;
           final double avgTeleUpperMissed = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["tele_upper_missed"] as double? ??
-              0;
+              double.nan;
           final double avgTeleUpperScored = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["tele_upper"] as double? ??
-              0;
+              double.nan;
 
           final List<int> climbVals =
               (teamByPk["matches_aggregate"]["nodes"] as List<dynamic>)
                   .map((final dynamic e) => e["climb"]["points"] as int)
                   .toList();
-          final int climbSum = climbVals.length == 1
-              ? climbVals.first
-              : climbVals.reduce(
-                  (final int value, final int element) => value + element,
-                );
-
+          final int climbSum = climbVals.isEmpty
+              ? 0
+              : climbVals.length == 1
+                  ? climbVals.first
+                  : climbVals.reduce(
+                      (final int value, final int element) => value + element,
+                    );
           final QuickData quickData = QuickData(
             avgAutoLowScored: avgAutoLow,
             avgAutoUpperMissed: avgAutoUpperMissed,
