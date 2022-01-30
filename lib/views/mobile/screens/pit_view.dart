@@ -181,7 +181,6 @@ class _PitViewState extends State<PitView> {
                     height: 20,
                   ),
                   TextField(
-                    focusNode: node,
                     controller: wheelTypeController,
                     onChanged: (final String value) {
                       vars.driveWheelType = value;
@@ -253,6 +252,7 @@ class _PitViewState extends State<PitView> {
                   ),
                   SectionDivider(label: "Notes"),
                   TextField(
+                    focusNode: node,
                     textDirection: TextDirection.rtl,
                     controller: notesController,
                     onChanged: (final String text) {
