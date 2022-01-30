@@ -357,14 +357,22 @@ Widget teamData(final CoachViewLightTeam team, final BuildContext context) {
       team.avgBallPoints.isNaN ||
       team.avgClimbPoints.isNaN ||
       team.teleopBallAim.isNaN) {
-    return Column(
-      children: <Text>[
-        Text(
-          team.team.number.toString(),
-          style: TextStyle(fontSize: 20),
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute<CoachTeamData>(
+          builder: (final BuildContext context) => CoachTeamData(team.team),
         ),
-        Text("No data :(")
-      ],
+      ),
+      child: Column(
+        children: <Text>[
+          Text(
+            team.team.number.toString(),
+            style: TextStyle(fontSize: 20),
+          ),
+          Text("No data :(")
+        ],
+      ),
     );
   }
   return GestureDetector(
