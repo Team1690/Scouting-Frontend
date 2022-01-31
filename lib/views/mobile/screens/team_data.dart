@@ -106,7 +106,7 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
                   style: TextStyle(color: Colors.yellow),
                 ),
                 Text(
-                  "Missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}",
+                  "Missed: ${data.avgAutoMissed.toStringAsFixed(3)}",
                   style: TextStyle(color: Colors.red),
                 ),
               ],
@@ -129,7 +129,7 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
                   style: TextStyle(color: Colors.yellow),
                 ),
                 Text(
-                  "Missed: ${data.avgTeleUpperMissed.toStringAsFixed(3)}",
+                  "Missed: ${data.avgTeleMissed.toStringAsFixed(3)}",
                   style: TextStyle(color: Colors.red),
                 ),
               ],
@@ -157,10 +157,10 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
             Column(
               children: <Widget>[
                 Text(
-                  "Teleop: ${!data.scorePercentTeleUpper.isNaN ? "${data.scorePercentTeleUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+                  "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(3)}%" : "Insufficient data"} ",
                 ),
                 Text(
-                  "Autonomous: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
+                  "Autonomous: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(3)}%" : "Insufficient data"} ",
                 ),
               ],
             ),
@@ -197,10 +197,10 @@ query MyQuery(\$id: Int!) {
         avg {
           auto_lower
           auto_upper
-          auto_upper_missed
+          auto_missed
           tele_lower
           tele_upper
-          tele_upper_missed
+          tele_missed
         }
       }
       nodes{
@@ -267,8 +267,8 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["auto_lower"] as double? ??
               double.nan;
-          final double avgAutoUpperMissed = teamByPk["matches_aggregate"]
-                  ["aggregate"]["avg"]["auto_upper_missed"] as double? ??
+          final double avgAutoMissed = teamByPk["matches_aggregate"]
+                  ["aggregate"]["avg"]["auto_missed"] as double? ??
               double.nan;
           final double avgAutoUpperScored = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["auto_upper"] as double? ??
@@ -276,8 +276,8 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
           final double avgTeleLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["tele_lower"] as double? ??
               double.nan;
-          final double avgTeleUpperMissed = teamByPk["matches_aggregate"]
-                  ["aggregate"]["avg"]["tele_upper_missed"] as double? ??
+          final double avgTeleMissed = teamByPk["matches_aggregate"]
+                  ["aggregate"]["avg"]["tele_missed"] as double? ??
               double.nan;
           final double avgTeleUpperScored = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["tele_upper"] as double? ??
@@ -296,7 +296,7 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
                     );
           final QuickData quickData = QuickData(
             avgAutoLowScored: avgAutoLow,
-            avgAutoUpperMissed: avgAutoUpperMissed,
+            avgAutoMissed: avgAutoMissed,
             avgAutoUpperScored: avgAutoUpperScored,
             avgBallPoints: avgTeleUpperScored * 2 +
                 avgTeleLow +
@@ -304,13 +304,13 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
                 avgAutoLow * 2,
             avgClimbPoints: climbSum / climbVals.length,
             avgTeleLowScored: avgTeleLow,
-            avgTeleUpperMissed: avgTeleUpperMissed,
+            avgTeleMissed: avgTeleMissed,
             avgTeleUpperScored: avgTeleUpperScored,
-            scorePercentAutoUpper: (avgAutoUpperScored /
-                    (avgAutoUpperScored + avgAutoUpperMissed)) *
+            scorePercentAuto: ((avgAutoUpperScored + avgAutoLow) /
+                    (avgAutoUpperScored + avgAutoMissed + avgAutoLow)) *
                 100,
-            scorePercentTeleUpper: (avgTeleUpperScored /
-                    (avgTeleUpperScored + avgTeleUpperMissed)) *
+            scorePercentTele: ((avgTeleUpperScored + avgTeleLow) /
+                    (avgTeleUpperScored + avgTeleMissed + avgTeleLow)) *
                 100,
           );
           return CoachViewTeam(

@@ -82,12 +82,12 @@ class _UserInputState extends State<UserInput> {
                   height: 10,
                 ),
                 Counter(
-                  count: match.autoHighMissed,
-                  label: "Upper missed",
+                  count: match.autoMissed,
+                  label: "Missed",
                   icon: Icons.error,
                   onChange: (final int p0) {
                     setState(() {
-                      match.autoHighMissed = p0;
+                      match.autoMissed = p0;
                     });
                   },
                 ),
@@ -125,12 +125,12 @@ class _UserInputState extends State<UserInput> {
                   height: 10,
                 ),
                 Counter(
-                  count: match.teleHighMissed,
-                  label: "Upper missed",
+                  count: match.teleMissed,
+                  label: "Missed",
                   icon: Icons.error,
                   onChange: (final int p0) {
                     setState(() {
-                      match.teleHighMissed = p0;
+                      match.teleMissed = p0;
                     });
                   },
                 ),
@@ -199,8 +199,8 @@ class _UserInputState extends State<UserInput> {
 }
 
 const String mutation = """
-mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_upper_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_upper_missed: Int) {
-  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_upper_missed: \$auto_upper_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_upper_missed: \$tele_upper_missed}) {
+mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int) {
+  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed}) {
     returning {
       id
     }

@@ -156,8 +156,8 @@ query MyQuery {
             auto_lower
             tele_lower
             tele_upper
-            tele_upper_missed
-            auto_upper_missed
+            tele_missed
+            auto_missed
           }
         }
         nodes {
@@ -178,8 +178,8 @@ query MyQuery {
             auto_lower
             tele_lower
             tele_upper
-            tele_upper_missed
-            auto_upper_missed
+            tele_missed
+            auto_missed
           }
         }
         nodes {
@@ -200,8 +200,8 @@ query MyQuery {
             auto_lower
             tele_lower
             tele_upper
-            tele_upper_missed
-            auto_upper_missed
+            tele_missed
+            auto_missed
           }
         }
         nodes {
@@ -222,8 +222,8 @@ query MyQuery {
             auto_lower
             tele_lower
             tele_upper
-            tele_upper_missed
-            auto_upper_missed
+            tele_missed
+            auto_missed
           }
         }
         nodes {
@@ -244,8 +244,8 @@ query MyQuery {
             auto_lower
             tele_lower
             tele_upper
-            tele_upper_missed
-            auto_upper_missed
+            tele_missed
+            auto_missed
           }
         }
         nodes {
@@ -266,8 +266,8 @@ query MyQuery {
             auto_lower
             tele_lower
             tele_upper
-            tele_upper_missed
-            auto_upper_missed
+            tele_missed
+            auto_missed
           }
         }
         nodes {
@@ -330,16 +330,18 @@ Future<List<CoachData>> fetchMatches() async {
                           climb.length;
 
               final double autoAim =
-                  (((avg["auto_upper"] as double?) ?? double.nan) /
-                          (((avg["auto_upper"] as double?) ?? double.nan) +
-                              ((avg["auto_upper_missed"] as double?) ??
-                                  double.nan))) *
+                  (((avg["auto_upper"] as double? ?? double.nan) +
+                              (avg["auto_lower"] as double? ?? double.nan)) /
+                          ((avg["auto_upper"] as double? ?? double.nan) +
+                              (avg["auto_missed"] as double? ?? double.nan) +
+                              (avg["auto_lower"] as double? ?? double.nan))) *
                       100;
               final double teleAim =
-                  (((avg["tele_upper"] as double?) ?? double.nan) /
-                          (((avg["tele_upper"] as double?) ?? double.nan) +
-                              ((avg["tele_upper_missed"] as double?) ??
-                                  double.nan))) *
+                  (((avg["tele_upper"] as double? ?? double.nan) +
+                              (avg["tele_lower"] as double? ?? double.nan)) /
+                          ((avg["tele_upper"] as double? ?? double.nan) +
+                              (avg["tele_missed"] as double? ?? double.nan) +
+                              (avg["tele_lower"] as double? ?? double.nan))) *
                       100;
               return CoachViewLightTeam(
                 avgBallPoints: avgBallPoints,

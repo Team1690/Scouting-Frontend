@@ -69,9 +69,7 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
                           flex: 6,
                           child: DashboardCard(
                             title: "Game Chart",
-                            body: data.upperScoredMissedDataTele.points[0]
-                                        .length >
-                                    1
+                            body: data.scoredMissedDataTele.points[0].length > 1
                                 ? gameChartWidgets(data)
                                 : Center(
                                     child: Text(
@@ -155,7 +153,7 @@ Widget quickDataLeft(final QuickData data) => Row(
               style: TextStyle(color: Colors.yellow),
             ),
             Text(
-              "Missed: ${data.avgAutoUpperMissed.toStringAsFixed(1)}",
+              "Missed: ${data.avgAutoMissed.toStringAsFixed(1)}",
               style: TextStyle(color: Colors.red),
             ),
           ],
@@ -176,7 +174,7 @@ Widget quickDataLeft(final QuickData data) => Row(
               style: TextStyle(color: Colors.yellow),
             ),
             Text(
-              "Missed: ${data.avgTeleUpperMissed.toStringAsFixed(1)}",
+              "Missed: ${data.avgTeleMissed.toStringAsFixed(1)}",
               style: TextStyle(color: Colors.red),
             ),
           ],
@@ -206,10 +204,10 @@ Widget quickDataRight(final QuickData data) => Row(
               style: TextStyle(fontSize: 18),
             ),
             Text(
-              "Teleop: ${!data.scorePercentTeleUpper.isNaN ? "${data.scorePercentTeleUpper.toStringAsFixed(1)}%" : "Insufficient data"} ",
+              "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(1)}%" : "Insufficient data"} ",
             ),
             Text(
-              "Autonomous: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(1)}%" : "Insufficient data"} ",
+              "Autonomous: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(1)}%" : "Insufficient data"} ",
             ),
           ],
         ),
@@ -266,8 +264,8 @@ Widget lineChart<E extends num>(final LineChartData<E> data) => Stack(
 Widget gameChartWidgets<E extends num>(final Team<E> data) {
   return CarouselWithIndicator(
     widgets: <Widget>[
-      lineChart<E>(data.upperScoredMissedDataTele),
-      lineChart<E>(data.upperScoredMissedDataAuto),
+      lineChart<E>(data.scoredMissedDataTele),
+      lineChart<E>(data.scoredMissedDataAuto),
       Stack(
         children: <Widget>[
           Align(
@@ -319,10 +317,10 @@ query MyQuery(\$id: Int!) {
         avg {
           auto_lower
           auto_upper
-          auto_upper_missed
+          auto_missed
           tele_lower
           tele_upper
-          tele_upper_missed
+          tele_missed
         }
       }
     }
@@ -332,11 +330,11 @@ query MyQuery(\$id: Int!) {
       }
       auto_lower
       auto_upper
-      auto_upper_missed
+      auto_missed
       match_number
       tele_lower
       tele_upper
-      tele_upper_missed
+      tele_missed
     }
   }
 }
@@ -346,26 +344,26 @@ query MyQuery(\$id: Int!) {
 class QuickData {
   QuickData({
     required this.avgAutoLowScored,
-    required this.avgAutoUpperMissed,
+    required this.avgAutoMissed,
     required this.avgAutoUpperScored,
     required this.avgBallPoints,
     required this.avgClimbPoints,
     required this.avgTeleLowScored,
-    required this.avgTeleUpperMissed,
+    required this.avgTeleMissed,
     required this.avgTeleUpperScored,
-    required this.scorePercentAutoUpper,
-    required this.scorePercentTeleUpper,
+    required this.scorePercentAuto,
+    required this.scorePercentTele,
   });
   final double avgBallPoints;
   final double avgClimbPoints;
   final double avgAutoUpperScored;
-  final double avgAutoUpperMissed;
+  final double avgAutoMissed;
   final double avgAutoLowScored;
-  final double scorePercentAutoUpper;
+  final double scorePercentAuto;
   final double avgTeleUpperScored;
-  final double avgTeleUpperMissed;
+  final double avgTeleMissed;
   final double avgTeleLowScored;
-  final double scorePercentTeleUpper;
+  final double scorePercentTele;
 }
 
 class SpecificData {
@@ -413,16 +411,16 @@ class Team<E extends num> {
     required this.pitViewData,
     required this.quickData,
     required this.climbData,
-    required this.upperScoredMissedDataTele,
-    required this.upperScoredMissedDataAuto,
+    required this.scoredMissedDataTele,
+    required this.scoredMissedDataAuto,
   });
   final LightTeam team;
   final SpecificData specificData;
   final PitData? pitViewData;
   final QuickData quickData;
   final LineChartData<E> climbData;
-  final LineChartData<E> upperScoredMissedDataTele;
-  final LineChartData<E> upperScoredMissedDataAuto;
+  final LineChartData<E> scoredMissedDataTele;
+  final LineChartData<E> scoredMissedDataAuto;
 }
 
 double getClimbAverage(final List<String> climbVals) {
@@ -540,8 +538,8 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["auto_lower"] as double? ??
               0;
-          final double avgAutoUpperMissed = teamByPk["matches_aggregate"]
-                  ["aggregate"]["avg"]["auto_upper_missed"] as double? ??
+          final double avgAutoMissed = teamByPk["matches_aggregate"]
+                  ["aggregate"]["avg"]["auto_missed"] as double? ??
               0;
           final double avgAutoUpperScored = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["auto_upper"] as double? ??
@@ -549,8 +547,8 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final double avgTeleLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["tele_lower"] as double? ??
               0;
-          final double avgTeleUpperMissed = teamByPk["matches_aggregate"]
-                  ["aggregate"]["avg"]["tele_upper_missed"] as double? ??
+          final double avgTeleMissed = teamByPk["matches_aggregate"]
+                  ["aggregate"]["avg"]["tele_missed"] as double? ??
               0;
           final double avgTeleUpperScored = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["tele_upper"] as double? ??
@@ -562,7 +560,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
 
           final QuickData quickData = QuickData(
             avgAutoLowScored: avgAutoLow,
-            avgAutoUpperMissed: avgAutoUpperMissed,
+            avgAutoMissed: avgAutoMissed,
             avgAutoUpperScored: avgAutoUpperScored,
             avgBallPoints: avgTeleUpperScored * 2 +
                 avgTeleLow +
@@ -570,13 +568,13 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                 avgAutoLow * 2,
             avgClimbPoints: getClimbAverage(climbVals),
             avgTeleLowScored: avgTeleLow,
-            avgTeleUpperMissed: avgTeleUpperMissed,
+            avgTeleMissed: avgTeleMissed,
             avgTeleUpperScored: avgTeleUpperScored,
-            scorePercentAutoUpper: (avgAutoUpperScored /
-                    (avgAutoUpperScored + avgAutoUpperMissed)) *
+            scorePercentAuto: ((avgAutoUpperScored + avgAutoLow) /
+                    (avgAutoUpperScored + avgAutoMissed + avgAutoLow)) *
                 100,
-            scorePercentTeleUpper: (avgTeleUpperScored /
-                    (avgTeleUpperScored + avgTeleUpperMissed)) *
+            scorePercentTele: ((avgTeleUpperScored + avgTeleLow) /
+                    (avgTeleUpperScored + avgTeleMissed + avgTeleLow)) *
                 100,
           );
 
@@ -608,11 +606,10 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                   .map((final dynamic e) => e["tele_upper"] as int)
                   .cast<E>()
                   .toList();
-          final List<E> upperMissedDataTele =
-              (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["tele_upper_missed"] as int)
-                  .cast<E>()
-                  .toList();
+          final List<E> missedDataTele = (teamByPk["matches"] as List<dynamic>)
+              .map((final dynamic e) => e["tele_missed"] as int)
+              .cast<E>()
+              .toList();
 
           final List<E> lowerScoredDataTele =
               (teamByPk["matches"] as List<dynamic>)
@@ -620,10 +617,10 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                   .cast<E>()
                   .toList();
 
-          final LineChartData<E> upperScoredMissedDataTele = LineChartData<E>(
+          final LineChartData<E> scoredMissedDataTele = LineChartData<E>(
             points: <List<E>>[
               upperScoredDataTele,
-              upperMissedDataTele,
+              missedDataTele,
               lowerScoredDataTele
             ],
             title: "Teleoperated",
@@ -634,20 +631,19 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                   .map((final dynamic e) => e["auto_upper"] as int)
                   .toList()
                   .cast<E>();
-          final List<E> upperMissedDataAuto =
-              (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["auto_upper_missed"] as int)
-                  .cast<E>()
-                  .toList();
+          final List<E> missedDataAuto = (teamByPk["matches"] as List<dynamic>)
+              .map((final dynamic e) => e["auto_missed"] as int)
+              .cast<E>()
+              .toList();
           final List<E> lowerScoredDataAuto =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["auto_lower"] as int)
                   .cast<E>()
                   .toList();
-          final LineChartData<E> upperScoredMissedDataAuto = LineChartData<E>(
+          final LineChartData<E> scoredMissedDataAuto = LineChartData<E>(
             points: <List<E>>[
               upperScoredDataAuto,
-              upperMissedDataAuto,
+              missedDataAuto,
               lowerScoredDataAuto
             ],
             title: "Autonomous",
@@ -658,8 +654,8 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             pitViewData: pitData,
             quickData: quickData,
             climbData: climbData,
-            upperScoredMissedDataTele: upperScoredMissedDataTele,
-            upperScoredMissedDataAuto: upperScoredMissedDataAuto,
+            scoredMissedDataTele: scoredMissedDataTele,
+            scoredMissedDataAuto: scoredMissedDataAuto,
           );
         }) ??
         (throw Exception("No team with that id")),

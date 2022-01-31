@@ -24,10 +24,10 @@ query MyQuery(\$ids: [Int!]) {
         avg {
           auto_lower
           auto_upper
-          auto_upper_missed
+          auto_missed
           tele_lower
           tele_upper
-          tele_upper_missed
+          tele_missed
         }
       }
     }
@@ -37,11 +37,11 @@ query MyQuery(\$ids: [Int!]) {
       }
       auto_lower
       auto_upper
-      auto_upper_missed
+      auto_missed
       match_number
       tele_lower
       tele_upper
-      tele_upper_missed
+      tele_missed
     }
     name
     number
@@ -61,8 +61,8 @@ class CompareTeam<E extends num> {
     required this.climbData,
     required this.upperScoredDataAuto,
     required this.upperScoredDataTele,
-    required this.upperMissedDataAuto,
-    required this.upperMissedDataTele,
+    required this.missedDataAuto,
+    required this.missedDataTele,
     required this.team,
   });
   final LightTeam team;
@@ -74,9 +74,9 @@ class CompareTeam<E extends num> {
   final double climbPercentage;
   final CompareLineChartData<E> climbData;
   final CompareLineChartData<E> upperScoredDataTele;
-  final CompareLineChartData<E> upperMissedDataTele;
+  final CompareLineChartData<E> missedDataTele;
   final CompareLineChartData<E> upperScoredDataAuto;
-  final CompareLineChartData<E> upperMissedDataAuto;
+  final CompareLineChartData<E> missedDataAuto;
 }
 
 class CompareLineChartData<E extends num> {
@@ -108,22 +108,20 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                   final double avgAutoUpperScored = e["matches_aggregate"]
                           ["aggregate"]["avg"]["auto_upper"] as double? ??
                       0;
-                  final double avgAutoUpperMissed = e["matches_aggregate"]
-                              ["aggregate"]["avg"]["auto_upper_missed"]
-                          as double? ??
+                  final double avgAutoMissed = e["matches_aggregate"]
+                          ["aggregate"]["avg"]["auto_missed"] as double? ??
                       0;
                   final double autoUpperScorePercentage = avgAutoUpperScored /
-                      (avgAutoUpperScored + avgAutoUpperMissed) *
+                      (avgAutoUpperScored + avgAutoMissed) *
                       100;
                   final double avgTeleUpperScored = e["matches_aggregate"]
                           ["aggregate"]["avg"]["tele_upper"] as double? ??
                       0;
-                  final double avgTeleUpperMissed = e["matches_aggregate"]
-                              ["aggregate"]["avg"]["tele_upper_missed"]
-                          as double? ??
+                  final double avgTeleMissed = e["matches_aggregate"]
+                          ["aggregate"]["avg"]["tele_missed"] as double? ??
                       0;
                   final double teleUpperPointPercentage = (avgTeleUpperScored /
-                          (avgTeleUpperScored + avgTeleUpperMissed)) *
+                          (avgTeleUpperScored + avgTeleMissed)) *
                       100;
 
                   final List<String> climbVals = (e["matches"] as List<dynamic>)
@@ -134,7 +132,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                   final int failedClimb = climbVals
                       .where(
                         (final String element) =>
-                            element == "failed" || element == "no attempt",
+                            element == "Failed" || element == "No attempt",
                       )
                       .length;
                   final int succededClimb = climbVals.length - failedClimb;
@@ -170,10 +168,10 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                       (e["matches"] as List<dynamic>)
                           .map((final dynamic e) => e["tele_upper"] as int)
                           .toList();
-                  final List<int> upperMissedDataTele =
+                  final List<int> missedDataTele =
                       (e["matches"] as List<dynamic>)
                           .map(
-                            (final dynamic e) => e["tele_upper_missed"] as int,
+                            (final dynamic e) => e["tele_missed"] as int,
                           )
                           .toList();
 
@@ -183,20 +181,20 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     points: upperScoredDataTele.cast(),
                   );
 
-                  final CompareLineChartData<E> upperMissedDataTeleLineChart =
+                  final CompareLineChartData<E> missedDataTeleLineChart =
                       CompareLineChartData<E>(
                     title: "Teleop missed",
-                    points: upperMissedDataTele.cast(),
+                    points: missedDataTele.cast(),
                   );
 
                   final List<int> upperScoredDataAuto =
                       (e["matches"] as List<dynamic>)
                           .map((final dynamic e) => e["auto_upper"] as int)
                           .toList();
-                  final List<int> upperMissedDataAuto =
+                  final List<int> missedDataAuto =
                       (e["matches"] as List<dynamic>)
                           .map(
-                            (final dynamic e) => e["auto_upper_missed"] as int,
+                            (final dynamic e) => e["auto_missed"] as int,
                           )
                           .toList();
 
@@ -206,10 +204,10 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     points: upperScoredDataAuto.cast(),
                   );
 
-                  final CompareLineChartData<E> upperMissedDataAutoLinechart =
+                  final CompareLineChartData<E> missedDataAutoLinechart =
                       CompareLineChartData<E>(
                     title: "Auto missed",
-                    points: upperMissedDataAuto.cast(),
+                    points: missedDataAuto.cast(),
                   );
 
                   return CompareTeam<E>(
@@ -226,9 +224,9 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     teleUpperScoredPercentage: teleUpperPointPercentage,
                     climbData: climbData,
                     upperScoredDataAuto: upperScoredDataAutoLinechart,
-                    upperMissedDataAuto: upperMissedDataAutoLinechart,
+                    missedDataAuto: missedDataAutoLinechart,
                     upperScoredDataTele: upperScoredDataTeleLineChart,
-                    upperMissedDataTele: upperMissedDataTeleLineChart,
+                    missedDataTele: missedDataTeleLineChart,
                   );
                 }), (final CompareTeam<E> team1, final CompareTeam<E> team2) {
               return team1.team.id.compareTo(team2.team.id);
@@ -418,7 +416,6 @@ Widget spiderChartWidget<E extends num>(
                       (final CompareTeam<E> e) => e.avgClimbPoints,
                     )
                     .reduce(max);
-
             return SpiderChart(
               numberOfFeatures: 6,
               data: data
@@ -532,13 +529,13 @@ Widget gameChartWidget<E extends num>(final SplayTreeSet<CompareTeam<E>> data) {
                   item.upperScoredDataTele,
                 );
                 teleMissed.add(
-                  item.upperMissedDataTele,
+                  item.missedDataTele,
                 );
                 autoScored.add(
                   item.upperScoredDataAuto,
                 );
                 autoMissed.add(
-                  item.upperMissedDataAuto,
+                  item.missedDataAuto,
                 );
                 climb.add(item.climbData);
               }
