@@ -23,7 +23,7 @@ class ScoutingSpecific extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       SizedBox(
-                        width: phone ? double.infinity : 150,
+                        width: double.infinity,
                         child: Text(
                           e,
                           textDirection: TextDirection.rtl,
