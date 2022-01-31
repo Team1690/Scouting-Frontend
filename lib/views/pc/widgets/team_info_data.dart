@@ -1,3 +1,4 @@
+import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -42,36 +43,35 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
                     child: Column(
                       children: <Widget>[
                         Expanded(
-                          flex: 4,
+                          flex: 3,
                           child: Row(
                             children: <Widget>[
                               Expanded(
-                                flex: 3,
                                 child: DashboardCard(
-                                  title: "Quick Data",
-                                  body: quickData(data.quickData),
+                                  title: "Quick",
+                                  body: quickDataLeft(data.quickData),
                                 ),
                               ),
-                              SizedBox(width: defaultPadding),
+                              SizedBox(
+                                width: defaultPadding,
+                              ),
                               Expanded(
-                                flex: 3,
                                 child: DashboardCard(
-                                  title: "Pit Scouting",
-                                  body: data.pitViewData
-                                          .mapNullable(ScoutingPit.new) ??
-                                      Text("No data yet :("),
+                                  title: "Data",
+                                  body: quickDataRight(data.quickData),
                                 ),
-                              ),
+                              )
                             ],
                           ),
                         ),
                         SizedBox(height: defaultPadding),
                         Expanded(
-                          flex: 5,
+                          flex: 6,
                           child: DashboardCard(
                             title: "Game Chart",
                             body: data.upperScoredMissedDataTele.points[0]
-                                    .isNotEmpty
+                                        .length >
+                                    1
                                 ? gameChartWidgets(data)
                                 : Center(
                                     child: Text(
@@ -84,14 +84,50 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
                     ),
                   ),
                   SizedBox(width: defaultPadding),
-                  DashboardCard(
-                    title: "Scouting Specific",
-                    body: snapShot.data!.specificData.msg.isNotEmpty
-                        ? ScoutingSpecific(
-                            msg: snapShot.data!.specificData.msg,
-                          )
-                        : Text("No data yet :("),
-                  )
+                  Expanded(
+                    flex: 2,
+                    child: DashboardCard(
+                      title: "Scouting Specific",
+                      body: snapShot.data!.specificData.msg.isNotEmpty
+                          ? ScoutingSpecific(
+                              msg: snapShot.data!.specificData.msg,
+                            )
+                          : Center(child: Text("No data yet :(")),
+                    ),
+                  ),
+                  SizedBox(
+                    width: defaultPadding,
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: data.pitViewData.mapNullable(
+                          (final PitData p0) => Column(
+                            children: <Widget>[
+                              Expanded(
+                                flex: 2,
+                                child: DashboardCard(
+                                  title: "Robot Image",
+                                  body: robotImage(
+                                    context,
+                                    p0.url,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: defaultPadding,
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: DashboardCard(
+                                  title: "Pit Scouting",
+                                  body: ScoutingPit(p0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ) ??
+                        DashboardCard(title: "Pit Scouting", body: Container()),
+                  ),
                 ],
               ),
             ) ??
@@ -101,98 +137,84 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
   }
 }
 
-Widget quickData(final QuickData data) => SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Auto",
-            style: TextStyle(fontSize: 18),
-          ),
-          Row(
-            children: <Widget>[
-              Spacer(),
-              Text(
-                "Upper: ${data.avgAutoUpperScored.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.green),
-              ),
-              Spacer(),
-              Text(
-                "Lower: ${data.avgAutoLowScored.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.yellow),
-              ),
-              Spacer(),
-              Text(
-                "Missed: ${data.avgAutoUpperMissed.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.red),
-              ),
-              Spacer()
-            ],
-          ),
-          Text(
-            "Teleop",
-            style: TextStyle(fontSize: 18),
-          ),
-          Row(
-            children: <Widget>[
-              Spacer(),
-              Text(
-                "Upper: ${data.avgTeleUpperScored.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.green),
-              ),
-              Spacer(),
-              Text(
-                "Lower: ${data.avgTeleLowScored.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.yellow),
-              ),
-              Spacer(),
-              Text(
-                "Missed: ${data.avgTeleUpperMissed.toStringAsFixed(3)}",
-                style: TextStyle(color: Colors.red),
-              ),
-              Spacer()
-            ],
-          ),
-          Text(
-            "Points",
-            style: TextStyle(fontSize: 18),
-          ),
-          Row(
-            children: <Widget>[
-              Spacer(
-                flex: 3,
-              ),
-              Text("Balls: ${data.avgBallPoints.toStringAsFixed(3)}"),
-              Spacer(),
-              Text("Climb: ${data.avgClimbPoints.toStringAsFixed(3)}"),
-              Spacer(
-                flex: 3,
-              ),
-            ],
-          ),
-          Text(
-            "Upper Aim",
-            style: TextStyle(fontSize: 18),
-          ),
-          Row(
-            children: <Widget>[
-              Spacer(
-                flex: 3,
-              ),
-              Text(
-                "Teleop: ${!data.scorePercentTeleUpper.isNaN ? "${data.scorePercentTeleUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
-              ),
-              Spacer(),
-              Text(
-                "Autonomous: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(3)}%" : "Insufficient data"} ",
-              ),
-              Spacer(
-                flex: 3,
-              )
-            ],
-          ),
-        ],
-      ),
+Widget quickDataLeft(final QuickData data) => Row(
+      children: <Widget>[
+        Spacer(),
+        Column(
+          children: <Widget>[
+            Text(
+              "Auto",
+              style: TextStyle(fontSize: 18),
+            ),
+            Text(
+              "Upper: ${data.avgAutoUpperScored.toStringAsFixed(1)}",
+              style: TextStyle(color: Colors.green),
+            ),
+            Text(
+              "Lower: ${data.avgAutoLowScored.toStringAsFixed(1)}",
+              style: TextStyle(color: Colors.yellow),
+            ),
+            Text(
+              "Missed: ${data.avgAutoUpperMissed.toStringAsFixed(1)}",
+              style: TextStyle(color: Colors.red),
+            ),
+          ],
+        ),
+        Spacer(),
+        Column(
+          children: <Widget>[
+            Text(
+              "Teleop",
+              style: TextStyle(fontSize: 18),
+            ),
+            Text(
+              "Upper: ${data.avgTeleUpperScored.toStringAsFixed(1)}",
+              style: TextStyle(color: Colors.green),
+            ),
+            Text(
+              "Lower: ${data.avgTeleLowScored.toStringAsFixed(1)}",
+              style: TextStyle(color: Colors.yellow),
+            ),
+            Text(
+              "Missed: ${data.avgTeleUpperMissed.toStringAsFixed(1)}",
+              style: TextStyle(color: Colors.red),
+            ),
+          ],
+        ),
+        Spacer()
+      ],
+    );
+
+Widget quickDataRight(final QuickData data) => Row(
+      children: <Widget>[
+        Spacer(),
+        Column(
+          children: <Widget>[
+            Text(
+              "Points",
+              style: TextStyle(fontSize: 18),
+            ),
+            Text("Balls: ${data.avgBallPoints.toStringAsFixed(1)}"),
+            Text("Climb: ${data.avgClimbPoints.toStringAsFixed(1)}"),
+          ],
+        ),
+        Spacer(),
+        Column(
+          children: <Widget>[
+            Text(
+              "Upper Aim",
+              style: TextStyle(fontSize: 18),
+            ),
+            Text(
+              "Teleop: ${!data.scorePercentTeleUpper.isNaN ? "${data.scorePercentTeleUpper.toStringAsFixed(1)}%" : "Insufficient data"} ",
+            ),
+            Text(
+              "Autonomous: ${!data.scorePercentAutoUpper.isNaN ? "${data.scorePercentAutoUpper.toStringAsFixed(1)}%" : "Insufficient data"} ",
+            ),
+          ],
+        ),
+        Spacer()
+      ],
     );
 
 Widget lineChart<E extends num>(final LineChartData<E> data) => Stack(
@@ -428,6 +450,49 @@ double getClimbAverage(final List<String> climbVals) {
   return climbPoints.reduce((final int a, final int b) => a + b).toDouble() /
       climbPoints.length;
 }
+
+Expanded robotImage(final BuildContext context, final String url) => Expanded(
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push<Scaffold>(
+          PageRouteBuilder<Scaffold>(
+            reverseTransitionDuration: Duration(milliseconds: 700),
+            transitionDuration: Duration(milliseconds: 700),
+            pageBuilder: (
+              final BuildContext context,
+              final Animation<double> a,
+              final Animation<double> b,
+            ) =>
+                GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: Scaffold(
+                body: Center(
+                  child: Hero(
+                    tag: "Robot Image",
+                    child: CachedNetworkImage(
+                      imageUrl: url,
+                      placeholder: (
+                        final BuildContext context,
+                        final String url,
+                      ) =>
+                          Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        child: Hero(
+          tag: "Robot Image",
+          child: CachedNetworkImage(
+            width: 240,
+            imageUrl: url,
+            placeholder: (final BuildContext context, final String url) =>
+                Center(child: CircularProgressIndicator()),
+          ),
+        ),
+      ),
+    );
 
 Future<Team<E>> fetchTeamInfo<E extends num>(
   final LightTeam teamForQuery,
