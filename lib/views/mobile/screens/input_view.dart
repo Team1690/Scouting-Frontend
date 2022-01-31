@@ -83,7 +83,7 @@ class _UserInputState extends State<UserInput> {
                 ),
                 Counter(
                   count: match.autoMissed,
-                  label: "Missed",
+                  label: "Missed            ",
                   icon: Icons.error,
                   onChange: (final int p0) {
                     setState(() {
@@ -126,7 +126,7 @@ class _UserInputState extends State<UserInput> {
                 ),
                 Counter(
                   count: match.teleMissed,
-                  label: "Missed",
+                  label: "Missed            ",
                   icon: Icons.error,
                   onChange: (final int p0) {
                     setState(() {
