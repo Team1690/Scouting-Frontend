@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
-import "package:cached_network_image/cached_network_image.dart";
 
 class ScoutingPit extends StatelessWidget {
   ScoutingPit(this.data);
@@ -53,7 +52,7 @@ class ScoutingPit extends StatelessWidget {
           FittedBox(
             fit: BoxFit.fitWidth,
             child: Row(
-              children: [
+              children: <Widget>[
                 Text("Drivetrain: "),
                 Slider(
                   divisions: 4,
@@ -69,7 +68,7 @@ class ScoutingPit extends StatelessWidget {
           FittedBox(
             fit: BoxFit.fitWidth,
             child: Row(
-              children: [
+              children: <Widget>[
                 Text("Electronics: "),
                 Slider(
                   divisions: 4,
@@ -85,7 +84,7 @@ class ScoutingPit extends StatelessWidget {
           FittedBox(
             fit: BoxFit.fitWidth,
             child: Row(
-              children: [
+              children: <Widget>[
                 Text("Robot: "),
                 Slider(
                   divisions: 9,
