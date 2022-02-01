@@ -103,17 +103,23 @@ Widget lineCharts(final CoachViewTeam data) => CarouselSlider(
         viewportFraction: 1,
       ),
       items: <Widget>[
-        Expanded(
-          child: Column(
-            children: <Widget>[
-              FittedBox(
-                fit: BoxFit.fitHeight,
-                child: Center(child: Text("Teleop")),
+        Column(
+          children: <Widget>[
+            FittedBox(
+              fit: BoxFit.fitHeight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Text("Teleop"),
+                ),
               ),
-              Expanded(
-                flex: 6,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5, top: 8.0),
+            ),
+            Expanded(
+              flex: 6,
+              child: Container(
+                margin: const EdgeInsets.only(left: 25, top: 8.0),
+                child: Container(
                   child: DashboardLineChart<int>(
                     distanceFromHighest: 4,
                     dataSet: data.scoredMissedDataTele.points,
@@ -125,22 +131,25 @@ Widget lineCharts(final CoachViewTeam data) => CarouselSlider(
                   ),
                 ),
               ),
-              Spacer(
-                flex: 3,
-              )
-            ],
-          ),
+            ),
+            Spacer(
+              flex: 3,
+            )
+          ],
         ),
         Column(
           children: <Widget>[
-            FittedBox(
-              fit: BoxFit.fitHeight,
-              child: Text("Autonomous"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FittedBox(
+                fit: BoxFit.fitHeight,
+                child: Text("Autonomous"),
+              ),
             ),
             Expanded(
               flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, top: 8.0),
+              child: Container(
+                margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: DashboardLineChart<int>(
                   distanceFromHighest: 4,
                   dataSet: data.scoredMissedDataAuto.points,
@@ -159,14 +168,17 @@ Widget lineCharts(final CoachViewTeam data) => CarouselSlider(
         ),
         Column(
           children: <Widget>[
-            FittedBox(
-              fit: BoxFit.fitHeight,
-              child: Text("Climb"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FittedBox(
+                fit: BoxFit.fitHeight,
+                child: Text("Climb"),
+              ),
             ),
             Expanded(
               flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5, top: 8.0),
+              child: Container(
+                margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: DashBoardClimbLineChart<int>(
                   dataSet: data.climbData.points,
                 ),
