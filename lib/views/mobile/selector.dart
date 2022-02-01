@@ -24,7 +24,10 @@ class Selector<T> extends StatelessWidget {
     DropdownMenuItem<V> itemizeRaw<V>(final V choice, final String title) =>
         DropdownMenuItem<V>(
           value: choice,
-          child: Text(title, style: TextStyle(color: Colors.white)),
+          child: Text(
+            title,
+            // style: TextStyle(color: Colors.white),
+          ),
         );
 
     DropdownMenuItem<V> itemize<V extends T>(final V choice) =>
@@ -39,7 +42,16 @@ class Selector<T> extends StatelessWidget {
       isExpanded: true,
       value: value,
       elevation: 24,
-      style: const TextStyle(color: primaryColor, fontSize: 20),
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: defaultBorderRadius,
+        ),
+      ),
+      style: TextStyle(
+        fontFamily: Theme.of(context).textTheme.bodyText2?.fontFamily,
+        color: Colors.white,
+        fontSize: 20,
+      ),
       onChanged: (final T? selection) => selection.mapNullable(onChange),
       items: <DropdownMenuItem<T?>>[placeholderItem, ...choices],
     );

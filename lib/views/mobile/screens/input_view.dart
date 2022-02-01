@@ -70,7 +70,7 @@ class _UserInputState extends State<UserInput> {
                 ),
                 Counter(
                   label: "Upper scored",
-                  icon: Icons.adjust,
+                  icon: Icons.sports_baseball,
                   count: match.autoHigh,
                   onChange: (final int p0) {
                     setState(() {
@@ -82,21 +82,8 @@ class _UserInputState extends State<UserInput> {
                   height: 10,
                 ),
                 Counter(
-                  count: match.autoMissed,
-                  label: "Missed            ",
-                  icon: Icons.error,
-                  onChange: (final int p0) {
-                    setState(() {
-                      match.autoMissed = p0;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Counter(
                   label: "Lower scored",
-                  icon: Icons.adjust,
+                  icon: Icons.sports_baseball_outlined,
                   count: match.autoLow,
                   onChange: (final int p0) {
                     setState(() {
@@ -105,19 +92,45 @@ class _UserInputState extends State<UserInput> {
                   },
                 ),
                 SizedBox(
+                  height: 10,
+                ),
+                Counter(
+                  count: match.autoMissed,
+                  label: "      Missed      ",
+                  icon: Icons.error,
+                  onChange: (final int p0) {
+                    setState(() {
+                      match.autoMissed = p0;
+                    });
+                  },
+                ),
+                SizedBox(
                   height: 20,
                 ),
                 SectionDivider(label: "Teleoperated"),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Counter(
                   count: match.teleHigh,
                   label: "Upper scored",
-                  icon: Icons.adjust,
+                  icon: Icons.sports_baseball,
                   onChange: (final int p0) {
                     setState(() {
                       match.teleHigh = p0;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Counter(
+                  count: match.teleLow,
+                  label: "Lower scored",
+                  icon: Icons.sports_baseball_outlined,
+                  onChange: (final int p0) {
+                    setState(() {
+                      match.teleLow = p0;
                     });
                   },
                 ),
@@ -126,24 +139,11 @@ class _UserInputState extends State<UserInput> {
                 ),
                 Counter(
                   count: match.teleMissed,
-                  label: "Missed            ",
+                  label: "      Missed      ",
                   icon: Icons.error,
                   onChange: (final int p0) {
                     setState(() {
                       match.teleMissed = p0;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Counter(
-                  count: match.teleLow,
-                  label: "Lower scored",
-                  icon: Icons.adjust,
-                  onChange: (final int p0) {
-                    setState(() {
-                      match.teleLow = p0;
                     });
                   },
                 ),

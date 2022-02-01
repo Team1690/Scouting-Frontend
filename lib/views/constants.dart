@@ -31,6 +31,7 @@ final ThemeData darkModeTheme = ThemeData.dark().copyWith(
   toggleButtonsTheme: ToggleButtonsThemeData(
     borderRadius: defaultBorderRadius,
   ),
+  buttonTheme: ButtonThemeData(buttonColor: primaryColor),
 );
 
 bool isPC(final BuildContext context) {

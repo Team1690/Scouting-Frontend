@@ -6,6 +6,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/widgets/card.dart";
+import "package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart";
 import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
 import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
 
@@ -38,11 +39,23 @@ class CoachTeamData extends StatelessWidget {
             return snapshot.data.mapNullable((final CoachViewTeam data) {
                   return CarouselSlider(
                     options: CarouselOptions(
+                      initialPage: 1,
                       height: 3500,
                       aspectRatio: 2.0,
                       viewportFraction: 1,
                     ),
                     items: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: DashboardCard(
+                          title: "Line charts",
+                          body: data.climbData.points[0].length < 2
+                              ? Center(
+                                  child: Text("No data"),
+                                )
+                              : lineCharts(data),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: DashboardCard(
@@ -82,90 +95,176 @@ class CoachTeamData extends StatelessWidget {
   }
 }
 
-Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
-    ? Text("No data")
-    : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+Widget lineCharts(final CoachViewTeam data) => CarouselSlider(
+      options: CarouselOptions(
+        scrollDirection: Axis.vertical,
+        height: 3500,
+        aspectRatio: 2.0,
+        viewportFraction: 1,
+      ),
+      items: <Widget>[
+        Expanded(
+          child: Column(
+            children: <Widget>[
+              FittedBox(
+                fit: BoxFit.fitHeight,
+                child: Center(child: Text("Teleop")),
+              ),
+              Expanded(
+                flex: 6,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, top: 8.0),
+                  child: DashboardLineChart<int>(
+                    distanceFromHighest: 4,
+                    dataSet: data.scoredMissedDataTele.points,
+                    inputedColors: <Color>[
+                      Colors.green,
+                      Colors.red,
+                      Colors.yellow[700]!
+                    ],
+                  ),
+                ),
+              ),
+              Spacer(
+                flex: 3,
+              )
+            ],
+          ),
+        ),
+        Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Text(
-                "Auto",
-                style: TextStyle(fontSize: 18),
+            FittedBox(
+              fit: BoxFit.fitHeight,
+              child: Text("Autonomous"),
+            ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5, top: 8.0),
+                child: DashboardLineChart<int>(
+                  distanceFromHighest: 4,
+                  dataSet: data.scoredMissedDataAuto.points,
+                  inputedColors: <Color>[
+                    Colors.green,
+                    Colors.red,
+                    Colors.yellow[700]!
+                  ],
+                ),
               ),
             ),
-            Column(
-              children: <Widget>[
-                Text(
-                  "Upper: ${data.avgAutoUpperScored.toStringAsFixed(3)}",
-                  style: TextStyle(color: Colors.green[300]),
-                ),
-                Text(
-                  "Lower: ${data.avgAutoLowScored.toStringAsFixed(3)}",
-                  style: TextStyle(color: Colors.yellow),
-                ),
-                Text(
-                  "Missed: ${data.avgAutoMissed.toStringAsFixed(3)}",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                "Teleop",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                Text(
-                  "Upper: ${data.avgTeleUpperScored.toStringAsFixed(3)}",
-                  style: TextStyle(color: Colors.green[300]),
-                ),
-                Text(
-                  "Lower: ${data.avgTeleLowScored.toStringAsFixed(3)}",
-                  style: TextStyle(color: Colors.yellow),
-                ),
-                Text(
-                  "Missed: ${data.avgTeleMissed.toStringAsFixed(3)}",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                "Points",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                Text("Balls: ${data.avgBallPoints.toStringAsFixed(3)}"),
-                Text("Climb: ${data.avgClimbPoints.toStringAsFixed(3)}"),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                "Upper Aim",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                Text(
-                  "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(3)}%" : "Insufficient data"} ",
-                ),
-                Text(
-                  "Autonomous: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(3)}%" : "Insufficient data"} ",
-                ),
-              ],
-            ),
+            Spacer(
+              flex: 3,
+            )
           ],
         ),
+        Column(
+          children: <Widget>[
+            FittedBox(
+              fit: BoxFit.fitHeight,
+              child: Text("Climb"),
+            ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5, top: 8.0),
+                child: DashBoardClimbLineChart<int>(
+                  dataSet: data.climbData.points,
+                ),
+              ),
+            ),
+            Spacer(
+              flex: 3,
+            )
+          ],
+        )
+      ],
+    );
+
+Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
+    ? Text("No data")
+    : Column(
+        children: <Widget>[
+          Spacer(),
+          Row(
+            children: <Expanded>[
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        "Auto",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    Text(
+                      "Upper: ${data.avgAutoUpperScored.toStringAsFixed(3)}",
+                      style: TextStyle(color: Colors.green[300]),
+                    ),
+                    Text(
+                      "Lower: ${data.avgAutoLowScored.toStringAsFixed(3)}",
+                      style: TextStyle(color: Colors.yellow),
+                    ),
+                    Text(
+                      "Missed: ${data.avgAutoMissed.toStringAsFixed(3)}",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        "Points",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    Text("Balls: ${data.avgBallPoints.toStringAsFixed(3)}"),
+                    Text("Climb: ${data.avgClimbPoints.toStringAsFixed(3)}"),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        "Teleop",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    Text(
+                      "Upper: ${data.avgTeleUpperScored.toStringAsFixed(3)}",
+                      style: TextStyle(color: Colors.green[300]),
+                    ),
+                    Text(
+                      "Lower: ${data.avgTeleLowScored.toStringAsFixed(3)}",
+                      style: TextStyle(color: Colors.yellow),
+                    ),
+                    Text(
+                      "Missed: ${data.avgTeleMissed.toStringAsFixed(3)}",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        "Upper Aim",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    Text(
+                      "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(3)}%" : "Insufficient data"} ",
+                    ),
+                    Text(
+                      "Autonomous: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(3)}%" : "Insufficient data"} ",
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Spacer(
+            flex: 2,
+          )
+        ],
       );
 
 const String query = """
@@ -192,6 +291,7 @@ query MyQuery(\$id: Int!) {
     specifics {
       message
     }
+
     matches_aggregate {
       aggregate {
         avg {
@@ -203,13 +303,20 @@ query MyQuery(\$id: Int!) {
           tele_missed
         }
       }
-      nodes{
-        climb{
-          points
-        }
-      }
     }
-
+    matches(order_by: {match_number: asc}) {
+      climb {
+        points
+        title
+      }
+      auto_lower
+      auto_upper
+      auto_missed
+      match_number
+      tele_lower
+      tele_upper
+      tele_missed
+    }
   }
 }
 
@@ -222,7 +329,13 @@ class CoachViewTeam {
     required this.specificData,
     required this.pitData,
     required this.quickData,
+    required this.climbData,
+    required this.scoredMissedDataAuto,
+    required this.scoredMissedDataTele,
   });
+  final LineChartData<int> scoredMissedDataTele;
+  final LineChartData<int> scoredMissedDataAuto;
+  final LineChartData<int> climbData;
   final SpecificData specificData;
   final QuickData quickData;
   final PitData? pitData;
@@ -237,7 +350,6 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
   return result.mapQueryResult(
     (final Map<String, dynamic>? p0) =>
         p0.mapNullable((final Map<String, dynamic> team) {
-          print(team);
           final Map<String, dynamic> teamByPk = team["team_by_pk"] != null
               ? team["team_by_pk"] as Map<String, dynamic>
               : throw Exception("that team doesnt exist");
@@ -283,10 +395,9 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
                   ["aggregate"]["avg"]["tele_upper"] as double? ??
               double.nan;
 
-          final List<int> climbVals =
-              (teamByPk["matches_aggregate"]["nodes"] as List<dynamic>)
-                  .map((final dynamic e) => e["climb"]["points"] as int)
-                  .toList();
+          final List<int> climbVals = (teamByPk["matches"] as List<dynamic>)
+              .map((final dynamic e) => e["climb"]["points"] as int)
+              .toList();
           final int climbSum = climbVals.isEmpty
               ? 0
               : climbVals.length == 1
@@ -313,10 +424,85 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
                     (avgTeleUpperScored + avgTeleMissed + avgTeleLow)) *
                 100,
           );
+          final List<String> climbTitles =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["climb"]["title"] as String)
+                  .toList();
+
+          final List<int> climbPoints = climbTitles.map<int>((final String e) {
+            switch (e) {
+              case "Failed":
+                return 0;
+              case "No attempt":
+                return -1;
+              case "Level 1":
+                return 1;
+              case "Level 2":
+                return 2;
+              case "Level 3":
+                return 3;
+              case "Level 4":
+                return 4;
+            }
+            throw Exception("Not a climb value");
+          }).toList();
+
+          final LineChartData<int> climbData = LineChartData<int>(
+            points: <List<int>>[climbPoints.cast<int>()],
+            title: "Climb",
+          );
+
+          final List<int> upperScoredDataTele =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["tele_upper"] as int)
+                  .toList();
+          final List<int> missedDataTele =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["tele_missed"] as int)
+                  .toList();
+
+          final List<int> lowerScoredDataTele =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["tele_lower"] as int)
+                  .toList();
+
+          final LineChartData<int> scoredMissedDataTele = LineChartData<int>(
+            points: <List<int>>[
+              upperScoredDataTele,
+              missedDataTele,
+              lowerScoredDataTele
+            ],
+            title: "Teleoperated",
+          );
+
+          final List<int> upperScoredDataAuto =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["auto_upper"] as int)
+                  .toList();
+          final List<int> missedDataAuto =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["auto_missed"] as int)
+                  .toList();
+          final List<int> lowerScoredDataAuto =
+              (teamByPk["matches"] as List<dynamic>)
+                  .map((final dynamic e) => e["auto_lower"] as int)
+                  .cast<int>()
+                  .toList();
+          final LineChartData<int> scoredMissedDataAuto = LineChartData<int>(
+            points: <List<int>>[
+              upperScoredDataAuto,
+              missedDataAuto,
+              lowerScoredDataAuto
+            ],
+            title: "Autonomous",
+          );
           return CoachViewTeam(
             specificData: specificData,
             pitData: pitData,
             quickData: quickData,
+            climbData: climbData,
+            scoredMissedDataAuto: scoredMissedDataAuto,
+            scoredMissedDataTele: scoredMissedDataTele,
           );
         }) ??
         (throw Exception("No data")),
@@ -381,48 +567,45 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
           SizedBox(
             height: 30,
           ),
-          FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Align(
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).push<Scaffold>(
-                  PageRouteBuilder<Scaffold>(
-                    reverseTransitionDuration: Duration(milliseconds: 700),
-                    transitionDuration: Duration(milliseconds: 700),
-                    pageBuilder: (
-                      final BuildContext context,
-                      final Animation<double> a,
-                      final Animation<double> b,
-                    ) =>
-                        GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Scaffold(
-                        body: Center(
-                          child: Hero(
-                            tag: "Robot Image",
-                            child: CachedNetworkImage(
-                              imageUrl: data.url,
-                              placeholder: (
-                                final BuildContext context,
-                                final String url,
-                              ) =>
-                                  Center(child: CircularProgressIndicator()),
-                            ),
+          Align(
+            alignment: Alignment.center,
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).push<Scaffold>(
+                PageRouteBuilder<Scaffold>(
+                  reverseTransitionDuration: Duration(milliseconds: 700),
+                  transitionDuration: Duration(milliseconds: 700),
+                  pageBuilder: (
+                    final BuildContext context,
+                    final Animation<double> a,
+                    final Animation<double> b,
+                  ) =>
+                      GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Scaffold(
+                      body: Center(
+                        child: Hero(
+                          tag: "Robot Image",
+                          child: CachedNetworkImage(
+                            width: double.infinity,
+                            imageUrl: data.url,
+                            placeholder: (
+                              final BuildContext context,
+                              final String url,
+                            ) =>
+                                CircularProgressIndicator(),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                child: Hero(
-                  tag: "Robot Image",
-                  child: CachedNetworkImage(
-                    imageUrl: data.url,
-                    placeholder:
-                        (final BuildContext context, final String url) =>
-                            Center(child: CircularProgressIndicator()),
-                  ),
+              ),
+              child: Hero(
+                tag: "Robot Image",
+                child: CachedNetworkImage(
+                  imageUrl: data.url,
+                  placeholder: (final BuildContext context, final String url) =>
+                      CircularProgressIndicator(),
                 ),
               ),
             ),

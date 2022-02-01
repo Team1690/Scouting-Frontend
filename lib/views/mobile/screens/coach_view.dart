@@ -4,6 +4,7 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/team_data.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 
@@ -81,59 +82,48 @@ const List<String> matchTypes = <String>[
   "Finals"
 ];
 
-Widget matchScreen(final BuildContext context, final CoachData data) => Stack(
+Widget matchScreen(final BuildContext context, final CoachData data) => Column(
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: Column(
-                    children: List<Widget>.generate(
-                      3,
-                      (final int index) => Expanded(
-                        flex: 2,
-                        child: teamData(
-                          data.blueAlliance[index],
-                          context,
-                        ),
-                      ),
-                    )..insert(0, Spacer()),
-                  ),
-                  color: Colors.blue,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: Column(
-                    children: List<Widget>.generate(
-                      3,
-                      (final int index) => Expanded(
-                        flex: 2,
-                        child: teamData(
-                          data.redAlliance[index],
-                          context,
-                        ),
-                      ),
-                    )..insert(0, Spacer()),
-                  ),
-                  color: Colors.red,
-                ),
-              ),
-            )
-          ],
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("${data.matchType}: ${data.matchNumber}"),
         ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text("${data.matchType}: ${data.matchNumber}"),
+        Expanded(
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(0.625),
+                  child: Column(
+                    children: List<Widget>.generate(
+                      3,
+                      (final int index) => Expanded(
+                        flex: 2,
+                        child:
+                            teamData(data.blueAlliance[index], context, true),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(0.625),
+                  child: Column(
+                    children: List<Widget>.generate(
+                      3,
+                      (final int index) => Expanded(
+                        flex: 2,
+                        child:
+                            teamData(data.redAlliance[index], context, false),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-        )
+        ),
       ],
     );
 
@@ -404,91 +394,86 @@ class CoachData {
   final String matchType;
 }
 
-Widget teamData(final CoachViewLightTeam team, final BuildContext context) {
-  if (team.autoBallAim.isNaN ||
-      team.avgBallPoints.isNaN ||
-      team.avgClimbPoints.isNaN ||
-      team.teleopBallAim.isNaN) {
-    return GestureDetector(
-      onTap: () => Navigator.push(
+Widget teamData(
+  final CoachViewLightTeam team,
+  final BuildContext context,
+  final bool isBlue,
+) {
+  return Padding(
+    padding: const EdgeInsets.all(defaultPadding / 4),
+    child: ElevatedButton(
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(borderRadius: defaultBorderRadius),
+        ),
+        backgroundColor: MaterialStateProperty.all<Color>(
+          isBlue ? Colors.blue : Colors.red,
+        ),
+      ),
+      onPressed: () => Navigator.push(
         context,
         MaterialPageRoute<CoachTeamData>(
           builder: (final BuildContext context) => CoachTeamData(team.team),
         ),
       ),
       child: Column(
-        children: <Text>[
-          Text(
-            team.team.number.toString(),
-            style: TextStyle(fontSize: 20),
-          ),
-          Text("No data :(")
-        ],
-      ),
-    );
-  }
-  return GestureDetector(
-    onTap: () => Navigator.push(
-      context,
-      MaterialPageRoute<CoachTeamData>(
-        builder: (final BuildContext context) => CoachTeamData(team.team),
-      ),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Align(
-          alignment: Alignment.center,
-          child: Text(
-            team.team.number.toString(),
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: team.team.number == 1690
-                  ? FontWeight.w900
-                  : FontWeight.normal,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              team.team.number.toString(),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: team.team.number == 1690
+                    ? FontWeight.w900
+                    : FontWeight.normal,
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Column(
-            children: <Row>[
-              Row(
-                children: <Widget>[
-                  Text("Ball points: "),
-                  Text(team.avgBallPoints.toString()),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Text("Climb points: "),
-                  Text(team.avgClimbPoints.toStringAsFixed(3)),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Text("Teleop aim: "),
-                  Text(
-                    team.teleopBallAim.isNaN
-                        ? "No data :("
-                        : "${team.teleopBallAim.toStringAsFixed(3)}%",
+          if (!(team.autoBallAim.isNaN ||
+              team.avgBallPoints.isNaN ||
+              team.avgClimbPoints.isNaN ||
+              team.teleopBallAim.isNaN))
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Column(
+                children: <Row>[
+                  Row(
+                    children: <Widget>[
+                      Text("Ball points: "),
+                      Text(team.avgBallPoints.toString()),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text("Climb points: "),
+                      Text(team.avgClimbPoints.toStringAsFixed(3)),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text("Teleop aim: "),
+                      Text(
+                        "${team.teleopBallAim.toStringAsFixed(3)}%",
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text("Auto aim: "),
+                      Text(
+                        "${team.autoBallAim.toStringAsFixed(3)}%",
+                      )
+                    ],
                   )
                 ],
               ),
-              Row(
-                children: <Widget>[
-                  Text("Auto aim: "),
-                  Text(
-                    team.teleopBallAim.isNaN
-                        ? "No data :("
-                        : "${team.autoBallAim.toStringAsFixed(3)}%",
-                  )
-                ],
-              )
-            ],
-          ),
-        )
-      ],
+            )
+          else
+            Center(child: Text("No data :("))
+        ],
+      ),
     ),
   );
 }
