@@ -416,12 +416,10 @@ Widget teamData(
           builder: (final BuildContext context) => CoachTeamData(team.team),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Align(
-            alignment: Alignment.center,
-            child: Text(
+      child: Expanded(
+        child: Column(
+          children: <Widget>[
+            Text(
               team.team.number.toString(),
               style: TextStyle(
                 fontSize: 20,
@@ -430,49 +428,59 @@ Widget teamData(
                     : FontWeight.normal,
               ),
             ),
-          ),
-          if (!(team.autoBallAim.isNaN ||
-              team.avgBallPoints.isNaN ||
-              team.avgClimbPoints.isNaN ||
-              team.teleopBallAim.isNaN))
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                children: <Row>[
-                  Row(
+            if (!(team.autoBallAim.isNaN ||
+                team.avgBallPoints.isNaN ||
+                team.avgClimbPoints.isNaN ||
+                team.teleopBallAim.isNaN))
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
                     children: <Widget>[
-                      Text("Ball points: "),
-                      Text(team.avgBallPoints.toString()),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text("Climb points: "),
-                      Text(team.avgClimbPoints.toStringAsFixed(3)),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text("Teleop aim: "),
-                      Text(
-                        "${team.teleopBallAim.toStringAsFixed(3)}%",
+                      Spacer(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Ball points: "),
+                          Text(team.avgBallPoints.toString()),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Climb points: "),
+                          Text(team.avgClimbPoints.toStringAsFixed(3)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Teleop aim: "),
+                          Text(
+                            "${team.teleopBallAim.toStringAsFixed(3)}%",
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Auto aim: "),
+                          Text(
+                            "${team.autoBallAim.toStringAsFixed(3)}%",
+                          )
+                        ],
+                      ),
+                      Spacer(
+                        flex: 2,
                       )
                     ],
                   ),
-                  Row(
-                    children: <Widget>[
-                      Text("Auto aim: "),
-                      Text(
-                        "${team.autoBallAim.toStringAsFixed(3)}%",
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )
-          else
-            Center(child: Text("No data :("))
-        ],
+                ),
+              )
+            else
+              Center(child: Text("No data :("))
+          ],
+        ),
       ),
     ),
   );
