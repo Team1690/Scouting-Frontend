@@ -122,7 +122,7 @@ class _PitViewState extends State<PitView> {
                   Counter(
                     count: vars.driveMotorAmount,
                     label: "Drive Motors",
-                    icon: Icons.adjust,
+                    icon: Icons.speed,
                     upperLimit: 10,
                     lowerLimit: 2,
                     stepValue: 2,

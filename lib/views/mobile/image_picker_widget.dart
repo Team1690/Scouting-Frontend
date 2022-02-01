@@ -32,9 +32,9 @@ class ImagePickerWidget extends FormField<XFile> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Icon(Icons.upload),
+                      Icon(Icons.camera_alt),
                       Text(
-                        " Pick File",
+                        " Take picture",
                         style: TextStyle(fontSize: 20),
                       ),
                     ],

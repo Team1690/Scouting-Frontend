@@ -93,6 +93,7 @@ void sendMatches(
   final Iterable<Map<String, int>> vars = matches.map<Map<String, int>>(
     (final Match e) => <String, int>{
       "match_number": e.number,
+      "match_type_is": 1,
       for (int i = 0; i < 3; i++)
         "blue_$i": teams
             .where(
