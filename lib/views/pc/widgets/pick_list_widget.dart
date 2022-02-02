@@ -76,32 +76,46 @@ class _PickListState extends State<PickList> {
                       Expanded(
                         flex: 6,
                         child: Row(
-                          children: [
-                            Spacer(),
-                            Text(
-                                "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}"),
-                            Spacer(),
-                            Text(
-                                "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}"),
-                            Spacer(),
-                            Text("Tele aim: ${e.teleAim.toStringAsFixed(1)}%"),
-                            Spacer(),
-                            Text("Auto aim: ${e.autoAim.toStringAsFixed(1)}%"),
-                            Spacer(),
-                            ElevatedButton(
-                              onPressed: () => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute<TeamInfoScreen>(
-                                  builder: (final BuildContext context) =>
-                                      TeamInfoScreen(
-                                    initalTeam:
-                                        LightTeam(e.id, e.number, e.name),
+                          children: <Widget>[
+                            if (!e.autoAim.isNaN) ...<Widget>[
+                              Spacer(),
+                              Text(
+                                "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
+                              ),
+                              Spacer(),
+                              Text(
+                                "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                              ),
+                              Spacer(),
+                              Text(
+                                "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                              ),
+                              Spacer(),
+                              Text(
+                                "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                              ),
+                              Spacer(),
+                              ElevatedButton(
+                                onPressed: () => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute<TeamInfoScreen>(
+                                    builder: (final BuildContext context) =>
+                                        TeamInfoScreen(
+                                      initalTeam:
+                                          LightTeam(e.id, e.number, e.name),
+                                    ),
                                   ),
                                 ),
+                                child: Text("Team info"),
                               ),
-                              child: Text("Team info"),
-                            ),
-                            Spacer(),
+                              Spacer(),
+                            ] else ...<Widget>[
+                              Spacer(),
+                              Text("No data"),
+                              Spacer(
+                                flex: 2,
+                              )
+                            ]
                           ],
                         ),
                       )
