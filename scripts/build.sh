@@ -3,7 +3,7 @@ Commit=$(git log -1 --pretty=%B | head -1)
 
 if [[ ! -d ./build/web ]]
 then
-	mkdir ./build/web
+	mkdir -p ./build/web
     
 fi
 
@@ -19,7 +19,7 @@ else
 fi
 
 
-#flutter build web --web-renderer html --release 
+flutter build web --web-renderer html --release 
 git add . 
 git commit -m "$Commit"
 git push origin master
