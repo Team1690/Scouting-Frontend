@@ -3,7 +3,7 @@ Commit=$(git log -1 --pretty=%B | head -1)
 
 if [[ ! -d ./build/web ]]
 then
-	mkdir build/web
+	mkdir ./build/web
     
 fi
 
