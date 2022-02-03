@@ -59,18 +59,66 @@ class _PickListState extends State<PickList> {
                 child: ListTile(
                   title: Row(
                     children: <Widget>[
-                      GestureDetector(
-                        onTap: () => Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute<TeamInfoScreen>(
-                            builder: (final BuildContext context) =>
-                                TeamInfoScreen(
-                              initalTeam: LightTeam(e.id, e.number, e.name),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute<TeamInfoScreen>(
+                              builder: (final BuildContext context) =>
+                                  TeamInfoScreen(
+                                initalTeam: LightTeam(e.id, e.number, e.name),
+                              ),
                             ),
                           ),
+                          child: Text(e.toString()),
                         ),
-                        child: Text(e.toString()),
                       ),
+                      Expanded(
+                        flex: 6,
+                        child: Row(
+                          children: <Widget>[
+                            if (!e.autoAim.isNaN) ...<Widget>[
+                              Spacer(),
+                              Text(
+                                "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
+                              ),
+                              Spacer(),
+                              Text(
+                                "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                              ),
+                              Spacer(),
+                              Text(
+                                "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                              ),
+                              Spacer(),
+                              Text(
+                                "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                              ),
+                              Spacer(),
+                              ElevatedButton(
+                                onPressed: () => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute<TeamInfoScreen>(
+                                    builder: (final BuildContext context) =>
+                                        TeamInfoScreen(
+                                      initalTeam:
+                                          LightTeam(e.id, e.number, e.name),
+                                    ),
+                                  ),
+                                ),
+                                child: Text("Team info"),
+                              ),
+                              Spacer(),
+                            ] else ...<Widget>[
+                              Spacer(),
+                              Text("No data"),
+                              Spacer(
+                                flex: 2,
+                              )
+                            ]
+                          ],
+                        ),
+                      )
                     ],
                   ),
                   leading: AdvancedSwitch(
@@ -102,20 +150,28 @@ String validateName(final String name) =>
     name == "" ? throw ArgumentError("Invalid Team Name") : name;
 
 class PickListTeam {
-  PickListTeam(
-    final int id,
-    final int number,
-    final String name,
-    final int firstListIndex,
-    final int secondListIndex,
-    final bool available,
-  ) : this.controller(
+  PickListTeam({
+    required final int id,
+    required final int number,
+    required final String name,
+    required final int firstListIndex,
+    required final int secondListIndex,
+    required final bool taken,
+    required final double avgBallPoints,
+    required final double avgClimbPoints,
+    required final double autoAim,
+    required final double teleAim,
+  }) : this.controller(
           validateId(id),
           validateNumber(number),
           validateName(name),
           firstListIndex,
           secondListIndex,
-          ValueNotifier<bool>(available),
+          ValueNotifier<bool>(taken),
+          avgBallPoints,
+          avgClimbPoints,
+          autoAim,
+          teleAim,
         );
 
   PickListTeam.controller(
@@ -125,8 +181,16 @@ class PickListTeam {
     this.firstListIndex,
     this.secondListIndex,
     this.controller,
+    this.avgBallPoints,
+    this.avgClimbPoints,
+    this.autoAim,
+    this.teleAim,
   );
 
+  final double avgBallPoints;
+  final double avgClimbPoints;
+  final double autoAim;
+  final double teleAim;
   final int id;
   final int number;
   final String name;
