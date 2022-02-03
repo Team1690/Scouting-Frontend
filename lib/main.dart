@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
@@ -10,9 +12,11 @@ import "models/id_helpers.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (!Platform.isLinux && !Platform.isWindows && !Platform.isMacOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
   await dotenv.load(fileName: "dev.env");
   final Map<String, int> climbs = await fetchEnum("climb_2022");
   final Map<String, int> driveTrains = await fetchEnum("drivetrain");
