@@ -1,11 +1,11 @@
 import "package:cached_network_image/cached_network_image.dart";
-import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/widgets/card.dart";
+import "package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart";
 import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
 import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
@@ -37,21 +37,17 @@ class CoachTeamData extends StatelessWidget {
             );
           } else {
             return snapshot.data.mapNullable((final CoachViewTeam data) {
-                  return CarouselSlider(
-                    options: CarouselOptions(
-                      initialPage: 1,
-                      height: 3500,
-                      aspectRatio: 2.0,
-                      viewportFraction: 1,
-                    ),
-                    items: <Widget>[
+                  return CarouselWithIndicator(
+                    enableInfininteScroll: true,
+                    initialPage: 1,
+                    widgets: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: DashboardCard(
                           title: "Line charts",
                           body: data.climbData.points[0].length < 2
                               ? Center(
-                                  child: Text("No data"),
+                                  child: Text("No data :("),
                                 )
                               : lineCharts(data),
                         ),
@@ -64,7 +60,7 @@ class CoachTeamData extends StatelessWidget {
                                 (final PitData pit) =>
                                     pitScouting(pit, context),
                               ) ??
-                              Text("No data"),
+                              Center(child: Text("No data :(")),
                         ),
                       ),
                       Padding(
@@ -78,10 +74,14 @@ class CoachTeamData extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: DashboardCard(
                           title: "Specific",
-                          body: ScoutingSpecific(
-                            phone: true,
-                            msg: data.specificData.msg,
-                          ),
+                          body: data.specificData.msg.isEmpty
+                              ? Center(
+                                  child: Text("No data :("),
+                                )
+                              : ScoutingSpecific(
+                                  phone: true,
+                                  msg: data.specificData.msg,
+                                ),
                         ),
                       )
                     ],
@@ -95,14 +95,10 @@ class CoachTeamData extends StatelessWidget {
   }
 }
 
-Widget lineCharts(final CoachViewTeam data) => CarouselSlider(
-      options: CarouselOptions(
-        scrollDirection: Axis.vertical,
-        height: 3500,
-        aspectRatio: 2.0,
-        viewportFraction: 1,
-      ),
-      items: <Widget>[
+Widget lineCharts(final CoachViewTeam data) => CarouselWithIndicator(
+      direction: Axis.vertical,
+      enableInfininteScroll: true,
+      widgets: <Widget>[
         Column(
           children: <Widget>[
             FittedBox(
@@ -121,6 +117,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselSlider(
                 margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: Container(
                   child: DashboardLineChart<int>(
+                    gameNumbers: data.scoredMissedDataTele.gameNumbers,
                     distanceFromHighest: 4,
                     dataSet: data.scoredMissedDataTele.points,
                     inputedColors: <Color>[
@@ -151,6 +148,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselSlider(
               child: Container(
                 margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: DashboardLineChart<int>(
+                  gameNumbers: data.scoredMissedDataAuto.gameNumbers,
                   distanceFromHighest: 4,
                   dataSet: data.scoredMissedDataAuto.points,
                   inputedColors: <Color>[
@@ -180,6 +178,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselSlider(
               child: Container(
                 margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: DashBoardClimbLineChart<int>(
+                  matchNumbers: data.climbData.gameNumbers,
                   dataSet: data.climbData.points,
                 ),
               ),
@@ -193,7 +192,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselSlider(
     );
 
 Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
-    ? Text("No data")
+    ? Center(child: Text("No data :("))
     : Column(
         children: <Widget>[
           Spacer(),
@@ -458,8 +457,11 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
             }
             throw Exception("Not a climb value");
           }).toList();
-
+          final List<int> matchNumbers = (teamByPk["matches"] as List<dynamic>)
+              .map((final dynamic e) => e["match_number"] as int)
+              .toList();
           final LineChartData<int> climbData = LineChartData<int>(
+            gameNumbers: matchNumbers,
             points: <List<int>>[climbPoints.cast<int>()],
             title: "Climb",
           );
@@ -479,6 +481,7 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
                   .toList();
 
           final LineChartData<int> scoredMissedDataTele = LineChartData<int>(
+            gameNumbers: matchNumbers,
             points: <List<int>>[
               upperScoredDataTele,
               missedDataTele,
@@ -501,6 +504,7 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
                   .cast<int>()
                   .toList();
           final LineChartData<int> scoredMissedDataAuto = LineChartData<int>(
+            gameNumbers: matchNumbers,
             points: <List<int>>[
               upperScoredDataAuto,
               missedDataAuto,
@@ -574,6 +578,7 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
           ),
           Text(
             data.notes,
+            textDirection: TextDirection.rtl,
             softWrap: true,
           ),
           SizedBox(

@@ -7,12 +7,14 @@ import "package:scouting_frontend/views/constants.dart";
 class DashboardLineChart<E extends num> extends StatelessWidget {
   const DashboardLineChart({
     required this.dataSet,
+    required this.gameNumbers,
     this.distanceFromHighest = 5,
     this.inputedColors = colors,
   });
   final List<Color> inputedColors;
   final int distanceFromHighest;
   final List<List<E>> dataSet;
+  final List<int> gameNumbers;
 
   @override
   Widget build(final BuildContext context) {
@@ -77,6 +79,9 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
               final double value,
             ) =>
                 value == value.floorToDouble(),
+            getTitles: (final double value) {
+              return gameNumbers[value.toInt() - 1].toString();
+            },
           ),
           rightTitles: SideTitles(
             interval: 5,
@@ -109,7 +114,9 @@ class DashBoardClimbLineChart<E extends num> extends StatelessWidget {
   const DashBoardClimbLineChart({
     required this.dataSet,
     this.inputedColors = const <Color>[],
+    required this.matchNumbers,
   });
+  final List<int> matchNumbers;
   final List<Color> inputedColors;
   final List<List<E>> dataSet;
 
@@ -180,6 +187,8 @@ class DashBoardClimbLineChart<E extends num> extends StatelessWidget {
           titlesData: FlTitlesData(
             show: true,
             topTitles: SideTitles(
+              getTitles: (final double value) =>
+                  matchNumbers[value.toInt() - 1].toString(),
               showTitles: true,
               reservedSize: 16,
               getTextStyles: (final BuildContext context, final double value) =>

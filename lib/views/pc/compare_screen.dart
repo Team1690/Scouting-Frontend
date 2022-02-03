@@ -459,6 +459,12 @@ Widget lineChart<E extends num>(final List<CompareLineChartData<E>> data) =>
             top: 40,
           ),
           child: DashboardLineChart<E>(
+            gameNumbers: List<int>.generate(
+              data
+                  .map((final CompareLineChartData<E> e) => e.points.length)
+                  .reduce(max),
+              (final int index) => index + 1,
+            ),
             distanceFromHighest: 4,
             dataSet: data
                 .map(
@@ -487,6 +493,12 @@ Widget climbLineChart<E extends num>(
             top: 40,
           ),
           child: DashBoardClimbLineChart<E>(
+            matchNumbers: List<int>.generate(
+              data
+                  .map((final CompareLineChartData<E> e) => e.points.length)
+                  .reduce(max),
+              (final int index) => index + 1,
+            ),
             dataSet: data
                 .map(
                   (final CompareLineChartData<E> e) => e.points,
