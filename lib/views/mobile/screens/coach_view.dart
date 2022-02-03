@@ -99,8 +99,11 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
                       3,
                       (final int index) => Expanded(
                         flex: 2,
-                        child:
-                            teamData(data.blueAlliance[index], context, true),
+                        child: teamData(
+                          data.blueAlliance[index],
+                          context,
+                          true,
+                        ),
                       ),
                     ),
                   ),
@@ -438,37 +441,49 @@ Widget teamData(
                   child: Column(
                     children: <Widget>[
                       Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Ball points: "),
-                          Text(team.avgBallPoints.toString()),
-                        ],
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text("Ball points: "),
+                            Text(team.avgBallPoints.toString()),
+                          ],
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Climb points: "),
-                          Text(team.avgClimbPoints.toStringAsFixed(3)),
-                        ],
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text("Climb points: "),
+                            Text(team.avgClimbPoints.toStringAsFixed(3)),
+                          ],
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Teleop aim: "),
-                          Text(
-                            "${team.teleopBallAim.toStringAsFixed(3)}%",
-                          )
-                        ],
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text("Teleop aim: "),
+                            Text(
+                              "${team.teleopBallAim.toStringAsFixed(3)}%",
+                            )
+                          ],
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Auto aim: "),
-                          Text(
-                            "${team.autoBallAim.toStringAsFixed(3)}%",
-                          )
-                        ],
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text("Auto aim: "),
+                            Text(
+                              "${team.autoBallAim.toStringAsFixed(3)}%",
+                            )
+                          ],
+                        ),
                       ),
                       Spacer(
                         flex: 2,
@@ -478,7 +493,9 @@ Widget teamData(
                 ),
               )
             else
-              Center(child: Text("No data :("))
+              Expanded(
+                child: Center(child: Text("No data :(")),
+              )
           ],
         ),
       ),

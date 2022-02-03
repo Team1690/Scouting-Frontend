@@ -204,10 +204,10 @@ Widget quickDataRight(final QuickData data) => Row(
               style: TextStyle(fontSize: 18),
             ),
             Text(
-              "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(1)}%" : "Insufficient data"} ",
+              "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(1)}%" : "No data"} ",
             ),
             Text(
-              "Autonomous: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(1)}%" : "Insufficient data"} ",
+              "Autonomous: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(1)}%" : "No data"} ",
             ),
           ],
         ),
@@ -249,6 +249,7 @@ Widget lineChart<E extends num>(final LineChartData<E> data) => Stack(
             top: 40,
           ),
           child: DashboardLineChart<E>(
+            gameNumbers: data.gameNumbers,
             inputedColors: <Color>[
               Colors.green,
               Colors.red,
@@ -280,6 +281,7 @@ Widget gameChartWidgets<E extends num>(final Team<E> data) {
               top: 40,
             ),
             child: DashBoardClimbLineChart<E>(
+              matchNumbers: data.climbData.gameNumbers,
               dataSet: data.climbData.points,
             ),
           ),
@@ -372,8 +374,13 @@ class SpecificData {
 }
 
 class LineChartData<E extends num> {
-  LineChartData({required this.points, required this.title});
+  LineChartData({
+    required this.points,
+    required this.title,
+    required this.gameNumbers,
+  });
   List<List<E>> points;
+  List<int> gameNumbers;
   String title = "";
 }
 
@@ -595,8 +602,12 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             }
             throw Exception("Not a climb value");
           }).toList();
+          final List<int> matchNumbers = (teamByPk["matches"] as List<dynamic>)
+              .map((final dynamic e) => e["match_number"] as int)
+              .toList();
 
           final LineChartData<E> climbData = LineChartData<E>(
+            gameNumbers: matchNumbers,
             points: <List<E>>[climbPoints.cast<E>()],
             title: "Climb",
           );
@@ -618,6 +629,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                   .toList();
 
           final LineChartData<E> scoredMissedDataTele = LineChartData<E>(
+            gameNumbers: matchNumbers,
             points: <List<E>>[
               upperScoredDataTele,
               missedDataTele,
@@ -641,6 +653,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                   .cast<E>()
                   .toList();
           final LineChartData<E> scoredMissedDataAuto = LineChartData<E>(
+            gameNumbers: matchNumbers,
             points: <List<E>>[
               upperScoredDataAuto,
               missedDataAuto,

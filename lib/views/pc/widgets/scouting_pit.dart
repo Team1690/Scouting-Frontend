@@ -107,6 +107,7 @@ class ScoutingPit extends StatelessWidget {
           Text(
             data.notes,
             softWrap: true,
+            textDirection: TextDirection.rtl,
           )
         ],
       ),

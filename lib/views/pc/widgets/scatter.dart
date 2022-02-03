@@ -121,8 +121,7 @@ class Scatter extends StatelessWidget {
                               ),
                               leftTitle: AxisTitle(
                                 showTitle: true,
-                                titleText:
-                                    "Standard devitaion from ball points",
+                                titleText: "Ball point standard deviation",
                               ),
                             ),
                             borderData: FlBorderData(
