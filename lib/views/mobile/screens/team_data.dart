@@ -527,6 +527,7 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
 
 Widget pitScouting(final PitData data, final BuildContext context) =>
     SingleChildScrollView(
+      primary: false,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

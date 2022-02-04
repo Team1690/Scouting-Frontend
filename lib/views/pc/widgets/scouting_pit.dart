@@ -8,6 +8,7 @@ class ScoutingPit extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return SingleChildScrollView(
+      primary: false,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
