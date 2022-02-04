@@ -406,6 +406,7 @@ Widget teamData(
     padding: const EdgeInsets.all(defaultPadding / 4),
     child: ElevatedButton(
       style: ButtonStyle(
+        minimumSize: MaterialStateProperty.all(Size.infinite),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(borderRadius: defaultBorderRadius),
         ),
@@ -444,48 +445,28 @@ Widget teamData(
                 child: Column(
                   children: <Widget>[
                     Spacer(),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Ball points: "),
-                          Text(team.avgBallPoints.toString()),
-                        ],
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        "Ball points: ${team.avgBallPoints.toStringAsFixed(1)}%",
                       ),
                     ),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Climb points: "),
-                          Text(team.avgClimbPoints.toStringAsFixed(3)),
-                        ],
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}%",
                       ),
                     ),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Teleop aim: "),
-                          Text(
-                            "${team.teleopBallAim.toStringAsFixed(3)}%",
-                          )
-                        ],
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        "Teleop aim: ${team.teleopBallAim.toStringAsFixed(1)}%",
                       ),
                     ),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Auto aim: "),
-                          Text(
-                            "${team.autoBallAim.toStringAsFixed(3)}%",
-                          )
-                        ],
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        "Auto aim: ${team.autoBallAim.toStringAsFixed(1)}%",
                       ),
                     ),
                     Spacer(
