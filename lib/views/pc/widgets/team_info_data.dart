@@ -456,45 +456,44 @@ double getClimbAverage(final List<String> climbVals) {
       climbPoints.length;
 }
 
-Expanded robotImage(final BuildContext context, final String url) => Expanded(
-      child: GestureDetector(
-        onTap: () => Navigator.of(context).push<Scaffold>(
-          PageRouteBuilder<Scaffold>(
-            reverseTransitionDuration: Duration(milliseconds: 700),
-            transitionDuration: Duration(milliseconds: 700),
-            pageBuilder: (
-              final BuildContext context,
-              final Animation<double> a,
-              final Animation<double> b,
-            ) =>
-                GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Scaffold(
-                body: Center(
-                  child: Hero(
-                    tag: "Robot Image",
-                    child: CachedNetworkImage(
-                      imageUrl: url,
-                      placeholder: (
-                        final BuildContext context,
-                        final String url,
-                      ) =>
-                          Center(child: CircularProgressIndicator()),
-                    ),
+Widget robotImage(final BuildContext context, final String url) =>
+    GestureDetector(
+      onTap: () => Navigator.of(context).push<Scaffold>(
+        PageRouteBuilder<Scaffold>(
+          reverseTransitionDuration: Duration(milliseconds: 700),
+          transitionDuration: Duration(milliseconds: 700),
+          pageBuilder: (
+            final BuildContext context,
+            final Animation<double> a,
+            final Animation<double> b,
+          ) =>
+              GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Scaffold(
+              body: Center(
+                child: Hero(
+                  tag: "Robot Image",
+                  child: CachedNetworkImage(
+                    imageUrl: url,
+                    placeholder: (
+                      final BuildContext context,
+                      final String url,
+                    ) =>
+                        Center(child: CircularProgressIndicator()),
                   ),
                 ),
               ),
             ),
           ),
         ),
-        child: Hero(
-          tag: "Robot Image",
-          child: CachedNetworkImage(
-            width: 240,
-            imageUrl: url,
-            placeholder: (final BuildContext context, final String url) =>
-                Center(child: CircularProgressIndicator()),
-          ),
+      ),
+      child: Hero(
+        tag: "Robot Image",
+        child: CachedNetworkImage(
+          width: 240,
+          imageUrl: url,
+          placeholder: (final BuildContext context, final String url) =>
+              Center(child: CircularProgressIndicator()),
         ),
       ),
     );

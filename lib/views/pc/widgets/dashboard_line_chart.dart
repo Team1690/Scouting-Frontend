@@ -22,6 +22,19 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
         dataSet.map((final List<E> points) => points.reduce(max)).reduce(max);
     return LineChart(
       LineChartData(
+        lineTouchData: LineTouchData(
+          touchTooltipData: LineTouchTooltipData(
+            getTooltipItems: (final List<LineBarSpot> touchedSpots) =>
+                touchedSpots
+                    .map(
+                      (final LineBarSpot e) => LineTooltipItem(
+                        e.y.toInt().toString(),
+                        TextStyle(color: e.bar.colors[0]),
+                      ),
+                    )
+                    .toList(),
+          ),
+        ),
         lineBarsData:
             List<LineChartBarData>.generate(dataSet.length, (final int index) {
           final List<Color> chartColors = <Color>[inputedColors[index]];
@@ -134,7 +147,7 @@ class DashBoardClimbLineChart<E extends num> extends StatelessWidget {
                                 -1: "No attempt"
                               }[e.y.toInt()] ??
                               "Level ${e.y.toInt()}",
-                          TextStyle(),
+                          TextStyle(color: e.bar.colors[0]),
                         ),
                       )
                       .toList(),
