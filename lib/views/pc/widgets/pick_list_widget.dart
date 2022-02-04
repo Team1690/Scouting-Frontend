@@ -39,103 +39,101 @@ class _PickListState extends State<PickList> {
   Widget build(final BuildContext context) {
     return Container(
       child: ReorderableListView(
-        children: <Widget>[
-          ...widget.uiList.map<Widget>((final PickListTeam e) {
-            e.controller.addListener(() {
-              widget.onReorder(widget.uiList);
-            });
-            return Card(
-              // TODO: move theme-related values into a dedicated InheritedWidget
-              color: bgColor,
-              key: ValueKey<String>(e.toString()),
-              elevation: 2,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(
-                  0,
-                  defaultPadding / 4,
-                  0,
-                  defaultPadding / 4,
-                ),
-                child: ListTile(
-                  title: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute<TeamInfoScreen>(
-                              builder: (final BuildContext context) =>
-                                  TeamInfoScreen(
-                                initalTeam: LightTeam(e.id, e.number, e.name),
-                              ),
+        primary: false,
+        children: widget.uiList.map<Widget>((final PickListTeam e) {
+          e.controller.addListener(() {
+            widget.onReorder(widget.uiList);
+          });
+          return Card(
+            color: bgColor,
+            key: ValueKey<String>(e.toString()),
+            elevation: 2,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(
+                0,
+                defaultPadding / 4,
+                0,
+                defaultPadding / 4,
+              ),
+              child: ListTile(
+                title: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute<TeamInfoScreen>(
+                            builder: (final BuildContext context) =>
+                                TeamInfoScreen(
+                              initalTeam: LightTeam(e.id, e.number, e.name),
                             ),
                           ),
-                          child: Text(e.toString()),
                         ),
+                        child: Text(e.toString()),
                       ),
-                      Expanded(
-                        flex: 6,
-                        child: Row(
-                          children: <Widget>[
-                            if (!e.autoAim.isNaN) ...<Widget>[
-                              Spacer(),
-                              Text(
-                                "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
-                              ),
-                              Spacer(),
-                              Text(
-                                "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
-                              ),
-                              Spacer(),
-                              Text(
-                                "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
-                              ),
-                              Spacer(),
-                              Text(
-                                "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
-                              ),
-                              Spacer(),
-                              ElevatedButton(
-                                onPressed: () => Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute<TeamInfoScreen>(
-                                    builder: (final BuildContext context) =>
-                                        TeamInfoScreen(
-                                      initalTeam:
-                                          LightTeam(e.id, e.number, e.name),
-                                    ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Row(
+                        children: <Widget>[
+                          if (!e.autoAim.isNaN) ...<Widget>[
+                            Spacer(),
+                            Text(
+                              "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
+                            ),
+                            Spacer(),
+                            Text(
+                              "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                            ),
+                            Spacer(),
+                            Text(
+                              "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                            ),
+                            Spacer(),
+                            Text(
+                              "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                            ),
+                            Spacer(),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute<TeamInfoScreen>(
+                                  builder: (final BuildContext context) =>
+                                      TeamInfoScreen(
+                                    initalTeam:
+                                        LightTeam(e.id, e.number, e.name),
                                   ),
                                 ),
-                                child: Text("Team info"),
                               ),
-                              Spacer(),
-                            ] else ...<Widget>[
-                              Spacer(),
-                              Text("No data"),
-                              Spacer(
-                                flex: 2,
-                              )
-                            ]
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  leading: AdvancedSwitch(
-                    controller: e.controller,
-                    activeColor: Colors.red,
-                    inactiveColor: primaryColor,
-                    activeChild: Text("Taken"),
-                    inactiveChild: Text("Available"),
-                    height: 25,
-                    width: 100,
-                    enabled: true,
-                  ),
+                              child: Text("Team info"),
+                            ),
+                            Spacer(),
+                          ] else ...<Widget>[
+                            Spacer(),
+                            Text("No data"),
+                            Spacer(
+                              flex: 2,
+                            )
+                          ]
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                leading: AdvancedSwitch(
+                  controller: e.controller,
+                  activeColor: Colors.red,
+                  inactiveColor: primaryColor,
+                  activeChild: Text("Taken"),
+                  inactiveChild: Text("Available"),
+                  height: 25,
+                  width: 100,
+                  enabled: true,
                 ),
               ),
-            );
-          })
-        ],
+            ),
+          );
+        }).toList(),
         onReorder: reorderData,
       ),
     );

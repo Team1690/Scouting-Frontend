@@ -406,6 +406,7 @@ Widget teamData(
     padding: const EdgeInsets.all(defaultPadding / 4),
     child: ElevatedButton(
       style: ButtonStyle(
+        minimumSize: MaterialStateProperty.all(Size.infinite),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(borderRadius: defaultBorderRadius),
         ),
@@ -419,10 +420,11 @@ Widget teamData(
           builder: (final BuildContext context) => CoachTeamData(team.team),
         ),
       ),
-      child: Expanded(
-        child: Column(
-          children: <Widget>[
-            Text(
+      child: Column(
+        children: <Widget>[
+          Spacer(),
+          Expanded(
+            child: Text(
               team.team.number.toString(),
               style: TextStyle(
                 fontSize: 20,
@@ -431,73 +433,55 @@ Widget teamData(
                     : FontWeight.normal,
               ),
             ),
-            if (!(team.autoBallAim.isNaN ||
-                team.avgBallPoints.isNaN ||
-                team.avgClimbPoints.isNaN ||
-                team.teleopBallAim.isNaN))
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Column(
-                    children: <Widget>[
-                      Spacer(),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Ball points: "),
-                            Text(team.avgBallPoints.toString()),
-                          ],
-                        ),
+          ),
+          if (!(team.autoBallAim.isNaN ||
+              team.avgBallPoints.isNaN ||
+              team.avgClimbPoints.isNaN ||
+              team.teleopBallAim.isNaN))
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Column(
+                  children: <Widget>[
+                    Spacer(),
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        "Ball points: ${team.avgBallPoints.toStringAsFixed(1)}%",
                       ),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Climb points: "),
-                            Text(team.avgClimbPoints.toStringAsFixed(3)),
-                          ],
-                        ),
+                    ),
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}%",
                       ),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Teleop aim: "),
-                            Text(
-                              "${team.teleopBallAim.toStringAsFixed(3)}%",
-                            )
-                          ],
-                        ),
+                    ),
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        "Teleop aim: ${team.teleopBallAim.toStringAsFixed(1)}%",
                       ),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Auto aim: "),
-                            Text(
-                              "${team.autoBallAim.toStringAsFixed(3)}%",
-                            )
-                          ],
-                        ),
+                    ),
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text(
+                        "Auto aim: ${team.autoBallAim.toStringAsFixed(1)}%",
                       ),
-                      Spacer(
-                        flex: 2,
-                      )
-                    ],
-                  ),
+                    ),
+                    Spacer(
+                      flex: 2,
+                    )
+                  ],
                 ),
-              )
-            else
-              Expanded(
-                child: Center(child: Text("No data :(")),
-              )
-          ],
-        ),
+              ),
+            )
+          else
+            Expanded(
+              flex: 4,
+              child: Center(child: Text("No data :(")),
+            )
+        ],
       ),
     ),
   );

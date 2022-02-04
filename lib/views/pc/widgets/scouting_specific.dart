@@ -10,6 +10,7 @@ class ScoutingSpecific extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return SingleChildScrollView(
+      primary: false,
       child: Column(
         children: msg
             .map(

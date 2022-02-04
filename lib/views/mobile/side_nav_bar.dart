@@ -16,6 +16,7 @@ class _SideNavBarState extends State<SideNavBar> {
   Widget build(final BuildContext context) {
     return Drawer(
       child: ListView(
+        primary: false,
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
