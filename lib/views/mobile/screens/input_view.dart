@@ -7,7 +7,7 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/main_app_bar.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
-import "package:scouting_frontend/views/mobile/team_selection_future.dart";
+import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/match_dropdown.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";

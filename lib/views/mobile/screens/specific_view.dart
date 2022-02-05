@@ -4,7 +4,7 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
-import "package:scouting_frontend/views/mobile/team_selection_future.dart";
+import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
 
 class Specific extends StatefulWidget {
