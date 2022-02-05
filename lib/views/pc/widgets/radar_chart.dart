@@ -40,6 +40,7 @@ class SpiderChart extends StatelessWidget {
         axisColor: primaryWhite,
         outlineColor: secondaryWhite,
         featuresTextStyle: Theme.of(context).textTheme.bodyText2!,
+        ticksTextStyle: TextStyle(fontSize: 0),
       ),
     );
   }
