@@ -3,6 +3,7 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
@@ -161,7 +162,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                   final CompareLineChartData<E> climbData =
                       CompareLineChartData<E>(
                     title: "Climb",
-                    points: climbPoints.cast(),
+                    points: climbPoints.castToGeneric<E>().toList(),
                   );
 
                   final List<int> upperScoredDataTele =
@@ -178,13 +179,13 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                   final CompareLineChartData<E> upperScoredDataTeleLineChart =
                       CompareLineChartData<E>(
                     title: "Teleop upper",
-                    points: upperScoredDataTele.cast(),
+                    points: upperScoredDataTele.castToGeneric<E>().toList(),
                   );
 
                   final CompareLineChartData<E> missedDataTeleLineChart =
                       CompareLineChartData<E>(
                     title: "Teleop missed",
-                    points: missedDataTele.cast(),
+                    points: missedDataTele.castToGeneric<E>().toList(),
                   );
 
                   final List<int> upperScoredDataAuto =
@@ -201,13 +202,13 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                   final CompareLineChartData<E> upperScoredDataAutoLinechart =
                       CompareLineChartData<E>(
                     title: "Auto upper",
-                    points: upperScoredDataAuto.cast(),
+                    points: upperScoredDataAuto.castToGeneric<E>().toList(),
                   );
 
                   final CompareLineChartData<E> missedDataAutoLinechart =
                       CompareLineChartData<E>(
                     title: "Auto missed",
-                    points: missedDataAuto.cast(),
+                    points: missedDataAuto.castToGeneric<E>().toList(),
                   );
 
                   return CompareTeam<E>(

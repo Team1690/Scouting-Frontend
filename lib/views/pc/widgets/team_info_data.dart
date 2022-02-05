@@ -1,6 +1,7 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
@@ -39,29 +40,29 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
               (final Team<E> data) => Row(
                 children: <Widget>[
                   Expanded(
-                    flex: 4,
+                    flex: 5,
                     child: Column(
                       children: <Widget>[
                         Expanded(
                           flex: 3,
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: DashboardCard(
-                                  title: "Quick",
-                                  body: quickDataLeft(data.quickData),
-                                ),
-                              ),
-                              SizedBox(
-                                width: defaultPadding,
-                              ),
-                              Expanded(
-                                child: DashboardCard(
-                                  title: "Data",
-                                  body: quickDataRight(data.quickData),
-                                ),
-                              )
-                            ],
+                          child: DashboardCard(
+                            title: "Quick data",
+                            body: Row(
+                              children: <Widget>[
+                                if (data.quickData.scorePercentTele.isNaN)
+                                  Container()
+                                else ...<Expanded>[
+                                  Expanded(
+                                    flex: 6,
+                                    child: quickDataLeft(data.quickData),
+                                  ),
+                                  Expanded(
+                                    flex: 6,
+                                    child: quickDataRight(data.quickData),
+                                  )
+                                ],
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(height: defaultPadding),
@@ -69,13 +70,13 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
                           flex: 6,
                           child: DashboardCard(
                             title: "Game Chart",
-                            body: data.scoredMissedDataTele.points[0].length > 1
-                                ? gameChartWidgets(data)
-                                : Center(
-                                    child: Text(
-                                      "No data yet :(",
-                                    ),
-                                  ),
+                            body: data.climbData.points[0].isEmpty
+                                ? Center(
+                                    child: Container(),
+                                  )
+                                : data.climbData.points[0].length == 1
+                                    ? Text("Not enough data for line chart")
+                                    : gameChartWidgets(data),
                           ),
                         )
                       ],
@@ -86,11 +87,9 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
                     flex: 2,
                     child: DashboardCard(
                       title: "Scouting Specific",
-                      body: snapShot.data!.specificData.msg.isNotEmpty
-                          ? ScoutingSpecific(
-                              msg: snapShot.data!.specificData.msg,
-                            )
-                          : Center(child: Text("No data yet :(")),
+                      body: ScoutingSpecific(
+                        msg: snapShot.data!.specificData.msg,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -102,7 +101,7 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
                           (final PitData p0) => Column(
                             children: <Widget>[
                               Expanded(
-                                flex: 2,
+                                flex: 3,
                                 child: DashboardCard(
                                   title: "Robot Image",
                                   body: robotImage(
@@ -115,7 +114,7 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
                                 height: defaultPadding,
                               ),
                               Expanded(
-                                flex: 3,
+                                flex: 6,
                                 child: DashboardCard(
                                   title: "Pit Scouting",
                                   body: ScoutingPit(p0),
@@ -124,7 +123,27 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
                             ],
                           ),
                         ) ??
-                        DashboardCard(title: "Pit Scouting", body: Container()),
+                        Column(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 3,
+                              child: DashboardCard(
+                                title: "Robot Image",
+                                body: Container(),
+                              ),
+                            ),
+                            SizedBox(
+                              height: defaultPadding,
+                            ),
+                            Expanded(
+                              flex: 6,
+                              child: DashboardCard(
+                                title: "Pit Scouting",
+                                body: Container(),
+                              ),
+                            ),
+                          ],
+                        ),
                   ),
                 ],
               ),
@@ -138,46 +157,56 @@ class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
 Widget quickDataLeft(final QuickData data) => Row(
       children: <Widget>[
         Spacer(),
-        Column(
-          children: <Widget>[
-            Text(
-              "Auto",
-              style: TextStyle(fontSize: 18),
-            ),
-            Text(
-              "Upper: ${data.avgAutoUpperScored.toStringAsFixed(1)}",
-              style: TextStyle(color: Colors.green),
-            ),
-            Text(
-              "Lower: ${data.avgAutoLowScored.toStringAsFixed(1)}",
-              style: TextStyle(color: Colors.yellow),
-            ),
-            Text(
-              "Missed: ${data.avgAutoMissed.toStringAsFixed(1)}",
-              style: TextStyle(color: Colors.red),
-            ),
-          ],
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Auto",
+                style: TextStyle(fontSize: 18),
+              ),
+              Spacer(),
+              Text(
+                "Upper: ${data.avgAutoUpperScored.toStringAsFixed(1)}",
+                style: TextStyle(color: Colors.green),
+              ),
+              Text(
+                "Lower: ${data.avgAutoLowScored.toStringAsFixed(1)}",
+                style: TextStyle(color: Colors.yellow),
+              ),
+              Text(
+                "Missed: ${data.avgAutoMissed.toStringAsFixed(1)}",
+                style: TextStyle(color: Colors.red),
+              ),
+              Spacer()
+            ],
+          ),
         ),
         Spacer(),
-        Column(
-          children: <Widget>[
-            Text(
-              "Teleop",
-              style: TextStyle(fontSize: 18),
-            ),
-            Text(
-              "Upper: ${data.avgTeleUpperScored.toStringAsFixed(1)}",
-              style: TextStyle(color: Colors.green),
-            ),
-            Text(
-              "Lower: ${data.avgTeleLowScored.toStringAsFixed(1)}",
-              style: TextStyle(color: Colors.yellow),
-            ),
-            Text(
-              "Missed: ${data.avgTeleMissed.toStringAsFixed(1)}",
-              style: TextStyle(color: Colors.red),
-            ),
-          ],
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Teleop",
+                style: TextStyle(fontSize: 18),
+              ),
+              Spacer(),
+              Text(
+                "Upper: ${data.avgTeleUpperScored.toStringAsFixed(1)}",
+                style: TextStyle(color: Colors.green),
+              ),
+              Text(
+                "Lower: ${data.avgTeleLowScored.toStringAsFixed(1)}",
+                style: TextStyle(color: Colors.yellow),
+              ),
+              Text(
+                "Missed: ${data.avgTeleMissed.toStringAsFixed(1)}",
+                style: TextStyle(color: Colors.red),
+              ),
+              Spacer()
+            ],
+          ),
         ),
         Spacer()
       ],
@@ -186,30 +215,44 @@ Widget quickDataLeft(final QuickData data) => Row(
 Widget quickDataRight(final QuickData data) => Row(
       children: <Widget>[
         Spacer(),
-        Column(
-          children: <Widget>[
-            Text(
-              "Points",
-              style: TextStyle(fontSize: 18),
-            ),
-            Text("Balls: ${data.avgBallPoints.toStringAsFixed(1)}"),
-            Text("Climb: ${data.avgClimbPoints.toStringAsFixed(1)}"),
-          ],
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Points",
+                style: TextStyle(fontSize: 18),
+              ),
+              Spacer(),
+              Text("Balls: ${data.avgBallPoints.toStringAsFixed(1)}"),
+              Text("Climb: ${data.avgClimbPoints.toStringAsFixed(1)}"),
+              Spacer(
+                flex: 2,
+              )
+            ],
+          ),
         ),
         Spacer(),
-        Column(
-          children: <Widget>[
-            Text(
-              "Upper Aim",
-              style: TextStyle(fontSize: 18),
-            ),
-            Text(
-              "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(1)}%" : "No data"} ",
-            ),
-            Text(
-              "Autonomous: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(1)}%" : "No data"} ",
-            ),
-          ],
+        Expanded(
+          flex: 3,
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Aim",
+                style: TextStyle(fontSize: 18),
+              ),
+              Spacer(),
+              Text(
+                "Auto: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(1)}%" : "No data"} ",
+              ),
+              Text(
+                "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(1)}%" : "No data"} ",
+              ),
+              Spacer(
+                flex: 2,
+              )
+            ],
+          ),
         ),
         Spacer()
       ],
@@ -607,24 +650,24 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
 
           final LineChartData<E> climbData = LineChartData<E>(
             gameNumbers: matchNumbers,
-            points: <List<E>>[climbPoints.cast<E>()],
+            points: <List<E>>[climbPoints.castToGeneric<E>().toList()],
             title: "Climb",
           );
 
           final List<E> upperScoredDataTele =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["tele_upper"] as int)
-                  .cast<E>()
+                  .castToGeneric<E>()
                   .toList();
           final List<E> missedDataTele = (teamByPk["matches"] as List<dynamic>)
               .map((final dynamic e) => e["tele_missed"] as int)
-              .cast<E>()
+              .castToGeneric<E>()
               .toList();
 
           final List<E> lowerScoredDataTele =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["tele_lower"] as int)
-                  .cast<E>()
+                  .castToGeneric<E>()
                   .toList();
 
           final LineChartData<E> scoredMissedDataTele = LineChartData<E>(
@@ -641,15 +684,19 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["auto_upper"] as int)
                   .toList()
-                  .cast<E>();
+                  .castToGeneric<E>()
+                  .toList();
           final List<E> missedDataAuto = (teamByPk["matches"] as List<dynamic>)
               .map((final dynamic e) => e["auto_missed"] as int)
-              .cast<E>()
+              .toList()
+              .castToGeneric<E>()
               .toList();
           final List<E> lowerScoredDataAuto =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["auto_lower"] as int)
-                  .cast<E>()
+                  .toList()
+                  .castToGeneric<E>()
+                  .toList()
                   .toList();
           final LineChartData<E> scoredMissedDataAuto = LineChartData<E>(
             gameNumbers: matchNumbers,

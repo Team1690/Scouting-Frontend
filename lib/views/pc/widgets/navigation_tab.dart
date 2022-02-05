@@ -58,7 +58,8 @@ class _NavigationTab extends State<NavigationTab> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<CompareScreen<int>>(
-                  builder: (final BuildContext context) => CompareScreen<int>(),
+                  builder: (final BuildContext context) =>
+                      CompareScreen<double>(),
                 ),
               );
             },
