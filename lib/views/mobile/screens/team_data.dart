@@ -257,7 +257,7 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        "Upper Aim",
+                        "Aim",
                         style: TextStyle(fontSize: 18),
                       ),
                     ),
@@ -462,7 +462,7 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
               .toList();
           final LineChartData<int> climbData = LineChartData<int>(
             gameNumbers: matchNumbers,
-            points: <List<int>>[climbPoints.cast<int>()],
+            points: <List<int>>[climbPoints],
             title: "Climb",
           );
 
@@ -501,7 +501,6 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
           final List<int> lowerScoredDataAuto =
               (teamByPk["matches"] as List<dynamic>)
                   .map((final dynamic e) => e["auto_lower"] as int)
-                  .cast<int>()
                   .toList();
           final LineChartData<int> scoredMissedDataAuto = LineChartData<int>(
             gameNumbers: matchNumbers,
