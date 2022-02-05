@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/pc/widgets/teams_search_box.dart";
+import "package:scouting_frontend/views/common/teams_search_box.dart";
 
 class TeamSelectionFuture extends StatefulWidget {
   TeamSelectionFuture({

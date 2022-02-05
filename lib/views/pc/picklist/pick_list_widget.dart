@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
-import "package:scouting_frontend/views/pc/pick_list_screen.dart";
-import "package:scouting_frontend/views/pc/team_info_screen.dart";
+import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
+import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 
 class PickList extends StatefulWidget {
   PickList({

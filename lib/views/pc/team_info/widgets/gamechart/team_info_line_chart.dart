@@ -123,8 +123,8 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
   }
 }
 
-class DashBoardClimbLineChart<E extends num> extends StatelessWidget {
-  const DashBoardClimbLineChart({
+class DashboardClimbLineChart<E extends num> extends StatelessWidget {
+  const DashboardClimbLineChart({
     required this.dataSet,
     this.inputedColors = const <Color>[],
     required this.matchNumbers,

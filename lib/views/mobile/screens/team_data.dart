@@ -4,11 +4,11 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/pc/widgets/card.dart";
-import "package:scouting_frontend/views/pc/widgets/carousel_with_indicator.dart";
-import "package:scouting_frontend/views/pc/widgets/dashboard_line_chart.dart";
-import "package:scouting_frontend/views/pc/widgets/scouting_specific.dart";
-import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
+import "package:scouting_frontend/views/common/card.dart";
+import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/team_info_line_chart.dart";
+import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/specific/scouting_specific.dart";
 
 class CoachTeamData extends StatelessWidget {
   const CoachTeamData(this.team);
@@ -177,7 +177,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselWithIndicator(
               flex: 6,
               child: Container(
                 margin: const EdgeInsets.only(left: 25, top: 8.0),
-                child: DashBoardClimbLineChart<int>(
+                child: DashboardClimbLineChart<int>(
                   matchNumbers: data.climbData.gameNumbers,
                   dataSet: data.climbData.points,
                 ),
@@ -209,15 +209,15 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
                       ),
                     ),
                     Text(
-                      "Upper: ${data.avgAutoUpperScored.toStringAsFixed(3)}",
+                      "Upper: ${data.avgAutoUpperScored.toStringAsFixed(1)}",
                       style: TextStyle(color: Colors.green[300]),
                     ),
                     Text(
-                      "Lower: ${data.avgAutoLowScored.toStringAsFixed(3)}",
+                      "Lower: ${data.avgAutoLowScored.toStringAsFixed(1)}",
                       style: TextStyle(color: Colors.yellow),
                     ),
                     Text(
-                      "Missed: ${data.avgAutoMissed.toStringAsFixed(3)}",
+                      "Missed: ${data.avgAutoMissed.toStringAsFixed(1)}",
                       style: TextStyle(color: Colors.red),
                     ),
                     Padding(
@@ -227,8 +227,8 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
                         style: TextStyle(fontSize: 18),
                       ),
                     ),
-                    Text("Balls: ${data.avgBallPoints.toStringAsFixed(3)}"),
-                    Text("Climb: ${data.avgClimbPoints.toStringAsFixed(3)}"),
+                    Text("Balls: ${data.avgBallPoints.toStringAsFixed(1)}"),
+                    Text("Climb: ${data.avgClimbPoints.toStringAsFixed(1)}"),
                   ],
                 ),
               ),
@@ -243,15 +243,15 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
                       ),
                     ),
                     Text(
-                      "Upper: ${data.avgTeleUpperScored.toStringAsFixed(3)}",
+                      "Upper: ${data.avgTeleUpperScored.toStringAsFixed(1)}",
                       style: TextStyle(color: Colors.green[300]),
                     ),
                     Text(
-                      "Lower: ${data.avgTeleLowScored.toStringAsFixed(3)}",
+                      "Lower: ${data.avgTeleLowScored.toStringAsFixed(1)}",
                       style: TextStyle(color: Colors.yellow),
                     ),
                     Text(
-                      "Missed: ${data.avgTeleMissed.toStringAsFixed(3)}",
+                      "Missed: ${data.avgTeleMissed.toStringAsFixed(1)}",
                       style: TextStyle(color: Colors.red),
                     ),
                     Padding(
@@ -262,10 +262,10 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
                       ),
                     ),
                     Text(
-                      "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(3)}%" : "Insufficient data"} ",
+                      "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(1)}%" : "Insufficient data"} ",
                     ),
                     Text(
-                      "Autonomous: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(3)}%" : "Insufficient data"} ",
+                      "Auto: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(1)}%" : "Insufficient data"} ",
                     ),
                   ],
                 ),
@@ -278,7 +278,8 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
         ],
       );
 
-const String query = """
+const String query =
+    """
 
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {

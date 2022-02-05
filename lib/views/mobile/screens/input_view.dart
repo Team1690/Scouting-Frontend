@@ -7,7 +7,7 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/main_app_bar.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
-import "package:scouting_frontend/views/mobile/team_selection_future.dart";
+import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/match_dropdown.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
@@ -198,7 +198,8 @@ class _UserInputState extends State<UserInput> {
   }
 }
 
-const String mutation = """
+const String mutation =
+    """
 mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int) {
   insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed}) {
     returning {

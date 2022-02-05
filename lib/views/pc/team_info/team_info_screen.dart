@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/views/mobile/team_selection_future.dart";
-import "package:scouting_frontend/views/pc/widgets/card.dart";
-import "package:scouting_frontend/views/pc/widgets/dashboard_scaffold.dart";
-import "package:scouting_frontend/views/pc/widgets/team_info_data.dart";
+import "package:scouting_frontend/views/common/team_selection_future.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/no_team_selected.dart";
+import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
+import "package:scouting_frontend/views/pc/team_info/team_info_data.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
 class TeamInfoScreen extends StatefulWidget {
@@ -67,35 +67,11 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
               child: chosenTeam.mapNullable(
                     TeamInfoData<double>.new,
                   ) ??
-                  noTeamSelected(),
+                  NoTeamSelected(),
             ),
           ],
         ),
       ),
     );
   }
-}
-
-Widget noTeamSelected() {
-  return DashboardCard(
-    title: "",
-    body: Center(
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(),
-          ),
-          Icon(
-            Icons.search,
-            size: 100,
-          ),
-          SizedBox(height: defaultPadding),
-          Text("Please choose a team in order to display data"),
-          Expanded(
-            child: Container(),
-          ),
-        ],
-      ),
-    ),
-  );
 }

@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
-
-import "../../constants.dart";
+import "package:scouting_frontend/views/constants.dart";
 
 class ScoutingSpecific extends StatelessWidget {
   const ScoutingSpecific({required this.msg, this.phone = false});

@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:scouting_frontend/views/pc/compare_screen.dart";
-import "package:scouting_frontend/views/pc/pick_list_screen.dart";
-import "package:scouting_frontend/views/pc/scatters_screen.dart";
-import "package:scouting_frontend/views/pc/team_info_screen.dart";
+import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
+import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
+import "package:scouting_frontend/views/pc/scatter/scatters_screen.dart";
+import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 
-import "package:scouting_frontend/views/pc/widgets/navigation_tab.dart";
+import "package:scouting_frontend/views/common/navigation_tab.dart";
 
 class DashboardScaffold extends StatelessWidget {
   DashboardScaffold({
