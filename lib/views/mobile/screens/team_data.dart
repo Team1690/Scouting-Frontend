@@ -278,8 +278,7 @@ Widget quickData(final QuickData data) => data.avgAutoLowScored.isNaN
         ],
       );
 
-const String query =
-    """
+const String query = """
 
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
