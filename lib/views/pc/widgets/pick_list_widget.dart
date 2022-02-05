@@ -78,22 +78,30 @@ class _PickListState extends State<PickList> {
                         children: <Widget>[
                           if (!e.autoAim.isNaN) ...<Widget>[
                             Spacer(),
-                            Text(
-                              "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
+                              ),
                             ),
-                            Spacer(),
-                            Text(
-                              "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                              ),
                             ),
-                            Spacer(),
-                            Text(
-                              "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                              ),
                             ),
-                            Spacer(),
-                            Text(
-                              "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                              ),
                             ),
-                            Spacer(),
                             ElevatedButton(
                               onPressed: () => Navigator.pushReplacement(
                                 context,
