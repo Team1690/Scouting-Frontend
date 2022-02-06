@@ -136,10 +136,15 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                 avgTeleLow +
                 avgAutoUpperScored * 4 +
                 avgAutoLow * 2,
-            avgClimbPoints: climbPoints.reduce(
-                  (final int value, final int element) => value + element,
-                ) /
-                climbPoints.length,
+            avgClimbPoints: climbPoints.isEmpty
+                ? 0.0
+                : climbPoints.length == 1
+                    ? climbPoints.single.toDouble()
+                    : climbPoints.reduce(
+                          (final int value, final int element) =>
+                              value + element,
+                        ) /
+                        climbPoints.length,
             avgTeleLowScored: avgTeleLow,
             avgTeleMissed: avgTeleMissed,
             avgTeleUpperScored: avgTeleUpperScored,

@@ -9,19 +9,14 @@ import "package:scouting_frontend/views/pc/team_info/widgets/quick_data/quick_da
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/specific/specific_card.dart";
 
-class TeamInfoData<E extends num> extends StatefulWidget {
+class TeamInfoData<E extends num> extends StatelessWidget {
   TeamInfoData(this.team);
   final LightTeam team;
 
   @override
-  _TeamInfoDataState<E> createState() => _TeamInfoDataState<E>();
-}
-
-class _TeamInfoDataState<E extends num> extends State<TeamInfoData<E>> {
-  @override
   Widget build(final BuildContext context) {
     return FutureBuilder<Team<E>>(
-      future: fetchTeamInfo<E>(widget.team),
+      future: fetchTeamInfo<E>(team),
       builder: (
         final BuildContext context,
         final AsyncSnapshot<Team<E>> snapShot,
