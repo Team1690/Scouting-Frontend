@@ -59,6 +59,7 @@ class _PickListState extends State<PickList> {
                 title: Row(
                   children: <Widget>[
                     Expanded(
+                      flex: 3,
                       child: GestureDetector(
                         onTap: () => Navigator.pushReplacement(
                           context,
@@ -69,63 +70,60 @@ class _PickListState extends State<PickList> {
                             ),
                           ),
                         ),
-                        child: Text(e.toString()),
+                        child: Text(
+                          e.toString(),
+                        ),
                       ),
                     ),
-                    Expanded(
-                      flex: 6,
-                      child: Row(
-                        children: <Widget>[
-                          if (!e.autoAim.isNaN) ...<Widget>[
-                            Spacer(),
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
-                              ),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
-                              ),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
-                              ),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: Text(
-                                "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute<TeamInfoScreen>(
-                                  builder: (final BuildContext context) =>
-                                      TeamInfoScreen(
-                                    initalTeam:
-                                        LightTeam(e.id, e.number, e.name),
-                                  ),
-                                ),
-                              ),
-                              child: Text("Team info"),
-                            ),
-                            Spacer(),
-                          ] else ...<Widget>[
-                            Spacer(),
-                            Text("No data"),
-                            Spacer(
-                              flex: 2,
-                            )
-                          ]
-                        ],
+                    if (!e.autoAim.isNaN) ...<Widget>[
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
+                        ),
                       ),
-                    )
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute<TeamInfoScreen>(
+                              builder: (final BuildContext context) =>
+                                  TeamInfoScreen(
+                                initalTeam: LightTeam(e.id, e.number, e.name),
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            "Team info",
+                          ),
+                        ),
+                      ),
+                      Spacer()
+                    ] else ...<Widget>[
+                      Text("No data"),
+                      Spacer(
+                        flex: 3,
+                      ),
+                    ]
                   ],
                 ),
                 leading: AdvancedSwitch(
