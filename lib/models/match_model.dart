@@ -1,4 +1,3 @@
-import "package:flutter/cupertino.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
@@ -40,7 +39,7 @@ class Match implements HasuraVars {
 
   LightTeam? team;
   @override
-  Map<String, dynamic> toHasuraVars(final BuildContext context) {
+  Map<String, dynamic> toHasuraVars() {
     return <String, dynamic>{
       "auto_lower": autoLow,
       "auto_upper": autoHigh,
