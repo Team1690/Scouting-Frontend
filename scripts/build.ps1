@@ -16,4 +16,4 @@ flutter build web --web-renderer html --release
 git add . 
 git commit -m $Commit
 git push origin master
- Set-Location ../..
+Set-Location ../..
