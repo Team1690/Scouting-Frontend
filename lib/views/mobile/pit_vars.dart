@@ -1,4 +1,3 @@
-import "package:flutter/cupertino.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class PitVars implements HasuraVars {
@@ -14,7 +13,7 @@ class PitVars implements HasuraVars {
   double robotReliability = 1;
   int? teamId;
   @override
-  Map<String, dynamic> toHasuraVars(final BuildContext context) {
+  Map<String, dynamic> toHasuraVars() {
     return <String, dynamic>{
       "drivetrain_id": driveTrainType,
       "drivemotor_id": driveMotorType,
