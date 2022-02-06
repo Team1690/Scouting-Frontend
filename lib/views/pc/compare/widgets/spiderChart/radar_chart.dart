@@ -25,8 +25,6 @@ class SpiderChart extends StatelessWidget {
   final List<List<int>> data;
   final List<int> ticks;
   final List<String> features;
-  final bool darkMode = false;
-  final bool useSides = false;
 
   @override
   Widget build(final BuildContext context) {
