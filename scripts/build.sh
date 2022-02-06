@@ -11,10 +11,8 @@ cd build/web/
 
 if [[ -d ./.git ]]
 then
-	echo ".git exists"
 	git pull origin master
 else
-	echo ".git doesn't exist"
 	git clone git@github.com:itamarsch/itamarsch.github.io.git .
 fi
 
