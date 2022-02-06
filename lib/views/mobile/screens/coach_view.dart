@@ -8,12 +8,7 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/team_data.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 
-class CoachView extends StatefulWidget {
-  @override
-  _CoachViewState createState() => _CoachViewState();
-}
-
-class _CoachViewState extends State<CoachView> {
+class CoachView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Scaffold(

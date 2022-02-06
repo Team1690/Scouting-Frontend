@@ -5,12 +5,7 @@ import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
 
-class NavigationTab extends StatefulWidget {
-  @override
-  _NavigationTab createState() => _NavigationTab();
-}
-
-class _NavigationTab extends State<NavigationTab> {
+class NavigationTab extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Drawer(

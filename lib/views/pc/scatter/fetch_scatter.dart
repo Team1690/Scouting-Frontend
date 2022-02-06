@@ -37,7 +37,7 @@ Future<List<ScatterData>> fetchScatterData() async {
       await client.query(QueryOptions(document: gql(query)));
   return result.mapQueryResult(
         (final Map<String, dynamic>? data) =>
-            data?.mapNullable((final Map<String, dynamic> data) {
+            data.mapNullable((final Map<String, dynamic> data) {
           return (data["team"] as List<dynamic>)
               .map<ScatterData?>((final dynamic e) {
                 final LightTeam team = LightTeam(

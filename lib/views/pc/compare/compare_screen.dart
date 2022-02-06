@@ -9,7 +9,7 @@ import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/models/fetch_compare.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/lineChart/compare_gamechart_card.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/spider_chart_card.dart";
-import "package:scouting_frontend/views/pc/team_info/widgets/no_team_selected.dart";
+import "package:scouting_frontend/views/common/no_team_selected.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
@@ -86,7 +86,7 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                         Icon(Icons.shield_rounded),
                         Icon(Icons.remove_moderator_outlined),
                       ],
-                      isSelected: <bool>[true, false],
+                      isSelected: <bool>[false, false],
                       //Currently unused feature
                       onPressed: (final int index) {},
                     ),

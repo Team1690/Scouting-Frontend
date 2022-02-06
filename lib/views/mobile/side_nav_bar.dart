@@ -4,14 +4,9 @@ import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view.dart";
 import "package:scouting_frontend/views/mobile/screens/specific_view.dart";
 
-class SideNavBar extends StatefulWidget {
+class SideNavBar extends StatelessWidget {
   const SideNavBar();
 
-  @override
-  _SideNavBarState createState() => _SideNavBarState();
-}
-
-class _SideNavBarState extends State<SideNavBar> {
   @override
   Widget build(final BuildContext context) {
     return Drawer(

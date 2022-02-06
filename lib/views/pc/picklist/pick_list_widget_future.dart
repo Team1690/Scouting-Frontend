@@ -3,20 +3,15 @@ import "package:scouting_frontend/views/pc/picklist/fetch_picklist.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
 
-class PickListFuture extends StatefulWidget {
+class PickListFuture extends StatelessWidget {
   PickListFuture({required this.screen, required this.onReorder});
 
   final CurrentPickList screen;
   final void Function(List<PickListTeam> list) onReorder;
   @override
-  _PickListFutureState createState() => _PickListFutureState();
-}
-
-class _PickListFutureState extends State<PickListFuture> {
-  @override
   Widget build(final BuildContext context) {
     return FutureBuilder<List<PickListTeam>>(
-      future: fetchPicklist(widget.screen),
+      future: fetchPicklist(screen),
       builder: (
         final BuildContext context,
         final AsyncSnapshot<List<PickListTeam>> snapshot,
@@ -32,11 +27,11 @@ class _PickListFutureState extends State<PickListFuture> {
             child: Text("No Teams"),
           );
         }
-        widget.onReorder(snapshot.data!);
+        onReorder(snapshot.data!);
         return PickList(
-          onReorder: widget.onReorder,
+          onReorder: onReorder,
           uiList: snapshot.data!,
-          screen: widget.screen,
+          screen: screen,
         );
       },
     );

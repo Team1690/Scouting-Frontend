@@ -6,12 +6,7 @@ import "package:scouting_frontend/views/pc/scatter/scatter.dart";
 
 //TODo: need to get some fake data to test it.
 
-class ScattersScreen extends StatefulWidget {
-  @override
-  State<ScattersScreen> createState() => _ScattersScreenState();
-}
-
-class _ScattersScreenState extends State<ScattersScreen> {
+class ScattersScreen extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return DashboardScaffold(
