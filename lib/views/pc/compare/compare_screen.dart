@@ -9,7 +9,6 @@ import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/models/fetch_compare.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/lineChart/compare_gamechart_card.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/spider_chart_card.dart";
-import "package:scouting_frontend/views/common/no_team_selected.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
@@ -116,7 +115,29 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 4,
+                            child: DashboardCard(
+                              title: "Gamechart",
+                              body: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: defaultPadding,
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: DashboardCard(
+                              title: "Spiderchart",
+                              body: Container(),
+                            ),
+                          )
+                        ],
+                      ),
                     );
                   }
 
@@ -125,12 +146,7 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                           children: <Widget>[
                             Expanded(
                               flex: 4,
-                              child: DashboardCard(
-                                title: "Game Chart",
-                                body: teams.isEmpty
-                                    ? NoTeamSelected()
-                                    : CompareGamechartCard<E>(data),
-                              ),
+                              child: CompareGamechartCard<E>(data, teams),
                             ),
                             SizedBox(width: defaultPadding),
                             Expanded(
