@@ -13,7 +13,7 @@ class SpiderChartCard<E extends num> extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return DashboardCard(
-      title: "Compare Spider Chart",
+      title: "Spiderchart",
       body: Center(
         child: teams.isEmpty
             ? Container()
