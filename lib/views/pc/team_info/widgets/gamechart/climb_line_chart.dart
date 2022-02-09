@@ -15,7 +15,7 @@ class ClimbLineChart<E extends num> extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(
-              bottom: 40.0,
+              bottom: 20.0,
               left: 40.0,
               right: 20.0,
               top: 40,
