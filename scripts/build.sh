@@ -1,5 +1,5 @@
-#!/bin/bash
-Commit=$(git log -1 --pretty=%B | head -1)
+#!/usr/bin/bash
+Commit=`git log -1 --pretty=%B | head -1`
 
 if [[ ! -d ./build/web ]]
 then
