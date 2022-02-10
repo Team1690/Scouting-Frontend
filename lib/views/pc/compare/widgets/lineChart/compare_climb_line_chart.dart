@@ -18,7 +18,7 @@ class CompareClimbLineChart<E extends num> extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(
             bottom: 20.0,
-            left: 40.0,
+            left: 20.0,
             right: 20.0,
             top: 40,
           ),
