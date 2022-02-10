@@ -62,7 +62,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
             return SplayTreeSet<CompareTeam<E>>.from(
                 (teams["team"] as List<dynamic>)
                     .map<CompareTeam<E>>((final dynamic e) {
-                  final double avgAutoUpperScored = e["matches_aggregate"]
+                  final double avgAutoUpper = e["matches_aggregate"]
                           ["aggregate"]["avg"]["auto_upper"] as double? ??
                       0;
                   final double avgAutoMissed = e["matches_aggregate"]
@@ -71,11 +71,11 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                   final double avgAutoLower = e["matches_aggregate"]
                           ["aggregate"]["avg"]["auto_lower"] as double? ??
                       0;
-                  final double autoUpperScorePercentage = ((avgAutoUpperScored +
-                              avgAutoLower) /
-                          (avgAutoUpperScored + avgAutoMissed + avgAutoLower)) *
-                      100;
-                  final double avgTeleUpperScored = e["matches_aggregate"]
+                  final double autoUpperScorePercentage =
+                      ((avgAutoUpper + avgAutoLower) /
+                              (avgAutoUpper + avgAutoMissed + avgAutoLower)) *
+                          100;
+                  final double avgTeleUpper = e["matches_aggregate"]
                           ["aggregate"]["avg"]["tele_upper"] as double? ??
                       0;
                   final double avgTeleMissed = e["matches_aggregate"]
@@ -84,10 +84,10 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                   final double avgTeleLower = e["matches_aggregate"]
                           ["aggregate"]["avg"]["tele_lower"] as double? ??
                       0;
-                  final double teleUpperPointPercentage = ((avgTeleUpperScored +
-                              avgTeleLower) /
-                          (avgTeleUpperScored + avgTeleMissed + avgTeleLower)) *
-                      100;
+                  final double teleUpperPointPercentage =
+                      ((avgTeleUpper + avgTeleLower) /
+                              (avgTeleUpper + avgTeleMissed + avgTeleLower)) *
+                          100;
 
                   final List<String> climbVals = (e["matches"] as List<dynamic>)
                       .map((final dynamic e) => e["climb"]["title"] as String)
@@ -184,17 +184,17 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                       e["name"] as String,
                     ),
                     autoUpperScoredPercentage: autoUpperScorePercentage,
-                    avgAutoUpperScored: avgAutoUpperScored,
+                    avgAutoUpperScored: avgAutoUpper,
                     avgClimbPoints: climbPoints.isEmpty
                         ? double.nan
                         : climbPoints.length == 1
-                            ? climbPoints.first.toDouble()
+                            ? climbPoints.single.toDouble()
                             : climbPoints.reduce(
                                   (final int value, final int element) =>
                                       value + element,
                                 ) /
                                 climbPoints.length,
-                    avgTeleUpperScored: avgTeleUpperScored,
+                    avgTeleUpperScored: avgTeleUpper,
                     climbPercentage: climbSuccessPercent,
                     teleUpperScoredPercentage: teleUpperPointPercentage,
                     climbData: climbData,

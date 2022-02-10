@@ -107,8 +107,8 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final double avgAutoMissed = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["auto_missed"] as double? ??
               0;
-          final double avgAutoUpperScored = teamByPk["matches_aggregate"]
-                  ["aggregate"]["avg"]["auto_upper"] as double? ??
+          final double avgAutoUpper = teamByPk["matches_aggregate"]["aggregate"]
+                  ["avg"]["auto_upper"] as double? ??
               0;
           final double avgTeleLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["tele_lower"] as double? ??
@@ -116,8 +116,8 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final double avgTeleMissed = teamByPk["matches_aggregate"]
                   ["aggregate"]["avg"]["tele_missed"] as double? ??
               0;
-          final double avgTeleUpperScored = teamByPk["matches_aggregate"]
-                  ["aggregate"]["avg"]["tele_upper"] as double? ??
+          final double avgTeleUpper = teamByPk["matches_aggregate"]["aggregate"]
+                  ["avg"]["tele_upper"] as double? ??
               0;
 
           final List<String> climbTitles =
@@ -131,10 +131,10 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final QuickData quickData = QuickData(
             avgAutoLowScored: avgAutoLow,
             avgAutoMissed: avgAutoMissed,
-            avgAutoUpperScored: avgAutoUpperScored,
-            avgBallPoints: avgTeleUpperScored * 2 +
+            avgAutoUpperScored: avgAutoUpper,
+            avgBallPoints: avgTeleUpper * 2 +
                 avgTeleLow +
-                avgAutoUpperScored * 4 +
+                avgAutoUpper * 4 +
                 avgAutoLow * 2,
             avgClimbPoints: climbPoints.isEmpty
                 ? 0.0
@@ -147,12 +147,12 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                         climbPoints.length,
             avgTeleLowScored: avgTeleLow,
             avgTeleMissed: avgTeleMissed,
-            avgTeleUpperScored: avgTeleUpperScored,
-            scorePercentAuto: ((avgAutoUpperScored + avgAutoLow) /
-                    (avgAutoUpperScored + avgAutoMissed + avgAutoLow)) *
+            avgTeleUpperScored: avgTeleUpper,
+            scorePercentAuto: ((avgAutoUpper + avgAutoLow) /
+                    (avgAutoUpper + avgAutoMissed + avgAutoLow)) *
                 100,
-            scorePercentTele: ((avgTeleUpperScored + avgTeleLow) /
-                    (avgTeleUpperScored + avgTeleMissed + avgTeleLow)) *
+            scorePercentTele: ((avgTeleUpper + avgTeleLow) /
+                    (avgTeleUpper + avgTeleMissed + avgTeleLow)) *
                 100,
           );
 
