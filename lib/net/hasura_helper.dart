@@ -1,15 +1,11 @@
 import "package:flutter/material.dart";
-import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
 GraphQLClient getClient() {
-  final Map<String, String> headers = <String, String>{};
-  headers["x-hasura-admin-secret"] = dotenv.env["HASURA_ADMIN_SECRET"]!;
   final HttpLink link = HttpLink(
     "https://orbitdb.hasura.app/v1/graphql",
-    defaultHeaders: headers,
   );
   return GraphQLClient(link: link, cache: GraphQLCache());
 }
