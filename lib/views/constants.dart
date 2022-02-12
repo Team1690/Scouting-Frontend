@@ -12,13 +12,18 @@ const double defaultPadding = 20.0;
 const BorderRadius defaultBorderRadius = BorderRadius.all(Radius.circular(10));
 
 const List<Color> colors = <Color>[
-  Color(0xff19B7E9),
+  Color(0xFF19B7E9),
   Color(0xffff4343),
   Color(0xffffb443),
   Color(0xff02d39a),
   Color(0xffff7b43),
   Color(0xffff43CA),
   Color(0xff982ABE),
+  Color(0xF6B0ECD8),
+  Color(0xFF633408),
+  Color(0xFF504D4D),
+  Color(0xFF230BF5),
+  Color(0xFFFFF45B),
 ];
 
 final ThemeData darkModeTheme = ThemeData.dark().copyWith(
