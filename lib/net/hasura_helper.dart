@@ -37,6 +37,7 @@ query FetchTeams {
     id
     number
     name
+    colors_index
   }
 }
   """;
@@ -52,6 +53,7 @@ query FetchTeams {
                   e["id"] as int,
                   e["number"] as int,
                   e["name"] as String,
+                  e["colors_index"] as int,
                 ),
               )
               .toList(),
