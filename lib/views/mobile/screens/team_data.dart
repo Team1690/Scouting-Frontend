@@ -6,6 +6,7 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/team_info_line_chart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/specific/scouting_specific.dart";
@@ -178,6 +179,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselWithIndicator(
               child: Container(
                 margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: DashboardClimbLineChart<int>(
+                  inputedColors: <Color>[primaryColor],
                   matchNumbers: data.climbData.gameNumbers,
                   dataSet: data.climbData.points,
                 ),
@@ -282,6 +284,10 @@ const String query = """
 
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
+    id
+    name
+    number
+    colors_index
     pit {
       drive_motor_amount
       drive_train_reliability
@@ -337,6 +343,7 @@ query MyQuery(\$id: Int!) {
 
 class CoachViewTeam {
   const CoachViewTeam({
+    required this.team,
     required this.specificData,
     required this.pitData,
     required this.quickData,
@@ -344,6 +351,7 @@ class CoachViewTeam {
     required this.scoredMissedDataAuto,
     required this.scoredMissedDataTele,
   });
+  final LightTeam team;
   final LineChartData<int> scoredMissedDataTele;
   final LineChartData<int> scoredMissedDataAuto;
   final LineChartData<int> climbData;
@@ -512,6 +520,12 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
             title: "Autonomous",
           );
           return CoachViewTeam(
+            team: LightTeam(
+              teamByPk["id"] as int,
+              teamByPk["number"] as int,
+              teamByPk["name"] as String,
+              teamByPk["colors_index"] as int,
+            ),
             specificData: specificData,
             pitData: pitData,
             quickData: quickData,
