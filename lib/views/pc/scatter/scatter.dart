@@ -45,6 +45,7 @@ class Scatter extends StatelessWidget {
                                 e.team.id,
                                 e.team.number,
                                 e.team.name,
+                                e.team.colorsIndex,
                               ),
                             )
                             .toList();
@@ -55,6 +56,7 @@ class Scatter extends StatelessWidget {
                                   (final ScatterData e) => ScatterSpot(
                                     e.xBallPointsAvg,
                                     e.yBallPointsStddev,
+                                    color: colors[e.team.colorsIndex],
                                   ),
                                 )
                                 .toList(),

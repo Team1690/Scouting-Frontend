@@ -7,6 +7,7 @@ import "package:scouting_frontend/views/pc/scatter/scatter.dart";
 const String query = """
 query MyQuery {
   team {
+    colors_index
     number
     id
     name
@@ -44,6 +45,7 @@ Future<List<ScatterData>> fetchScatterData() async {
                   e["id"] as int,
                   e["number"] as int,
                   e["name"] as String,
+                  e["colors_index"] as int,
                 );
                 final double? avgAutoUpper = (e["matches_aggregate"]
                         ["aggregate"]["avg"]["auto_upper"] as double?)
