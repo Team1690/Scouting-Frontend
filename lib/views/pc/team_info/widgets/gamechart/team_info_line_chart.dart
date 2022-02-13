@@ -2,14 +2,13 @@ import "dart:math";
 
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 
 class DashboardLineChart<E extends num> extends StatelessWidget {
   const DashboardLineChart({
     required this.dataSet,
     required this.gameNumbers,
     this.distanceFromHighest = 5,
-    this.inputedColors = colors,
+    required this.inputedColors,
   });
   final List<Color> inputedColors;
   final int distanceFromHighest;
@@ -126,11 +125,11 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
 class DashboardClimbLineChart<E extends num> extends StatelessWidget {
   const DashboardClimbLineChart({
     required this.dataSet,
-    this.inputedColors = const <Color>[],
+    required this.inputedColors,
     required this.matchNumbers,
   });
-  final List<int> matchNumbers;
   final List<Color> inputedColors;
+  final List<int> matchNumbers;
   final List<List<E>> dataSet;
 
   @override
@@ -155,9 +154,7 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
           ),
           lineBarsData: List<LineChartBarData>.generate(dataSet.length,
               (final int index) {
-            final List<Color> chartColors = <Color>[
-              inputedColors.isEmpty ? colors[index] : inputedColors[index]
-            ];
+            final List<Color> chartColors = <Color>[inputedColors[index]];
             return LineChartBarData(
               isCurved: false,
               colors: chartColors,
