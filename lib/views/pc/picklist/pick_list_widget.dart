@@ -66,7 +66,7 @@ class _PickListState extends State<PickList> {
                           MaterialPageRoute<TeamInfoScreen>(
                             builder: (final BuildContext context) =>
                                 TeamInfoScreen(
-                              initalTeam: LightTeam(e.id, e.number, e.name),
+                              initalTeam: e.team,
                             ),
                           ),
                         ),
@@ -108,7 +108,7 @@ class _PickListState extends State<PickList> {
                             MaterialPageRoute<TeamInfoScreen>(
                               builder: (final BuildContext context) =>
                                   TeamInfoScreen(
-                                initalTeam: LightTeam(e.id, e.number, e.name),
+                                initalTeam: e.team,
                               ),
                             ),
                           ),
@@ -155,6 +155,7 @@ String validateName(final String name) =>
 
 class PickListTeam {
   PickListTeam({
+    required final int colorsIndex,
     required final int id,
     required final int number,
     required final String name,
@@ -166,9 +167,6 @@ class PickListTeam {
     required final double autoAim,
     required final double teleAim,
   }) : this.controller(
-          validateId(id),
-          validateNumber(number),
-          validateName(name),
           firstListIndex,
           secondListIndex,
           ValueNotifier<bool>(taken),
@@ -176,12 +174,15 @@ class PickListTeam {
           avgClimbPoints,
           autoAim,
           teleAim,
+          LightTeam(
+            validateId(id),
+            validateNumber(number),
+            validateName(name),
+            colorsIndex,
+          ),
         );
 
   PickListTeam.controller(
-    this.id,
-    this.number,
-    this.name,
     this.firstListIndex,
     this.secondListIndex,
     this.controller,
@@ -189,21 +190,20 @@ class PickListTeam {
     this.avgClimbPoints,
     this.autoAim,
     this.teleAim,
+    this.team,
   );
 
   final double avgBallPoints;
   final double avgClimbPoints;
   final double autoAim;
   final double teleAim;
-  final int id;
-  final int number;
-  final String name;
+  final LightTeam team;
   int firstListIndex;
   int secondListIndex;
   final ValueNotifier<bool> controller;
 
   @override
   String toString() {
-    return "$name $number";
+    return "${team.name} ${team.number}";
   }
 }
