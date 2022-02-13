@@ -7,9 +7,7 @@ class LightTeam {
     final String name,
     final int colorsIndex,
   ) : this._inner(id, number, name, _colors[colorsIndex]);
-  LightTeam._inner(this.id, this.number, this.name, this.color) {
-    print(_colors.length);
-  }
+  LightTeam._inner(this.id, this.number, this.name, this.color);
 
   final int id;
   final int number;
