@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:scouting_frontend/models/team_model.dart";
 
 class CompareTeam<E extends num> {
@@ -30,7 +31,12 @@ class CompareTeam<E extends num> {
 }
 
 class CompareLineChartData<E extends num> {
-  CompareLineChartData({required this.points, required this.title});
+  CompareLineChartData({
+    required this.points,
+    required this.title,
+    required this.color,
+  });
   final String title;
   final List<E> points;
+  final Color color;
 }

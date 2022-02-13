@@ -39,6 +39,11 @@ class CompareSpiderChart<E extends num> extends StatelessWidget {
                         )
                         .reduce(max);
                 return SpiderChart(
+                  colors: data
+                      .map(
+                        (final CompareTeam<E> element) => element.team.color,
+                      )
+                      .toList(),
                   numberOfFeatures: 6,
                   data: data
                       .map<List<int>>(

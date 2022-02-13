@@ -9,6 +9,7 @@ Future<List<PickListTeam>> fetchPicklist(final CurrentPickList screen) async {
   final String query = """
  query MyQuery {
   team {
+    colors_index
     first_picklist_index
     id
     name
@@ -86,6 +87,7 @@ Future<List<PickListTeam>> fetchPicklist(final CurrentPickList screen) async {
                     100;
 
             return PickListTeam(
+              colorsIndex: e["colors_index"] as int,
               id: e["id"] as int,
               number: e["number"] as int,
               name: e["name"] as String,

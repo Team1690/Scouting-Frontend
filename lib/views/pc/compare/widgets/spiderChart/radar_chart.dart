@@ -8,7 +8,9 @@ class SpiderChart extends StatelessWidget {
     required final List<List<int>> data,
     required final List<int> ticks,
     required final List<String> features,
+    required final List<Color> colors,
   }) : this.inner(
+          colors: colors,
           ticks: ticks,
           features: features.sublist(0, numberOfFeatures),
           data: data
@@ -17,11 +19,13 @@ class SpiderChart extends StatelessWidget {
         );
 
   SpiderChart.inner({
+    required this.colors,
     required this.data,
     required this.features,
     required this.ticks,
   });
 
+  final List<Color> colors;
   final List<List<int>> data;
   final List<int> ticks;
   final List<String> features;

@@ -67,7 +67,7 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                             label: Text(
                               teams.elementAt(index).number.toString(),
                             ),
-                            backgroundColor: colors[index],
+                            backgroundColor: teams.elementAt(index).color,
                             onDeleted: () => setState(
                               () => teams.remove(
                                 teams.elementAt(index),
