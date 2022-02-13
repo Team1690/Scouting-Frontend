@@ -22,10 +22,9 @@ class _SpecificState extends State<Specific> {
   final SpecificVars vars = SpecificVars();
   final FocusNode node = FocusNode();
   Map<int, int> indexToId() => <int, int>{
-        0: IdProvider.of(context).robotRole.nameToId["Upper shooter"]!,
-        1: IdProvider.of(context).robotRole.nameToId["Lower shooter"]!,
+        0: IdProvider.of(context).robotRole.nameToId["Upper"]!,
+        1: IdProvider.of(context).robotRole.nameToId["Lower"]!,
         2: IdProvider.of(context).robotRole.nameToId["Defender"]!,
-        3: IdProvider.of(context).robotRole.nameToId["Misc"]!
       };
   @override
   Widget build(final BuildContext context) {
@@ -84,16 +83,14 @@ class _SpecificState extends State<Specific> {
                       children: <Widget>[
                         Switcher(
                           labels: <String>[
-                            "Upper shooter",
-                            "Lower shooter",
+                            "Upper",
+                            "Lower",
                             "Defender",
-                            "Misc"
                           ],
                           colors: <Color>[
                             Colors.green,
                             Colors.yellow,
                             Colors.deepPurple,
-                            Colors.indigoAccent
                           ],
                           onChange: (final int index) {
                             state.didChange(index);
@@ -128,8 +125,8 @@ class _SpecificState extends State<Specific> {
                           messageController.clear();
                         });
                       },
-                      mutation:
-                          """mutation MyMutation (\$team_id: Int, \$message: String, \$robot_role_id: Int){
+                      mutation: """
+                  mutation MyMutation (\$team_id: Int, \$message: String, \$robot_role_id: Int){
                   insert_specific(objects: {team_id: \$team_id, message: \$message, robot_role_id: \$robot_role_id}) {
                     returning {
                   team_id
