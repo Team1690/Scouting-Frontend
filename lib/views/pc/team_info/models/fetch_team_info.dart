@@ -27,6 +27,9 @@ query MyQuery(\$id: Int!) {
     }
     specifics {
       message
+      robot_role{
+        title
+      }
     }
     matches_aggregate {
       aggregate {
@@ -82,7 +85,12 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               (teamByPk["pit"] as Map<String, dynamic>?);
           final SpecificData specificData = SpecificData(
             (teamByPk["specifics"] as List<dynamic>)
-                .map((final dynamic e) => e["message"] as String)
+                .map(
+                  (final dynamic e) => SpecificMatch(
+                    e["message"] as String,
+                    e["robot_role"]["title"] as String,
+                  ),
+                )
                 .toList(),
           );
 

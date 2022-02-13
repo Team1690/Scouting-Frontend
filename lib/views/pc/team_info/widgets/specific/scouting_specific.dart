@@ -1,19 +1,19 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 class ScoutingSpecific extends StatelessWidget {
-  const ScoutingSpecific({required this.msg, this.phone = false});
+  const ScoutingSpecific({required this.msg});
 
-  final List<String> msg;
-  final bool phone;
+  final SpecificData msg;
   @override
   Widget build(final BuildContext context) {
     return SingleChildScrollView(
       primary: false,
       child: Column(
-        children: msg
+        children: msg.msg
             .map(
-              (final String e) => Card(
+              (final SpecificMatch e) => Card(
                 // shape: ,
                 elevation: 10,
                 color: bgColor,
@@ -24,13 +24,24 @@ class ScoutingSpecific extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(
                         width: double.infinity,
-                        child: Text(
-                          e,
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                            color: primaryWhite,
-                            fontSize: 15,
-                          ),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              e.role,
+                              style: TextStyle(
+                                color: primaryWhite,
+                                fontSize: 15,
+                              ),
+                            ),
+                            Text(
+                              e.message,
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                color: primaryWhite,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
