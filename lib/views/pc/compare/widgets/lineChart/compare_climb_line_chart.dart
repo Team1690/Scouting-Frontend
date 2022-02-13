@@ -23,6 +23,8 @@ class CompareClimbLineChart<E extends num> extends StatelessWidget {
             top: 40,
           ),
           child: DashboardClimbLineChart<E>(
+            inputedColors:
+                data.map((final CompareLineChartData<E> e) => e.color).toList(),
             matchNumbers: List<int>.generate(
               data
                   .map((final CompareLineChartData<E> e) => e.points.length)

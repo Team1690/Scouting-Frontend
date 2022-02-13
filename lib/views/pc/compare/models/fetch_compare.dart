@@ -5,6 +5,7 @@ import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 
 const String query = """
@@ -38,6 +39,7 @@ query MyQuery(\$ids: [Int!]) {
     name
     number
     id
+    colors_index
   }
 }
 """;
@@ -62,6 +64,12 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
             return SplayTreeSet<CompareTeam<E>>.from(
                 (teams["team"] as List<dynamic>)
                     .map<CompareTeam<E>>((final dynamic e) {
+                  final LightTeam team = LightTeam(
+                    e["id"] as int,
+                    e["number"] as int,
+                    e["name"] as String,
+                    e["colors_index"] as int,
+                  );
                   final double avgAutoUpper = e["matches_aggregate"]
                           ["aggregate"]["avg"]["auto_upper"] as double? ??
                       0;
@@ -127,6 +135,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
 
                   final CompareLineChartData<E> climbData =
                       CompareLineChartData<E>(
+                    color: colors[team.colorsIndex],
                     title: "Climb",
                     points: climbLineChartPoints.castToGeneric<E>().toList(),
                   );
@@ -144,12 +153,14 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
 
                   final CompareLineChartData<E> upperScoredDataTeleLineChart =
                       CompareLineChartData<E>(
+                    color: colors[team.colorsIndex],
                     title: "Teleop upper",
                     points: upperScoredDataTele.castToGeneric<E>().toList(),
                   );
 
                   final CompareLineChartData<E> missedDataTeleLineChart =
                       CompareLineChartData<E>(
+                    color: colors[team.colorsIndex],
                     title: "Teleop missed",
                     points: missedDataTele.castToGeneric<E>().toList(),
                   );
@@ -167,22 +178,20 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
 
                   final CompareLineChartData<E> upperScoredDataAutoLinechart =
                       CompareLineChartData<E>(
+                    color: colors[team.colorsIndex],
                     title: "Auto upper",
                     points: upperScoredDataAuto.castToGeneric<E>().toList(),
                   );
 
                   final CompareLineChartData<E> missedDataAutoLinechart =
                       CompareLineChartData<E>(
+                    color: colors[team.colorsIndex],
                     title: "Auto missed",
                     points: missedDataAuto.castToGeneric<E>().toList(),
                   );
 
                   return CompareTeam<E>(
-                    team: LightTeam(
-                      e["id"] as int,
-                      e["number"] as int,
-                      e["name"] as String,
-                    ),
+                    team: team,
                     autoUpperScoredPercentage: autoUpperScorePercentage,
                     avgAutoUpperScored: avgAutoUpper,
                     avgClimbPoints: climbPoints.isEmpty
