@@ -134,6 +134,7 @@ query MyQuery {
       title
     }
     blue_0_team {
+      colors_index
       id
       name
       number
@@ -156,6 +157,7 @@ query MyQuery {
       }
     }
     blue_1_team {
+      colors_index
       id
       name
       number
@@ -178,6 +180,7 @@ query MyQuery {
       }
     }
     blue_2_team {
+      colors_index
       id
       name
       number
@@ -200,6 +203,7 @@ query MyQuery {
       }
     }
     red_0_team {
+      colors_index
       id
       name
       number
@@ -222,6 +226,7 @@ query MyQuery {
       }
     }
     red_1_team {
+      colors_index
       id
       name
       number
@@ -244,6 +249,7 @@ query MyQuery {
       }
     }
     red_2_team {
+      colors_index
       id
       name
       number
@@ -289,6 +295,7 @@ Future<List<CoachData>> fetchMatches() async {
                 match[e]["id"] as int,
                 match[e]["number"] as int,
                 match[e]["name"] as String,
+                match[e]["colors_index"] as int,
               );
               final dynamic avg =
                   match[e]["matches_aggregate"]["aggregate"]["avg"];
