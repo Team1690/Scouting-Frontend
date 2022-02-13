@@ -41,12 +41,7 @@ class Scatter extends StatelessWidget {
                           .mapNullable((final List<ScatterData> report) {
                         final List<LightTeam> teams = report
                             .map(
-                              (final ScatterData e) => LightTeam(
-                                e.team.id,
-                                e.team.number,
-                                e.team.name,
-                                e.team.colorsIndex,
-                              ),
+                              (final ScatterData e) => e.team,
                             )
                             .toList();
                         return ScatterChart(
@@ -56,7 +51,7 @@ class Scatter extends StatelessWidget {
                                   (final ScatterData e) => ScatterSpot(
                                     e.xBallPointsAvg,
                                     e.yBallPointsStddev,
-                                    color: colors[e.team.colorsIndex],
+                                    color: e.team.color,
                                   ),
                                 )
                                 .toList(),

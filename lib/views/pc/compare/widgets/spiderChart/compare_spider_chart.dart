@@ -2,7 +2,6 @@ import "dart:collection";
 import "dart:math";
 
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/radar_chart.dart";
 
@@ -42,8 +41,7 @@ class CompareSpiderChart<E extends num> extends StatelessWidget {
                 return SpiderChart(
                   colors: data
                       .map(
-                        (final CompareTeam<E> element) =>
-                            colors[element.team.colorsIndex],
+                        (final CompareTeam<E> element) => element.team.color,
                       )
                       .toList(),
                   numberOfFeatures: 6,
