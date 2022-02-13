@@ -11,14 +11,14 @@ cd build/web/
 
 if [[ -d ./.git ]]
 then
-	git pull origin master
+	git pull origin main
 else
-	git clone git@github.com:itamarsch/itamarsch.github.io.git .
+	git clone git@github.com:Team1690/Team1690.github.io.git .
 fi
 
 
 flutter build web --web-renderer html --release 
 git add . 
 git commit -m "$Commit"
-git push origin master
+git push origin main
 cd ../..
