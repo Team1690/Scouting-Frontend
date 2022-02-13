@@ -81,9 +81,9 @@ class _PickListScreenState extends State<PickListScreen> {
       "objects": teams
           .map(
             (final PickListTeam e) => <String, dynamic>{
-              "id": e.id,
-              "name": e.name,
-              "number": e.number,
+              "id": e.team.id,
+              "name": e.team.name,
+              "number": e.team.number,
               "first_picklist_index": e.firstListIndex,
               "second_picklist_index": e.secondListIndex,
               "taken": e.controller.value
@@ -128,9 +128,9 @@ class _PickListScreenState extends State<PickListScreen> {
       "objects": teams
           .map(
             (final PickListTeam e) => <String, dynamic>{
-              "id": e.id,
-              "name": e.name,
-              "number": e.number,
+              "id": e.team.id,
+              "name": e.team.name,
+              "number": e.team.number,
               "first_picklist_index": e.firstListIndex,
               "second_picklist_index": e.secondListIndex,
               "taken": e.controller.value
