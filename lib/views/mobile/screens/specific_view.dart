@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 
 import "package:scouting_frontend/views/constants.dart";
@@ -74,44 +73,27 @@ class _SpecificState extends State<Specific> {
                     maxLines: 18,
                   ),
                   SizedBox(height: 14),
-                  FormField<int>(
-                    initialValue: null,
-                    validator: (final int? value) {
-                      return vars.roleId.onNull("Pick an option");
+                  Switcher(
+                    labels: <String>[
+                      "Upper",
+                      "Lower",
+                      "Defender",
+                    ],
+                    colors: <Color>[
+                      Colors.green,
+                      Colors.yellow,
+                      Colors.deepPurple,
+                    ],
+                    onChange: (final int index) {
+                      setState(() {
+                        vars.roleId = indexToId()[index];
+                      });
                     },
-                    builder: (final FormFieldState<int> state) => Column(
-                      children: <Widget>[
-                        Switcher(
-                          labels: <String>[
-                            "Upper",
-                            "Lower",
-                            "Defender",
-                          ],
-                          colors: <Color>[
-                            Colors.green,
-                            Colors.yellow,
-                            Colors.deepPurple,
-                          ],
-                          onChange: (final int index) {
-                            state.didChange(index);
-                            setState(() {
-                              vars.roleId = indexToId()[index];
-                            });
-                          },
-                          selected: <int, int>{
-                                for (MapEntry<int, int> entry
-                                    in indexToId().entries)
-                                  entry.value: entry.key
-                              }[vars.roleId] ??
-                              -1,
-                        ),
-                        if (state.hasError)
-                          Text(
-                            state.errorText!,
-                            style: TextStyle(color: Colors.red),
-                          )
-                      ],
-                    ),
+                    selected: <int, int>{
+                          for (MapEntry<int, int> entry in indexToId().entries)
+                            entry.value: entry.key
+                        }[vars.roleId] ??
+                        -1,
                   ),
                   SizedBox(height: 14),
                   Align(
