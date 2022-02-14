@@ -1,5 +1,3 @@
-import "dart:math";
-
 import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
@@ -379,7 +377,9 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                       100;
 
               final List<int> roleIds = (match[e]["specifics"] as List<dynamic>)
-                  .map<int>((final dynamic e) => e["robot_role"]["id"] as int)
+                  .map<int?>((final dynamic e) => e["robot_role"]["id"] as int?)
+                  .where((final int? element) => element != null)
+                  .cast<int>()
                   .toList();
 
               final Map<int, int> roleToAmount = <int, int>{};
