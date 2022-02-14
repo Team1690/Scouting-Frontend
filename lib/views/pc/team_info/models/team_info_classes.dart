@@ -27,7 +27,13 @@ class QuickData {
 
 class SpecificData {
   SpecificData(this.msg);
-  final List<String> msg;
+  final List<SpecificMatch> msg;
+}
+
+class SpecificMatch {
+  const SpecificMatch(this.message, this.role);
+  final String message;
+  final String? role;
 }
 
 class LineChartData<E extends num> {

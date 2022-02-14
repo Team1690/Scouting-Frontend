@@ -11,16 +11,19 @@ class App extends StatelessWidget {
     required this.climdIds,
     required this.driveMotorIds,
     required this.drivetrainIds,
+    required this.robotRoleIds,
   });
   final List<LightTeam> teams;
   final Map<String, int> climdIds;
   final Map<String, int> drivetrainIds;
   final Map<String, int> driveMotorIds;
+  final Map<String, int> robotRoleIds;
   @override
   Widget build(final BuildContext context) {
     return TeamProvider(
       teams: teams,
       child: IdProvider(
+        robotRoleIds: robotRoleIds,
         climbIds: climdIds,
         drivemotorIds: driveMotorIds,
         drivetrainIds: drivetrainIds,

@@ -20,6 +20,7 @@ void main() async {
   final Map<String, int> climbs = await fetchEnum("climb_2022");
   final Map<String, int> driveTrains = await fetchEnum("drivetrain");
   final Map<String, int> driveMotors = await fetchEnum("drivemotor");
+  final Map<String, int> robotRoles = await fetchEnum("robot_role");
   final List<LightTeam> teams = await fetchTeams();
 
   runApp(
@@ -28,6 +29,7 @@ void main() async {
       drivetrainIds: driveTrains,
       climdIds: climbs,
       driveMotorIds: driveMotors,
+      robotRoleIds: robotRoles,
     ),
   );
 }

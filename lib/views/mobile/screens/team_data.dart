@@ -80,8 +80,7 @@ class CoachTeamData extends StatelessWidget {
                                   child: Text("No data :("),
                                 )
                               : ScoutingSpecific(
-                                  phone: true,
-                                  msg: data.specificData.msg,
+                                  msg: data.specificData,
                                 ),
                         ),
                       )
@@ -307,6 +306,9 @@ query MyQuery(\$id: Int!) {
     }
     specifics {
       message
+      robot_role{
+        title
+      }
     }
 
     matches_aggregate {
@@ -376,7 +378,12 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
               (teamByPk["pit"] as Map<String, dynamic>?);
           final SpecificData specificData = SpecificData(
             (teamByPk["specifics"] as List<dynamic>)
-                .map((final dynamic e) => e["message"] as String)
+                .map(
+                  (final dynamic e) => SpecificMatch(
+                    e["message"] as String,
+                    e["robot_role"]?["title"] as String?,
+                  ),
+                )
                 .toList(),
           );
 

@@ -50,7 +50,7 @@ class TeamInfoData<E extends num> extends StatelessWidget {
                   SizedBox(width: defaultPadding),
                   Expanded(
                     flex: 2,
-                    child: SpecificCard(data.specificData.msg),
+                    child: SpecificCard(data.specificData),
                   ),
                   SizedBox(
                     width: defaultPadding,
