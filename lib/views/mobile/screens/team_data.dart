@@ -381,7 +381,7 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
                 .map(
                   (final dynamic e) => SpecificMatch(
                     e["message"] as String,
-                    e["robot_role"]["title"] as String,
+                    e["robot_role"]?["title"] as String?,
                   ),
                 )
                 .toList(),
