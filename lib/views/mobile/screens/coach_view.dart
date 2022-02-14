@@ -383,11 +383,8 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   .toList();
 
               final Map<int, int> roleToAmount = <int, int>{};
-              int mostPopularValue = -1;
               for (final int element in roleIds) {
                 roleToAmount[element] = (roleToAmount[element] ?? 0) + 1;
-                mostPopularValue =
-                    max(mostPopularValue, roleToAmount[element]!);
               }
               final List<MapEntry<int, int>> roles = roleToAmount.entries
                   .toList()
