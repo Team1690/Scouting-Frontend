@@ -33,7 +33,7 @@ class SpecificData {
 class SpecificMatch {
   const SpecificMatch(this.message, this.role);
   final String message;
-  final String role;
+  final String? role;
 }
 
 class LineChartData<E extends num> {

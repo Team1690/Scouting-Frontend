@@ -27,7 +27,7 @@ class ScoutingSpecific extends StatelessWidget {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              e.role,
+                              e.role ?? "No role",
                               style: TextStyle(
                                 color: primaryWhite,
                                 fontSize: 15,
