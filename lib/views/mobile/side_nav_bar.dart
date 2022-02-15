@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_view.dart";
+import "package:scouting_frontend/views/mobile/screens/fault_view.dart";
 import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view.dart";
 import "package:scouting_frontend/views/mobile/screens/specific_view.dart";
@@ -93,6 +94,22 @@ class SideNavBar extends StatelessWidget {
               context,
               MaterialPageRoute<Specific>(
                 builder: (final BuildContext context) => CoachView(),
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.construction),
+            title: const Text(
+              "Faults",
+              style: TextStyle(
+                fontSize: 25.0,
+                letterSpacing: 1.0,
+              ),
+            ),
+            onTap: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute<FaultView>(
+                builder: (final BuildContext context) => FaultView(),
               ),
             ),
           )

@@ -96,6 +96,57 @@ class _SpecificState extends State<Specific> {
                         -1,
                   ),
                   SizedBox(height: 14),
+                  FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        FittedBox(
+                          fit: BoxFit.fitHeight,
+                          child: Text(
+                            "Robot fault:     ",
+                          ),
+                        ),
+                        FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: ToggleButtons(
+                            fillColor: Color.fromARGB(10, 244, 67, 54),
+                            focusColor: Color.fromARGB(170, 244, 67, 54),
+                            highlightColor: Color.fromARGB(170, 244, 67, 54),
+                            selectedBorderColor:
+                                Color.fromARGB(170, 244, 67, 54),
+                            selectedColor: Colors.red,
+                            children: <Widget>[
+                              Icon(
+                                Icons.cancel,
+                              )
+                            ],
+                            isSelected: <bool>[vars.robotBroke],
+                            onPressed: (final int index) {
+                              assert(index == 0);
+                              setState(() {
+                                vars.robotBroke = !vars.robotBroke;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 14,
+                  ),
+                  if (vars.robotBroke)
+                    TextField(
+                      textDirection: TextDirection.rtl,
+                      onChanged: (final String value) {
+                        vars.faultMessage = value;
+                      },
+                      decoration: InputDecoration(hintText: "Robot fault"),
+                    ),
+                  SizedBox(
+                    height: 14,
+                  ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: SubmitButton(
@@ -108,14 +159,19 @@ class _SpecificState extends State<Specific> {
                         });
                       },
                       mutation: """
-                  mutation MyMutation (\$team_id: Int, \$message: String, \$robot_role_id: Int){
+                  mutation MyMutation (\$team_id: Int, \$message: String, \$robot_role_id: Int, \$fault_message: String){
                   insert_specific(objects: {team_id: \$team_id, message: \$message, robot_role_id: \$robot_role_id}) {
                     returning {
                   team_id
                   message
                     }
                   }
+                  ${!vars.robotBroke ? "" : """
+  insert_broken_robots(objects: {team_id: \$team_id, message: \$fault_message}, on_conflict: {constraint: broken_robots_team_id_key, update_columns: message}) {
+    affected_rows
+  }"""}
                   }
+
                       """,
                       vars: vars,
                     ),
