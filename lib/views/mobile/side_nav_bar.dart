@@ -108,7 +108,7 @@ class SideNavBar extends StatelessWidget {
             ),
             onTap: () => Navigator.pushReplacement(
               context,
-              MaterialPageRoute<Specific>(
+              MaterialPageRoute<FaultView>(
                 builder: (final BuildContext context) => FaultView(),
               ),
             ),
