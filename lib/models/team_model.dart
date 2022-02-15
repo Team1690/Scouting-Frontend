@@ -21,7 +21,7 @@ const List<Color> _colors = <Color>[
   Color(0xffff4343),
   Color(0xffffb443),
   Color(0xff02d39a),
-  Color(0xffff7b43),
+  Color(0xFF2697FF),
   Color(0xffff43CA),
   Color(0xff982ABE),
   Color(0xF6B0ECD8),
