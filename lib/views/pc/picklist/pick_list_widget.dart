@@ -39,6 +39,7 @@ class _PickListState extends State<PickList> {
   Widget build(final BuildContext context) {
     return Container(
       child: ReorderableListView(
+        buildDefaultDragHandles: true,
         primary: false,
         children: widget.uiList.map<Widget>((final PickListTeam e) {
           e.controller.addListener(() {
@@ -55,77 +56,98 @@ class _PickListState extends State<PickList> {
                 0,
                 defaultPadding / 4,
               ),
-              child: ListTile(
+              child: ExpansionTile(
+                children: <Widget>[
+                  ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        if (!e.autoAim.isNaN) ...<Widget>[
+                          Spacer(),
+                          Expanded(
+                            flex: 3,
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Icon(
+                                    e.hasFault ? Icons.warning : Icons.check,
+                                    color: e.hasFault
+                                        ? Colors.yellow[700]
+                                        : Colors.green,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    e.hasFault ? e.faultMessage : "No Fault",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute<TeamInfoScreen>(
+                                  builder: (final BuildContext context) =>
+                                      TeamInfoScreen(
+                                    initalTeam: e.team,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                "Team info",
+                              ),
+                            ),
+                          ),
+                          Spacer()
+                        ] else ...<Widget>[
+                          Text("No data"),
+                          Spacer(
+                            flex: 3,
+                          ),
+                        ]
+                      ],
+                    ),
+                  )
+                ],
                 title: Row(
                   children: <Widget>[
                     Expanded(
                       flex: 3,
-                      child: GestureDetector(
-                        onTap: () => Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute<TeamInfoScreen>(
-                            builder: (final BuildContext context) =>
-                                TeamInfoScreen(
-                              initalTeam: e.team,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          e.toString(),
-                        ),
+                      child: Text(
+                        e.toString(),
                       ),
                     ),
-                    if (!e.autoAim.isNaN) ...<Widget>[
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute<TeamInfoScreen>(
-                              builder: (final BuildContext context) =>
-                                  TeamInfoScreen(
-                                initalTeam: e.team,
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            "Team info",
-                          ),
-                        ),
-                      ),
-                      Spacer()
-                    ] else ...<Widget>[
-                      Text("No data"),
-                      Spacer(
-                        flex: 3,
-                      ),
-                    ]
                   ],
                 ),
+                trailing: Spacer(),
                 leading: AdvancedSwitch(
                   controller: e.controller,
                   activeColor: Colors.red,
@@ -166,6 +188,8 @@ class PickListTeam {
     required final double avgClimbPoints,
     required final double autoAim,
     required final double teleAim,
+    required final bool hasFault,
+    required final String faultMessage,
   }) : this.controller(
           firstListIndex,
           secondListIndex,
@@ -180,6 +204,8 @@ class PickListTeam {
             validateName(name),
             colorsIndex,
           ),
+          hasFault,
+          faultMessage,
         );
 
   PickListTeam.controller(
@@ -191,6 +217,8 @@ class PickListTeam {
     this.autoAim,
     this.teleAim,
     this.team,
+    this.hasFault,
+    this.faultMessage,
   );
 
   final double avgBallPoints;
@@ -198,6 +226,8 @@ class PickListTeam {
   final double autoAim;
   final double teleAim;
   final LightTeam team;
+  final bool hasFault;
+  final String faultMessage;
   int firstListIndex;
   int secondListIndex;
   final ValueNotifier<bool> controller;
