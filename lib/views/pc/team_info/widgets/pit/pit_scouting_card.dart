@@ -24,18 +24,16 @@ class PitScoutingCard extends StatelessWidget {
             ),
             Row(
               children: <Widget>[
-                Spacer(
-                  flex: 5,
+                Expanded(
+                  child: Icon(
+                    data.hasFault ? Icons.warning : Icons.check,
+                    color: data.hasFault ? Colors.yellow[700] : Colors.green,
+                  ),
                 ),
-                Icon(
-                  data.hasFault ? Icons.warning : Icons.check,
-                  color: data.hasFault ? Colors.yellow[700] : Colors.green,
+                Expanded(
+                  flex: 3,
+                  child: Text(data.hasFault ? data.faultMessage : "No Fault"),
                 ),
-                Spacer(),
-                Text(data.hasFault ? data.faultMessage : "No Fault"),
-                Spacer(
-                  flex: 5,
-                )
               ],
             ),
             Align(
