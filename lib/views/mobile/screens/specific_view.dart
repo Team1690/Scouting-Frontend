@@ -121,11 +121,12 @@ class _SpecificState extends State<Specific> {
                                 Icons.cancel,
                               )
                             ],
-                            isSelected: <bool>[vars.robotBroke],
+                            isSelected: <bool>[vars.faultMessage != null],
                             onPressed: (final int index) {
                               assert(index == 0);
                               setState(() {
-                                vars.robotBroke = !vars.robotBroke;
+                                vars.faultMessage =
+                                    vars.faultMessage == null ? "" : null;
                               });
                             },
                           ),
@@ -136,7 +137,7 @@ class _SpecificState extends State<Specific> {
                   SizedBox(
                     height: 14,
                   ),
-                  if (vars.robotBroke)
+                  if (vars.faultMessage != null)
                     TextField(
                       textDirection: TextDirection.rtl,
                       onChanged: (final String value) {
@@ -166,7 +167,7 @@ class _SpecificState extends State<Specific> {
                   message
                     }
                   }
-                  ${!vars.robotBroke ? "" : """
+                  ${vars.faultMessage == null ? "" : """
   insert_broken_robots(objects: {team_id: \$team_id, message: \$fault_message}, on_conflict: {constraint: broken_robots_team_id_key, update_columns: message}) {
     affected_rows
   }"""}
