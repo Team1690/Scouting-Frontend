@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
+import 'package:scouting_frontend/models/map_nullable.dart';
 import "package:scouting_frontend/models/team_model.dart";
 
 import "package:scouting_frontend/views/constants.dart";
@@ -126,7 +127,7 @@ class _SpecificState extends State<Specific> {
                               assert(index == 0);
                               setState(() {
                                 vars.faultMessage =
-                                    vars.faultMessage == null ? "" : null;
+                                    vars.faultMessage.onNull("");
                               });
                             },
                           ),
