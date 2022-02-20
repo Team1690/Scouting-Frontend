@@ -108,8 +108,7 @@ Future<List<PickListTeam>> fetchPicklist(final CurrentPickList screen) async {
               teleAim: teleAim,
               avgBallPoints: avgBallPoints,
               avgClimbPoints: climbAvg,
-              hasFault: teamIdToFaultMessage.containsKey(e["id"] as int),
-              faultMessage: teamIdToFaultMessage[e["id"] as int] ?? "",
+              faultMessage: teamIdToFaultMessage[e["id"] as int],
             );
           }).toList();
         }) ??

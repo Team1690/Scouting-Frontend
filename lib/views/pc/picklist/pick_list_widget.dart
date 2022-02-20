@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
@@ -69,16 +70,20 @@ class _PickListState extends State<PickList> {
                               children: <Widget>[
                                 Expanded(
                                   child: Icon(
-                                    e.hasFault ? Icons.warning : Icons.check,
-                                    color: e.hasFault
-                                        ? Colors.yellow[700]
-                                        : Colors.green,
+                                    e.faultMessage.fold(
+                                      () => Icons.check,
+                                      (final String _) => Icons.warning,
+                                    ),
+                                    color: e.faultMessage.fold(
+                                      () => Colors.green,
+                                      (final String _) => Colors.yellow[700],
+                                    ),
                                   ),
                                 ),
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    e.hasFault ? e.faultMessage : "No Fault",
+                                    e.faultMessage.orElse("No fault"),
                                   ),
                                 ),
                               ],
@@ -188,8 +193,7 @@ class PickListTeam {
     required final double avgClimbPoints,
     required final double autoAim,
     required final double teleAim,
-    required final bool hasFault,
-    required final String faultMessage,
+    required final String? faultMessage,
   }) : this.controller(
           firstListIndex,
           secondListIndex,
@@ -204,7 +208,6 @@ class PickListTeam {
             validateName(name),
             colorsIndex,
           ),
-          hasFault,
           faultMessage,
         );
 
@@ -217,7 +220,6 @@ class PickListTeam {
     this.autoAim,
     this.teleAim,
     this.team,
-    this.hasFault,
     this.faultMessage,
   );
 
@@ -226,8 +228,7 @@ class PickListTeam {
   final double autoAim;
   final double teleAim;
   final LightTeam team;
-  final bool hasFault;
-  final String faultMessage;
+  final String? faultMessage;
   int firstListIndex;
   int secondListIndex;
   final ValueNotifier<bool> controller;
