@@ -412,8 +412,7 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
               driveMotorType: p0["drivemotor"]["title"] as String,
-              hasFault: teamIdToFaultMessage.containsKey(teamByPk["id"] as int),
-              faultMessage: teamIdToFaultMessage[teamByPk["id"] as int] ?? "",
+              faultMessage: teamIdToFaultMessage[teamByPk["id"] as int],
             ),
           );
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
@@ -579,11 +578,13 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
                 flex: 5,
               ),
               Icon(
-                data.hasFault ? Icons.warning : Icons.check,
-                color: data.hasFault ? Colors.yellow[700] : Colors.green,
+                data.faultMessage == null ? Icons.warning : Icons.check,
+                color: data.faultMessage == null
+                    ? Colors.yellow[700]
+                    : Colors.green,
               ),
               Spacer(),
-              Text(data.hasFault ? data.faultMessage : "No Fault"),
+              Text(data.faultMessage ?? "No Fault"),
               Spacer(
                 flex: 5,
               )

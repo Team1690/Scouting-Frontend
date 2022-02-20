@@ -26,13 +26,15 @@ class PitScoutingCard extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: Icon(
-                    data.hasFault ? Icons.warning : Icons.check,
-                    color: data.hasFault ? Colors.yellow[700] : Colors.green,
+                    data.faultMessage == null ? Icons.warning : Icons.check,
+                    color: data.faultMessage == null
+                        ? Colors.yellow[700]
+                        : Colors.green,
                   ),
                 ),
                 Expanded(
                   flex: 3,
-                  child: Text(data.hasFault ? data.faultMessage : "No Fault"),
+                  child: Text(data.faultMessage ?? "No Fault"),
                 ),
               ],
             ),

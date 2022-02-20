@@ -121,8 +121,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
               driveMotorType: p0["drivemotor"]["title"] as String,
-              hasFault: teamIdToFaultMessage.containsKey(teamByPk["id"] as int),
-              faultMessage: teamIdToFaultMessage[teamByPk["id"] as int] ?? "",
+              faultMessage: teamIdToFaultMessage[teamByPk["id"] as int],
             ),
           );
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
