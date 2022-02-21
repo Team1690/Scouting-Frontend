@@ -127,7 +127,7 @@ class _SpecificState extends State<Specific> {
                               assert(index == 0);
                               setState(() {
                                 vars.faultMessage =
-                                    vars.faultMessage.onNull("");
+                                    vars.faultMessage.onNull("No input");
                               });
                             },
                           ),
