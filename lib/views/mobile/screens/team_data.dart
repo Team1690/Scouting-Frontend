@@ -337,6 +337,15 @@ query MyQuery(\$id: Int!) {
       tele_missed
     }
   }
+  broken_robots {
+    team {
+      colors_index
+      id
+      name
+      number
+    }
+    message
+  }
 }
 
 
@@ -386,7 +395,10 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
                 )
                 .toList(),
           );
-
+          final Map<int, String> teamIdToFaultMessage = <int, String>{
+            for (final dynamic e in (team["broken_robots"] as List<dynamic>))
+              e["team"]["id"] as int: e["message"] as String
+          };
           final PitData? pitData = pit.mapNullable<PitData>(
             (final Map<String, dynamic> p0) => PitData(
               driveMotorAmount: p0["drive_motor_amount"] as int,
@@ -400,6 +412,7 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
               driveMotorType: p0["drivemotor"]["title"] as String,
+              faultMessage: teamIdToFaultMessage[teamByPk["id"] as int],
             ),
           );
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
@@ -552,6 +565,31 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              "Robot Fault",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          Row(
+            children: <Widget>[
+              Spacer(
+                flex: 5,
+              ),
+              Icon(
+                data.faultMessage == null ? Icons.warning : Icons.check,
+                color: data.faultMessage == null
+                    ? Colors.yellow[700]
+                    : Colors.green,
+              ),
+              Spacer(),
+              Text(data.faultMessage ?? "No Fault"),
+              Spacer(
+                flex: 5,
+              )
+            ],
+          ),
           Align(
             alignment: Alignment.center,
             child: Text(

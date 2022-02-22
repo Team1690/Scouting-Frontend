@@ -64,6 +64,22 @@ class SideNavBar extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: Icon(Icons.feed_outlined),
+            title: const Text(
+              "Coach",
+              style: TextStyle(
+                fontSize: 25.0,
+                letterSpacing: 1.0,
+              ),
+            ),
+            onTap: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute<Specific>(
+                builder: (final BuildContext context) => CoachView(),
+              ),
+            ),
+          ),
+          ListTile(
             leading: Icon(Icons.build),
             title: const Text(
               "Pit",
@@ -80,22 +96,6 @@ class SideNavBar extends StatelessWidget {
                 ),
               );
             },
-          ),
-          ListTile(
-            leading: Icon(Icons.feed_outlined),
-            title: const Text(
-              "Coach",
-              style: TextStyle(
-                fontSize: 25.0,
-                letterSpacing: 1.0,
-              ),
-            ),
-            onTap: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<Specific>(
-                builder: (final BuildContext context) => CoachView(),
-              ),
-            ),
           ),
           ListTile(
             leading: Icon(Icons.construction),

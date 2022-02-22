@@ -18,6 +18,29 @@ class PitScoutingCard extends StatelessWidget {
             Align(
               alignment: Alignment.center,
               child: Text(
+                "Robot Fault",
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Icon(
+                    data.faultMessage == null ? Icons.warning : Icons.check,
+                    color: data.faultMessage == null
+                        ? Colors.yellow[700]
+                        : Colors.green,
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(data.faultMessage ?? "No Fault"),
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
                 "Drivetrain",
                 style: TextStyle(fontSize: 18),
               ),

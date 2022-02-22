@@ -34,6 +34,11 @@ Future<List<PickListTeam>> fetchPicklist(final CurrentPickList screen) async {
       }
     }
   }
+
+  broken_robots{
+    team_id
+    message
+  }
 }
 
     """;
@@ -43,6 +48,11 @@ Future<List<PickListTeam>> fetchPicklist(final CurrentPickList screen) async {
   final List<PickListTeam> teams = result.mapQueryResult(
     (final Map<String, dynamic>? data) =>
         data.mapNullable((final Map<String, dynamic> pickListTeams) {
+          final Map<int, String> teamIdToFaultMessage = <int, String>{
+            for (final dynamic e
+                in pickListTeams["broken_robots"] as List<dynamic>)
+              e["team_id"] as int: e["message"] as String
+          };
           return (pickListTeams["team"] as List<dynamic>)
               .map((final dynamic e) {
             final dynamic avg = e["matches_aggregate"]["aggregate"]["avg"];
@@ -98,6 +108,7 @@ Future<List<PickListTeam>> fetchPicklist(final CurrentPickList screen) async {
               teleAim: teleAim,
               avgBallPoints: avgBallPoints,
               avgClimbPoints: climbAvg,
+              faultMessage: teamIdToFaultMessage[e["id"] as int],
             );
           }).toList();
         }) ??

@@ -8,6 +8,7 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 const String teamInfoQuery = """
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
+    id
     pit {
       drive_motor_amount
       drive_train_reliability
@@ -56,6 +57,16 @@ query MyQuery(\$id: Int!) {
       tele_upper
       tele_missed
     }
+
+  }
+        broken_robots {
+    team {
+      colors_index
+      id
+      name
+      number
+    }
+    message
   }
 }
 
@@ -93,7 +104,10 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                 )
                 .toList(),
           );
-
+          final Map<int, String> teamIdToFaultMessage = <int, String>{
+            for (final dynamic e in (team["broken_robots"] as List<dynamic>))
+              e["team"]["id"] as int: e["message"] as String
+          };
           final PitData? pitData = pit.mapNullable<PitData>(
             (final Map<String, dynamic> p0) => PitData(
               driveMotorAmount: p0["drive_motor_amount"] as int,
@@ -107,6 +121,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
               driveMotorType: p0["drivemotor"]["title"] as String,
+              faultMessage: teamIdToFaultMessage[teamByPk["id"] as int],
             ),
           );
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]

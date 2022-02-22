@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
@@ -39,6 +40,7 @@ class _PickListState extends State<PickList> {
   Widget build(final BuildContext context) {
     return Container(
       child: ReorderableListView(
+        buildDefaultDragHandles: true,
         primary: false,
         children: widget.uiList.map<Widget>((final PickListTeam e) {
           e.controller.addListener(() {
@@ -55,77 +57,102 @@ class _PickListState extends State<PickList> {
                 0,
                 defaultPadding / 4,
               ),
-              child: ListTile(
+              child: ExpansionTile(
+                children: <Widget>[
+                  ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        if (!e.autoAim.isNaN) ...<Widget>[
+                          Spacer(),
+                          Expanded(
+                            flex: 3,
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Icon(
+                                    e.faultMessage.fold(
+                                      () => Icons.check,
+                                      (final String _) => Icons.warning,
+                                    ),
+                                    color: e.faultMessage.fold(
+                                      () => Colors.green,
+                                      (final String _) => Colors.yellow[700],
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    e.faultMessage.orElse("No fault"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute<TeamInfoScreen>(
+                                  builder: (final BuildContext context) =>
+                                      TeamInfoScreen(
+                                    initalTeam: e.team,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                "Team info",
+                              ),
+                            ),
+                          ),
+                          Spacer()
+                        ] else ...<Widget>[
+                          Text("No data"),
+                          Spacer(
+                            flex: 3,
+                          ),
+                        ]
+                      ],
+                    ),
+                  )
+                ],
                 title: Row(
                   children: <Widget>[
                     Expanded(
                       flex: 3,
-                      child: GestureDetector(
-                        onTap: () => Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute<TeamInfoScreen>(
-                            builder: (final BuildContext context) =>
-                                TeamInfoScreen(
-                              initalTeam: e.team,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          e.toString(),
-                        ),
+                      child: Text(
+                        e.toString(),
                       ),
                     ),
-                    if (!e.autoAim.isNaN) ...<Widget>[
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute<TeamInfoScreen>(
-                              builder: (final BuildContext context) =>
-                                  TeamInfoScreen(
-                                initalTeam: e.team,
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            "Team info",
-                          ),
-                        ),
-                      ),
-                      Spacer()
-                    ] else ...<Widget>[
-                      Text("No data"),
-                      Spacer(
-                        flex: 3,
-                      ),
-                    ]
                   ],
                 ),
+                trailing: Spacer(),
                 leading: AdvancedSwitch(
                   controller: e.controller,
                   activeColor: Colors.red,
@@ -166,6 +193,7 @@ class PickListTeam {
     required final double avgClimbPoints,
     required final double autoAim,
     required final double teleAim,
+    required final String? faultMessage,
   }) : this.controller(
           firstListIndex,
           secondListIndex,
@@ -180,6 +208,7 @@ class PickListTeam {
             validateName(name),
             colorsIndex,
           ),
+          faultMessage,
         );
 
   PickListTeam.controller(
@@ -191,6 +220,7 @@ class PickListTeam {
     this.autoAim,
     this.teleAim,
     this.team,
+    this.faultMessage,
   );
 
   final double avgBallPoints;
@@ -198,6 +228,7 @@ class PickListTeam {
   final double autoAim;
   final double teleAim;
   final LightTeam team;
+  final String? faultMessage;
   int firstListIndex;
   int secondListIndex;
   final ValueNotifier<bool> controller;

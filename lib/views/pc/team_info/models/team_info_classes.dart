@@ -60,6 +60,7 @@ class PitData {
     required this.robotReliability,
     required this.hasShifer,
     required this.url,
+    required this.faultMessage,
   });
   final String driveTrainType;
   final int driveMotorAmount;
@@ -72,6 +73,7 @@ class PitData {
   final int robotReliability;
   final String notes;
   final String url;
+  final String? faultMessage;
 }
 
 class Team<E extends num> {
