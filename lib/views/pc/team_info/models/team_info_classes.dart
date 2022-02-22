@@ -26,7 +26,8 @@ class QuickData {
 }
 
 class SpecificData {
-  SpecificData(this.msg);
+  SpecificData(this.msg, this.role);
+  final String role;
   final List<SpecificMatch> msg;
 }
 
