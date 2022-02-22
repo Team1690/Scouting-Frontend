@@ -6,7 +6,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/views/mobile/screens/team_data.dart";
+import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 
 class CoachView extends StatelessWidget {
