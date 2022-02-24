@@ -26,8 +26,8 @@ class PitScoutingCard extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: Icon(
-                    data.faultMessage == null ? Icons.warning : Icons.check,
-                    color: data.faultMessage == null
+                    data.faultMessage != null ? Icons.warning : Icons.check,
+                    color: data.faultMessage != null
                         ? Colors.yellow[700]
                         : Colors.green,
                   ),
