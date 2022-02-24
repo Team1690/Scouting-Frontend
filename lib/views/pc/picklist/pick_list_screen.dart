@@ -17,7 +17,7 @@ class _PickListScreenState extends State<PickListScreen> {
 
   @override
   void dispose() {
-    saveWithoutSnackbar(teams);
+    save(teams);
     super.dispose();
   }
 
@@ -42,7 +42,7 @@ class _PickListScreenState extends State<PickListScreen> {
                   ),
                   IconButton(
                     onPressed: () =>
-                        save(context, List<PickListTeam>.from(teams)),
+                        save(List<PickListTeam>.from(teams), context),
                     icon: Icon(Icons.save),
                   ),
                   IconButton(
@@ -62,43 +62,13 @@ class _PickListScreenState extends State<PickListScreen> {
       ),
     );
   }
-
-  static void saveWithoutSnackbar(final List<PickListTeam> teams) {
-    final GraphQLClient client = getClient();
-    final String query = """
-  mutation M(\$objects: [team_insert_input!]!) {
-  insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index]}) {
-    affected_rows
-    returning {
-      id
-    }
-  }
 }
 
-  """;
-
-    final Map<String, dynamic> vars = <String, dynamic>{
-      "objects": teams
-          .map(
-            (final PickListTeam e) => <String, dynamic>{
-              "id": e.team.id,
-              "name": e.team.name,
-              "number": e.team.number,
-              "first_picklist_index": e.firstListIndex,
-              "second_picklist_index": e.secondListIndex,
-              "taken": e.controller.value
-            },
-          )
-          .toList()
-    };
-
-    client.mutate(MutationOptions(document: gql(query), variables: vars));
-  }
-
-  static void save(
-    final BuildContext context,
-    final List<PickListTeam> teams,
-  ) async {
+void save(
+  final List<PickListTeam> teams, [
+  final BuildContext? context,
+]) async {
+  if (context != null) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: Duration(seconds: 5),
@@ -111,8 +81,9 @@ class _PickListScreenState extends State<PickListScreen> {
         backgroundColor: Colors.blue,
       ),
     );
-    final GraphQLClient client = getClient();
-    final String query = """
+  }
+  final GraphQLClient client = getClient();
+  final String query = """
   mutation M(\$objects: [team_insert_input!]!) {
   insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index]}) {
     affected_rows
@@ -124,23 +95,25 @@ class _PickListScreenState extends State<PickListScreen> {
 
   """;
 
-    final Map<String, dynamic> vars = <String, dynamic>{
-      "objects": teams
-          .map(
-            (final PickListTeam e) => <String, dynamic>{
-              "id": e.team.id,
-              "name": e.team.name,
-              "number": e.team.number,
-              "first_picklist_index": e.firstListIndex,
-              "second_picklist_index": e.secondListIndex,
-              "taken": e.controller.value
-            },
-          )
-          .toList()
-    };
+  final Map<String, dynamic> vars = <String, dynamic>{
+    "objects": teams
+        .map(
+          (final PickListTeam e) => <String, dynamic>{
+            "id": e.team.id,
+            "name": e.team.name,
+            "number": e.team.number,
+            "colors_index": e.team.colorsIndex,
+            "first_picklist_index": e.firstListIndex,
+            "second_picklist_index": e.secondListIndex,
+            "taken": e.controller.value
+          },
+        )
+        .toList()
+  };
 
-    final QueryResult result = await client
-        .mutate(MutationOptions(document: gql(query), variables: vars));
+  final QueryResult result = await client
+      .mutate(MutationOptions(document: gql(query), variables: vars));
+  if (context != null) {
     if (result.hasException) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
