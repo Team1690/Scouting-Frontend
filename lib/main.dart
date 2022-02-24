@@ -17,10 +17,13 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
-  final Map<String, int> climbs = await fetchEnum("climb_2022");
-  final Map<String, int> driveTrains = await fetchEnum("drivetrain");
-  final Map<String, int> driveMotors = await fetchEnum("drivemotor");
-  final Map<String, int> robotRoles = await fetchEnum("robot_role");
+  final Map<String, Map<String, int>> enums = await fetchEnums(
+    <String>["climb_2022", "drivetrain", "drivemotor", "robot_role"],
+  );
+  final Map<String, int> climbs = enums["climb_2022"]!;
+  final Map<String, int> driveTrains = enums["drivetrain"]!;
+  final Map<String, int> driveMotors = enums["drivemotor"]!;
+  final Map<String, int> robotRoles = enums["robot_role"]!;
   final List<LightTeam> teams = await fetchTeams();
 
   runApp(
