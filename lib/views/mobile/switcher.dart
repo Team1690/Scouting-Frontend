@@ -59,8 +59,7 @@ class Switcher extends StatelessWidget {
                       getBorder(i),
                     ),
                     overlayColor: MaterialStateColor.resolveWith(
-                      (final Set<MaterialState> states) =>
-                          selected == i ? colors[i] : Colors.grey,
+                      (final Set<MaterialState> states) => Colors.grey,
                     ),
                   ),
                   onPressed: () {
