@@ -16,7 +16,7 @@ class TeamInfoData<E extends num> extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return FutureBuilder<Team<E>>(
-      future: fetchTeamInfo<E>(team),
+      future: fetchTeamInfo<E>(team, context),
       builder: (
         final BuildContext context,
         final AsyncSnapshot<Team<E>> snapShot,

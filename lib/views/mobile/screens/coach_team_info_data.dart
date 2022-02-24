@@ -1,6 +1,7 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -24,7 +25,7 @@ class CoachTeamData extends StatelessWidget {
         ),
       ),
       body: FutureBuilder<CoachViewTeam>(
-        future: fetchTeam(team.id),
+        future: fetchTeam(team.id, context),
         builder: (
           final BuildContext context,
           final AsyncSnapshot<CoachViewTeam> snapshot,
@@ -308,6 +309,7 @@ query MyQuery(\$id: Int!) {
       message
       robot_role{
         title
+        id
       }
     }
 
@@ -371,7 +373,10 @@ class CoachViewTeam {
   final PitData? pitData;
 }
 
-Future<CoachViewTeam> fetchTeam(final int id) async {
+Future<CoachViewTeam> fetchTeam(
+  final int id,
+  final BuildContext context,
+) async {
   final GraphQLClient client = getClient();
   final QueryResult result = await client.query(
     QueryOptions(document: gql(query), variables: <String, dynamic>{"id": id}),
@@ -385,6 +390,30 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
               : throw Exception("that team doesnt exist");
           final Map<String, dynamic>? pit =
               (teamByPk["pit"] as Map<String, dynamic>?);
+          final List<int> roleIds = (teamByPk["specifics"] as List<dynamic>)
+              .map<int?>(
+                (final dynamic e) => e["robot_role"]?["id"] as int?,
+              )
+              .where((final int? element) => element != null)
+              .cast<int>()
+              .toList();
+
+          final Map<int, int> roleToAmount = <int, int>{};
+          for (final int element in roleIds) {
+            roleToAmount[element] = (roleToAmount[element] ?? 0) + 1;
+          }
+          final List<MapEntry<int, int>> roles = roleToAmount.entries.toList()
+            ..sort(
+              (final MapEntry<int, int> a, final MapEntry<int, int> b) =>
+                  b.value.compareTo(a.value),
+            );
+          final String mostPopularRoleName = roles.isEmpty
+              ? "No data"
+              : roles.length == 1
+                  ? IdProvider.of(context).robotRole.idToName[roles.first.key]!
+                  : roles.length == 2
+                      ? "${IdProvider.of(context).robotRole.idToName[roles.first.key]}-${IdProvider.of(context).robotRole.idToName[roles.elementAt(1).key]}"
+                      : "Misc";
           final SpecificData specificData = SpecificData(
             (teamByPk["specifics"] as List<dynamic>)
                 .map(
@@ -394,6 +423,7 @@ Future<CoachViewTeam> fetchTeam(final int id) async {
                   ),
                 )
                 .toList(),
+            mostPopularRoleName,
           );
           final Map<int, String> teamIdToFaultMessage = <int, String>{
             for (final dynamic e in (team["broken_robots"] as List<dynamic>))
