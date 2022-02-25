@@ -62,34 +62,34 @@ class _PickListState extends State<PickList> {
                   ListTile(
                     title: Row(
                       children: <Widget>[
-                        if (!e.autoAim.isNaN) ...<Widget>[
-                          Spacer(),
-                          Expanded(
-                            flex: 3,
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Icon(
-                                    e.faultMessage.fold(
-                                      () => Icons.check,
-                                      (final String _) => Icons.warning,
-                                    ),
-                                    color: e.faultMessage.fold(
-                                      () => Colors.green,
-                                      (final String _) => Colors.yellow[700],
-                                    ),
+                        Spacer(),
+                        Expanded(
+                          flex: 3,
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Icon(
+                                  e.faultMessage.fold(
+                                    () => Icons.check,
+                                    (final String _) => Icons.warning,
+                                  ),
+                                  color: e.faultMessage.fold(
+                                    () => Colors.green,
+                                    (final String _) => Colors.yellow[700],
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    e.faultMessage.orElse("No fault"),
-                                  ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  e.faultMessage.orElse("No fault"),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          Spacer(),
+                        ),
+                        Spacer(),
+                        if (!e.autoAim.isNaN) ...<Expanded>[
                           Expanded(
                             flex: 3,
                             child: Text(
@@ -114,30 +114,31 @@ class _PickListState extends State<PickList> {
                               "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
                             ),
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute<TeamInfoScreen>(
-                                  builder: (final BuildContext context) =>
-                                      TeamInfoScreen(
-                                    initalTeam: e.team,
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                "Team info",
-                              ),
+                        ] else
+                          ...List<Spacer>.filled(
+                            4,
+                            Spacer(
+                              flex: 3,
                             ),
                           ),
-                          Spacer()
-                        ] else ...<Widget>[
-                          Text("No data"),
-                          Spacer(
-                            flex: 3,
+                        Expanded(
+                          flex: 3,
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute<TeamInfoScreen>(
+                                builder: (final BuildContext context) =>
+                                    TeamInfoScreen(
+                                  initalTeam: e.team,
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              "Team info",
+                            ),
                           ),
-                        ]
+                        ),
+                        Spacer()
                       ],
                     ),
                   )
@@ -152,7 +153,7 @@ class _PickListState extends State<PickList> {
                     ),
                   ],
                 ),
-                trailing: Spacer(),
+                trailing: SizedBox(),
                 leading: AdvancedSwitch(
                   controller: e.controller,
                   activeColor: Colors.red,
