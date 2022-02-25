@@ -39,15 +39,17 @@ void main(final List<String> args) async {
         )),
   );
 
-  sendMatches(
-    parseResponse(response, results["event"] as String),
-    getClient(),
-    teams,
+  print(
+    await sendMatches(
+      parseResponse(response, results["event"] as String),
+      getClient(),
+      teams,
+    ),
   );
 }
 
 const String mutation = """
-mutation MyMutation(\$matches: [orbit_matches_test_insert_input!]!) {
+mutation MyMutation(\$matches: [orbit_matches_insert_input!]!) {
   insert_orbit_matches(objects: \$matches) {
     affected_rows
   }
@@ -85,7 +87,7 @@ List<Match> parseResponse(final http.Response response, final String event) {
       .toList();
 }
 
-void sendMatches(
+Future<QueryResult> sendMatches(
   final List<Match> matches,
   final GraphQLClient client,
   final List<LightTeam> teams,
@@ -93,7 +95,7 @@ void sendMatches(
   final Iterable<Map<String, int>> vars = matches.map<Map<String, int>>(
     (final Match e) => <String, int>{
       "match_number": e.number,
-      "match_type_is": 1,
+      "match_type_id": 1,
       for (int i = 0; i < 3; i++)
         "blue_$i": teams
             .where(
@@ -111,7 +113,7 @@ void sendMatches(
     },
   );
 
-  client.mutate(
+  return client.mutate(
     MutationOptions(
       document: gql(mutation),
       variables: <String, dynamic>{"matches": vars.toList()},
@@ -147,7 +149,7 @@ Future<List<LightTeam>> fetchTeams() async {
   final GraphQLClient client = getClient();
   final String query = """
 query FetchTeams {
-  team_test {
+  team {
     id
     number
     name
@@ -160,16 +162,15 @@ query FetchTeams {
 
   return result.mapQueryResult(
         (final Map<String, dynamic>? data) => data.mapNullable(
-          (final Map<String, dynamic> teams) =>
-              (teams["team_test"] as List<dynamic>)
-                  .map(
-                    (final dynamic e) => LightTeam(
-                      e["id"] as int,
-                      e["number"] as int,
-                      e["name"] as String,
-                    ),
-                  )
-                  .toList(),
+          (final Map<String, dynamic> teams) => (teams["team"] as List<dynamic>)
+              .map(
+                (final dynamic e) => LightTeam(
+                  e["id"] as int,
+                  e["number"] as int,
+                  e["name"] as String,
+                ),
+              )
+              .toList(),
         ),
       ) ??
       (throw Exception("No teams queried"));
