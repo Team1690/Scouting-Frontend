@@ -56,21 +56,25 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                   SizedBox(width: defaultPadding),
                   Expanded(
                     flex: 2,
-                    child: Row(
-                      children: List<Padding>.generate(
-                        teams.length,
-                        (final int index) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: defaultPadding / 2,
-                          ),
-                          child: Chip(
-                            label: Text(
-                              teams.elementAt(index).number.toString(),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      primary: false,
+                      child: Row(
+                        children: List<Padding>.generate(
+                          teams.length,
+                          (final int index) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: defaultPadding / 2,
                             ),
-                            backgroundColor: teams.elementAt(index).color,
-                            onDeleted: () => setState(
-                              () => teams.remove(
-                                teams.elementAt(index),
+                            child: Chip(
+                              label: Text(
+                                teams.elementAt(index).number.toString(),
+                              ),
+                              backgroundColor: teams.elementAt(index).color,
+                              onDeleted: () => setState(
+                                () => teams.remove(
+                                  teams.elementAt(index),
+                                ),
                               ),
                             ),
                           ),
@@ -78,17 +82,14 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ToggleButtons(
-                      children: <Widget>[
-                        Icon(Icons.shield_rounded),
-                        Icon(Icons.remove_moderator_outlined),
-                      ],
-                      isSelected: <bool>[false, false],
-                      //Currently unused feature
-                      onPressed: (final int index) {},
-                    ),
+                  ToggleButtons(
+                    children: <Widget>[
+                      Icon(Icons.shield_rounded),
+                      Icon(Icons.remove_moderator_outlined),
+                    ],
+                    isSelected: <bool>[false, false],
+                    //Currently unused feature
+                    onPressed: (final int index) {},
                   ),
                 ],
               ),
