@@ -80,7 +80,7 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
           show: true,
           topTitles: SideTitles(
             showTitles: true,
-            reservedSize: 16,
+            interval: 1,
             getTextStyles: (final BuildContext context, final double value) =>
                 TextStyle(color: Colors.white, fontSize: 16),
             checkToShowTitle: (
@@ -200,7 +200,7 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
               getTitles: (final double value) =>
                   matchNumbers[value.toInt() - 1].toString(),
               showTitles: true,
-              reservedSize: 16,
+              interval: 1,
               getTextStyles: (final BuildContext context, final double value) =>
                   TextStyle(color: Colors.white, fontSize: 16),
               checkToShowTitle: (
