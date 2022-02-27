@@ -46,7 +46,7 @@ void main(final List<String> args) async {
     exit(0);
   }
   final dynamic teams = jsonDecode(response.body);
-  sendTeams(teams as List<dynamic>, getClient());
+  print(await sendTeams(teams as List<dynamic>, getClient()));
 }
 
 Future<http.Response> fetchTeamsFromTba(final String event) {
@@ -64,11 +64,12 @@ mutation MyMutation(\$teams: [team_insert_input!]!) {
 }
 """;
 
-Future<void> sendTeams(
+Future<QueryResult> sendTeams(
   final List<dynamic> teams,
   final GraphQLClient client,
 ) async {
-  client.mutate(
+  int index = 0;
+  return client.mutate(
     MutationOptions(
       document: gql(mutation),
       variables: <String, dynamic>{
@@ -77,6 +78,7 @@ Future<void> sendTeams(
               (final dynamic e) => <String, dynamic>{
                 "name": e["nickname"],
                 "number": e["team_number"],
+                "colors_index": index++
               },
             )
             .toList()
