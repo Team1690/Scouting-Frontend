@@ -32,7 +32,6 @@ class _SpecificState extends State<Specific> {
       onTap: node.unfocus,
       child: Scaffold(
         drawer: SideNavBar(),
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
           title: Text("Specific"),
