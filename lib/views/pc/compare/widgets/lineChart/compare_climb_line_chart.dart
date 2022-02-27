@@ -2,7 +2,7 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
-import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/team_info_line_chart.dart";
+import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 
 class CompareClimbLineChart<E extends num> extends StatelessWidget {
   const CompareClimbLineChart(this.data);
