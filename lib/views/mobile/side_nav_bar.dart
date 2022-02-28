@@ -4,6 +4,7 @@ import "package:scouting_frontend/views/mobile/screens/fault_view.dart";
 import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view.dart";
 import "package:scouting_frontend/views/mobile/screens/specific_view.dart";
+import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 
 class SideNavBar extends StatelessWidget {
   const SideNavBar();
@@ -29,92 +30,68 @@ class SideNavBar extends StatelessWidget {
               ),
             ),
           ),
-          ListTile(
-            leading: Icon(Icons.error_outline),
-            title: const Text(
-              "Match",
-              style: TextStyle(
-                fontSize: 25.0,
-                letterSpacing: 1.0,
-              ),
-            ),
-            onTap: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<Specific>(
-                builder: (final BuildContext context) => UserInput(),
-              ),
-            ),
+          NavbarTile(
+            icon: Icons.error_outline,
+            title: "Match",
+            widget: UserInput.new,
           ),
-          ListTile(
-            leading: Icon(Icons.search),
-            title: const Text(
-              "Specific",
-              style: TextStyle(
-                fontSize: 25.0,
-                letterSpacing: 1.0,
-              ),
-            ),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute<Specific>(
-                  builder: (final BuildContext context) => Specific(),
-                ),
-              );
-            },
+          NavbarTile(
+            icon: Icons.search,
+            title: "Specific",
+            widget: Specific.new,
           ),
-          ListTile(
-            leading: Icon(Icons.feed_outlined),
-            title: const Text(
-              "Coach",
-              style: TextStyle(
-                fontSize: 25.0,
-                letterSpacing: 1.0,
-              ),
-            ),
-            onTap: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<Specific>(
-                builder: (final BuildContext context) => CoachView(),
-              ),
-            ),
+          NavbarTile(
+            icon: Icons.feed_outlined,
+            title: "Coach",
+            widget: CoachView.new,
           ),
-          ListTile(
-            leading: Icon(Icons.build),
-            title: const Text(
-              "Pit",
-              style: TextStyle(
-                fontSize: 25.0,
-                letterSpacing: 1.0,
-              ),
-            ),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute<PitView>(
-                  builder: (final BuildContext context) => PitView(),
-                ),
-              );
-            },
+          NavbarTile(
+            icon: Icons.build,
+            title: "Pit",
+            widget: PitView.new,
           ),
-          ListTile(
-            leading: Icon(Icons.construction),
-            title: const Text(
-              "Faults",
-              style: TextStyle(
-                fontSize: 25.0,
-                letterSpacing: 1.0,
-              ),
-            ),
-            onTap: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<FaultView>(
-                builder: (final BuildContext context) => FaultView(),
-              ),
-            ),
-          )
+          NavbarTile(
+            icon: Icons.construction,
+            title: "Faults",
+            widget: FaultView.new,
+          ),
+          NavbarTile(
+            icon: Icons.list,
+            title: "Picklist",
+            widget: PickListScreen.new,
+          ),
         ],
       ),
     );
   }
+}
+
+class NavbarTile extends StatelessWidget {
+  const NavbarTile({
+    required this.icon,
+    required this.title,
+    required this.widget,
+  });
+  final String title;
+  final IconData icon;
+  final Widget Function() widget;
+  @override
+  Widget build(final BuildContext context) => ListTile(
+        leading: Icon(icon),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 25.0,
+            letterSpacing: 1.0,
+          ),
+        ),
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute<Widget>(
+              builder: (final BuildContext context) => widget(),
+            ),
+          );
+        },
+      );
 }
