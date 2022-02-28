@@ -609,8 +609,8 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
                 flex: 5,
               ),
               Icon(
-                data.faultMessage == null ? Icons.warning : Icons.check,
-                color: data.faultMessage == null
+                data.faultMessage != null ? Icons.warning : Icons.check,
+                color: data.faultMessage != null
                     ? Colors.yellow[700]
                     : Colors.green,
               ),
