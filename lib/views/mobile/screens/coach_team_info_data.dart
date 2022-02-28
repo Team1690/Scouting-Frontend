@@ -685,7 +685,10 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
           ),
           Align(
             alignment: Alignment.center,
-            child: Text("Notes"),
+            child: Text(
+              "Notes",
+              style: TextStyle(fontSize: 18),
+            ),
           ),
           Text(
             data.notes,
