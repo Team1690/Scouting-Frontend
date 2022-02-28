@@ -50,9 +50,13 @@ class TeamsSearchBox extends StatelessWidget {
         (final LightTeam element) {
           return element.number.toString().startsWith(pattern);
         },
-      ),
+      ).toList()
+        ..sort(
+          (final LightTeam a, final LightTeam b) =>
+              a.number.compareTo(b.number),
+        ),
       itemBuilder: (final BuildContext context, final LightTeam suggestion) =>
-          ListTile(title: Text(suggestion.number.toString())),
+          ListTile(title: Text("${suggestion.number} ${suggestion.name}")),
       transitionBuilder: (
         final BuildContext context,
         final Widget suggestionsBox,
@@ -76,7 +80,7 @@ class TeamsSearchBox extends StatelessWidget {
         ),
       ),
       onSuggestionSelected: (final LightTeam suggestion) {
-        typeAheadController.text = suggestion.number.toString();
+        typeAheadController.text = "${suggestion.number} ${suggestion.name}";
         onChange(
           teams[teams.indexWhere(
             (final LightTeam team) => team.number == suggestion.number,
