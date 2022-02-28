@@ -9,6 +9,7 @@ import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
+import "package:scouting_frontend/views/mobile/slider.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/specific/scouting_specific.dart";
 
@@ -658,9 +659,30 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
               style: TextStyle(fontSize: 18),
             ),
           ),
-          Text("Drivetrain: ${data.driveTrainReliability}"),
-          Text("Electronics: ${data.electronicsReliability}"),
-          Text("Robot: ${data.robotReliability}"),
+          PitViewSlider(
+            label: "Drivetrain",
+            divisions: 4,
+            max: 5,
+            min: 1,
+            onChange: identity,
+            value: data.driveTrainReliability.toDouble(),
+          ),
+          PitViewSlider(
+            label: "Electronics",
+            divisions: 4,
+            max: 5,
+            min: 1,
+            onChange: identity,
+            value: data.electronicsReliability.toDouble(),
+          ),
+          PitViewSlider(
+            label: "Robot",
+            divisions: 9,
+            max: 10,
+            min: 1,
+            onChange: identity,
+            value: data.driveTrainReliability.toDouble(),
+          ),
           Align(
             alignment: Alignment.center,
             child: Text("Notes"),
