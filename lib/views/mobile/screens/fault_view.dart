@@ -3,6 +3,7 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 
@@ -19,6 +20,81 @@ class _FaultViewState extends State<FaultView> {
       appBar: AppBar(
         title: Text("Robot faults"),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () async {
+              LightTeam? team;
+              String? newMessage;
+              showDialog<void>(
+                context: context,
+                builder: (final BuildContext innerContext) {
+                  return AlertDialog(
+                    title: Text("Add team"),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        TeamSelectionFuture(
+                          onChange: (final LightTeam newTeam) {
+                            team = newTeam;
+                          },
+                          controller: TextEditingController(),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextField(
+                          textDirection: TextDirection.rtl,
+                          onChanged: (final String a) {
+                            newMessage = a;
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Error message",
+                            border: OutlineInputBorder(),
+                          ),
+                        )
+                      ],
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          if (team == null || newMessage == null) return;
+                          Navigator.of(context).pop();
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              duration: Duration(days: 365),
+                              backgroundColor: Color.fromARGB(0, 0, 0, 0),
+                              content: Align(
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          );
+                          addFaultTeam(team!.id, newMessage!)
+                              .then((final void _) {
+                            ScaffoldMessenger.of(context).clearSnackBars();
+                            setState(() {});
+                          });
+                        },
+                        child: Text("Submit"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ).then((final void _) {});
+            },
+            icon: Icon(Icons.add),
+          )
+        ],
       ),
       body: FutureBuilder<List<FaultTeam>>(
         future: fetchFaults(),
@@ -47,27 +123,108 @@ class _FaultViewState extends State<FaultView> {
                                   horizontal: defaultPadding / 4,
                                 ),
                                 child: ExpansionTile(
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          backgroundColor:
-                                              Color.fromARGB(0, 0, 0, 0),
-                                          content: Align(
-                                            alignment: Alignment.center,
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        ),
-                                      );
-                                      saveDeletedFaults(e.team.id)
-                                          .then((final void value) {
-                                        ScaffoldMessenger.of(context)
-                                            .clearSnackBars();
-                                        setState(() {});
-                                      });
-                                    },
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: () async {
+                                          final TextEditingController
+                                              controller =
+                                              TextEditingController();
+                                          final String? message =
+                                              await showDialog<String>(
+                                            context: context,
+                                            builder:
+                                                (final BuildContext context) =>
+                                                    AlertDialog(
+                                              title: Text("Edit message"),
+                                              content: TextField(
+                                                controller: controller,
+                                                autofocus: true,
+                                                textDirection:
+                                                    TextDirection.rtl,
+                                                decoration: InputDecoration(
+                                                  hintText: "Error message",
+                                                ),
+                                              ),
+                                              actions: <TextButton>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop<String>(
+                                                      controller.text,
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    "Submit",
+                                                    style: TextStyle(
+                                                      color: Colors.blue,
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed:
+                                                      Navigator.of(context).pop,
+                                                  child: Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                          if (message == null) return;
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              duration: Duration(days: 365),
+                                              backgroundColor:
+                                                  Color.fromARGB(0, 0, 0, 0),
+                                              content: Align(
+                                                alignment: Alignment.center,
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            ),
+                                          );
+                                          updateFaultMessage(
+                                            e.team.id,
+                                            message,
+                                          ).then((final void _) {
+                                            setState(() {});
+                                            ScaffoldMessenger.of(context)
+                                                .clearSnackBars();
+                                          });
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.delete),
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              duration: Duration(days: 365),
+                                              backgroundColor:
+                                                  Color.fromARGB(0, 0, 0, 0),
+                                              content: Align(
+                                                alignment: Alignment.center,
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                            ),
+                                          );
+                                          saveDeletedFaults(e.team.id)
+                                              .then((final void value) {
+                                            setState(() {});
+                                            ScaffoldMessenger.of(context)
+                                                .clearSnackBars();
+                                          });
+                                        },
+                                      ),
+                                    ],
                                   ),
                                   title: Text(
                                     "${e.team.number} ${e.team.name}",
@@ -93,19 +250,36 @@ class _FaultViewState extends State<FaultView> {
   }
 }
 
-const String mutation = """
-mutation MyMutation(\$team: Int) {
-  delete_broken_robots(where: {team_id: {_eq: \$team}}) {
-    affected_rows
-  }
+Future<void> updateFaultMessage(final int teamId, final String message) async {
+  final GraphQLClient client = getClient();
+  await client.mutate(
+    MutationOptions(
+      document: gql(updateMessage),
+      variables: <String, dynamic>{"team": teamId, "message": message},
+    ),
+  );
 }
-""";
+
+Future<void> addFaultTeam(final int teamId, final String message) async {
+  final GraphQLClient client = getClient();
+  print(
+    await client.mutate(
+      MutationOptions(
+        document: gql(addTeam),
+        variables: <String, dynamic>{
+          "team_id": teamId,
+          "fault_message": message
+        },
+      ),
+    ),
+  );
+}
 
 Future<void> saveDeletedFaults(final int teamID) async {
   final GraphQLClient client = getClient();
   await client.mutate(
     MutationOptions(
-      document: gql(mutation),
+      document: gql(deleteTeams),
       variables: <String, dynamic>{"team": teamID},
     ),
   );
@@ -144,14 +318,6 @@ class FaultTeam {
   final LightTeam team;
 }
 
-const String saveMutation = """
-mutation MyMutation(\$teams: [Int!]) {
-  delete_broken_robots(where: {team_id: {_in: \$teams}}) {
-    affected_rows
-  }
-}
-""";
-
 const String query = """
 query MyQuery {
   broken_robots {
@@ -165,4 +331,28 @@ query MyQuery {
   }
 }
 
+""";
+
+const String updateMessage = """
+mutation MyMutation(\$team: Int, \$message: String) {
+  update_broken_robots(where: {team_id: {_eq: \$team}}, _set: {message: \$message}) {
+    affected_rows
+  }
+}
+
+""";
+
+const String deleteTeams = """
+mutation MyMutation(\$team: Int) {
+  delete_broken_robots(where: {team_id: {_eq: \$team}}) {
+    affected_rows
+  }
+}
+""";
+
+const String addTeam = """
+mutation Mymutation(\$team_id:Int,\$fault_message:String){
+  insert_broken_robots(objects: {team_id: \$team_id, message: \$fault_message}) {
+    affected_rows
+  }}
 """;
