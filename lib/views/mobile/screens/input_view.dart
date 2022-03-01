@@ -22,6 +22,7 @@ class _UserInputState extends State<UserInput> {
   final TextEditingController matchNumberController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
+  final TextEditingController scouterNameController = TextEditingController();
   Match match = Match();
   // -1 means nothing
 
@@ -51,6 +52,24 @@ class _UserInputState extends State<UserInput> {
                   },
                   onChange: (final int value) => match.matchNumber = value,
                   controller: matchNumberController,
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                TextFormField(
+                  controller: scouterNameController,
+                  validator: (final String? value) =>
+                      value != null && value.isNotEmpty
+                          ? null
+                          : "Please enter your name",
+                  onChanged: (final String p0) {
+                    match.name = p0;
+                  },
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.person),
+                    border: OutlineInputBorder(),
+                    hintText: "Scouter name",
+                  ),
                 ),
                 SizedBox(
                   height: 15,
@@ -181,6 +200,7 @@ class _UserInputState extends State<UserInput> {
                       match.clear();
                       teamNumberController.clear();
                       matchNumberController.clear();
+                      scouterNameController.clear();
                     });
                   },
                   validate: () {
@@ -199,8 +219,8 @@ class _UserInputState extends State<UserInput> {
 }
 
 const String mutation = """
-mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int) {
-  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed}) {
+mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int, \$scouter_name: String) {
+  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed, scouter_name: \$scouter_name}) {
     returning {
       id
     }
