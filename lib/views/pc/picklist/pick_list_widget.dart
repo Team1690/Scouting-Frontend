@@ -3,6 +3,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
+import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 
@@ -57,114 +58,154 @@ class _PickListState extends State<PickList> {
                 0,
                 defaultPadding / 4,
               ),
-              child: ExpansionTile(
-                children: <Widget>[
-                  ListTile(
-                    title: Row(
+              child: isPC(context)
+                  ? ExpansionTile(
                       children: <Widget>[
-                        Spacer(),
-                        Expanded(
-                          flex: 3,
-                          child: Row(
+                        ListTile(
+                          title: Row(
                             children: <Widget>[
+                              Spacer(),
                               Expanded(
-                                child: Icon(
-                                  e.faultMessage.fold(
-                                    () => Icons.check,
-                                    (final String _) => Icons.warning,
+                                flex: 3,
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Icon(
+                                        e.faultMessage.fold(
+                                          () => Icons.check,
+                                          (final String _) => Icons.warning,
+                                        ),
+                                        color: e.faultMessage.fold(
+                                          () => Colors.green,
+                                          (final String _) =>
+                                              Colors.yellow[700],
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        e.faultMessage.orElse("No fault"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Spacer(),
+                              if (!e.autoAim.isNaN) ...<Expanded>[
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
                                   ),
-                                  color: e.faultMessage.fold(
-                                    () => Colors.green,
-                                    (final String _) => Colors.yellow[700],
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                                  ),
+                                ),
+                              ] else
+                                ...List<Spacer>.filled(
+                                  4,
+                                  Spacer(
+                                    flex: 3,
+                                  ),
+                                ),
+                              Expanded(
+                                flex: 3,
+                                child: ElevatedButton(
+                                  onPressed: () => Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute<TeamInfoScreen>(
+                                      builder: (final BuildContext context) =>
+                                          TeamInfoScreen(
+                                        initalTeam: e.team,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "Team info",
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  e.faultMessage.orElse("No fault"),
-                                ),
-                              ),
+                              Spacer()
                             ],
                           ),
-                        ),
-                        Spacer(),
-                        if (!e.autoAim.isNaN) ...<Expanded>[
+                        )
+                      ],
+                      title: Row(
+                        children: <Widget>[
                           Expanded(
                             flex: 3,
                             child: Text(
-                              "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
+                              e.toString(),
                             ),
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
-                            ),
+                        ],
+                      ),
+                      trailing: SizedBox(),
+                      leading: AdvancedSwitch(
+                        disabledOpacity: 1,
+                        controller: e.controller,
+                        activeColor: Colors.red,
+                        inactiveColor: primaryColor,
+                        activeChild: Text("Taken"),
+                        inactiveChild: Text("Available"),
+                        height: 25,
+                        width: 100,
+                        enabled: true,
+                      ),
+                    )
+                  : GestureDetector(
+                      onDoubleTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<CoachTeamData>(
+                            builder: (final BuildContext context) =>
+                                CoachTeamData(e.team),
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
-                            ),
-                          ),
-                        ] else
-                          ...List<Spacer>.filled(
-                            4,
-                            Spacer(
+                        );
+                      },
+                      child: ListTile(
+                        title: Row(
+                          children: <Widget>[
+                            Expanded(
                               flex: 3,
-                            ),
-                          ),
-                        Expanded(
-                          flex: 3,
-                          child: ElevatedButton(
-                            onPressed: () => Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute<TeamInfoScreen>(
-                                builder: (final BuildContext context) =>
-                                    TeamInfoScreen(
-                                  initalTeam: e.team,
-                                ),
+                              child: Text(
+                                e.toString(),
                               ),
                             ),
-                            child: Text(
-                              "Team info",
-                            ),
-                          ),
+                          ],
                         ),
-                        Spacer()
-                      ],
-                    ),
-                  )
-                ],
-                title: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        e.toString(),
+                        trailing: SizedBox(),
+                        leading: AdvancedSwitch(
+                          controller: e.controller,
+                          activeColor: Colors.red,
+                          inactiveColor: primaryColor,
+                          activeChild: Text(
+                            "Taken",
+                          ),
+                          inactiveChild: Text(
+                            "Available",
+                          ),
+                          height: 25,
+                          width: 100,
+                          enabled: true,
+                        ),
                       ),
                     ),
-                  ],
-                ),
-                trailing: SizedBox(),
-                leading: AdvancedSwitch(
-                  controller: e.controller,
-                  activeColor: Colors.red,
-                  inactiveColor: primaryColor,
-                  activeChild: Text("Taken"),
-                  inactiveChild: Text("Available"),
-                  height: 25,
-                  width: 100,
-                  enabled: true,
-                ),
-              ),
             ),
           );
         }).toList(),

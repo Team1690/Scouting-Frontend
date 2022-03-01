@@ -4,6 +4,7 @@ import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
+import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget_future.dart";
 
@@ -22,43 +23,57 @@ class _PickListScreenState extends State<PickListScreen> {
   }
 
   CurrentPickList currentScreen = CurrentPickList.first;
+
   @override
   Widget build(final BuildContext context) {
-    return DashboardScaffold(
-      body: Padding(
-        padding: EdgeInsets.all(defaultPadding),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: DashboardCard(
-                titleWidgets: <Widget>[
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = currentScreen.nextScreen();
-                      });
-                    },
-                    icon: Icon(Icons.swap_horiz),
-                  ),
-                  IconButton(
-                    onPressed: () =>
-                        save(List<PickListTeam>.from(teams), context),
-                    icon: Icon(Icons.save),
-                  ),
-                  IconButton(
-                    onPressed: () => setState(() {}),
-                    icon: Icon(Icons.refresh),
-                  )
-                ],
-                title: currentScreen.title,
-                body: PickListFuture(
-                  onReorder: (final List<PickListTeam> list) => teams = list,
-                  screen: currentScreen,
+    return isPC(context)
+        ? DashboardScaffold(
+            body: pickList(context),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text("Picklist"),
+              centerTitle: true,
+            ),
+            drawer: SideNavBar(),
+            body: pickList(context),
+          );
+  }
+
+  Padding pickList(final BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(defaultPadding),
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: DashboardCard(
+              titleWidgets: <Widget>[
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      currentScreen = currentScreen.nextScreen();
+                    });
+                  },
+                  icon: Icon(Icons.swap_horiz),
                 ),
+                IconButton(
+                  onPressed: () =>
+                      save(List<PickListTeam>.from(teams), context),
+                  icon: Icon(Icons.save),
+                ),
+                IconButton(
+                  onPressed: () => setState(() {}),
+                  icon: Icon(Icons.refresh),
+                )
+              ],
+              title: currentScreen.title,
+              body: PickListFuture(
+                onReorder: (final List<PickListTeam> list) => teams = list,
+                screen: currentScreen,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
