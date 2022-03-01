@@ -75,6 +75,26 @@ class _PitViewState extends State<PitView> {
                       vars.teamId = lightTeam.id;
                     },
                   ),
+                  SectionDivider(label: "Shooter"),
+                  Switcher(
+                    selected: vars.hasTurret
+                            .mapNullable((final bool p0) => p0 ? 0 : 1) ??
+                        -1,
+                    labels: <String>[
+                      "Has turret",
+                      "Doesn't Have turret",
+                    ],
+                    colors: <Color>[
+                      Colors.white,
+                      Colors.white,
+                    ],
+                    onChange: (final int selection) {
+                      setState(() {
+                        vars.hasTurret =
+                            <int, bool>{1: false, 0: true}[selection];
+                      });
+                    },
+                  ),
                   SectionDivider(label: "Drive Train"),
                   Selector<int>(
                     validate: (final int? p0) =>
@@ -172,6 +192,28 @@ class _PitViewState extends State<PitView> {
                     onChange: (final int selection) {
                       setState(() {
                         vars.gearboxPurchased =
+                            <int, bool>{1: false, 0: true}[selection];
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Switcher(
+                    selected: vars.canGoUnderLowRung
+                            .mapNullable((final bool p0) => p0 ? 0 : 1) ??
+                        -1,
+                    labels: <String>[
+                      "Can pass low rung",
+                      "Can't pass low rung",
+                    ],
+                    colors: <Color>[
+                      Colors.white,
+                      Colors.white,
+                    ],
+                    onChange: (final int selection) {
+                      setState(() {
+                        vars.canGoUnderLowRung =
                             <int, bool>{1: false, 0: true}[selection];
                       });
                     },
@@ -290,7 +332,9 @@ class _PitViewState extends State<PitView> {
               \$notes:String, 
               \$robot_reliability:Int,
               \$has_shifter:Boolean,
-              \$team_id:Int) {
+              \$team_id:Int,
+              \$has_turret:Boolean,
+              \$can_go_under_low_rung:Boolean) {
           insert_pit(objects: {
           url: \$url,
           drive_motor_amount: \$drive_motor_amount,
@@ -303,7 +347,9 @@ class _PitViewState extends State<PitView> {
           notes: \$notes,
           robot_reliability: \$robot_reliability,
           has_shifter: \$has_shifter,
-          team_id: \$team_id
+          team_id: \$team_id,
+          has_turret: \$has_turret,
+          can_go_under_low_rung: \$can_go_under_low_rung
           }) {
               returning {
                 url
