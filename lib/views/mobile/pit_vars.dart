@@ -1,6 +1,8 @@
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class PitVars implements HasuraVars {
+  bool? hasTurret;
+  bool? canGoUnderLowRung;
   int? driveTrainType;
   int? driveMotorType;
   int driveMotorAmount = 2;
@@ -25,7 +27,9 @@ class PitVars implements HasuraVars {
       "drive_train_reliability": driveTrainReliability,
       "electronics_reliability": electronicsReliability,
       "robot_reliability": robotReliability,
-      "team_id": teamId
+      "team_id": teamId,
+      "has_turret": hasTurret,
+      "can_go_under_low_rung": canGoUnderLowRung
     };
   }
 
@@ -41,5 +45,7 @@ class PitVars implements HasuraVars {
     electronicsReliability = 1.0;
     robotReliability = 1.0;
     teamId = null;
+    canGoUnderLowRung = null;
+    hasTurret = null;
   }
 }
