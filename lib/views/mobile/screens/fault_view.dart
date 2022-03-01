@@ -3,7 +3,7 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/mobile/fault_view_list.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 
 class FaultView extends StatefulWidget {
@@ -12,39 +12,11 @@ class FaultView extends StatefulWidget {
 }
 
 class _FaultViewState extends State<FaultView> {
-  final Map<int, bool> teamIdToState = <int, bool>{};
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
       drawer: SideNavBar(),
       appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                  content: Align(
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              );
-              saveDeletedFaults(
-                teamIdToState.entries
-                    .where(
-                      (final MapEntry<int, bool> element) => element.value,
-                    )
-                    .map((final MapEntry<int, bool> e) => e.key)
-                    .toList(),
-              ).then((final void value) {
-                ScaffoldMessenger.of(context).clearSnackBars();
-                setState(() {});
-              });
-            },
-            icon: Icon(Icons.save),
-          )
-        ],
         title: Text("Robot faults"),
         centerTitle: true,
       ),
@@ -62,16 +34,56 @@ class _FaultViewState extends State<FaultView> {
             );
           } else {
             return snapshot.data.mapNullable((final List<FaultTeam> data) {
-                  teamIdToState.addEntries(
-                    data.map(
-                      (final FaultTeam e) =>
-                          MapEntry<int, bool>(e.team.id, false),
+                  return SingleChildScrollView(
+                    primary: false,
+                    child: Column(
+                      children: data
+                          .map(
+                            (final FaultTeam e) => Card(
+                              elevation: 2,
+                              color: bgColor,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: defaultPadding / 4,
+                                ),
+                                child: ExpansionTile(
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          backgroundColor:
+                                              Color.fromARGB(0, 0, 0, 0),
+                                          content: Align(
+                                            alignment: Alignment.center,
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                      );
+                                      saveDeletedFaults(e.team.id)
+                                          .then((final void value) {
+                                        ScaffoldMessenger.of(context)
+                                            .clearSnackBars();
+                                        setState(() {});
+                                      });
+                                    },
+                                  ),
+                                  title: Text(
+                                    "${e.team.number} ${e.team.name}",
+                                  ),
+                                  children: <Widget>[
+                                    ListTile(
+                                      title: Text(e.faultMessage),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
                     ),
                   );
-                  return FaultViewList(data,
-                      (final int teamId, final bool value) {
-                    teamIdToState[teamId] = value;
-                  });
                 }) ??
                 (throw Exception("No data"));
           }
@@ -82,20 +94,19 @@ class _FaultViewState extends State<FaultView> {
 }
 
 const String mutation = """
-mutation MyMutation(\$teams: [Int!]) {
-  delete_broken_robots(where: {team_id: {_in: \$teams}}) {
+mutation MyMutation(\$team: Int) {
+  delete_broken_robots(where: {team_id: {_eq: \$team}}) {
     affected_rows
   }
 }
 """;
 
-Future<void> saveDeletedFaults(final List<int> teamIds) async {
+Future<void> saveDeletedFaults(final int teamID) async {
   final GraphQLClient client = getClient();
-  if (teamIds.isEmpty) return;
   await client.mutate(
     MutationOptions(
       document: gql(mutation),
-      variables: <String, dynamic>{"teams": teamIds},
+      variables: <String, dynamic>{"team": teamID},
     ),
   );
 }
