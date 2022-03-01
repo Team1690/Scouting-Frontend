@@ -289,6 +289,8 @@ query MyQuery(\$id: Int!) {
     number
     colors_index
     pit {
+      has_turret
+      can_go_under_low_rung
       drive_motor_amount
       drive_train_reliability
       drive_wheel_type
@@ -431,6 +433,8 @@ Future<CoachViewTeam> fetchTeam(
           };
           final PitData? pitData = pit.mapNullable<PitData>(
             (final Map<String, dynamic> p0) => PitData(
+              canGoUnderLowRung: p0["can_go_under_low_rung"] as bool?,
+              hasTurret: p0["has_turret"] as bool?,
               driveMotorAmount: p0["drive_motor_amount"] as int,
               driveTrainReliability: p0["drive_train_reliability"] as int,
               driveWheelType: p0["drive_wheel_type"] as String,
