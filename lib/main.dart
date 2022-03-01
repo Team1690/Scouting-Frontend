@@ -12,7 +12,7 @@ import "models/id_helpers.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb || Platform.isAndroid) {
+  if (kIsWeb || Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
