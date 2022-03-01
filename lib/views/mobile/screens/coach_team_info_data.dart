@@ -627,6 +627,30 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
           Align(
             alignment: Alignment.center,
             child: Text(
+              "Shooter",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          Row(
+            children: <Widget>[
+              Text("Has turret:"),
+              data.hasTurret.mapNullable(
+                    (final bool hasTurret) => hasTurret
+                        ? Icon(
+                            Icons.done,
+                            color: Colors.lightGreen,
+                          )
+                        : Icon(
+                            Icons.close,
+                            color: Colors.red,
+                          ),
+                  ) ??
+                  Text(" Not answered"),
+            ],
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
               "Drivetrain",
               style: TextStyle(fontSize: 18),
             ),
@@ -654,6 +678,23 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
           ),
           Text(
             "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
+          ),
+          Row(
+            children: <Widget>[
+              Text("Can pass low rung:"),
+              data.canGoUnderLowRung.mapNullable(
+                    (final bool canGoUnderLowRung) => canGoUnderLowRung
+                        ? Icon(
+                            Icons.done,
+                            color: Colors.lightGreen,
+                          )
+                        : Icon(
+                            Icons.close,
+                            color: Colors.red,
+                          ),
+                  ) ??
+                  Text(" Not answered"),
+            ],
           ),
           Align(
             alignment: Alignment.center,
