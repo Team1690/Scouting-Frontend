@@ -35,7 +35,7 @@ class Scatter extends StatelessWidget {
                   );
                 } else {
                   if (snapshot.data!.isEmpty) {
-                    return Text("invalid data :(");
+                    return Text("No data :(");
                   }
                   return snapshot.data
                           .mapNullable((final List<ScatterData> report) {
@@ -130,11 +130,15 @@ class Scatter extends StatelessWidget {
                                   (final ScatterData e) => (e.xBallPointsAvg),
                                 )
                                 .reduce(max),
-                            maxY: report
-                                .map(
-                                  (final ScatterData e) => e.yBallPointsStddev,
-                                )
-                                .reduce(max),
+                            maxY: max(
+                              report
+                                  .map(
+                                    (final ScatterData e) =>
+                                        e.yBallPointsStddev,
+                                  )
+                                  .reduce(max),
+                              25,
+                            ),
                           ),
                         );
                       }) ??
