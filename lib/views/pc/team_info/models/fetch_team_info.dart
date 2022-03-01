@@ -12,6 +12,8 @@ query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
     id
     pit {
+      can_go_under_low_rung
+      has_turret
       drive_motor_amount
       drive_train_reliability
       drive_wheel_type
@@ -105,6 +107,8 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           };
           final PitData? pitData = pit.mapNullable<PitData>(
             (final Map<String, dynamic> p0) => PitData(
+              canGoUnderLowRung: p0["can_go_under_low_rung"] as bool?,
+              hasTurret: p0["has_turret"] as bool?,
               driveMotorAmount: p0["drive_motor_amount"] as int,
               driveTrainReliability: p0["drive_train_reliability"] as int,
               driveWheelType: p0["drive_wheel_type"] as String,

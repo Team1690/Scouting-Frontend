@@ -62,7 +62,11 @@ class PitData {
     required this.hasShifer,
     required this.url,
     required this.faultMessage,
+    required this.canGoUnderLowRung,
+    required this.hasTurret,
   });
+  final bool? hasTurret;
+  final bool? canGoUnderLowRung;
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;

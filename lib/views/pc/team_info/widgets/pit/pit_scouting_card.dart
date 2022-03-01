@@ -41,6 +41,30 @@ class PitScoutingCard extends StatelessWidget {
             Align(
               alignment: Alignment.center,
               child: Text(
+                "Shooter",
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            Row(
+              children: <Widget>[
+                Text("Has turret:"),
+                data.hasTurret.mapNullable(
+                      (final bool hasTurret) => hasTurret
+                          ? Icon(
+                              Icons.done,
+                              color: Colors.lightGreen,
+                            )
+                          : Icon(
+                              Icons.close,
+                              color: Colors.red,
+                            ),
+                    ) ??
+                    Text(" Not answered"),
+              ],
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
                 "Drivetrain",
                 style: TextStyle(fontSize: 18),
               ),
@@ -68,6 +92,26 @@ class PitScoutingCard extends StatelessWidget {
             ),
             Text(
               "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
+            ),
+            FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Row(
+                children: <Widget>[
+                  Text("Can pass low rung:"),
+                  data.canGoUnderLowRung.mapNullable(
+                        (final bool canGoUnderLowRung) => canGoUnderLowRung
+                            ? Icon(
+                                Icons.done,
+                                color: Colors.lightGreen,
+                              )
+                            : Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ),
+                      ) ??
+                      Text(" Not answered"),
+                ],
+              ),
             ),
             Align(
               alignment: Alignment.center,
