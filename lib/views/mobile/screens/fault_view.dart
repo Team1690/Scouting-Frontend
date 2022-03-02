@@ -25,7 +25,7 @@ class _FaultViewState extends State<FaultView> {
             onPressed: () async {
               LightTeam? team;
               String? newMessage;
-              showDialog<void>(
+              final FaultTeam? faultTeam = await showDialog<FaultTeam>(
                 context: context,
                 builder: (final BuildContext innerContext) {
                   return AlertDialog(
@@ -58,23 +58,8 @@ class _FaultViewState extends State<FaultView> {
                       TextButton(
                         onPressed: () {
                           if (team == null || newMessage == null) return;
-                          Navigator.of(context).pop();
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              duration: Duration(days: 365),
-                              backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                              content: Align(
-                                alignment: Alignment.center,
-                                child: CircularProgressIndicator(),
-                              ),
-                            ),
-                          );
-                          addFaultTeam(team!.id, newMessage!)
-                              .then((final void _) {
-                            ScaffoldMessenger.of(context).clearSnackBars();
-                            setState(() {});
-                          });
+                          Navigator.of(context)
+                              .pop(FaultTeam(newMessage!, team!));
                         },
                         child: Text("Submit"),
                       ),
@@ -91,6 +76,22 @@ class _FaultViewState extends State<FaultView> {
                   );
                 },
               );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: Duration(days: 365),
+                  backgroundColor: Color.fromARGB(0, 0, 0, 0),
+                  content: Align(
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              );
+              if (faultTeam == null) return;
+              addFaultTeam(faultTeam.team.id, faultTeam.faultMessage)
+                  .then((final void _) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                setState(() {});
+              });
             },
             icon: Icon(Icons.add),
           )
