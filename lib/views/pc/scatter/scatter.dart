@@ -130,15 +130,11 @@ class Scatter extends StatelessWidget {
                                   (final ScatterData e) => (e.xBallPointsAvg),
                                 )
                                 .reduce(max),
-                            maxY: max(
-                              report
-                                  .map(
-                                    (final ScatterData e) =>
-                                        e.yBallPointsStddev,
-                                  )
-                                  .reduce(max),
-                              25,
-                            ),
+                            maxY: report
+                                .map(
+                                  (final ScatterData e) => e.yBallPointsStddev,
+                                )
+                                .fold<double>(25.0, max),
                           ),
                         );
                       }) ??
