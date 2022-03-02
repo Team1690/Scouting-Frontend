@@ -90,7 +90,7 @@ class _FaultViewState extends State<FaultView> {
                     ],
                   );
                 },
-              ).then((final void _) {});
+              );
             },
             icon: Icon(Icons.add),
           )
