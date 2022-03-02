@@ -76,6 +76,7 @@ class _FaultViewState extends State<FaultView> {
                   );
                 },
               );
+              if (faultTeam == null) return;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   duration: Duration(days: 365),
@@ -86,7 +87,6 @@ class _FaultViewState extends State<FaultView> {
                   ),
                 ),
               );
-              if (faultTeam == null) return;
               addFaultTeam(faultTeam.team.id, faultTeam.faultMessage)
                   .then((final void _) {
                 ScaffoldMessenger.of(context).clearSnackBars();
