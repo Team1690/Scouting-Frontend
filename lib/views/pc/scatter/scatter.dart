@@ -34,11 +34,11 @@ class Scatter extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 } else {
-                  if (snapshot.data!.isEmpty) {
-                    return Text("invalid data :(");
-                  }
                   return snapshot.data
                           .mapNullable((final List<ScatterData> report) {
+                        if (report.isEmpty) {
+                          return Text("No data");
+                        }
                         final List<LightTeam> teams = report
                             .map(
                               (final ScatterData e) => e.team,
@@ -134,7 +134,7 @@ class Scatter extends StatelessWidget {
                                 .map(
                                   (final ScatterData e) => e.yBallPointsStddev,
                                 )
-                                .reduce(max),
+                                .fold<double>(25.0, max),
                           ),
                         );
                       }) ??
