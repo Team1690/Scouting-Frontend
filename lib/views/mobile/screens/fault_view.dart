@@ -77,16 +77,7 @@ class _FaultViewState extends State<FaultView> {
                 },
               );
               if (faultTeam == null) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  duration: Duration(days: 365),
-                  backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                  content: Align(
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              );
+              showLoadingSnackBar(context);
               addFaultTeam(faultTeam.team.id, faultTeam.faultMessage)
                   .then((final void _) {
                 ScaffoldMessenger.of(context).clearSnackBars();
@@ -178,19 +169,8 @@ class _FaultViewState extends State<FaultView> {
                                             ),
                                           );
                                           if (message == null) return;
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              duration: Duration(days: 365),
-                                              backgroundColor:
-                                                  Color.fromARGB(0, 0, 0, 0),
-                                              content: Align(
-                                                alignment: Alignment.center,
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                            ),
-                                          );
+                                          showLoadingSnackBar(context);
+
                                           updateFaultMessage(
                                             e.team.id,
                                             message,
@@ -204,19 +184,7 @@ class _FaultViewState extends State<FaultView> {
                                       IconButton(
                                         icon: Icon(Icons.delete),
                                         onPressed: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              duration: Duration(days: 365),
-                                              backgroundColor:
-                                                  Color.fromARGB(0, 0, 0, 0),
-                                              content: Align(
-                                                alignment: Alignment.center,
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                            ),
-                                          );
+                                          showLoadingSnackBar(context);
                                           saveDeletedFaults(e.team.id)
                                               .then((final void value) {
                                             setState(() {});
@@ -250,6 +218,18 @@ class _FaultViewState extends State<FaultView> {
     );
   }
 }
+
+void showLoadingSnackBar(final BuildContext context) =>
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(days: 365),
+        backgroundColor: Color.fromARGB(0, 0, 0, 0),
+        content: Align(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
 
 Future<void> updateFaultMessage(final int teamId, final String message) async {
   final GraphQLClient client = getClient();
