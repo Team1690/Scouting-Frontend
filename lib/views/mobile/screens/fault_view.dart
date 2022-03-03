@@ -25,7 +25,7 @@ class _FaultViewState extends State<FaultView> {
             onPressed: () async {
               LightTeam? team;
               String? newMessage;
-              final FaultTeam? faultTeam = await showDialog<FaultTeam>(
+              (await showDialog<FaultTeam>(
                 context: context,
                 builder: (final BuildContext innerContext) {
                   return AlertDialog(
@@ -64,9 +64,7 @@ class _FaultViewState extends State<FaultView> {
                         child: Text("Submit"),
                       ),
                       TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                        onPressed: Navigator.of(context).pop,
                         child: Text(
                           "Cancel",
                           style: TextStyle(color: Colors.red),
@@ -75,13 +73,13 @@ class _FaultViewState extends State<FaultView> {
                     ],
                   );
                 },
-              );
-              if (faultTeam == null) return;
-              showLoadingSnackBar(context);
-              addFaultTeam(faultTeam.team.id, faultTeam.faultMessage)
-                  .then((final void _) {
-                ScaffoldMessenger.of(context).clearSnackBars();
-                setState(() {});
+              ))
+                  .mapNullable((final FaultTeam p0) {
+                showLoadingSnackBar(context);
+                addFaultTeam(p0.team.id, p0.faultMessage).then((final void _) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  setState(() {});
+                });
               });
             },
             icon: Icon(Icons.add),
@@ -124,8 +122,8 @@ class _FaultViewState extends State<FaultView> {
                                           final TextEditingController
                                               controller =
                                               TextEditingController();
-                                          final String? message =
-                                              await showDialog<String>(
+
+                                          (await showDialog<String>(
                                             context: context,
                                             builder:
                                                 (final BuildContext context) =>
@@ -167,17 +165,20 @@ class _FaultViewState extends State<FaultView> {
                                                 )
                                               ],
                                             ),
-                                          );
-                                          if (message == null) return;
-                                          showLoadingSnackBar(context);
+                                          ))
+                                              .mapNullable((
+                                            final String message,
+                                          ) {
+                                            showLoadingSnackBar(context);
 
-                                          updateFaultMessage(
-                                            e.team.id,
-                                            message,
-                                          ).then((final void _) {
-                                            setState(() {});
-                                            ScaffoldMessenger.of(context)
-                                                .clearSnackBars();
+                                            updateFaultMessage(
+                                              e.team.id,
+                                              message,
+                                            ).then((final void _) {
+                                              setState(() {});
+                                              ScaffoldMessenger.of(context)
+                                                  .clearSnackBars();
+                                            });
                                           });
                                         },
                                       ),
