@@ -2,6 +2,7 @@ import "dart:collection";
 import "dart:math";
 
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/radar_chart.dart";
 
@@ -48,12 +49,22 @@ class CompareSpiderChart<E extends num> extends StatelessWidget {
                   data: data
                       .map<List<int>>(
                         (final CompareTeam<E> e) => <int>[
-                          (e.avgAutoUpperScored * autoRatio).toInt(),
-                          e.autoUpperScoredPercentage.toInt(),
-                          (e.avgTeleUpperScored * teleRatio).toInt(),
-                          e.teleUpperScoredPercentage.toInt(),
-                          (e.avgClimbPoints * climbPointsRatio).toInt(),
-                          e.climbPercentage.toInt()
+                          (e.avgAutoUpperScored *
+                                  autoRatio.toZeroIfNanOrInfinty())
+                              .toInt(),
+                          e.autoUpperScoredPercentage
+                              .toZeroIfNanOrInfinty()
+                              .toInt(),
+                          (e.avgTeleUpperScored *
+                                  teleRatio.toZeroIfNanOrInfinty())
+                              .toInt(),
+                          e.teleUpperScoredPercentage
+                              .toZeroIfNanOrInfinty()
+                              .toInt(),
+                          (e.avgClimbPoints *
+                                  climbPointsRatio.toZeroIfNanOrInfinty())
+                              .toInt(),
+                          e.climbPercentage.toZeroIfNanOrInfinty().toInt()
                         ],
                       )
                       .toList(),
