@@ -1,9 +1,10 @@
 import "dart:collection";
 
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/common/teams_search_box.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/models/fetch_compare.dart";
@@ -41,7 +42,9 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: TeamSelectionFuture(
+                    child: TeamsSearchBox(
+                      teams: TeamProvider.of(context).teams
+                        ..removeWhere(teams.contains),
                       onChange: (final LightTeam team) {
                         if (teams.contains(team)) return;
                         setState(() {
@@ -50,7 +53,7 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                           );
                         });
                       },
-                      controller: controller,
+                      typeAheadController: controller,
                     ),
                   ),
                   SizedBox(width: defaultPadding),
