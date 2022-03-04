@@ -23,6 +23,8 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
       LineChartData(
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
+            fitInsideVertically: true,
+            fitInsideHorizontally: true,
             getTooltipItems: (final List<LineBarSpot> touchedSpots) =>
                 touchedSpots
                     .map(
@@ -137,6 +139,8 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
         LineChartData(
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
+              fitInsideHorizontally: true,
+              fitInsideVertically: true,
               getTooltipItems: (final List<LineBarSpot> touchedSpots) =>
                   touchedSpots
                       .map(

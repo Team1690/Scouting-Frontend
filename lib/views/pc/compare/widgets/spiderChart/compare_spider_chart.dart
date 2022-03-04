@@ -47,14 +47,19 @@ class CompareSpiderChart<E extends num> extends StatelessWidget {
                   numberOfFeatures: 6,
                   data: data
                       .map<List<int>>(
-                        (final CompareTeam<E> e) => <int>[
-                          (e.avgAutoUpperScored * autoRatio).toInt(),
-                          e.autoUpperScoredPercentage.toInt(),
-                          (e.avgTeleUpperScored * teleRatio).toInt(),
-                          e.teleUpperScoredPercentage.toInt(),
-                          (e.avgClimbPoints * climbPointsRatio).toInt(),
-                          e.climbPercentage.toInt()
-                        ],
+                        (final CompareTeam<E> e) => <double>[
+                          e.avgAutoUpperScored * autoRatio,
+                          e.autoUpperScoredPercentage,
+                          e.avgTeleUpperScored * teleRatio,
+                          e.teleUpperScoredPercentage,
+                          e.avgClimbPoints * climbPointsRatio,
+                          e.climbPercentage
+                        ]
+                            .map<int>(
+                              (final double e) =>
+                                  e.isNaN || e.isInfinite ? 0 : e.toInt(),
+                            )
+                            .toList(),
                       )
                       .toList(),
                   ticks: <int>[0, 25, 50, 75, 100],
