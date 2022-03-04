@@ -2,7 +2,6 @@ import "dart:collection";
 import "dart:math";
 
 import "package:flutter/material.dart";
-import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/radar_chart.dart";
 
