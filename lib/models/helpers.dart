@@ -10,9 +10,3 @@ extension Cast<E extends num> on Iterable<E> {
     });
   }
 }
-
-extension NoNanOrInfinty on double {
-  double toZeroIfNanOrInfinty() {
-    return isNaN || isInfinite ? 0 : this;
-  }
-}
