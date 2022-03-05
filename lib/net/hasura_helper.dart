@@ -4,10 +4,21 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
 GraphQLClient getClient() {
-  final HttpLink link = HttpLink(
+  final HttpLink httpLink = HttpLink(
     "https://orbitdb.hasura.app/v1/graphql",
   );
-  return GraphQLClient(link: link, cache: GraphQLCache());
+  final WebSocketLink webSocketLink = WebSocketLink(
+    "wss://orbitdb.hasura.app/v1/graphql",
+    config: SocketClientConfig(),
+  );
+  return GraphQLClient(
+    link: Link.split(
+      (final Request request) => request.isSubscription,
+      webSocketLink,
+      httpLink,
+    ),
+    cache: GraphQLCache(),
+  );
 }
 
 extension MapQueryResult on QueryResult {
