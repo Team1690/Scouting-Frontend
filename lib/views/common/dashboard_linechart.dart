@@ -9,7 +9,9 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
     required this.gameNumbers,
     this.distanceFromHighest = 5,
     required this.inputedColors,
+    required this.showShadow,
   });
+  final bool showShadow;
   final List<Color> inputedColors;
   final int distanceFromHighest;
   final List<List<E>> dataSet;
@@ -47,9 +49,11 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
             dotData: FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              colors: chartColors
-                  .map((final Color color) => color.withOpacity(0.3))
-                  .toList(),
+              colors: showShadow
+                  ? chartColors
+                      .map((final Color color) => color.withOpacity(0.3))
+                      .toList()
+                  : <Color>[Color(0x00000000)],
             ),
             spots: List<FlSpot>.generate(
               dataSet[index].length,
@@ -129,10 +133,12 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
     required this.dataSet,
     required this.inputedColors,
     required this.matchNumbers,
+    required this.showShadow,
   });
   final List<Color> inputedColors;
   final List<int> matchNumbers;
   final List<List<E>> dataSet;
+  final bool showShadow;
 
   @override
   Widget build(final BuildContext context) => LineChart(
@@ -167,9 +173,11 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
               dotData: FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                colors: chartColors
-                    .map((final Color color) => color.withOpacity(0.3))
-                    .toList(),
+                colors: showShadow
+                    ? chartColors
+                        .map((final Color color) => color.withOpacity(0.3))
+                        .toList()
+                    : <Color>[Color(0x00000000)],
               ),
               spots: List<FlSpot>.generate(
                 dataSet[index].length,
