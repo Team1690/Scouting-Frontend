@@ -350,7 +350,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
               final Iterable<int> climb = (match[e]["matches_aggregate"]
                       ["nodes"] as List<dynamic>)
                   .map<int>((final dynamic e) => e["climb"]["points"] as int);
-
+              final int amountOfMatches = climb.length;
               final double climbAvg = climb.isEmpty
                   ? double.nan
                   : climb.length == 1
@@ -405,6 +405,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                           : "Misc";
 
               return CoachViewLightTeam(
+                amountOfMatches: amountOfMatches,
                 robotRole: mostPopularRoleName,
                 avgBallPoints: avgBallPoints,
                 team: team,
@@ -444,7 +445,9 @@ class CoachViewLightTeam {
     required this.teleopBallAim,
     required this.team,
     required this.robotRole,
+    required this.amountOfMatches,
   });
+  final int amountOfMatches;
   final double avgBallPoints;
   final double avgClimbPoints;
   final double teleopBallAim;
@@ -505,22 +508,21 @@ Widget teamData(
               ),
             ),
           ),
-          if (!(team.autoBallAim.isNaN ||
-              team.avgBallPoints.isNaN ||
-              team.avgClimbPoints.isNaN ||
-              team.teleopBallAim.isNaN))
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Column(
-                  children: <Widget>[
+          Expanded(
+            flex: 6,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Column(
+                children: <Widget>[
+                  if (team.amountOfMatches == 0)
+                    ...List<Spacer>.filled(7, Spacer())
+                  else ...<Widget>[
                     Spacer(),
                     Expanded(
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          "Ball points: ${team.avgBallPoints.toStringAsFixed(1)}%",
+                          "Ball points: ${team.avgBallPoints.toStringAsFixed(1)}",
                         ),
                       ),
                     ),
@@ -528,7 +530,7 @@ Widget teamData(
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}%",
+                          "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}",
                         ),
                       ),
                     ),
@@ -552,14 +554,6 @@ Widget teamData(
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          "Auto aim: ${team.autoBallAim.toStringAsFixed(1)}%",
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
                           "Role: ${team.robotRole}",
                         ),
                       ),
@@ -567,15 +561,11 @@ Widget teamData(
                     Spacer(
                       flex: 1,
                     )
-                  ],
-                ),
+                  ]
+                ],
               ),
-            )
-          else
-            Expanded(
-              flex: 4,
-              child: Center(child: Text("No data :(")),
-            )
+            ),
+          )
         ],
       ),
     ),
