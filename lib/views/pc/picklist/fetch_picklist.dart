@@ -70,7 +70,8 @@ Future<List<PickListTeam>> fetchPicklist(final CurrentPickList screen) async {
             final Iterable<int> climb =
                 (e["matches_aggregate"]["nodes"] as List<dynamic>)
                     .map<int>((final dynamic e) => e["climb"]["points"] as int);
-
+            final int amountOfMatches =
+                (e["matches_aggregate"]["nodes"] as List<dynamic>).length;
             final double climbAvg = climb.isEmpty
                 ? double.nan
                 : climb.length == 1
@@ -97,6 +98,7 @@ Future<List<PickListTeam>> fetchPicklist(final CurrentPickList screen) async {
                     100;
 
             return PickListTeam(
+              amountOfMatches: amountOfMatches,
               colorsIndex: e["colors_index"] as int,
               id: e["id"] as int,
               number: e["number"] as int,
