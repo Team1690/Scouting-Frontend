@@ -23,6 +23,7 @@ class CompareLineChart<E extends num> extends StatelessWidget {
             top: 40,
           ),
           child: DashboardLineChart<E>(
+            showShadow: false,
             inputedColors:
                 data.map((final CompareLineChartData<E> e) => e.color).toList(),
             gameNumbers: List<int>.generate(

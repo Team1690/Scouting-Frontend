@@ -119,6 +119,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselWithIndicator(
                 margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: Container(
                   child: DashboardLineChart<int>(
+                    showShadow: true,
                     gameNumbers: data.scoredMissedDataTele.gameNumbers,
                     distanceFromHighest: 4,
                     dataSet: data.scoredMissedDataTele.points,
@@ -150,6 +151,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselWithIndicator(
               child: Container(
                 margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: DashboardLineChart<int>(
+                  showShadow: true,
                   gameNumbers: data.scoredMissedDataAuto.gameNumbers,
                   distanceFromHighest: 4,
                   dataSet: data.scoredMissedDataAuto.points,
@@ -180,6 +182,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselWithIndicator(
               child: Container(
                 margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: DashboardClimbLineChart<int>(
+                  showShadow: true,
                   inputedColors: <Color>[primaryColor],
                   matchNumbers: data.climbData.gameNumbers,
                   dataSet: data.climbData.points,
