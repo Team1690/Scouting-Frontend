@@ -92,7 +92,7 @@ class _PickListState extends State<PickList> {
                                 ),
                               ),
                               Spacer(),
-                              if (!e.autoAim.isNaN) ...<Expanded>[
+                              if (e.amountOfMatches != 0) ...<Expanded>[
                                 Expanded(
                                   flex: 3,
                                   child: Text(
@@ -236,6 +236,7 @@ class PickListTeam {
     required final double autoAim,
     required final double teleAim,
     required final String? faultMessage,
+    required final int amountOfMatches,
   }) : this.controller(
           firstListIndex,
           secondListIndex,
@@ -251,6 +252,7 @@ class PickListTeam {
             colorsIndex,
           ),
           faultMessage,
+          amountOfMatches,
         );
 
   PickListTeam.controller(
@@ -263,8 +265,10 @@ class PickListTeam {
     this.teleAim,
     this.team,
     this.faultMessage,
+    this.amountOfMatches,
   );
 
+  final int amountOfMatches;
   final double avgBallPoints;
   final double avgClimbPoints;
   final double autoAim;
