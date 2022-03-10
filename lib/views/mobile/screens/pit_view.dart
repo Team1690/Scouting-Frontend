@@ -8,7 +8,6 @@ import "package:scouting_frontend/views/mobile/image_picker_widget.dart";
 import "package:scouting_frontend/views/mobile/firebase_submit_button.dart";
 import "package:scouting_frontend/views/mobile/pit_vars.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
-import "package:scouting_frontend/views/mobile/slider.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
@@ -73,26 +72,6 @@ class _PitViewState extends State<PitView> {
                     controller: teamSelectionController,
                     onChange: (final LightTeam lightTeam) {
                       vars.teamId = lightTeam.id;
-                    },
-                  ),
-                  SectionDivider(label: "Shooter"),
-                  Switcher(
-                    selected: vars.hasTurret
-                            .mapNullable((final bool p0) => p0 ? 0 : 1) ??
-                        -1,
-                    labels: <String>[
-                      "Has turret",
-                      "Doesn't Have turret",
-                    ],
-                    colors: <Color>[
-                      Colors.white,
-                      Colors.white,
-                    ],
-                    onChange: (final int selection) {
-                      setState(() {
-                        vars.hasTurret =
-                            <int, bool>{1: false, 0: true}[selection];
-                      });
                     },
                   ),
                   SectionDivider(label: "Drive Train"),
@@ -199,28 +178,6 @@ class _PitViewState extends State<PitView> {
                   SizedBox(
                     height: 20,
                   ),
-                  Switcher(
-                    selected: vars.canGoUnderLowRung
-                            .mapNullable((final bool p0) => p0 ? 0 : 1) ??
-                        -1,
-                    labels: <String>[
-                      "Can pass low rung",
-                      "Can't pass low rung",
-                    ],
-                    colors: <Color>[
-                      Colors.white,
-                      Colors.white,
-                    ],
-                    onChange: (final int selection) {
-                      setState(() {
-                        vars.canGoUnderLowRung =
-                            <int, bool>{1: false, 0: true}[selection];
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
                   TextField(
                     controller: wheelTypeController,
                     onChanged: (final String value) {
@@ -236,52 +193,6 @@ class _PitViewState extends State<PitView> {
                       hintText: "Drive Wheel type",
                       hintStyle: TextStyle(fontSize: 14),
                     ),
-                  ),
-                  SectionDivider(label: "General Robot Reliability"),
-                  PitViewSlider(
-                    value: vars.driveTrainReliability,
-                    label: "Drive Train Reliablity:",
-                    onChange: (final double newVal) {
-                      setState(() {
-                        vars.driveTrainReliability = newVal;
-                      });
-                    },
-                    divisions: 4,
-                    max: 5,
-                    min: 1,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  PitViewSlider(
-                    value: vars.electronicsReliability,
-                    label: "Electronics Reliability",
-                    divisions: 4,
-                    min: 1,
-                    max: 5,
-                    onChange: (final double newValue) {
-                      setState(() {
-                        vars.electronicsReliability = newValue;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  PitViewSlider(
-                    value: vars.robotReliability,
-                    label: "Robot Reliability",
-                    divisions: 9,
-                    max: 10,
-                    min: 1,
-                    onChange: (final double newValue) {
-                      setState(() {
-                        vars.robotReliability = newValue;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    height: 8,
                   ),
                   SectionDivider(label: "Robot Image"),
                   ImagePickerWidget(
@@ -324,32 +235,23 @@ class _PitViewState extends State<PitView> {
               \$url: String,
               \$drive_motor_amount: Int,
               \$drivemotor_id: Int,
-              \$drive_train_reliability: Int,
               \$drivetrain_id: Int,
               \$drive_wheel_type: String,
-              \$electronics_reliability: Int,
               \$gearbox_purchased: Boolean,
               \$notes:String, 
-              \$robot_reliability:Int,
               \$has_shifter:Boolean,
               \$team_id:Int,
-              \$has_turret:Boolean,
-              \$can_go_under_low_rung:Boolean) {
+              ) {
           insert_pit(objects: {
           url: \$url,
           drive_motor_amount: \$drive_motor_amount,
           drivemotor_id: \$drivemotor_id,
-          drive_train_reliability: \$drive_train_reliability,
           drivetrain_id: \$drivetrain_id,
           drive_wheel_type: \$drive_wheel_type,
-          electronics_reliability: \$electronics_reliability,
           gearbox_purchased: \$gearbox_purchased,
           notes: \$notes,
-          robot_reliability: \$robot_reliability,
           has_shifter: \$has_shifter,
           team_id: \$team_id,
-          has_turret: \$has_turret,
-          can_go_under_low_rung: \$can_go_under_low_rung
           }) {
               returning {
                 url

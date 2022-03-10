@@ -9,7 +9,6 @@ import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
-import "package:scouting_frontend/views/mobile/slider.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/specific/scouting_specific.dart";
 
@@ -290,15 +289,10 @@ query MyQuery(\$id: Int!) {
     number
     colors_index
     pit {
-      has_turret
-      can_go_under_low_rung
       drive_motor_amount
-      drive_train_reliability
       drive_wheel_type
-      electronics_reliability
       gearbox_purchased
       notes
-      robot_reliability
       has_shifter
       url
       drivetrain {
@@ -434,15 +428,10 @@ Future<CoachViewTeam> fetchTeam(
           };
           final PitData? pitData = pit.mapNullable<PitData>(
             (final Map<String, dynamic> p0) => PitData(
-              canGoUnderLowRung: p0["can_go_under_low_rung"] as bool?,
-              hasTurret: p0["has_turret"] as bool?,
               driveMotorAmount: p0["drive_motor_amount"] as int,
-              driveTrainReliability: p0["drive_train_reliability"] as int,
               driveWheelType: p0["drive_wheel_type"] as String,
-              electronicsReliability: p0["electronics_reliability"] as int,
               gearboxPurchased: p0["gearbox_purchased"] as bool?,
               notes: p0["notes"] as String,
-              robotReliability: p0["robot_reliability"] as int,
               hasShifer: p0["has_shifter"] as bool?,
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
@@ -628,30 +617,6 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
           Align(
             alignment: Alignment.center,
             child: Text(
-              "Shooter",
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          Row(
-            children: <Widget>[
-              Text("Has turret:"),
-              data.hasTurret.mapNullable(
-                    (final bool hasTurret) => hasTurret
-                        ? Icon(
-                            Icons.done,
-                            color: Colors.lightGreen,
-                          )
-                        : Icon(
-                            Icons.close,
-                            color: Colors.red,
-                          ),
-                  ) ??
-                  Text(" Not answered"),
-            ],
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Text(
               "Drivetrain",
               style: TextStyle(fontSize: 18),
             ),
@@ -680,53 +645,12 @@ Widget pitScouting(final PitData data, final BuildContext context) =>
           Text(
             "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
           ),
-          Row(
-            children: <Widget>[
-              Text("Can pass low rung:"),
-              data.canGoUnderLowRung.mapNullable(
-                    (final bool canGoUnderLowRung) => canGoUnderLowRung
-                        ? Icon(
-                            Icons.done,
-                            color: Colors.lightGreen,
-                          )
-                        : Icon(
-                            Icons.close,
-                            color: Colors.red,
-                          ),
-                  ) ??
-                  Text(" Not answered"),
-            ],
-          ),
           Align(
             alignment: Alignment.center,
             child: Text(
               "Reliability",
               style: TextStyle(fontSize: 18),
             ),
-          ),
-          PitViewSlider(
-            label: "Drivetrain",
-            divisions: 4,
-            max: 5,
-            min: 1,
-            onChange: identity,
-            value: data.driveTrainReliability.toDouble(),
-          ),
-          PitViewSlider(
-            label: "Electronics",
-            divisions: 4,
-            max: 5,
-            min: 1,
-            onChange: identity,
-            value: data.electronicsReliability.toDouble(),
-          ),
-          PitViewSlider(
-            label: "Robot",
-            divisions: 9,
-            max: 10,
-            min: 1,
-            onChange: identity,
-            value: data.driveTrainReliability.toDouble(),
           ),
           Align(
             alignment: Alignment.center,
