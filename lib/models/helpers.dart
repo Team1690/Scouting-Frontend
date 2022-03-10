@@ -10,3 +10,28 @@ extension Cast<E extends num> on Iterable<E> {
     });
   }
 }
+
+extension SortMatches on List<dynamic> {
+  List<dynamic> sortMatches() {
+    final List<dynamic> matches = <dynamic>[];
+    final List<String> types = const <String>[
+      "Quals",
+      "Semi finals",
+      "Quartes finals",
+      "Finals"
+    ];
+    for (final String i in types) {
+      matches.addAll(
+        where(
+          (final dynamic element) => element["match_type"]["title"] == i,
+        ).toList()
+          ..sort(
+            (final dynamic i, final dynamic j) =>
+                (i["match_number"] as int).compareTo(j["match_number"] as int),
+          ),
+      );
+    }
+
+    return matches;
+  }
+}

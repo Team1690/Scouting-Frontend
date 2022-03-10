@@ -23,7 +23,7 @@ class _UserInputState extends State<UserInput> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
-  Match match = Match();
+  final Match match = Match();
   // -1 means nothing
 
   @override
@@ -79,6 +79,22 @@ class _UserInputState extends State<UserInput> {
                   onChange: (final LightTeam team) {
                     match.team = team;
                   },
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Selector<int>(
+                  options:
+                      IdProvider.of(context).matchType.idToName.keys.toList(),
+                  placeholder: "Match type",
+                  value: match.matchTypeId,
+                  makeItem: (final int id) =>
+                      IdProvider.of(context).matchType.idToName[id]!,
+                  onChange: (final int id) {
+                    match.matchTypeId = id;
+                  },
+                  validate: (final int i) =>
+                      i.onNull("Please pick a match type"),
                 ),
                 SizedBox(
                   height: 20,
@@ -219,8 +235,8 @@ class _UserInputState extends State<UserInput> {
 }
 
 const String mutation = """
-mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int, \$scouter_name: String) {
-  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed, scouter_name: \$scouter_name}) {
+mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int, \$scouter_name: String, \$match_type_id:Int) {
+  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed, scouter_name: \$scouter_name, match_type_id: \$match_type_id }) {
     returning {
       id
     }

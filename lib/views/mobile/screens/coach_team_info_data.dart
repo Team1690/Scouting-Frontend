@@ -1,6 +1,7 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -330,6 +331,9 @@ query MyQuery(\$id: Int!) {
         points
         title
       }
+      match_type{
+        title
+      }
       auto_lower
       auto_upper
       auto_missed
@@ -512,9 +516,16 @@ Future<CoachViewTeam> fetchTeam(
             }
             throw Exception("Not a climb value");
           }).toList();
-          final List<int> matchNumbers = (teamByPk["matches"] as List<dynamic>)
-              .map((final dynamic e) => e["match_number"] as int)
-              .toList();
+          final List<MatchIdentifier> matchNumbers =
+              (teamByPk["matches"] as List<dynamic>)
+                  .sortMatches()
+                  .map(
+                    (final dynamic e) => MatchIdentifier(
+                      number: e["match_number"] as int,
+                      type: e["match_type"]["title"] as String,
+                    ),
+                  )
+                  .toList();
           final LineChartData<int> climbData = LineChartData<int>(
             gameNumbers: matchNumbers,
             points: <List<int>>[climbPoints],
