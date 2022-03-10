@@ -72,13 +72,6 @@ class PitScoutingCard extends StatelessWidget {
             Align(
               alignment: Alignment.center,
               child: Text(
-                "Reliability",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
                 "Notes",
                 style: TextStyle(fontSize: 18),
               ),
