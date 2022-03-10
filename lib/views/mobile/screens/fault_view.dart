@@ -25,7 +25,7 @@ class _FaultViewState extends State<FaultView> {
             onPressed: () async {
               LightTeam? team;
               String? newMessage;
-              (await showDialog<FaultTeam>(
+              (await showDialog<Fault>(
                 context: context,
                 builder: (final BuildContext innerContext) {
                   return AlertDialog(
@@ -43,6 +43,7 @@ class _FaultViewState extends State<FaultView> {
                           height: 10,
                         ),
                         TextField(
+                          maxLines: 4,
                           textDirection: TextDirection.rtl,
                           onChanged: (final String a) {
                             newMessage = a;
@@ -58,8 +59,7 @@ class _FaultViewState extends State<FaultView> {
                       TextButton(
                         onPressed: () {
                           if (team == null || newMessage == null) return;
-                          Navigator.of(context)
-                              .pop(FaultTeam(newMessage!, team!));
+                          Navigator.of(context).pop(Fault(newMessage!, team!));
                         },
                         child: Text("Submit"),
                       ),
@@ -74,9 +74,9 @@ class _FaultViewState extends State<FaultView> {
                   );
                 },
               ))
-                  .mapNullable((final FaultTeam p0) {
+                  .mapNullable((final Fault p0) {
                 showLoadingSnackBar(context);
-                addFaultTeam(p0.team.id, p0.faultMessage).then((final void _) {
+                addFaultTeam(p0.team.id, p0.message).then((final void _) {
                   ScaffoldMessenger.of(context).clearSnackBars();
                   setState(() {});
                 });
@@ -86,11 +86,11 @@ class _FaultViewState extends State<FaultView> {
           )
         ],
       ),
-      body: FutureBuilder<List<FaultTeam>>(
+      body: FutureBuilder<List<FaultEntry>>(
         future: fetchFaults(),
         builder: (
           final BuildContext context,
-          final AsyncSnapshot<List<FaultTeam>> snapshot,
+          final AsyncSnapshot<List<FaultEntry>> snapshot,
         ) {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
@@ -99,13 +99,13 @@ class _FaultViewState extends State<FaultView> {
               child: CircularProgressIndicator(),
             );
           } else {
-            return snapshot.data.mapNullable((final List<FaultTeam> data) {
+            return snapshot.data.mapNullable((final List<FaultEntry> data) {
                   return SingleChildScrollView(
                     primary: false,
                     child: Column(
                       children: data
                           .map(
-                            (final FaultTeam e) => Card(
+                            (final FaultEntry e) => Card(
                               elevation: 2,
                               color: bgColor,
                               child: Padding(
@@ -122,7 +122,7 @@ class _FaultViewState extends State<FaultView> {
                                           final TextEditingController
                                               controller =
                                               TextEditingController();
-
+                                          controller.text = e.faultMessage;
                                           (await showDialog<String>(
                                             context: context,
                                             builder:
@@ -130,6 +130,7 @@ class _FaultViewState extends State<FaultView> {
                                                     AlertDialog(
                                               title: Text("Edit message"),
                                               content: TextField(
+                                                maxLines: 4,
                                                 controller: controller,
                                                 autofocus: true,
                                                 textDirection:
@@ -172,7 +173,7 @@ class _FaultViewState extends State<FaultView> {
                                             showLoadingSnackBar(context);
 
                                             updateFaultMessage(
-                                              e.team.id,
+                                              e.id,
                                               message,
                                             ).then((final void _) {
                                               setState(() {});
@@ -232,12 +233,12 @@ void showLoadingSnackBar(final BuildContext context) =>
       ),
     );
 
-Future<void> updateFaultMessage(final int teamId, final String message) async {
+Future<void> updateFaultMessage(final int id, final String message) async {
   final GraphQLClient client = getClient();
   await client.mutate(
     MutationOptions(
       document: gql(updateMessage),
-      variables: <String, dynamic>{"team": teamId, "message": message},
+      variables: <String, dynamic>{"id": id, "message": message},
     ),
   );
 }
@@ -267,17 +268,17 @@ Future<void> saveDeletedFaults(final int teamID) async {
   );
 }
 
-Future<List<FaultTeam>> fetchFaults() async {
+Future<List<FaultEntry>> fetchFaults() async {
   final GraphQLClient client = getClient();
   final QueryResult result =
       await client.query(QueryOptions(document: gql(query)));
   return result.mapQueryResult(
     (final Map<String, dynamic>? data) =>
-        data.mapNullable<List<FaultTeam>>(
+        data.mapNullable<List<FaultEntry>>(
           (final Map<String, dynamic> data) {
             return (data["broken_robots"] as List<dynamic>)
                 .map(
-                  (final dynamic e) => FaultTeam(
+                  (final dynamic e) => FaultEntry(
                     e["message"] as String,
                     LightTeam(
                       e["team"]["id"] as int,
@@ -285,6 +286,7 @@ Future<List<FaultTeam>> fetchFaults() async {
                       e["team"]["name"] as String,
                       e["team"]["colors_index"] as int,
                     ),
+                    e["id"] as int,
                   ),
                 )
                 .toList();
@@ -294,15 +296,27 @@ Future<List<FaultTeam>> fetchFaults() async {
   );
 }
 
-class FaultTeam {
-  const FaultTeam(this.faultMessage, this.team);
+class Fault {
+  const Fault(this.message, this.team);
+  final String message;
+  final LightTeam team;
+}
+
+class FaultEntry {
+  const FaultEntry(
+    this.faultMessage,
+    this.team,
+    this.id,
+  );
   final String faultMessage;
+  final int id;
   final LightTeam team;
 }
 
 const String query = """
 query MyQuery {
   broken_robots {
+    id
     team {
       colors_index
       name
@@ -316,8 +330,8 @@ query MyQuery {
 """;
 
 const String updateMessage = """
-mutation MyMutation(\$team: Int, \$message: String) {
-  update_broken_robots(where: {team_id: {_eq: \$team}}, _set: {message: \$message}) {
+mutation MyMutation(\$id: Int, \$message: String) {
+  update_broken_robots(where: {id: {_eq: \$id}}, _set: {message: \$message}) {
     affected_rows
   }
 }
