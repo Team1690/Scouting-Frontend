@@ -2,6 +2,8 @@ import "dart:math";
 
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
+import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart"
+    show MatchIdentifier;
 
 class DashboardLineChart<E extends num> extends StatelessWidget {
   const DashboardLineChart({
@@ -13,7 +15,7 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
   final List<Color> inputedColors;
   final int distanceFromHighest;
   final List<List<E>> dataSet;
-  final List<int> gameNumbers;
+  final List<MatchIdentifier> gameNumbers;
 
   @override
   Widget build(final BuildContext context) {
@@ -131,7 +133,7 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
     required this.matchNumbers,
   });
   final List<Color> inputedColors;
-  final List<int> matchNumbers;
+  final List<MatchIdentifier> matchNumbers;
   final List<List<E>> dataSet;
 
   @override
