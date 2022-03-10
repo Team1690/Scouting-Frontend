@@ -42,7 +42,7 @@ class CoachTeamData extends StatelessWidget {
             return snapshot.data.mapNullable((final CoachViewTeam data) {
                   return CarouselWithIndicator(
                     enableInfininteScroll: true,
-                    initialPage: 1,
+                    initialPage: 0,
                     widgets: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(10.0),
@@ -58,12 +58,14 @@ class CoachTeamData extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: DashboardCard(
-                          title: "Pit Scouting",
-                          body: data.pitData.mapNullable(
-                                (final PitData pit) =>
-                                    pitScouting(pit, context),
-                              ) ??
-                              Center(child: Text("No data :(")),
+                          title: "Specific",
+                          body: data.specificData.msg.isEmpty
+                              ? Center(
+                                  child: Text("No data :("),
+                                )
+                              : ScoutingSpecific(
+                                  msg: data.specificData,
+                                ),
                         ),
                       ),
                       Padding(
@@ -76,14 +78,12 @@ class CoachTeamData extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: DashboardCard(
-                          title: "Specific",
-                          body: data.specificData.msg.isEmpty
-                              ? Center(
-                                  child: Text("No data :("),
-                                )
-                              : ScoutingSpecific(
-                                  msg: data.specificData,
-                                ),
+                          title: "Pit Scouting",
+                          body: data.pitData.mapNullable(
+                                (final PitData pit) =>
+                                    pitScouting(pit, context),
+                              ) ??
+                              Center(child: Text("No data :(")),
                         ),
                       )
                     ],
