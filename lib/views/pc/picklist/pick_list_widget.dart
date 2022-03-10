@@ -157,16 +157,29 @@ class _PickListState extends State<PickList> {
                         ],
                       ),
                       trailing: SizedBox(),
-                      leading: AdvancedSwitch(
-                        disabledOpacity: 1,
-                        controller: e.controller,
-                        activeColor: Colors.red,
-                        inactiveColor: primaryColor,
-                        activeChild: Text("Taken"),
-                        inactiveChild: Text("Available"),
-                        height: 25,
-                        width: 100,
-                        enabled: true,
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          if (widget.screen.getIndex(e) + 1 <= 24)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                (widget.screen.getIndex(e) + 1).toString(),
+                              ),
+                            ),
+                          AdvancedSwitch(
+                            disabledOpacity: 1,
+                            controller: e.controller,
+                            activeColor: Colors.red,
+                            inactiveColor: primaryColor,
+                            activeChild: Text("Taken"),
+                            inactiveChild: Text("Available"),
+                            height: 25,
+                            width: 100,
+                            enabled: true,
+                          ),
+                        ],
                       ),
                     )
                   : GestureDetector(
