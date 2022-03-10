@@ -53,29 +53,19 @@ class PitData {
     required this.driveTrainType,
     required this.driveMotorAmount,
     required this.driveMotorType,
-    required this.driveTrainReliability,
     required this.driveWheelType,
-    required this.electronicsReliability,
     required this.gearboxPurchased,
     required this.notes,
-    required this.robotReliability,
     required this.hasShifer,
     required this.url,
     required this.faultMessage,
-    required this.canGoUnderLowRung,
-    required this.hasTurret,
   });
-  final bool? hasTurret;
-  final bool? canGoUnderLowRung;
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;
   final bool? hasShifer;
   final bool? gearboxPurchased;
   final String driveMotorType;
-  final int driveTrainReliability;
-  final int electronicsReliability;
-  final int robotReliability;
   final String notes;
   final String url;
   final String? faultMessage;
