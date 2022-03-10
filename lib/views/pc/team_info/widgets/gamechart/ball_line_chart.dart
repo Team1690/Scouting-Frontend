@@ -43,6 +43,7 @@ class BallLineChart<E extends num> extends StatelessWidget {
               top: 40,
             ),
             child: DashboardLineChart<E>(
+              showShadow: true,
               gameNumbers: data.gameNumbers,
               inputedColors: <Color>[
                 Colors.green,

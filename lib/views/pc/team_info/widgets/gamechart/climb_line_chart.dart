@@ -22,6 +22,7 @@ class ClimbLineChart<E extends num> extends StatelessWidget {
               top: 40,
             ),
             child: DashboardClimbLineChart<E>(
+              showShadow: true,
               inputedColors: <Color>[primaryColor],
               matchNumbers: data.gameNumbers,
               dataSet: data.points,
