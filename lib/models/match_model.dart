@@ -24,6 +24,7 @@ class Match implements HasuraVars {
     teleLow = 0;
     climbStatus = null;
     name = null;
+    matchTypeId = null;
   }
 
   int? matchNumber;
@@ -31,7 +32,7 @@ class Match implements HasuraVars {
   int autoHigh;
   int autoMissed;
   int autoLow;
-
+  int? matchTypeId;
   int teleHigh;
   int teleMissed;
   int teleLow;
@@ -51,7 +52,8 @@ class Match implements HasuraVars {
       "tele_lower": teleLow,
       "tele_upper": teleHigh,
       "tele_missed": teleMissed,
-      "scouter_name": name
+      "scouter_name": name,
+      "match_type_id": matchTypeId,
     };
   }
 }
