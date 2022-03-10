@@ -44,8 +44,32 @@ class LineChartData<E extends num> {
     required this.gameNumbers,
   });
   List<List<E>> points;
-  List<int> gameNumbers;
+  List<MatchIdentifier> gameNumbers;
   String title = "";
+}
+
+class MatchIdentifier {
+  const MatchIdentifier({required this.number, required this.type});
+  final String type;
+  final int number;
+  @override
+  String toString() {
+    return "${shortenType(type)}$number";
+  }
+
+  static String shortenType(final String type) {
+    switch (type) {
+      case "Quals":
+        return "";
+      case "Finals":
+        return "f";
+      case "Semi finals":
+        return "sf";
+      case "Quarter finals":
+        return "qf";
+    }
+    throw Exception("Not a supported match type");
+  }
 }
 
 class PitData {
