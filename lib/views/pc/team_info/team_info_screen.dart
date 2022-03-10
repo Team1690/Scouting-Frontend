@@ -26,7 +26,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
   void initState() {
     super.initState();
     chosenTeam.mapNullable((final LightTeam element) {
-      widget.controller.text = element.number.toString();
+      widget.controller.text = "${element.number} ${element.name}";
     });
   }
 
