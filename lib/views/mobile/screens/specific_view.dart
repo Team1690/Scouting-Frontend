@@ -168,7 +168,7 @@ class _SpecificState extends State<Specific> {
                     }
                   }
                   ${vars.faultMessage == null ? "" : """
-  insert_broken_robots(objects: {team_id: \$team_id, message: \$fault_message}, on_conflict: {constraint: broken_robots_team_id_key, update_columns: message}) {
+  insert_broken_robots(objects: {team_id: \$team_id, message: \$fault_message}) {
     affected_rows
   }"""}
                   }
