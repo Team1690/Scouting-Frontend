@@ -18,16 +18,24 @@ void main() async {
     );
   }
   final Map<String, Map<String, int>> enums = await fetchEnums(
-    <String>["climb_2022", "drivetrain", "drivemotor", "robot_role"],
+    <String>[
+      "climb_2022",
+      "drivetrain",
+      "drivemotor",
+      "robot_role",
+      "match_type",
+    ],
   );
   final Map<String, int> climbs = enums["climb_2022"]!;
   final Map<String, int> driveTrains = enums["drivetrain"]!;
   final Map<String, int> driveMotors = enums["drivemotor"]!;
   final Map<String, int> robotRoles = enums["robot_role"]!;
+  final Map<String, int> matchTypes = enums["match_type"]!;
   final List<LightTeam> teams = await fetchTeams();
 
   runApp(
     App(
+      matchTypeIds: matchTypes,
       teams: teams,
       drivetrainIds: driveTrains,
       climdIds: climbs,
