@@ -23,7 +23,7 @@ class _UserInputState extends State<UserInput> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
-  Match match = Match();
+  final Match match = Match();
   // -1 means nothing
 
   @override
@@ -91,7 +91,6 @@ class _UserInputState extends State<UserInput> {
                   makeItem: (final int id) =>
                       IdProvider.of(context).matchType.idToName[id]!,
                   onChange: (final int id) {
-                    print(id);
                     match.matchTypeId = id;
                   },
                   validate: (final int i) =>
