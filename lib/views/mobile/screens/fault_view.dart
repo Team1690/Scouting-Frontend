@@ -43,6 +43,7 @@ class _FaultViewState extends State<FaultView> {
                           height: 10,
                         ),
                         TextField(
+                          maxLines: 4,
                           textDirection: TextDirection.rtl,
                           onChanged: (final String a) {
                             newMessage = a;
@@ -129,6 +130,7 @@ class _FaultViewState extends State<FaultView> {
                                                     AlertDialog(
                                               title: Text("Edit message"),
                                               content: TextField(
+                                                maxLines: 4,
                                                 controller: controller,
                                                 autofocus: true,
                                                 textDirection:
