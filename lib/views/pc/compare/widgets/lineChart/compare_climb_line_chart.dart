@@ -3,6 +3,7 @@ import "dart:math";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
+import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 class CompareClimbLineChart<E extends num> extends StatelessWidget {
   const CompareClimbLineChart(this.data);
@@ -25,11 +26,12 @@ class CompareClimbLineChart<E extends num> extends StatelessWidget {
           child: DashboardClimbLineChart<E>(
             inputedColors:
                 data.map((final CompareLineChartData<E> e) => e.color).toList(),
-            matchNumbers: List<int>.generate(
+            matchNumbers: List<MatchIdentifier>.generate(
               data
                   .map((final CompareLineChartData<E> e) => e.points.length)
                   .reduce(max),
-              (final int index) => index + 1,
+              (final int index) =>
+                  MatchIdentifier(number: index + 1, type: "Quals"),
             ),
             dataSet: data
                 .map(

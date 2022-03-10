@@ -54,6 +54,9 @@ query MyQuery(\$id: Int!) {
         points
         title
       }
+      match_type {
+        title
+      }
       auto_lower
       auto_upper
       auto_missed
@@ -166,13 +169,13 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final double avgTeleUpper = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["tele_upper"] as double? ??
               0;
+          final List<dynamic> matches =
+              (teamByPk["matches"] as List<dynamic>).sortMatches();
+          final List<String> climbTitles = matches
+              .map((final dynamic e) => e["climb"]["title"] as String)
+              .toList();
 
-          final List<String> climbTitles =
-              (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["climb"]["title"] as String)
-                  .toList();
-
-          final List<int> climbPoints = (teamByPk["matches"] as List<dynamic>)
+          final List<int> climbPoints = matches
               .map((final dynamic e) => e["climb"]["points"] as int)
               .toList();
           final SpecificData specificData = SpecificData(
@@ -232,8 +235,13 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             }
             throw Exception("Not a climb value");
           }).toList();
-          final List<int> matchNumbers = (teamByPk["matches"] as List<dynamic>)
-              .map((final dynamic e) => e["match_number"] as int)
+          final List<MatchIdentifier> matchNumbers = matches
+              .map(
+                (final dynamic e) => MatchIdentifier(
+                  number: e["match_number"] as int,
+                  type: e["match_type"]["title"] as String,
+                ),
+              )
               .toList();
 
           final LineChartData<E> climbData = LineChartData<E>(
@@ -242,21 +250,19 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             title: "Climb",
           );
 
-          final List<E> upperScoredDataTele =
-              (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["tele_upper"] as int)
-                  .castToGeneric<E>()
-                  .toList();
-          final List<E> missedDataTele = (teamByPk["matches"] as List<dynamic>)
+          final List<E> upperScoredDataTele = matches
+              .map((final dynamic e) => e["tele_upper"] as int)
+              .castToGeneric<E>()
+              .toList();
+          final List<E> missedDataTele = matches
               .map((final dynamic e) => e["tele_missed"] as int)
               .castToGeneric<E>()
               .toList();
 
-          final List<E> lowerScoredDataTele =
-              (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["tele_lower"] as int)
-                  .castToGeneric<E>()
-                  .toList();
+          final List<E> lowerScoredDataTele = matches
+              .map((final dynamic e) => e["tele_lower"] as int)
+              .castToGeneric<E>()
+              .toList();
 
           final LineChartData<E> scoredMissedDataTele = LineChartData<E>(
             gameNumbers: matchNumbers,
@@ -268,20 +274,18 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             title: "Teleoperated",
           );
 
-          final List<E> upperScoredDataAuto =
-              (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["auto_upper"] as int)
-                  .castToGeneric<E>()
-                  .toList();
-          final List<E> missedDataAuto = (teamByPk["matches"] as List<dynamic>)
+          final List<E> upperScoredDataAuto = matches
+              .map((final dynamic e) => e["auto_upper"] as int)
+              .castToGeneric<E>()
+              .toList();
+          final List<E> missedDataAuto = matches
               .map((final dynamic e) => e["auto_missed"] as int)
               .castToGeneric<E>()
               .toList();
-          final List<E> lowerScoredDataAuto =
-              (teamByPk["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["auto_lower"] as int)
-                  .castToGeneric<E>()
-                  .toList();
+          final List<E> lowerScoredDataAuto = matches
+              .map((final dynamic e) => e["auto_lower"] as int)
+              .castToGeneric<E>()
+              .toList();
           final LineChartData<E> scoredMissedDataAuto = LineChartData<E>(
             gameNumbers: matchNumbers,
             points: <List<E>>[
