@@ -1,4 +1,7 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/common/team_selection_future.dart";
+import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_view.dart";
 import "package:scouting_frontend/views/mobile/screens/fault_view.dart";
 import "package:scouting_frontend/views/mobile/screens/input_view.dart";
@@ -7,8 +10,8 @@ import "package:scouting_frontend/views/mobile/screens/specific_view.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 
 class SideNavBar extends StatelessWidget {
-  const SideNavBar();
-
+  SideNavBar();
+  final TextEditingController teamSelectionController = TextEditingController();
   @override
   Widget build(final BuildContext context) {
     return Drawer(
@@ -28,6 +31,20 @@ class SideNavBar extends StatelessWidget {
                 letterSpacing: 2.0,
                 color: Colors.white,
               ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: TeamSelectionFuture(
+              onChange: (final LightTeam team) {
+                teamSelectionController.clear();
+                Navigator.of(context).push(
+                  MaterialPageRoute<CoachTeamData>(
+                    builder: (final BuildContext contxt) => CoachTeamData(team),
+                  ),
+                );
+              },
+              controller: teamSelectionController,
             ),
           ),
           NavbarTile(
