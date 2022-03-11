@@ -13,7 +13,9 @@ class App extends StatelessWidget {
     required this.drivetrainIds,
     required this.robotRoleIds,
     required this.matchTypeIds,
+    required this.robotMatchStatusIds,
   });
+  final Map<String, int> robotMatchStatusIds;
   final List<LightTeam> teams;
   final Map<String, int> climdIds;
   final Map<String, int> drivetrainIds;
@@ -30,6 +32,7 @@ class App extends StatelessWidget {
         climbIds: climdIds,
         drivemotorIds: driveMotorIds,
         drivetrainIds: drivetrainIds,
+        robotMatchStatusIds: robotMatchStatusIds,
         child: MaterialApp(
           title: "Orbit Scouting",
           home: isPC(context) ? TeamInfoScreen() : UserInput(),
