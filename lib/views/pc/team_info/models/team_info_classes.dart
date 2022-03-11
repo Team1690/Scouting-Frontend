@@ -48,10 +48,17 @@ class LineChartData<E extends num> {
   String title = "";
 }
 
+enum RobotMatchStatus { worked, didntComeToField, didntWorkOnField }
+
 class MatchIdentifier {
-  const MatchIdentifier({required this.number, required this.type});
+  const MatchIdentifier({
+    required this.number,
+    required this.type,
+    required this.robotMatchStatus,
+  });
   final String type;
   final int number;
+  final RobotMatchStatus robotMatchStatus;
   @override
   String toString() {
     return "${shortenType(type)}$number";
