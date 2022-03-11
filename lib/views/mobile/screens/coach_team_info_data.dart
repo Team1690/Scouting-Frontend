@@ -341,6 +341,9 @@ query MyQuery(\$id: Int!) {
       tele_lower
       tele_upper
       tele_missed
+      robot_match_status{
+        title
+      }
     }
   }
   broken_robots {
@@ -516,18 +519,22 @@ Future<CoachViewTeam> fetchTeam(
             }
             throw Exception("Not a climb value");
           }).toList();
-          final List<MatchIdentifier> matchNumbers =
-              (teamByPk["matches"] as List<dynamic>)
-                  .sortMatches()
-                  .map(
-                    (final dynamic e) => MatchIdentifier(
-                      number: e["match_number"] as int,
-                      type: e["match_type"]["title"] as String,
-                    ),
-                  )
-                  .toList();
+
+          final List<MatchIdentifier> matchNumbers = (teamByPk["matches"]
+                  as List<dynamic>)
+              .sortMatches()
+              .map(
+                (final dynamic e) => MatchIdentifier(
+                  number: e["match_number"] as int,
+                  type: e["match_type"]["title"] as String,
+                  robotMatchStatus:
+                      titleToEnum(e["robot_match_status"]["title"] as String),
+                ),
+              )
+              .toList();
+
           final LineChartData<int> climbData = LineChartData<int>(
-            gameNumbers: matchNumbers,
+            gameNumbers: List<List<MatchIdentifier>>.filled(3, matchNumbers),
             points: <List<int>>[climbPoints],
             title: "Climb",
           );
@@ -547,7 +554,7 @@ Future<CoachViewTeam> fetchTeam(
                   .toList();
 
           final LineChartData<int> scoredMissedDataTele = LineChartData<int>(
-            gameNumbers: matchNumbers,
+            gameNumbers: List<List<MatchIdentifier>>.filled(3, matchNumbers),
             points: <List<int>>[
               upperScoredDataTele,
               missedDataTele,
@@ -569,7 +576,7 @@ Future<CoachViewTeam> fetchTeam(
                   .map((final dynamic e) => e["auto_lower"] as int)
                   .toList();
           final LineChartData<int> scoredMissedDataAuto = LineChartData<int>(
-            gameNumbers: matchNumbers,
+            gameNumbers: List<List<MatchIdentifier>>.filled(3, matchNumbers),
             points: <List<int>>[
               upperScoredDataAuto,
               missedDataAuto,

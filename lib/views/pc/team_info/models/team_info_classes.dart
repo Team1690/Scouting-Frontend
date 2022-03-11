@@ -43,9 +43,9 @@ class LineChartData<E extends num> {
     required this.title,
     required this.gameNumbers,
   });
-  List<List<E>> points;
-  List<MatchIdentifier> gameNumbers;
-  String title = "";
+  final List<List<E>> points;
+  final List<List<MatchIdentifier>> gameNumbers;
+  final String title;
 }
 
 enum RobotMatchStatus { worked, didntComeToField, didntWorkOnField }

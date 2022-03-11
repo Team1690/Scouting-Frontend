@@ -52,6 +52,9 @@ query MyQuery(\$id: Int!) {
       match_type {
         title
       }
+      robot_match_status{
+        title
+      }
       auto_lower
       auto_upper
       auto_missed
@@ -225,17 +228,23 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             }
             throw Exception("Not a climb value");
           }).toList();
+
           final List<MatchIdentifier> matchNumbers = matches
               .map(
                 (final dynamic e) => MatchIdentifier(
                   number: e["match_number"] as int,
                   type: e["match_type"]["title"] as String,
+                  robotMatchStatus:
+                      titleToEnum(e["robot_match_status"]["title"] as String),
                 ),
               )
               .toList();
 
           final LineChartData<E> climbData = LineChartData<E>(
-            gameNumbers: matchNumbers,
+            gameNumbers: List<List<MatchIdentifier>>.generate(
+              3,
+              (final int index) => matchNumbers,
+            ),
             points: <List<E>>[climbLineChartPoints.castToGeneric<E>().toList()],
             title: "Climb",
           );
@@ -253,9 +262,11 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               .map((final dynamic e) => e["tele_lower"] as int)
               .castToGeneric<E>()
               .toList();
-
           final LineChartData<E> scoredMissedDataTele = LineChartData<E>(
-            gameNumbers: matchNumbers,
+            gameNumbers: List<List<MatchIdentifier>>.generate(
+              3,
+              (final int index) => matchNumbers,
+            ),
             points: <List<E>>[
               upperScoredDataTele,
               missedDataTele,
@@ -276,8 +287,12 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               .map((final dynamic e) => e["auto_lower"] as int)
               .castToGeneric<E>()
               .toList();
+
           final LineChartData<E> scoredMissedDataAuto = LineChartData<E>(
-            gameNumbers: matchNumbers,
+            gameNumbers: List<List<MatchIdentifier>>.generate(
+              3,
+              (final int index) => matchNumbers,
+            ),
             points: <List<E>>[
               upperScoredDataAuto,
               missedDataAuto,
