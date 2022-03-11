@@ -32,22 +32,7 @@ class CoachView extends StatelessWidget {
             );
           }
           return snapshot.data.mapNullable((final List<CoachData> data) {
-                final List<CoachData> matches = matchTypes
-                    .map(
-                      (final String matchType) => data
-                          .where(
-                            (final CoachData element) =>
-                                element.matchType == matchType,
-                          )
-                          .toList()
-                        ..sort(
-                          (final CoachData a, final CoachData b) =>
-                              a.matchNumber.compareTo(b.matchNumber),
-                        ),
-                    )
-                    .expand((final List<CoachData> element) => element)
-                    .toList();
-                final int initialIndex = matches.indexWhere(
+                final int initialIndex = data.indexWhere(
                   (final CoachData element) => !element.happened,
                 );
                 return CarouselSlider(
@@ -57,9 +42,9 @@ class CoachView extends StatelessWidget {
                     aspectRatio: 2.0,
                     viewportFraction: 1,
                     initialPage:
-                        initialIndex == -1 ? matches.length - 1 : initialIndex,
+                        initialIndex == -1 ? data.length - 1 : initialIndex,
                   ),
-                  items: matches
+                  items: data
                       .map((final CoachData e) => matchScreen(context, e))
                       .toList(),
                 );
@@ -128,10 +113,10 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
 
 const String query = """
 query MyQuery {
-  orbit_matches{
+  orbit_matches(order_by: {match_type: {order: asc}, match_number: asc}) {
     happened
     match_number
-    match_type{
+    match_type {
       title
     }
     blue_0_team {
@@ -174,7 +159,7 @@ query MyQuery {
       id
       name
       number
-            matches_aggregate {
+      matches_aggregate {
         aggregate {
           avg {
             auto_upper
@@ -203,7 +188,7 @@ query MyQuery {
       id
       name
       number
-            matches_aggregate {
+      matches_aggregate {
         aggregate {
           avg {
             auto_upper
@@ -232,7 +217,7 @@ query MyQuery {
       id
       name
       number
-            matches_aggregate {
+      matches_aggregate {
         aggregate {
           avg {
             auto_upper
@@ -261,7 +246,7 @@ query MyQuery {
       id
       name
       number
-            matches_aggregate {
+      matches_aggregate {
         aggregate {
           avg {
             auto_upper
@@ -290,7 +275,7 @@ query MyQuery {
       id
       name
       number
-            matches_aggregate {
+      matches_aggregate {
         aggregate {
           avg {
             auto_upper
@@ -310,6 +295,7 @@ query MyQuery {
     }
   }
 }
+
 
 
 """;

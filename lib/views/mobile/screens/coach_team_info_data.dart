@@ -326,7 +326,7 @@ query MyQuery(\$id: Int!) {
         }
       }
     }
-    matches(order_by: {match_number: asc}) {
+    matches(order_by: {match_type: {order: asc}, match_number: asc}) {
       climb {
         points
         title
@@ -518,7 +518,6 @@ Future<CoachViewTeam> fetchTeam(
           }).toList();
           final List<MatchIdentifier> matchNumbers =
               (teamByPk["matches"] as List<dynamic>)
-                  .sortMatches()
                   .map(
                     (final dynamic e) => MatchIdentifier(
                       number: e["match_number"] as int,
