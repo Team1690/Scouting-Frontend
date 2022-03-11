@@ -121,6 +121,8 @@ Widget lineCharts(final CoachViewTeam data) => CarouselWithIndicator(
                   child: DashboardLineChart<int>(
                     showShadow: true,
                     gameNumbers: data.scoredMissedDataTele.gameNumbers,
+                    robotMatchStatuses:
+                        data.scoredMissedDataTele.robotMatchStatuses,
                     distanceFromHighest: 4,
                     dataSet: data.scoredMissedDataTele.points,
                     inputedColors: <Color>[
@@ -153,6 +155,8 @@ Widget lineCharts(final CoachViewTeam data) => CarouselWithIndicator(
                 child: DashboardLineChart<int>(
                   showShadow: true,
                   gameNumbers: data.scoredMissedDataAuto.gameNumbers,
+                  robotMatchStatuses:
+                      data.scoredMissedDataAuto.robotMatchStatuses,
                   distanceFromHighest: 4,
                   dataSet: data.scoredMissedDataAuto.points,
                   inputedColors: <Color>[
@@ -182,6 +186,7 @@ Widget lineCharts(final CoachViewTeam data) => CarouselWithIndicator(
               child: Container(
                 margin: const EdgeInsets.only(left: 25, top: 8.0),
                 child: DashboardClimbLineChart<int>(
+                  robotMatchStatuses: data.climbData.robotMatchStatuses,
                   showShadow: true,
                   inputedColors: <Color>[primaryColor],
                   matchNumbers: data.climbData.gameNumbers,
@@ -520,23 +525,30 @@ Future<CoachViewTeam> fetchTeam(
             throw Exception("Not a climb value");
           }).toList();
 
-          final List<MatchIdentifier> matchNumbers = (teamByPk["matches"]
-                  as List<dynamic>)
-              .sortMatches()
-              .map(
-                (final dynamic e) => MatchIdentifier(
-                  number: e["match_number"] as int,
-                  type: e["match_type"]["title"] as String,
-                  robotMatchStatus:
-                      titleToEnum(e["robot_match_status"]["title"] as String),
-                ),
-              )
-              .toList();
+          final List<MatchIdentifier> matchNumbers =
+              (teamByPk["matches"] as List<dynamic>)
+                  .sortMatches()
+                  .map(
+                    (final dynamic e) => MatchIdentifier(
+                      number: e["match_number"] as int,
+                      type: e["match_type"]["title"] as String,
+                    ),
+                  )
+                  .toList();
 
           final LineChartData<int> climbData = LineChartData<int>(
-            gameNumbers: List<List<MatchIdentifier>>.filled(3, matchNumbers),
+            gameNumbers: matchNumbers,
             points: <List<int>>[climbPoints],
             title: "Climb",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) =>
+                        titleToEnum(e["robot_match_status"]["title"] as String),
+                  )
+                  .toList(),
+            ),
           );
 
           final List<int> upperScoredDataTele =
@@ -554,13 +566,22 @@ Future<CoachViewTeam> fetchTeam(
                   .toList();
 
           final LineChartData<int> scoredMissedDataTele = LineChartData<int>(
-            gameNumbers: List<List<MatchIdentifier>>.filled(3, matchNumbers),
+            gameNumbers: matchNumbers,
             points: <List<int>>[
               upperScoredDataTele,
               missedDataTele,
               lowerScoredDataTele
             ],
             title: "Teleoperated",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) =>
+                        titleToEnum(e["robot_match_status"]["title"] as String),
+                  )
+                  .toList(),
+            ),
           );
 
           final List<int> upperScoredDataAuto =
@@ -576,13 +597,22 @@ Future<CoachViewTeam> fetchTeam(
                   .map((final dynamic e) => e["auto_lower"] as int)
                   .toList();
           final LineChartData<int> scoredMissedDataAuto = LineChartData<int>(
-            gameNumbers: List<List<MatchIdentifier>>.filled(3, matchNumbers),
+            gameNumbers: matchNumbers,
             points: <List<int>>[
               upperScoredDataAuto,
               missedDataAuto,
               lowerScoredDataAuto
             ],
             title: "Autonomous",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) =>
+                        titleToEnum(e["robot_match_status"]["title"] as String),
+                  )
+                  .toList(),
+            ),
           );
           return CoachViewTeam(
             team: LightTeam(

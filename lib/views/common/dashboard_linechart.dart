@@ -13,12 +13,14 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
     this.distanceFromHighest = 5,
     required this.inputedColors,
     required this.showShadow,
+    required this.robotMatchStatuses,
   });
   final bool showShadow;
   final List<Color> inputedColors;
   final int distanceFromHighest;
   final List<List<E>> dataSet;
-  final List<List<MatchIdentifier>> gameNumbers;
+  final List<MatchIdentifier> gameNumbers;
+  final List<List<RobotMatchStatus>> robotMatchStatuses;
 
   @override
   Widget build(final BuildContext context) {
@@ -61,16 +63,15 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
                 strokeWidth: 4,
                 radius: 6,
                 color: secondaryColor,
-                strokeColor:
-                    gameNumbers[index][spot.x.toInt()].robotMatchStatus ==
-                            RobotMatchStatus.didntComeToField
-                        ? Colors.red
-                        : Colors.purple,
+                strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
+                        RobotMatchStatus.didntComeToField
+                    ? Colors.red
+                    : Colors.purple,
               ),
               checkToShowDot: (final FlSpot spot, final LineChartBarData data) {
-                return gameNumbers[index][spot.x.toInt()].robotMatchStatus ==
+                return robotMatchStatuses[index][spot.x.toInt()] ==
                         RobotMatchStatus.didntComeToField ||
-                    gameNumbers[index][spot.x.toInt()].robotMatchStatus ==
+                    robotMatchStatuses[index][spot.x.toInt()] ==
                         RobotMatchStatus.didntWorkOnField;
               },
             ),
@@ -125,7 +126,7 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
             ) =>
                 value == value.floorToDouble(),
             getTitles: (final double value) {
-              return gameNumbers.first[value.toInt()].toString();
+              return gameNumbers[value.toInt()].toString();
             },
           ),
           rightTitles: SideTitles(
@@ -161,9 +162,12 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
     required this.inputedColors,
     required this.matchNumbers,
     required this.showShadow,
+    required this.robotMatchStatuses,
   });
   final List<Color> inputedColors;
-  final List<List<MatchIdentifier>> matchNumbers;
+  final List<MatchIdentifier> matchNumbers;
+  final List<List<RobotMatchStatus>> robotMatchStatuses;
+
   final List<List<E>> dataSet;
   final bool showShadow;
 
@@ -209,17 +213,16 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
                   strokeWidth: 4,
                   radius: 6,
                   color: secondaryColor,
-                  strokeColor:
-                      matchNumbers[index][spot.x.toInt()].robotMatchStatus ==
-                              RobotMatchStatus.didntComeToField
-                          ? Colors.red
-                          : Colors.purple,
+                  strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
+                          RobotMatchStatus.didntComeToField
+                      ? Colors.red
+                      : Colors.purple,
                 ),
                 checkToShowDot:
                     (final FlSpot spot, final LineChartBarData data) {
-                  return matchNumbers[index][spot.x.toInt()].robotMatchStatus ==
+                  return robotMatchStatuses[index][spot.x.toInt()] ==
                           RobotMatchStatus.didntComeToField ||
-                      matchNumbers[index][spot.x.toInt()].robotMatchStatus ==
+                      robotMatchStatuses[index][spot.x.toInt()] ==
                           RobotMatchStatus.didntWorkOnField;
                 },
               ),
@@ -262,7 +265,7 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
             show: true,
             topTitles: SideTitles(
               getTitles: (final double value) =>
-                  matchNumbers[0][value.toInt()].toString(),
+                  matchNumbers[value.toInt()].toString(),
               showTitles: true,
               interval: 1,
               getTextStyles: (final BuildContext context, final double value) =>

@@ -234,19 +234,23 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                 (final dynamic e) => MatchIdentifier(
                   number: e["match_number"] as int,
                   type: e["match_type"]["title"] as String,
-                  robotMatchStatus:
-                      titleToEnum(e["robot_match_status"]["title"] as String),
                 ),
               )
               .toList();
 
           final LineChartData<E> climbData = LineChartData<E>(
-            gameNumbers: List<List<MatchIdentifier>>.generate(
-              3,
-              (final int index) => matchNumbers,
-            ),
+            gameNumbers: matchNumbers,
             points: <List<E>>[climbLineChartPoints.castToGeneric<E>().toList()],
             title: "Climb",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) =>
+                        titleToEnum(e["robot_match_status"]["title"] as String),
+                  )
+                  .toList(),
+            ),
           );
 
           final List<E> upperScoredDataTele = matches
@@ -263,16 +267,22 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               .castToGeneric<E>()
               .toList();
           final LineChartData<E> scoredMissedDataTele = LineChartData<E>(
-            gameNumbers: List<List<MatchIdentifier>>.generate(
-              3,
-              (final int index) => matchNumbers,
-            ),
+            gameNumbers: matchNumbers,
             points: <List<E>>[
               upperScoredDataTele,
               missedDataTele,
               lowerScoredDataTele
             ],
             title: "Teleoperated",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) =>
+                        titleToEnum(e["robot_match_status"]["title"] as String),
+                  )
+                  .toList(),
+            ),
           );
 
           final List<E> upperScoredDataAuto = matches
@@ -289,16 +299,23 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               .toList();
 
           final LineChartData<E> scoredMissedDataAuto = LineChartData<E>(
-            gameNumbers: List<List<MatchIdentifier>>.generate(
-              3,
-              (final int index) => matchNumbers,
-            ),
+            gameNumbers: matchNumbers,
             points: <List<E>>[
               upperScoredDataAuto,
               missedDataAuto,
               lowerScoredDataAuto
             ],
             title: "Autonomous",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) => titleToEnum(
+                      e["robot_match_status"]["title"] as String,
+                    ),
+                  )
+                  .toList(),
+            ),
           );
 
           return Team<E>(

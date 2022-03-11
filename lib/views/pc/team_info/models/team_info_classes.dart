@@ -42,9 +42,11 @@ class LineChartData<E extends num> {
     required this.points,
     required this.title,
     required this.gameNumbers,
+    required this.robotMatchStatuses,
   });
   final List<List<E>> points;
-  final List<List<MatchIdentifier>> gameNumbers;
+  final List<List<RobotMatchStatus>> robotMatchStatuses;
+  final List<MatchIdentifier> gameNumbers;
   final String title;
 }
 
@@ -54,11 +56,9 @@ class MatchIdentifier {
   const MatchIdentifier({
     required this.number,
     required this.type,
-    required this.robotMatchStatus,
   });
   final String type;
   final int number;
-  final RobotMatchStatus robotMatchStatus;
   @override
   String toString() {
     return "${shortenType(type)}$number";

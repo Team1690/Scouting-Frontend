@@ -52,6 +52,7 @@ class BallLineChart<E extends num> extends StatelessWidget {
               ],
               distanceFromHighest: 4,
               dataSet: data.points,
+              robotMatchStatuses: data.robotMatchStatuses,
             ),
           ),
         ],
