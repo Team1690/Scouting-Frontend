@@ -73,7 +73,7 @@ class NavigationTab extends StatelessWidget {
           ),
           ListTile(
             title: const Text("Status"),
-            leading: Icon(Icons.signal_wifi_statusbar_null),
+            leading: Icon(Icons.mobile_friendly),
             onTap: () {
               Navigator.pushReplacement(
                 context,
