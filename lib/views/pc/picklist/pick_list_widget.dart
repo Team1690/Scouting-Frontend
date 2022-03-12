@@ -5,6 +5,7 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
+import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 
 class PickList extends StatefulWidget {
@@ -64,9 +65,8 @@ class _PickListState extends State<PickList> {
                         ListTile(
                           title: Row(
                             children: <Widget>[
-                              Spacer(),
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: Row(
                                   children: <Widget>[
                                     Expanded(
@@ -91,28 +91,27 @@ class _PickListState extends State<PickList> {
                                   ],
                                 ),
                               ),
-                              Spacer(),
                               if (e.amountOfMatches != 0) ...<Expanded>[
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Text(
                                     "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Text(
                                     "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Text(
                                     "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Text(
                                     "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
                                   ),
@@ -121,11 +120,11 @@ class _PickListState extends State<PickList> {
                                 ...List<Spacer>.filled(
                                   4,
                                   Spacer(
-                                    flex: 3,
+                                    flex: 2,
                                   ),
                                 ),
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: ElevatedButton(
                                   onPressed: () => Navigator.pushReplacement(
                                     context,
@@ -139,6 +138,35 @@ class _PickListState extends State<PickList> {
                                   child: Text(
                                     "Team info",
                                   ),
+                                ),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                        ),
+                        ListTile(
+                          title: Row(
+                            children: <Widget>[
+                              Spacer(),
+                              Expanded(
+                                child: Text(
+                                  "Didn't work on field: ${e.robotMatchStatusToAmount[RobotMatchStatus.didntWorkOnField]}",
+                                  style: TextStyle(
+                                    color: Colors.purple,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Didn't come to field: ${e.robotMatchStatusToAmount[RobotMatchStatus.didntComeToField]}",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Worked: ${e.robotMatchStatusToAmount[RobotMatchStatus.worked]}",
                                 ),
                               ),
                               Spacer()
@@ -250,6 +278,7 @@ class PickListTeam {
     required final double teleAim,
     required final String? faultMessage,
     required final int amountOfMatches,
+    required final Map<RobotMatchStatus, int> robotMatchStatusToAmount,
   }) : this.controller(
           firstListIndex,
           secondListIndex,
@@ -266,6 +295,7 @@ class PickListTeam {
           ),
           faultMessage,
           amountOfMatches,
+          robotMatchStatusToAmount,
         );
 
   PickListTeam.controller(
@@ -279,6 +309,7 @@ class PickListTeam {
     this.team,
     this.faultMessage,
     this.amountOfMatches,
+    this.robotMatchStatusToAmount,
   );
 
   final int amountOfMatches;
@@ -288,6 +319,7 @@ class PickListTeam {
   final double teleAim;
   final LightTeam team;
   final String? faultMessage;
+  final Map<RobotMatchStatus, int> robotMatchStatusToAmount;
   int firstListIndex;
   int secondListIndex;
   final ValueNotifier<bool> controller;
