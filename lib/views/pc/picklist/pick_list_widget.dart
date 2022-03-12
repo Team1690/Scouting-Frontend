@@ -185,9 +185,9 @@ class _PickListState extends State<PickList> {
                   : GestureDetector(
                       onDoubleTap: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute<CoachTeamData>(
+                          MaterialPageRoute<CoachTeamData<int>>(
                             builder: (final BuildContext context) =>
-                                CoachTeamData(e.team),
+                                CoachTeamData<int>(e.team),
                           ),
                         );
                       },
