@@ -187,7 +187,7 @@ class _FaultViewState extends State<FaultView> {
                                         icon: Icon(Icons.delete),
                                         onPressed: () {
                                           showLoadingSnackBar(context);
-                                          saveDeletedFaults(e.team.id)
+                                          saveDeletedFaults(e.id)
                                               .then((final void value) {
                                             setState(() {});
                                             ScaffoldMessenger.of(context)
@@ -258,12 +258,12 @@ Future<void> addFaultTeam(final int teamId, final String message) async {
   );
 }
 
-Future<void> saveDeletedFaults(final int teamID) async {
+Future<void> saveDeletedFaults(final int id) async {
   final GraphQLClient client = getClient();
   await client.mutate(
     MutationOptions(
       document: gql(deleteTeams),
-      variables: <String, dynamic>{"team": teamID},
+      variables: <String, dynamic>{"id": id},
     ),
   );
 }
@@ -324,6 +324,9 @@ query MyQuery {
       id
     }
     message
+        fault_status {
+      title
+    }
   }
 }
 
@@ -339,8 +342,8 @@ mutation MyMutation(\$id: Int, \$message: String) {
 """;
 
 const String deleteTeams = """
-mutation MyMutation(\$team: Int) {
-  delete_broken_robots(where: {team_id: {_eq: \$team}}) {
+mutation MyMutation(\$id: Int) {
+  delete_broken_robots(where: {id: {_eq: \$id}}) {
     affected_rows
   }
 }
@@ -350,5 +353,6 @@ const String addTeam = """
 mutation Mymutation(\$team_id:Int,\$fault_message:String){
   insert_broken_robots(objects: {team_id: \$team_id, message: \$fault_message}) {
     affected_rows
-  }}
+  }
+}
 """;
