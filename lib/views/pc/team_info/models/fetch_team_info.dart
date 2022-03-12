@@ -44,7 +44,7 @@ query MyQuery(\$id: Int!) {
         }
       }
     }
-    matches(order_by: {match_number: asc}) {
+    matches(order_by: {match_type: {order: asc}, match_number: asc}) {
       climb {
         points
         title
@@ -162,8 +162,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final double avgTeleUpper = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["tele_upper"] as double? ??
               0;
-          final List<dynamic> matches =
-              (teamByPk["matches"] as List<dynamic>).sortMatches();
+          final List<dynamic> matches = (teamByPk["matches"] as List<dynamic>);
           final List<String> climbTitles = matches
               .map((final dynamic e) => e["climb"]["title"] as String)
               .toList();

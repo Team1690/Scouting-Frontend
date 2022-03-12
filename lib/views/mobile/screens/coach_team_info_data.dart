@@ -1,7 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -331,7 +330,7 @@ query MyQuery(\$id: Int!) {
         }
       }
     }
-    matches(order_by: {match_number: asc}) {
+    matches(order_by: {match_type: {order: asc}, match_number: asc}) {
       climb {
         points
         title
@@ -527,7 +526,6 @@ Future<CoachViewTeam> fetchTeam(
 
           final List<MatchIdentifier> matchNumbers =
               (teamByPk["matches"] as List<dynamic>)
-                  .sortMatches()
                   .map(
                     (final dynamic e) => MatchIdentifier(
                       number: e["match_number"] as int,
