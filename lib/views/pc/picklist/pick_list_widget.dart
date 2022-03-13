@@ -2,40 +2,37 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
+import "package:flutter_switch/flutter_switch.dart";
 
-class PickList extends StatefulWidget {
+class PickList extends StatelessWidget {
   PickList({
     required this.uiList,
     required this.screen,
     required this.onReorder,
-  });
+  }) {
+    uiList.sort((final PickListTeam a, final PickListTeam b) {
+      return screen.getIndex(a).compareTo(screen.getIndex(b));
+    });
+  }
 
   final List<PickListTeam> uiList;
   final CurrentPickList screen;
   final void Function(List<PickListTeam> list) onReorder;
 
-  @override
-  _PickListState createState() => _PickListState();
-}
-
-class _PickListState extends State<PickList> {
   void reorderData(final int oldindex, int newindex) {
-    setState(() {
-      if (newindex > oldindex) {
-        newindex -= 1;
-      }
-      final PickListTeam item = widget.uiList.removeAt(oldindex);
-      widget.uiList.insert(newindex, item);
-      for (int i = 0; i < widget.uiList.length; i++) {
-        widget.screen.setIndex(widget.uiList[i], i);
-      }
-    });
-    widget.onReorder(widget.uiList);
+    if (newindex > oldindex) {
+      newindex -= 1;
+    }
+    final PickListTeam item = uiList.removeAt(oldindex);
+    uiList.insert(newindex, item);
+    for (int i = 0; i < uiList.length; i++) {
+      screen.setIndex(uiList[i], i);
+    }
+    onReorder(uiList);
   }
 
   @override
@@ -44,10 +41,7 @@ class _PickListState extends State<PickList> {
       child: ReorderableListView(
         buildDefaultDragHandles: true,
         primary: false,
-        children: widget.uiList.map<Widget>((final PickListTeam e) {
-          e.controller.addListener(() {
-            widget.onReorder(widget.uiList);
-          });
+        children: uiList.map<Widget>((final PickListTeam e) {
           return Card(
             color: bgColor,
             key: ValueKey<String>(e.toString()),
@@ -188,24 +182,24 @@ class _PickListState extends State<PickList> {
                       leading: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          if (widget.screen.getIndex(e) + 1 <= 24)
+                          if (screen.getIndex(e) + 1 <= 24)
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8),
                               child: Text(
-                                (widget.screen.getIndex(e) + 1).toString(),
+                                (screen.getIndex(e) + 1).toString(),
                               ),
                             ),
-                          AdvancedSwitch(
-                            disabledOpacity: 1,
-                            controller: e.controller,
+                          FlutterSwitch(
+                            value: e.taken,
                             activeColor: Colors.red,
                             inactiveColor: primaryColor,
-                            activeChild: Text("Taken"),
-                            inactiveChild: Text("Available"),
                             height: 25,
                             width: 100,
-                            enabled: true,
+                            onToggle: (final bool val) {
+                              e.taken = val;
+                              onReorder(uiList);
+                            },
                           ),
                         ],
                       ),
@@ -213,9 +207,9 @@ class _PickListState extends State<PickList> {
                   : GestureDetector(
                       onDoubleTap: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute<CoachTeamData>(
+                          MaterialPageRoute<CoachTeamData<int>>(
                             builder: (final BuildContext context) =>
-                                CoachTeamData(e.team),
+                                CoachTeamData<int>(e.team),
                           ),
                         );
                       },
@@ -231,19 +225,29 @@ class _PickListState extends State<PickList> {
                           ],
                         ),
                         trailing: SizedBox(),
-                        leading: AdvancedSwitch(
-                          controller: e.controller,
-                          activeColor: Colors.red,
-                          inactiveColor: primaryColor,
-                          activeChild: Text(
-                            "Taken",
-                          ),
-                          inactiveChild: Text(
-                            "Available",
-                          ),
-                          height: 25,
-                          width: 100,
-                          enabled: true,
+                        leading: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            if (screen.getIndex(e) + 1 <= 24)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  (screen.getIndex(e) + 1).toString(),
+                                ),
+                              ),
+                            FlutterSwitch(
+                              value: e.taken,
+                              activeColor: Colors.red,
+                              inactiveColor: primaryColor,
+                              height: 25,
+                              width: 100,
+                              onToggle: (final bool val) {
+                                e.taken = val;
+                                onReorder(uiList);
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -282,7 +286,7 @@ class PickListTeam {
   }) : this.controller(
           firstListIndex,
           secondListIndex,
-          ValueNotifier<bool>(taken),
+          taken,
           avgBallPoints,
           avgClimbPoints,
           autoAim,
@@ -301,7 +305,7 @@ class PickListTeam {
   PickListTeam.controller(
     this.firstListIndex,
     this.secondListIndex,
-    this.controller,
+    this.taken,
     this.avgBallPoints,
     this.avgClimbPoints,
     this.autoAim,
@@ -322,7 +326,7 @@ class PickListTeam {
   final Map<RobotMatchStatus, int> robotMatchStatusToAmount;
   int firstListIndex;
   int secondListIndex;
-  final ValueNotifier<bool> controller;
+  bool taken;
 
   @override
   String toString() {

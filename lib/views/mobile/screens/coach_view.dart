@@ -476,8 +476,9 @@ Widget teamData(
       ),
       onPressed: () => Navigator.push(
         context,
-        MaterialPageRoute<CoachTeamData>(
-          builder: (final BuildContext context) => CoachTeamData(team.team),
+        MaterialPageRoute<CoachTeamData<int>>(
+          builder: (final BuildContext context) =>
+              CoachTeamData<int>(team.team),
         ),
       ),
       child: Column(
