@@ -15,29 +15,50 @@ class PitScoutingCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Robot Fault",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Icon(
-                    data.faultMessage != null ? Icons.warning : Icons.check,
-                    color: data.faultMessage != null
-                        ? Colors.yellow[700]
-                        : Colors.green,
+            if (data.faultMessages == null ||
+                data.faultMessages!.isEmpty) ...<Widget>[
+              Row(
+                children: <Widget>[
+                  Spacer(
+                    flex: 5,
                   ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Text(data.faultMessage ?? "No Fault"),
-                ),
-              ],
-            ),
+                  Icon(
+                    Icons.check,
+                    color: Colors.green,
+                  ),
+                  Spacer(),
+                  Text(
+                    "No Fault",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Spacer(
+                    flex: 5,
+                  )
+                ],
+              ),
+            ] else ...<Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Faults",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Icon(
+                    Icons.warning,
+                    color: Colors.yellow[700],
+                  )
+                ],
+              ),
+              ...data.faultMessages!.map(Text.new).toList().expand(
+                    (final Text element) => <Widget>[
+                      element,
+                      SizedBox(
+                        height: 20,
+                      )
+                    ],
+                  )
+            ],
             Align(
               alignment: Alignment.center,
               child: Text(
