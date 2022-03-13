@@ -65,13 +65,14 @@ class PickList extends StatelessWidget {
                                   children: <Widget>[
                                     Expanded(
                                       child: Icon(
-                                        e.faultMessage.fold(
+                                        e.faultMessages.fold(
                                           () => Icons.check,
-                                          (final String _) => Icons.warning,
+                                          (final List<String> _) =>
+                                              Icons.warning,
                                         ),
-                                        color: e.faultMessage.fold(
+                                        color: e.faultMessages.fold(
                                           () => Colors.green,
-                                          (final String _) =>
+                                          (final List<String> _) =>
                                               Colors.yellow[700],
                                         ),
                                       ),
@@ -79,7 +80,13 @@ class PickList extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                        e.faultMessage.orElse("No fault"),
+                                        e.faultMessages.mapNullable(
+                                              (
+                                                final List<String> p0,
+                                              ) =>
+                                                  "Faults: ${p0.length}",
+                                            ) ??
+                                            "No faults",
                                       ),
                                     ),
                                   ],
