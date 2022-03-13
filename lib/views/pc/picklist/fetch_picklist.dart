@@ -112,27 +112,29 @@ List<PickListTeam> parse(
                       )
                       .toList();
               return PickListTeam(
-                  amountOfMatches: amountOfMatches,
-                  colorsIndex: e["colors_index"] as int,
-                  id: e["id"] as int,
-                  number: e["number"] as int,
-                  name: e["name"] as String,
-                  firstListIndex: e["first_picklist_index"] as int,
-                  secondListIndex: e["second_picklist_index"] as int,
-                  taken: e["taken"] as bool,
-                  autoAim: autoAim,
-                  teleAim: teleAim,
-                  avgBallPoints: avgBallPoints,
-                  avgClimbPoints: climbAvg,
-                  faultMessage:
-                      faultMessages.isEmpty ? null : faultMessages.first,
-                  robotMatchStatusToAmount: <RobotMatchStatus, int>{
-                    for (final RobotMatchStatus i in RobotMatchStatus.values)
-                      i: robotMatchStatuses
-                          .where(
-                              (final RobotMatchStatus element) => element == i)
-                          .length
-                  });
+                amountOfMatches: amountOfMatches,
+                colorsIndex: e["colors_index"] as int,
+                id: e["id"] as int,
+                number: e["number"] as int,
+                name: e["name"] as String,
+                firstListIndex: e["first_picklist_index"] as int,
+                secondListIndex: e["second_picklist_index"] as int,
+                taken: e["taken"] as bool,
+                autoAim: autoAim,
+                teleAim: teleAim,
+                avgBallPoints: avgBallPoints,
+                avgClimbPoints: climbAvg,
+                faultMessage:
+                    faultMessages.isEmpty ? null : faultMessages.first,
+                robotMatchStatusToAmount: <RobotMatchStatus, int>{
+                  for (final RobotMatchStatus i in RobotMatchStatus.values)
+                    i: robotMatchStatuses
+                        .where(
+                          (final RobotMatchStatus element) => element == i,
+                        )
+                        .length
+                },
+              );
             }).toList();
             return teams;
           }) ??
