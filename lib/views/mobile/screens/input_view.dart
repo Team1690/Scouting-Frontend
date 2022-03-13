@@ -108,6 +108,23 @@ class _UserInputState extends State<UserInput> {
                       i.onNull("Please pick a match type"),
                 ),
                 SizedBox(
+                  height: 15,
+                ),
+                ToggleButtons(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text("Rematch"),
+                    )
+                  ],
+                  isSelected: <bool>[match.isRematch],
+                  onPressed: (final int i) {
+                    setState(() {
+                      match.isRematch = !match.isRematch;
+                    });
+                  },
+                ),
+                SizedBox(
                   height: 20,
                 ),
                 SectionDivider(label: "Autonomous"),
@@ -263,8 +280,8 @@ class _UserInputState extends State<UserInput> {
 }
 
 const String mutation = """
-mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int, \$scouter_name: String, \$match_type_id:Int, \$robot_match_status_id: Int) {
-  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed, scouter_name: \$scouter_name, match_type_id: \$match_type_id, robot_match_status_id: \$robot_match_status_id }) {
+mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int, \$scouter_name: String, \$match_type_id:Int, \$robot_match_status_id: Int,\$is_rematch: Boolean) {
+  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed, scouter_name: \$scouter_name, match_type_id: \$match_type_id, robot_match_status_id: \$robot_match_status_id, is_rematch: \$is_rematch}) {
     returning {
       id
     }
