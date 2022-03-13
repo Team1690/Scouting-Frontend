@@ -116,7 +116,10 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
             showTitles: true,
             interval: 1,
             getTextStyles: (final BuildContext context, final double value) =>
-                TextStyle(color: Colors.white, fontSize: 16),
+                TextStyle(
+              color: Colors.white,
+              fontSize: isPC(context) ? 16 : 8,
+            ),
             checkToShowTitle: (
               final double minValue,
               final double maxValue,
@@ -269,7 +272,10 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
               showTitles: true,
               interval: 1,
               getTextStyles: (final BuildContext context, final double value) =>
-                  TextStyle(color: Colors.white, fontSize: 16),
+                  TextStyle(
+                color: Colors.white,
+                fontSize: isPC(context) ? 16 : 8,
+              ),
               checkToShowTitle: (
                 final double minValue,
                 final double maxValue,
