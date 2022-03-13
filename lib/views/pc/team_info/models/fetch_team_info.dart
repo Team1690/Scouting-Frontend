@@ -11,6 +11,10 @@ const String teamInfoQuery = """
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
     id
+    broken_robots {
+
+    message
+    }
     pit {
       drive_motor_amount
       drive_wheel_type
@@ -65,15 +69,7 @@ query MyQuery(\$id: Int!) {
     }
 
   }
-  broken_robots {
-    team {
-      colors_index
-      id
-      name
-      number
-    }
-    message
-  }
+
 }
 
 """;
@@ -102,10 +98,10 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final Map<String, dynamic>? pit =
               (teamByPk["pit"] as Map<String, dynamic>?);
 
-          final Map<int, String> teamIdToFaultMessage = <int, String>{
-            for (final dynamic e in (team["broken_robots"] as List<dynamic>))
-              e["team"]["id"] as int: e["message"] as String
-          };
+          final List<String> faultMessages =
+              (teamByPk["broken_robots"] as List<dynamic>)
+                  .map((final dynamic e) => e["message"] as String)
+                  .toList();
           final PitData? pitData = pit.mapNullable<PitData>(
             (final Map<String, dynamic> p0) => PitData(
               driveMotorAmount: p0["drive_motor_amount"] as int,
@@ -116,7 +112,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
               driveMotorType: p0["drivemotor"]["title"] as String,
-              faultMessage: teamIdToFaultMessage[teamByPk["id"] as int],
+              faultMessages: faultMessages,
             ),
           );
           final List<int> roleIds = (teamByPk["specifics"] as List<dynamic>)
