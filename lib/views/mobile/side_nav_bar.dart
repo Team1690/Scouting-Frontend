@@ -39,8 +39,9 @@ class SideNavBar extends StatelessWidget {
               onChange: (final LightTeam team) {
                 teamSelectionController.clear();
                 Navigator.of(context).push(
-                  MaterialPageRoute<CoachTeamData>(
-                    builder: (final BuildContext contxt) => CoachTeamData(team),
+                  MaterialPageRoute<CoachTeamData<int>>(
+                    builder: (final BuildContext contxt) =>
+                        CoachTeamData<int>(team),
                   ),
                 );
               },
