@@ -8,13 +8,13 @@ class QuickDataCard extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => DashboardCard(
         title: "Quick data",
-        body: data.scorePercentTele.isNaN
+        body: data.amoutOfMatches == 0
             ? Container()
-            : Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 3,
-                    child: Column(
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Column(
                       children: <Widget>[
                         Text(
                           "Auto",
@@ -36,11 +36,7 @@ class QuickDataCard extends StatelessWidget {
                         Spacer()
                       ],
                     ),
-                  ),
-                  Spacer(),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
+                    Column(
                       children: <Widget>[
                         Text(
                           "Teleop",
@@ -62,11 +58,7 @@ class QuickDataCard extends StatelessWidget {
                         Spacer()
                       ],
                     ),
-                  ),
-                  Spacer(),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
+                    Column(
                       children: <Widget>[
                         Text(
                           "Points",
@@ -82,11 +74,39 @@ class QuickDataCard extends StatelessWidget {
                         )
                       ],
                     ),
-                  ),
-                  Spacer(),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
+                    Column(
+                      children: <Widget>[
+                        Text(
+                          "Misc",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Spacer(),
+                        Text(
+                          "Ball sum: ${(data.avgAutoLowScored + data.avgAutoUpperScored + data.avgTeleLowScored + data.avgTeleUpperScored).toStringAsFixed(1)}",
+                        ),
+                        Text(
+                          "Best climb: ${data.highestLevelTitle}",
+                        ),
+                        Spacer(
+                          flex: 2,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Text(
+                          "Picklist",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Spacer(),
+                        Text("First: ${data.firstPicklistIndex + 1}"),
+                        Text("Second: ${data.secondPicklistIndex + 1}"),
+                        Spacer(
+                          flex: 2,
+                        ),
+                      ],
+                    ),
+                    Column(
                       children: <Widget>[
                         Text(
                           "Aim",
@@ -94,19 +114,23 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         Spacer(),
                         Text(
-                          "Auto: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(1)}%" : "No data"} ",
+                          "Auto: ${(data.avgAutoUpperScored + data.avgAutoLowScored).toStringAsFixed(1)}/${(data.avgAutoUpperScored + data.avgAutoLowScored + data.avgAutoMissed).toStringAsFixed(1)}",
                         ),
                         Text(
-                          "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(1)}%" : "No data"} ",
+                          "Teleop: ${(data.avgTeleUpperScored + data.avgTeleLowScored).toStringAsFixed(1)}/${(data.avgTeleUpperScored + data.avgTeleLowScored + data.avgTeleMissed).toStringAsFixed(1)}",
                         ),
                         Spacer(
                           flex: 2,
                         )
                       ],
                     ),
-                  ),
-                  Spacer()
-                ],
+                  ]
+                      .expand(
+                        (final Widget element) =>
+                            <Widget>[element, SizedBox(width: 40)],
+                      )
+                      .toList(),
+                ),
               ),
       );
 }
