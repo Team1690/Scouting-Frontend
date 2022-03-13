@@ -89,7 +89,7 @@ class PitData {
     required this.notes,
     required this.hasShifer,
     required this.url,
-    required this.faultMessage,
+    required this.faultMessages,
   });
   final String driveTrainType;
   final int driveMotorAmount;
@@ -99,7 +99,7 @@ class PitData {
   final String driveMotorType;
   final String notes;
   final String url;
-  final String? faultMessage;
+  final List<String>? faultMessages;
 }
 
 class Team<E extends num> {

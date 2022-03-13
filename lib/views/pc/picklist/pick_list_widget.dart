@@ -280,7 +280,7 @@ class PickListTeam {
     required final double avgClimbPoints,
     required final double autoAim,
     required final double teleAim,
-    required final String? faultMessage,
+    required final List<String>? faultMessages,
     required final int amountOfMatches,
     required final Map<RobotMatchStatus, int> robotMatchStatusToAmount,
   }) : this.controller(
@@ -297,7 +297,7 @@ class PickListTeam {
             validateName(name),
             colorsIndex,
           ),
-          faultMessage,
+          faultMessages,
           amountOfMatches,
           robotMatchStatusToAmount,
         );
@@ -311,7 +311,7 @@ class PickListTeam {
     this.autoAim,
     this.teleAim,
     this.team,
-    this.faultMessage,
+    this.faultMessages,
     this.amountOfMatches,
     this.robotMatchStatusToAmount,
   );
@@ -322,8 +322,9 @@ class PickListTeam {
   final double autoAim;
   final double teleAim;
   final LightTeam team;
-  final String? faultMessage;
+  final List<String>? faultMessages;
   final Map<RobotMatchStatus, int> robotMatchStatusToAmount;
+
   int firstListIndex;
   int secondListIndex;
   bool taken;
