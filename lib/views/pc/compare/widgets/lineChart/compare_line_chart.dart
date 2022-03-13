@@ -24,6 +24,9 @@ class CompareLineChart<E extends num> extends StatelessWidget {
             top: 40,
           ),
           child: DashboardLineChart<E>(
+            robotMatchStatuses: data
+                .map((final CompareLineChartData<E> e) => e.matchStatuses)
+                .toList(),
             showShadow: false,
             inputedColors:
                 data.map((final CompareLineChartData<E> e) => e.color).toList(),
@@ -34,7 +37,6 @@ class CompareLineChart<E extends num> extends StatelessWidget {
               (final int index) =>
                   MatchIdentifier(number: index + 1, type: "Quals"),
             ),
-            distanceFromHighest: 4,
             dataSet: data
                 .map(
                   (final CompareLineChartData<E> e) => e.points,

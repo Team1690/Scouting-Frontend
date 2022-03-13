@@ -24,6 +24,9 @@ class CompareClimbLineChart<E extends num> extends StatelessWidget {
             top: 40,
           ),
           child: DashboardClimbLineChart<E>(
+            robotMatchStatuses: data
+                .map((final CompareLineChartData<E> e) => e.matchStatuses)
+                .toList(),
             showShadow: false,
             inputedColors:
                 data.map((final CompareLineChartData<E> e) => e.color).toList(),

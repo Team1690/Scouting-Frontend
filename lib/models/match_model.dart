@@ -1,3 +1,5 @@
+import "package:flutter/cupertino.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
@@ -11,9 +13,10 @@ class Match implements HasuraVars {
     this.teleHigh = 0,
     this.teleMissed = 0,
     this.teleLow = 0,
+    required this.robotMatchStatusId,
   });
 
-  void clear() {
+  void clear(final BuildContext context) {
     team = null;
     matchNumber = -1;
     autoHigh = 0;
@@ -25,6 +28,8 @@ class Match implements HasuraVars {
     climbStatus = null;
     name = null;
     matchTypeId = null;
+    robotMatchStatusId =
+        IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
   }
 
   int? matchNumber;
@@ -38,6 +43,7 @@ class Match implements HasuraVars {
   int teleLow;
   String? name;
   int? climbStatus;
+  int robotMatchStatusId;
 
   LightTeam? team;
   @override

@@ -42,14 +42,21 @@ class LineChartData<E extends num> {
     required this.points,
     required this.title,
     required this.gameNumbers,
+    required this.robotMatchStatuses,
   });
-  List<List<E>> points;
-  List<MatchIdentifier> gameNumbers;
-  String title = "";
+  final List<List<E>> points;
+  final List<List<RobotMatchStatus>> robotMatchStatuses;
+  final List<MatchIdentifier> gameNumbers;
+  final String title;
 }
 
+enum RobotMatchStatus { worked, didntComeToField, didntWorkOnField }
+
 class MatchIdentifier {
-  const MatchIdentifier({required this.number, required this.type});
+  const MatchIdentifier({
+    required this.number,
+    required this.type,
+  });
   final String type;
   final int number;
   @override

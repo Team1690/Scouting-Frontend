@@ -26,6 +26,7 @@ class ClimbLineChart<E extends num> extends StatelessWidget {
               inputedColors: <Color>[primaryColor],
               matchNumbers: data.gameNumbers,
               dataSet: data.points,
+              robotMatchStatuses: data.robotMatchStatuses,
             ),
           ),
         ],

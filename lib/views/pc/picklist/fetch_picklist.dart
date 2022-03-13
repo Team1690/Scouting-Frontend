@@ -1,7 +1,9 @@
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
+import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 Stream<QueryResult> fetchPicklist() {
   final GraphQLClient client = getClient();
@@ -32,6 +34,9 @@ Stream<QueryResult> fetchPicklist() {
       nodes {
         climb {
           points
+        }
+        robot_match_status{
+          title
         }
       }
     }
@@ -94,9 +99,17 @@ List<PickListTeam> parse(
                               (avg["tele_missed"] as double? ?? double.nan) +
                               (avg["tele_lower"] as double? ?? double.nan))) *
                       100;
-              final List<String> faltMessages =
+              final List<String> faultMessages =
                   (e["broken_robots"] as List<dynamic>)
                       .map((final dynamic e) => e["message"] as String)
+                      .toList();
+              final List<RobotMatchStatus> robotMatchStatuses =
+                  (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                      .map(
+                        (final dynamic e) => titleToEnum(
+                          e["robot_match_status"]["title"] as String,
+                        ),
+                      )
                       .toList();
               return PickListTeam(
                 amountOfMatches: amountOfMatches,
@@ -111,7 +124,16 @@ List<PickListTeam> parse(
                 teleAim: teleAim,
                 avgBallPoints: avgBallPoints,
                 avgClimbPoints: climbAvg,
-                faultMessage: faltMessages.isEmpty ? null : faltMessages.first,
+                faultMessage:
+                    faultMessages.isEmpty ? null : faultMessages.first,
+                robotMatchStatusToAmount: <RobotMatchStatus, int>{
+                  for (final RobotMatchStatus i in RobotMatchStatus.values)
+                    i: robotMatchStatuses
+                        .where(
+                          (final RobotMatchStatus element) => element == i,
+                        )
+                        .length
+                },
               );
             }).toList();
             return teams;

@@ -123,6 +123,8 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
                       gameNumbers: data.scoredMissedDataTele.gameNumbers,
                       distanceFromHighest: 4,
                       dataSet: data.scoredMissedDataTele.points,
+                      robotMatchStatuses:
+                          data.scoredMissedDataTele.robotMatchStatuses,
                       inputedColors: <Color>[
                         Colors.green,
                         Colors.red,
@@ -132,9 +134,7 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
                   ),
                 ),
               ),
-              Spacer(
-                flex: 3,
-              )
+              Spacer(),
             ],
           ),
           Column(
@@ -152,7 +152,9 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 25, top: 8.0),
                   child: DashboardLineChart<E>(
                     showShadow: true,
-                    gameNumbers: data.scoredMissedDataAuto.gameNumbers,
+                    gameNumbers: data.scoredMissedDataTele.gameNumbers,
+                    robotMatchStatuses:
+                        data.scoredMissedDataTele.robotMatchStatuses,
                     distanceFromHighest: 4,
                     dataSet: data.scoredMissedDataAuto.points,
                     inputedColors: <Color>[
@@ -163,9 +165,6 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
                   ),
                 ),
               ),
-              Spacer(
-                flex: 3,
-              )
             ],
           ),
           Column(
@@ -186,6 +185,7 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
                     inputedColors: <Color>[primaryColor],
                     matchNumbers: data.climbData.gameNumbers,
                     dataSet: data.climbData.points,
+                    robotMatchStatuses: data.climbData.robotMatchStatuses,
                   ),
                 ),
               ),

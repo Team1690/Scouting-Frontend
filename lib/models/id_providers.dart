@@ -26,6 +26,7 @@ class IdProvider extends InheritedWidget {
     required final Map<String, int> drivemotorIds,
     required final Map<String, int> robotRoleIds,
     required final Map<String, int> matchTypeIds,
+    required final Map<String, int> robotMatchStatusIds,
   }) : this._inner(
           child: child,
           climb: IdTable(climbIds),
@@ -33,6 +34,7 @@ class IdProvider extends InheritedWidget {
           drivemotor: IdTable(drivemotorIds),
           robotRole: IdTable(robotRoleIds),
           matchType: IdTable(matchTypeIds),
+          robotMatchStatus: IdTable(robotMatchStatusIds),
         );
   IdProvider._inner({
     required final Widget child,
@@ -41,8 +43,9 @@ class IdProvider extends InheritedWidget {
     required this.drivemotor,
     required this.robotRole,
     required this.matchType,
+    required this.robotMatchStatus,
   }) : super(child: child);
-
+  final IdTable robotMatchStatus;
   final IdTable matchType;
   final IdTable robotRole;
   final IdTable climb;
