@@ -23,7 +23,7 @@ query MyQuery(\$ids: [Int!]) {
         }
       }
     }
-    matches(order_by: {match_type: {order: asc}, match_number: asc}) {
+    matches(order_by: {match_type: {order: asc}, match_number: asc,is_rematch: asc}) {
       climb {
         points
         title
