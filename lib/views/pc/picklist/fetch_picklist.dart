@@ -124,8 +124,7 @@ List<PickListTeam> parse(
                 teleAim: teleAim,
                 avgBallPoints: avgBallPoints,
                 avgClimbPoints: climbAvg,
-                faultMessage:
-                    faultMessages.isEmpty ? null : faultMessages.first,
+                faultMessages: faultMessages.isEmpty ? null : faultMessages,
                 robotMatchStatusToAmount: <RobotMatchStatus, int>{
                   for (final RobotMatchStatus i in RobotMatchStatus.values)
                     i: robotMatchStatuses
