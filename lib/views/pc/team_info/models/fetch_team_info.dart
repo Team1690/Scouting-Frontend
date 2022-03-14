@@ -1,7 +1,6 @@
 import "package:flutter/cupertino.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
-import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -27,10 +26,6 @@ query MyQuery(\$id: Int!) {
     }
     specifics {
       message
-      robot_role{
-        title
-        id
-      }
     }
     matches_aggregate {
       aggregate {
@@ -119,30 +114,6 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               faultMessage: teamIdToFaultMessage[teamByPk["id"] as int],
             ),
           );
-          final List<int> roleIds = (teamByPk["specifics"] as List<dynamic>)
-              .map<int?>(
-                (final dynamic e) => e["robot_role"]?["id"] as int?,
-              )
-              .where((final int? element) => element != null)
-              .cast<int>()
-              .toList();
-
-          final Map<int, int> roleToAmount = <int, int>{};
-          for (final int element in roleIds) {
-            roleToAmount[element] = (roleToAmount[element] ?? 0) + 1;
-          }
-          final List<MapEntry<int, int>> roles = roleToAmount.entries.toList()
-            ..sort(
-              (final MapEntry<int, int> a, final MapEntry<int, int> b) =>
-                  b.value.compareTo(a.value),
-            );
-          final String mostPopularRoleName = roles.isEmpty
-              ? "No data"
-              : roles.length == 1
-                  ? IdProvider.of(context).robotRole.idToName[roles.first.key]!
-                  : roles.length == 2
-                      ? "${IdProvider.of(context).robotRole.idToName[roles.first.key]}-${IdProvider.of(context).robotRole.idToName[roles.elementAt(1).key]}"
-                      : "Misc";
 
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["auto_lower"] as double? ??
@@ -175,11 +146,9 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                 .map(
                   (final dynamic e) => SpecificMatch(
                     e["message"] as String,
-                    e["robot_role"]?["title"] as String?,
                   ),
                 )
                 .toList(),
-            mostPopularRoleName,
           );
           final QuickData quickData = QuickData(
             avgAutoLowScored: avgAutoLow,

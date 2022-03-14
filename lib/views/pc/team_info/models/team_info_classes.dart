@@ -26,15 +26,15 @@ class QuickData {
 }
 
 class SpecificData {
-  SpecificData(this.msg, this.role);
-  final String role;
+  const SpecificData(this.msg);
   final List<SpecificMatch> msg;
 }
 
 class SpecificMatch {
-  const SpecificMatch(this.message, this.role);
+  const SpecificMatch(
+    this.message,
+  );
   final String message;
-  final String? role;
 }
 
 class LineChartData<E extends num> {

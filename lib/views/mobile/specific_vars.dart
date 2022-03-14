@@ -4,13 +4,11 @@ class SpecificVars implements HasuraVars {
   int? teamId;
   String message = "";
   String? faultMessage;
-  int? roleId;
   @override
   Map<String, dynamic> toHasuraVars() {
     return <String, dynamic>{
       "team_id": teamId,
       "message": message,
-      "robot_role_id": roleId,
       if (faultMessage != null) "fault_message": faultMessage
     };
   }
@@ -19,6 +17,5 @@ class SpecificVars implements HasuraVars {
     faultMessage = null;
     teamId = null;
     message = "";
-    roleId = null;
   }
 }
