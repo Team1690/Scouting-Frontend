@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/scatter/scatters_screen.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
-import 'package:scouting_frontend/views/pc/status/status_screen.dart';
+import "package:scouting_frontend/views/pc/status/status_screen.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
 
