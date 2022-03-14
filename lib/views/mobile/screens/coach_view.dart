@@ -314,22 +314,6 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                           ) /
                           climb.length;
 
-
-              final double autoAim =
-                  (((avg["auto_upper"] as double? ?? double.nan) +
-                              (avg["auto_lower"] as double? ?? double.nan)) /
-                          ((avg["auto_upper"] as double? ?? double.nan) +
-                              (avg["auto_missed"] as double? ?? double.nan) +
-                              (avg["auto_lower"] as double? ?? double.nan))) *
-                      100;
-              final double teleAim =
-                  (((avg["tele_upper"] as double? ?? double.nan) +
-                              (avg["tele_lower"] as double? ?? double.nan)) /
-                          ((avg["tele_upper"] as double? ?? double.nan) +
-                              (avg["tele_missed"] as double? ?? double.nan) +
-                              (avg["tele_lower"] as double? ?? double.nan))) *
-                      100;
-
               return CoachViewLightTeam(
                 amountOfMatches: amountOfMatches,
                 avgBallPoints: avgBallPoints,
