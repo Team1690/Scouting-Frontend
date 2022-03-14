@@ -1,7 +1,6 @@
 import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -120,12 +119,7 @@ query MyQuery {
       title
     }
     blue_0_team {
-      specifics {
-        robot_role {
-          id
-          title
-        }
-      }
+  
       colors_index
       id
       name
@@ -149,12 +143,6 @@ query MyQuery {
       }
     }
     blue_1_team {
-      specifics {
-        robot_role {
-          id
-          title
-        }
-      }
       colors_index
       id
       name
@@ -178,12 +166,6 @@ query MyQuery {
       }
     }
     blue_2_team {
-      specifics {
-        robot_role {
-          id
-          title
-        }
-      }
       colors_index
       id
       name
@@ -207,12 +189,6 @@ query MyQuery {
       }
     }
     red_0_team {
-      specifics {
-        robot_role {
-          id
-          title
-        }
-      }
       colors_index
       id
       name
@@ -236,12 +212,6 @@ query MyQuery {
       }
     }
     red_1_team {
-      specifics {
-        robot_role {
-          id
-          title
-        }
-      }
       colors_index
       id
       name
@@ -265,12 +235,6 @@ query MyQuery {
       }
     }
     red_2_team {
-      specifics {
-        robot_role {
-          id
-          title
-        }
-      }
       colors_index
       id
       name
@@ -362,37 +326,8 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                               (avg["tele_lower"] as double? ?? double.nan))) *
                       100;
 
-              final List<int> roleIds = (match[e]["specifics"] as List<dynamic>)
-                  .map<int?>(
-                    (final dynamic e) => e["robot_role"]?["id"] as int?,
-                  )
-                  .where((final int? element) => element != null)
-                  .cast<int>()
-                  .toList();
-
-              final Map<int, int> roleToAmount = <int, int>{};
-              for (final int element in roleIds) {
-                roleToAmount[element] = (roleToAmount[element] ?? 0) + 1;
-              }
-              final List<MapEntry<int, int>> roles = roleToAmount.entries
-                  .toList()
-                ..sort(
-                  (final MapEntry<int, int> a, final MapEntry<int, int> b) =>
-                      b.value.compareTo(a.value),
-                );
-              final String mostPopularRoleName = roles.isEmpty
-                  ? "No data"
-                  : roles.length == 1
-                      ? IdProvider.of(context)
-                          .robotRole
-                          .idToName[roles.first.key]!
-                      : roles.length == 2
-                          ? "${IdProvider.of(context).robotRole.idToName[roles.first.key]}-${IdProvider.of(context).robotRole.idToName[roles.elementAt(1).key]}"
-                          : "Misc";
-
               return CoachViewLightTeam(
                 amountOfMatches: amountOfMatches,
-                robotRole: mostPopularRoleName,
                 avgBallPoints: avgBallPoints,
                 team: team,
                 avgClimbPoints: climbAvg,
@@ -430,7 +365,6 @@ class CoachViewLightTeam {
     required this.avgClimbPoints,
     required this.teleopBallAim,
     required this.team,
-    required this.robotRole,
     required this.amountOfMatches,
   });
   final int amountOfMatches;
@@ -439,7 +373,6 @@ class CoachViewLightTeam {
   final double teleopBallAim;
   final double autoBallAim;
   final LightTeam team;
-  final String robotRole;
 }
 
 class CoachData {
@@ -534,14 +467,6 @@ Widget teamData(
                         fit: BoxFit.fill,
                         child: Text(
                           "Auto aim: ${team.autoBallAim.toStringAsFixed(1)}%",
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
-                          "Role: ${team.robotRole}",
                         ),
                       ),
                     ),
