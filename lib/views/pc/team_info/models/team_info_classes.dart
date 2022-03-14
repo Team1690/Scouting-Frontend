@@ -56,12 +56,14 @@ class MatchIdentifier {
   const MatchIdentifier({
     required this.number,
     required this.type,
+    required this.isRematch,
   });
   final String type;
   final int number;
+  final bool isRematch;
   @override
   String toString() {
-    return "${shortenType(type)}$number";
+    return "${isRematch ? "R" : ""}${shortenType(type)}$number";
   }
 
   static String shortenType(final String type) {

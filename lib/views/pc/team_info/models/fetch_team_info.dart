@@ -39,7 +39,7 @@ query MyQuery(\$id: Int!) {
         }
       }
     }
-    matches(order_by: {match_type: {order: asc}, match_number: asc}) {
+    matches(order_by: {match_type: {order: asc}, match_number: asc,is_rematch: asc}) {
       climb {
         points
         title
@@ -50,6 +50,7 @@ query MyQuery(\$id: Int!) {
       robot_match_status{
         title
       }
+      is_rematch
       auto_lower
       auto_upper
       auto_missed
@@ -202,6 +203,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                 (final dynamic e) => MatchIdentifier(
                   number: e["match_number"] as int,
                   type: e["match_type"]["title"] as String,
+                  isRematch: e["is_rematch"] as bool,
                 ),
               )
               .toList();
