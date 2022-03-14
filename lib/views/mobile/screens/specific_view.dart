@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 
@@ -8,7 +7,6 @@ import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
-import "package:scouting_frontend/views/mobile/switcher.dart";
 
 class Specific extends StatefulWidget {
   @override
@@ -21,11 +19,6 @@ class _SpecificState extends State<Specific> {
   final TextEditingController teamSelectionController = TextEditingController();
   final SpecificVars vars = SpecificVars();
   final FocusNode node = FocusNode();
-  Map<int, int> indexToId() => <int, int>{
-        0: IdProvider.of(context).robotRole.nameToId["Upper"]!,
-        1: IdProvider.of(context).robotRole.nameToId["Lower"]!,
-        2: IdProvider.of(context).robotRole.nameToId["Defender"]!,
-      };
   @override
   Widget build(final BuildContext context) {
     return GestureDetector(
@@ -71,29 +64,6 @@ class _SpecificState extends State<Specific> {
                       filled: true,
                     ),
                     maxLines: 18,
-                  ),
-                  SizedBox(height: 14),
-                  Switcher(
-                    labels: <String>[
-                      "Upper",
-                      "Lower",
-                      "Defender",
-                    ],
-                    colors: <Color>[
-                      Colors.green,
-                      Colors.yellow,
-                      Colors.deepPurple,
-                    ],
-                    onChange: (final int index) {
-                      setState(() {
-                        vars.roleId = indexToId()[index];
-                      });
-                    },
-                    selected: <int, int>{
-                          for (MapEntry<int, int> entry in indexToId().entries)
-                            entry.value: entry.key
-                        }[vars.roleId] ??
-                        -1,
                   ),
                   SizedBox(height: 14),
                   FittedBox(
@@ -160,8 +130,8 @@ class _SpecificState extends State<Specific> {
                         });
                       },
                       mutation: """
-                  mutation MyMutation (\$team_id: Int, \$message: String, \$robot_role_id: Int, \$fault_message: String){
-                  insert_specific(objects: {team_id: \$team_id, message: \$message, robot_role_id: \$robot_role_id}) {
+                  mutation MyMutation (\$team_id: Int, \$message: String, \$fault_message: String){
+                  insert_specific(objects: {team_id: \$team_id, message: \$message,}) {
                     returning {
                   team_id
                   message

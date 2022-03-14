@@ -30,15 +30,15 @@ class QuickData {
 }
 
 class SpecificData {
-  SpecificData(this.msg, this.role);
-  final String role;
+  const SpecificData(this.msg);
   final List<SpecificMatch> msg;
 }
 
 class SpecificMatch {
-  const SpecificMatch(this.message, this.role);
+  const SpecificMatch(
+    this.message,
+  );
   final String message;
-  final String? role;
 }
 
 class LineChartData<E extends num> {
@@ -60,12 +60,14 @@ class MatchIdentifier {
   const MatchIdentifier({
     required this.number,
     required this.type,
+    required this.isRematch,
   });
   final String type;
   final int number;
+  final bool isRematch;
   @override
   String toString() {
-    return "${shortenType(type)}$number";
+    return "${isRematch ? "R" : ""}${shortenType(type)}$number";
   }
 
   static String shortenType(final String type) {
@@ -93,7 +95,7 @@ class PitData {
     required this.notes,
     required this.hasShifer,
     required this.url,
-    required this.faultMessage,
+    required this.faultMessages,
   });
   final String driveTrainType;
   final int driveMotorAmount;
@@ -103,7 +105,7 @@ class PitData {
   final String driveMotorType;
   final String notes;
   final String url;
-  final String? faultMessage;
+  final List<String>? faultMessages;
 }
 
 class Team<E extends num> {

@@ -14,6 +14,7 @@ class Match implements HasuraVars {
     this.teleMissed = 0,
     this.teleLow = 0,
     required this.robotMatchStatusId,
+    this.isRematch = false,
   });
 
   void clear(final BuildContext context) {
@@ -28,12 +29,13 @@ class Match implements HasuraVars {
     climbStatus = null;
     name = null;
     matchTypeId = null;
+    isRematch = false;
     robotMatchStatusId =
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
   }
 
   int? matchNumber;
-
+  bool isRematch;
   int autoHigh;
   int autoMissed;
   int autoLow;
@@ -60,6 +62,8 @@ class Match implements HasuraVars {
       "tele_missed": teleMissed,
       "scouter_name": name,
       "match_type_id": matchTypeId,
+      "robot_match_status_id": robotMatchStatusId,
+      "is_rematch": isRematch,
     };
   }
 }

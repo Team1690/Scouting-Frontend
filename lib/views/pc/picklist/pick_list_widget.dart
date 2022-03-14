@@ -65,13 +65,14 @@ class PickList extends StatelessWidget {
                                   children: <Widget>[
                                     Expanded(
                                       child: Icon(
-                                        e.faultMessage.fold(
+                                        e.faultMessages.fold(
                                           () => Icons.check,
-                                          (final String _) => Icons.warning,
+                                          (final List<String> _) =>
+                                              Icons.warning,
                                         ),
-                                        color: e.faultMessage.fold(
+                                        color: e.faultMessages.fold(
                                           () => Colors.green,
-                                          (final String _) =>
+                                          (final List<String> _) =>
                                               Colors.yellow[700],
                                         ),
                                       ),
@@ -79,7 +80,13 @@ class PickList extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                        e.faultMessage.orElse("No fault"),
+                                        e.faultMessages.mapNullable(
+                                              (
+                                                final List<String> p0,
+                                              ) =>
+                                                  "Faults: ${p0.length}",
+                                            ) ??
+                                            "No faults",
                                       ),
                                     ),
                                   ],
@@ -280,7 +287,7 @@ class PickListTeam {
     required final double avgClimbPoints,
     required final double autoAim,
     required final double teleAim,
-    required final String? faultMessage,
+    required final List<String>? faultMessages,
     required final int amountOfMatches,
     required final Map<RobotMatchStatus, int> robotMatchStatusToAmount,
   }) : this.controller(
@@ -297,7 +304,7 @@ class PickListTeam {
             validateName(name),
             colorsIndex,
           ),
-          faultMessage,
+          faultMessages,
           amountOfMatches,
           robotMatchStatusToAmount,
         );
@@ -311,7 +318,7 @@ class PickListTeam {
     this.autoAim,
     this.teleAim,
     this.team,
-    this.faultMessage,
+    this.faultMessages,
     this.amountOfMatches,
     this.robotMatchStatusToAmount,
   );
@@ -322,8 +329,9 @@ class PickListTeam {
   final double autoAim;
   final double teleAim;
   final LightTeam team;
-  final String? faultMessage;
+  final List<String>? faultMessages;
   final Map<RobotMatchStatus, int> robotMatchStatusToAmount;
+
   int firstListIndex;
   int secondListIndex;
   bool taken;

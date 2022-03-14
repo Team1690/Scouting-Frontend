@@ -328,31 +328,34 @@ class CoachPitScouting extends StatelessWidget {
                 style: TextStyle(fontSize: 18),
               ),
             ),
-            Row(
-              children: <Widget>[
-                Spacer(
-                  flex: 5,
-                ),
-                Icon(
-                  data.faultMessage != null ? Icons.warning : Icons.check,
-                  color: data.faultMessage != null
-                      ? Colors.yellow[700]
-                      : Colors.green,
-                ),
-                Spacer(),
-                Text(data.faultMessage ?? "No Fault"),
-                Spacer(
-                  flex: 5,
-                )
-              ],
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Drivetrain",
-                style: TextStyle(fontSize: 18),
+            if (data.faultMessages == null ||
+                data.faultMessages!.isEmpty) ...<Widget>[
+              Row(
+                children: <Widget>[
+                  Spacer(
+                    flex: 5,
+                  ),
+                  Icon(
+                    Icons.check,
+                    color: Colors.green,
+                  ),
+                  Spacer(),
+                  Text("No Fault"),
+                  Spacer(
+                    flex: 5,
+                  )
+                ],
               ),
-            ),
+            ] else ...<Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Faults",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              ...data.faultMessages!.map(Text.new).toList()
+            ],
             Text("Drivetrain: ${data.driveTrainType}"),
             Text("Drive motor: ${data.driveMotorType}"),
             Text("Drive motor amount: ${data.driveMotorAmount}"),

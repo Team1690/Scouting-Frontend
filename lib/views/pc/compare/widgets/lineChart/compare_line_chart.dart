@@ -34,8 +34,11 @@ class CompareLineChart<E extends num> extends StatelessWidget {
               data
                   .map((final CompareLineChartData<E> e) => e.points.length)
                   .reduce(max),
-              (final int index) =>
-                  MatchIdentifier(number: index + 1, type: "Quals"),
+              (final int index) => MatchIdentifier(
+                number: index + 1,
+                type: "Quals",
+                isRematch: false,
+              ),
             ),
             dataSet: data
                 .map(

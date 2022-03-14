@@ -324,9 +324,7 @@ query MyQuery {
       id
     }
     message
-        fault_status {
-      title
-    }
+
   }
 }
 
