@@ -30,7 +30,7 @@ class CompareClimbLineChart<E extends num> extends StatelessWidget {
             showShadow: false,
             inputedColors:
                 data.map((final CompareLineChartData<E> e) => e.color).toList(),
-            matchNumbers: List<MatchIdentifier>.generate(
+            gameNumbers: List<MatchIdentifier>.generate(
               data
                   .map((final CompareLineChartData<E> e) => e.points.length)
                   .reduce(max),

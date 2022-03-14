@@ -184,7 +184,7 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
                   child: DashboardClimbLineChart<E>(
                     showShadow: true,
                     inputedColors: <Color>[primaryColor],
-                    matchNumbers: data.climbData.gameNumbers,
+                    gameNumbers: data.climbData.gameNumbers,
                     dataSet: data.climbData.points,
                     robotMatchStatuses: data.climbData.robotMatchStatuses,
                   ),
