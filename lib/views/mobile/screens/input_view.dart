@@ -12,6 +12,7 @@ import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/match_dropdown.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
+import "package:scouting_frontend/views/mobile/switcher.dart";
 
 class UserInput extends StatefulWidget {
   @override
@@ -23,9 +24,19 @@ class _UserInputState extends State<UserInput> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
-  final Match match = Match();
+  late final Match match = Match(
+    robotMatchStatusId:
+        IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
+  );
   // -1 means nothing
 
+  late final Map<int, int> robotMatchStatusIndexToId = <int, int>{
+    -1: IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!,
+    0: IdProvider.of(context)
+        .robotMatchStatus
+        .nameToId["Didn't come to field"]!,
+    1: IdProvider.of(context).robotMatchStatus.nameToId["Didn't work on field"]!
+  };
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
@@ -95,6 +106,23 @@ class _UserInputState extends State<UserInput> {
                   },
                   validate: (final int i) =>
                       i.onNull("Please pick a match type"),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ToggleButtons(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text("Rematch"),
+                    )
+                  ],
+                  isSelected: <bool>[match.isRematch],
+                  onPressed: (final int i) {
+                    setState(() {
+                      match.isRematch = !match.isRematch;
+                    });
+                  },
                 ),
                 SizedBox(
                   height: 20,
@@ -185,6 +213,23 @@ class _UserInputState extends State<UserInput> {
                 SizedBox(
                   height: 20,
                 ),
+                Switcher(
+                  labels: <String>["Not on field", "Didn't work on field"],
+                  colors: <Color>[Colors.red, Colors.red],
+                  onChange: (final int i) {
+                    setState(() {
+                      match.robotMatchStatusId = robotMatchStatusIndexToId[i]!;
+                    });
+                  },
+                  selected: <int, int>{
+                    for (final MapEntry<int, int> i
+                        in robotMatchStatusIndexToId.entries)
+                      i.value: i.key
+                  }[match.robotMatchStatusId]!,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 SectionDivider(label: "Climb"),
                 SizedBox(
                   height: 20,
@@ -213,7 +258,7 @@ class _UserInputState extends State<UserInput> {
                 SubmitButton(
                   resetForm: () {
                     setState(() {
-                      match.clear();
+                      match.clear(context);
                       teamNumberController.clear();
                       matchNumberController.clear();
                       scouterNameController.clear();
@@ -235,8 +280,8 @@ class _UserInputState extends State<UserInput> {
 }
 
 const String mutation = """
-mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int, \$scouter_name: String, \$match_type_id:Int) {
-  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed, scouter_name: \$scouter_name, match_type_id: \$match_type_id }) {
+mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int, \$scouter_name: String, \$match_type_id:Int, \$robot_match_status_id: Int,\$is_rematch: Boolean) {
+  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed, scouter_name: \$scouter_name, match_type_id: \$match_type_id, robot_match_status_id: \$robot_match_status_id, is_rematch: \$is_rematch}) {
     returning {
       id
     }

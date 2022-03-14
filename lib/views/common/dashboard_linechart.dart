@@ -2,8 +2,9 @@ import "dart:math";
 
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart"
-    show MatchIdentifier;
+    show MatchIdentifier, RobotMatchStatus;
 
 class DashboardLineChart<E extends num> extends StatelessWidget {
   const DashboardLineChart({
@@ -12,12 +13,14 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
     this.distanceFromHighest = 5,
     required this.inputedColors,
     required this.showShadow,
+    required this.robotMatchStatuses,
   });
   final bool showShadow;
   final List<Color> inputedColors;
   final int distanceFromHighest;
   final List<List<E>> dataSet;
   final List<MatchIdentifier> gameNumbers;
+  final List<List<RobotMatchStatus>> robotMatchStatuses;
 
   @override
   Widget build(final BuildContext context) {
@@ -48,7 +51,30 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
             colors: chartColors,
             barWidth: 8,
             isStrokeCapRound: true,
-            dotData: FlDotData(show: false),
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (
+                final FlSpot spot,
+                final double d,
+                final LineChartBarData a,
+                final int v,
+              ) =>
+                  FlDotCirclePainter(
+                strokeWidth: 4,
+                radius: 6,
+                color: secondaryColor,
+                strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
+                        RobotMatchStatus.didntComeToField
+                    ? Colors.red
+                    : Colors.purple,
+              ),
+              checkToShowDot: (final FlSpot spot, final LineChartBarData data) {
+                return robotMatchStatuses[index][spot.x.toInt()] ==
+                        RobotMatchStatus.didntComeToField ||
+                    robotMatchStatuses[index][spot.x.toInt()] ==
+                        RobotMatchStatus.didntWorkOnField;
+              },
+            ),
             belowBarData: BarAreaData(
               show: true,
               colors: showShadow
@@ -60,7 +86,7 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
             spots: List<FlSpot>.generate(
               dataSet[index].length,
               (final int inner) => FlSpot(
-                inner.toDouble() + 1,
+                inner.toDouble(),
                 dataSet[index][inner].toDouble(),
               ),
             ),
@@ -100,7 +126,7 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
             ) =>
                 value == value.floorToDouble(),
             getTitles: (final double value) {
-              return gameNumbers[value.toInt() - 1].toString();
+              return gameNumbers[value.toInt()].toString();
             },
           ),
           rightTitles: SideTitles(
@@ -122,7 +148,7 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 1),
         ),
-        minX: 1,
+        minX: 0,
         minY: 0,
         maxY: highestValue.toDouble() + distanceFromHighest,
       ),
@@ -136,9 +162,12 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
     required this.inputedColors,
     required this.matchNumbers,
     required this.showShadow,
+    required this.robotMatchStatuses,
   });
   final List<Color> inputedColors;
   final List<MatchIdentifier> matchNumbers;
+  final List<List<RobotMatchStatus>> robotMatchStatuses;
+
   final List<List<E>> dataSet;
   final bool showShadow;
 
@@ -172,7 +201,31 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
               colors: chartColors,
               barWidth: 8,
               isStrokeCapRound: true,
-              dotData: FlDotData(show: false),
+              dotData: FlDotData(
+                show: true,
+                getDotPainter: (
+                  final FlSpot spot,
+                  final double d,
+                  final LineChartBarData a,
+                  final int v,
+                ) =>
+                    FlDotCirclePainter(
+                  strokeWidth: 4,
+                  radius: 6,
+                  color: secondaryColor,
+                  strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
+                          RobotMatchStatus.didntComeToField
+                      ? Colors.red
+                      : Colors.purple,
+                ),
+                checkToShowDot:
+                    (final FlSpot spot, final LineChartBarData data) {
+                  return robotMatchStatuses[index][spot.x.toInt()] ==
+                          RobotMatchStatus.didntComeToField ||
+                      robotMatchStatuses[index][spot.x.toInt()] ==
+                          RobotMatchStatus.didntWorkOnField;
+                },
+              ),
               belowBarData: BarAreaData(
                 show: true,
                 colors: showShadow
@@ -184,7 +237,7 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
               spots: List<FlSpot>.generate(
                 dataSet[index].length,
                 (final int inner) => FlSpot(
-                  inner.toDouble() + 1,
+                  inner.toDouble(),
                   dataSet[index][inner].toDouble(),
                 ),
               ),
@@ -212,7 +265,7 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
             show: true,
             topTitles: SideTitles(
               getTitles: (final double value) =>
-                  matchNumbers[value.toInt() - 1].toString(),
+                  matchNumbers[value.toInt()].toString(),
               showTitles: true,
               interval: 1,
               getTextStyles: (final BuildContext context, final double value) =>
@@ -256,7 +309,7 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
             show: true,
             border: Border.all(color: const Color(0xff37434d), width: 1),
           ),
-          minX: 1,
+          minX: 0,
           minY: -1,
           maxY: 5,
         ),

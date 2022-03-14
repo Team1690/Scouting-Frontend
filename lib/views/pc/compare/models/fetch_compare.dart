@@ -6,6 +6,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
+import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 const String query = """
 query MyQuery(\$ids: [Int!]) {
@@ -22,9 +23,12 @@ query MyQuery(\$ids: [Int!]) {
         }
       }
     }
-    matches(order_by: {match_number: asc}) {
+    matches(order_by: {match_type: {order: asc}, match_number: asc,is_rematch: asc}) {
       climb {
         points
+        title
+      }
+      robot_match_status{
         title
       }
       auto_lower
@@ -110,7 +114,14 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                       )
                       .length;
                   final int succededClimb = climbVals.length - failedClimb;
-
+                  final List<RobotMatchStatus> matchStatuses =
+                      (e["matches"] as List<dynamic>)
+                          .map(
+                            (final dynamic e) => titleToEnum(
+                              e["robot_match_status"]["title"] as String,
+                            ),
+                          )
+                          .toList();
                   final double climbSuccessPercent =
                       (succededClimb / (succededClimb + failedClimb)) * 100;
                   final List<int> climbLineChartPoints =
@@ -137,6 +148,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     color: team.color,
                     title: "Climb",
                     points: climbLineChartPoints.castToGeneric<E>().toList(),
+                    matchStatuses: matchStatuses,
                   );
 
                   final List<int> upperScoredDataTele =
@@ -155,6 +167,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     color: team.color,
                     title: "Teleop upper",
                     points: upperScoredDataTele.castToGeneric<E>().toList(),
+                    matchStatuses: matchStatuses,
                   );
 
                   final CompareLineChartData<E> missedDataTeleLineChart =
@@ -162,6 +175,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     color: team.color,
                     title: "Teleop missed",
                     points: missedDataTele.castToGeneric<E>().toList(),
+                    matchStatuses: matchStatuses,
                   );
 
                   final List<int> upperScoredDataAuto =
@@ -180,6 +194,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     color: team.color,
                     title: "Auto upper",
                     points: upperScoredDataAuto.castToGeneric<E>().toList(),
+                    matchStatuses: matchStatuses,
                   );
 
                   final CompareLineChartData<E> missedDataAutoLinechart =
@@ -187,6 +202,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     color: team.color,
                     title: "Auto missed",
                     points: missedDataAuto.castToGeneric<E>().toList(),
+                    matchStatuses: matchStatuses,
                   );
 
                   return CompareTeam<E>(

@@ -1,29 +1,14 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
+import "package:scouting_frontend/views/pc/picklist/fetch_picklist.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
-import "package:scouting_frontend/views/pc/picklist/pick_list_widget_future.dart";
+import "package:scouting_frontend/views/pc/picklist/picklist_card.dart";
 
-class PickListScreen extends StatefulWidget {
-  @override
-  State<PickListScreen> createState() => _PickListScreenState();
-}
-
-class _PickListScreenState extends State<PickListScreen> {
-  List<PickListTeam> teams = <PickListTeam>[];
-
-  @override
-  void dispose() {
-    save(teams);
-    super.dispose();
-  }
-
-  CurrentPickList currentScreen = CurrentPickList.first;
-
+class PickListScreen extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return isPC(context)
@@ -43,37 +28,25 @@ class _PickListScreenState extends State<PickListScreen> {
   Padding pickList(final BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(defaultPadding),
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: DashboardCard(
-              titleWidgets: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      currentScreen = currentScreen.nextScreen();
-                    });
-                  },
-                  icon: Icon(Icons.swap_horiz),
-                ),
-                IconButton(
-                  onPressed: () =>
-                      save(List<PickListTeam>.from(teams), context),
-                  icon: Icon(Icons.save),
-                ),
-                IconButton(
-                  onPressed: () => setState(() {}),
-                  icon: Icon(Icons.refresh),
-                )
-              ],
-              title: currentScreen.title,
-              body: PickListFuture(
-                onReorder: (final List<PickListTeam> list) => teams = list,
-                screen: currentScreen,
-              ),
-            ),
-          ),
-        ],
+      child: StreamBuilder<QueryResult>(
+        stream: fetchPicklist(),
+        builder: (
+          final BuildContext context,
+          final AsyncSnapshot<QueryResult> snapshot,
+        ) {
+          if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.data == null) {
+            return Center(
+              child: Text("No Teams"),
+            );
+          }
+          return PicklistCard(initialData: parse(snapshot.data!));
+        },
       ),
     );
   }
@@ -120,7 +93,7 @@ void save(
             "colors_index": e.team.colorsIndex,
             "first_picklist_index": e.firstListIndex,
             "second_picklist_index": e.secondListIndex,
-            "taken": e.controller.value
+            "taken": e.taken
           },
         )
         .toList()

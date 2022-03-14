@@ -1,7 +1,6 @@
 import "package:flutter/cupertino.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
-import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -11,6 +10,10 @@ const String teamInfoQuery = """
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
     id
+    broken_robots {
+
+    message
+    }
     pit {
       drive_motor_amount
       drive_wheel_type
@@ -27,10 +30,6 @@ query MyQuery(\$id: Int!) {
     }
     specifics {
       message
-      robot_role{
-        title
-        id
-      }
     }
     matches_aggregate {
       aggregate {
@@ -44,7 +43,7 @@ query MyQuery(\$id: Int!) {
         }
       }
     }
-    matches(order_by: {match_number: asc}) {
+    matches(order_by: {match_type: {order: asc}, match_number: asc,is_rematch: asc}) {
       climb {
         points
         title
@@ -52,6 +51,10 @@ query MyQuery(\$id: Int!) {
       match_type {
         title
       }
+      robot_match_status{
+        title
+      }
+      is_rematch
       auto_lower
       auto_upper
       auto_missed
@@ -62,15 +65,7 @@ query MyQuery(\$id: Int!) {
     }
 
   }
-  broken_robots {
-    team {
-      colors_index
-      id
-      name
-      number
-    }
-    message
-  }
+
 }
 
 """;
@@ -99,10 +94,10 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final Map<String, dynamic>? pit =
               (teamByPk["pit"] as Map<String, dynamic>?);
 
-          final Map<int, String> teamIdToFaultMessage = <int, String>{
-            for (final dynamic e in (team["broken_robots"] as List<dynamic>))
-              e["team"]["id"] as int: e["message"] as String
-          };
+          final List<String> faultMessages =
+              (teamByPk["broken_robots"] as List<dynamic>)
+                  .map((final dynamic e) => e["message"] as String)
+                  .toList();
           final PitData? pitData = pit.mapNullable<PitData>(
             (final Map<String, dynamic> p0) => PitData(
               driveMotorAmount: p0["drive_motor_amount"] as int,
@@ -113,33 +108,9 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               url: p0["url"] as String,
               driveTrainType: p0["drivetrain"]["title"] as String,
               driveMotorType: p0["drivemotor"]["title"] as String,
-              faultMessage: teamIdToFaultMessage[teamByPk["id"] as int],
+              faultMessages: faultMessages,
             ),
           );
-          final List<int> roleIds = (teamByPk["specifics"] as List<dynamic>)
-              .map<int?>(
-                (final dynamic e) => e["robot_role"]?["id"] as int?,
-              )
-              .where((final int? element) => element != null)
-              .cast<int>()
-              .toList();
-
-          final Map<int, int> roleToAmount = <int, int>{};
-          for (final int element in roleIds) {
-            roleToAmount[element] = (roleToAmount[element] ?? 0) + 1;
-          }
-          final List<MapEntry<int, int>> roles = roleToAmount.entries.toList()
-            ..sort(
-              (final MapEntry<int, int> a, final MapEntry<int, int> b) =>
-                  b.value.compareTo(a.value),
-            );
-          final String mostPopularRoleName = roles.isEmpty
-              ? "No data"
-              : roles.length == 1
-                  ? IdProvider.of(context).robotRole.idToName[roles.first.key]!
-                  : roles.length == 2
-                      ? "${IdProvider.of(context).robotRole.idToName[roles.first.key]}-${IdProvider.of(context).robotRole.idToName[roles.elementAt(1).key]}"
-                      : "Misc";
 
           final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["auto_lower"] as double? ??
@@ -159,8 +130,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
           final double avgTeleUpper = teamByPk["matches_aggregate"]["aggregate"]
                   ["avg"]["tele_upper"] as double? ??
               0;
-          final List<dynamic> matches =
-              (teamByPk["matches"] as List<dynamic>).sortMatches();
+          final List<dynamic> matches = (teamByPk["matches"] as List<dynamic>);
           final List<String> climbTitles = matches
               .map((final dynamic e) => e["climb"]["title"] as String)
               .toList();
@@ -173,11 +143,9 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                 .map(
                   (final dynamic e) => SpecificMatch(
                     e["message"] as String,
-                    e["robot_role"]?["title"] as String?,
                   ),
                 )
                 .toList(),
-            mostPopularRoleName,
           );
           final QuickData quickData = QuickData(
             avgAutoLowScored: avgAutoLow,
@@ -225,11 +193,13 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             }
             throw Exception("Not a climb value");
           }).toList();
+
           final List<MatchIdentifier> matchNumbers = matches
               .map(
                 (final dynamic e) => MatchIdentifier(
                   number: e["match_number"] as int,
                   type: e["match_type"]["title"] as String,
+                  isRematch: e["is_rematch"] as bool,
                 ),
               )
               .toList();
@@ -238,6 +208,15 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             gameNumbers: matchNumbers,
             points: <List<E>>[climbLineChartPoints.castToGeneric<E>().toList()],
             title: "Climb",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) =>
+                        titleToEnum(e["robot_match_status"]["title"] as String),
+                  )
+                  .toList(),
+            ),
           );
 
           final List<E> upperScoredDataTele = matches
@@ -253,7 +232,6 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               .map((final dynamic e) => e["tele_lower"] as int)
               .castToGeneric<E>()
               .toList();
-
           final LineChartData<E> scoredMissedDataTele = LineChartData<E>(
             gameNumbers: matchNumbers,
             points: <List<E>>[
@@ -262,6 +240,15 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               lowerScoredDataTele
             ],
             title: "Teleoperated",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) =>
+                        titleToEnum(e["robot_match_status"]["title"] as String),
+                  )
+                  .toList(),
+            ),
           );
 
           final List<E> upperScoredDataAuto = matches
@@ -276,6 +263,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               .map((final dynamic e) => e["auto_lower"] as int)
               .castToGeneric<E>()
               .toList();
+
           final LineChartData<E> scoredMissedDataAuto = LineChartData<E>(
             gameNumbers: matchNumbers,
             points: <List<E>>[
@@ -284,6 +272,16 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               lowerScoredDataAuto
             ],
             title: "Autonomous",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) => titleToEnum(
+                      e["robot_match_status"]["title"] as String,
+                    ),
+                  )
+                  .toList(),
+            ),
           );
 
           return Team<E>(

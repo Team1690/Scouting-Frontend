@@ -2,39 +2,37 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
+import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
+import "package:flutter_switch/flutter_switch.dart";
 
-class PickList extends StatefulWidget {
+class PickList extends StatelessWidget {
   PickList({
     required this.uiList,
     required this.screen,
     required this.onReorder,
-  });
+  }) {
+    uiList.sort((final PickListTeam a, final PickListTeam b) {
+      return screen.getIndex(a).compareTo(screen.getIndex(b));
+    });
+  }
 
   final List<PickListTeam> uiList;
   final CurrentPickList screen;
   final void Function(List<PickListTeam> list) onReorder;
 
-  @override
-  _PickListState createState() => _PickListState();
-}
-
-class _PickListState extends State<PickList> {
   void reorderData(final int oldindex, int newindex) {
-    setState(() {
-      if (newindex > oldindex) {
-        newindex -= 1;
-      }
-      final PickListTeam item = widget.uiList.removeAt(oldindex);
-      widget.uiList.insert(newindex, item);
-      for (int i = 0; i < widget.uiList.length; i++) {
-        widget.screen.setIndex(widget.uiList[i], i);
-      }
-    });
-    widget.onReorder(widget.uiList);
+    if (newindex > oldindex) {
+      newindex -= 1;
+    }
+    final PickListTeam item = uiList.removeAt(oldindex);
+    uiList.insert(newindex, item);
+    for (int i = 0; i < uiList.length; i++) {
+      screen.setIndex(uiList[i], i);
+    }
+    onReorder(uiList);
   }
 
   @override
@@ -43,10 +41,7 @@ class _PickListState extends State<PickList> {
       child: ReorderableListView(
         buildDefaultDragHandles: true,
         primary: false,
-        children: widget.uiList.map<Widget>((final PickListTeam e) {
-          e.controller.addListener(() {
-            widget.onReorder(widget.uiList);
-          });
+        children: uiList.map<Widget>((final PickListTeam e) {
           return Card(
             color: bgColor,
             key: ValueKey<String>(e.toString()),
@@ -64,20 +59,20 @@ class _PickListState extends State<PickList> {
                         ListTile(
                           title: Row(
                             children: <Widget>[
-                              Spacer(),
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: Row(
                                   children: <Widget>[
                                     Expanded(
                                       child: Icon(
-                                        e.faultMessage.fold(
+                                        e.faultMessages.fold(
                                           () => Icons.check,
-                                          (final String _) => Icons.warning,
+                                          (final List<String> _) =>
+                                              Icons.warning,
                                         ),
-                                        color: e.faultMessage.fold(
+                                        color: e.faultMessages.fold(
                                           () => Colors.green,
-                                          (final String _) =>
+                                          (final List<String> _) =>
                                               Colors.yellow[700],
                                         ),
                                       ),
@@ -85,34 +80,39 @@ class _PickListState extends State<PickList> {
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                        e.faultMessage.orElse("No fault"),
+                                        e.faultMessages.mapNullable(
+                                              (
+                                                final List<String> p0,
+                                              ) =>
+                                                  "Faults: ${p0.length}",
+                                            ) ??
+                                            "No faults",
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Spacer(),
                               if (e.amountOfMatches != 0) ...<Expanded>[
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Text(
                                     "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Text(
                                     "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Text(
                                     "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Text(
                                     "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
                                   ),
@@ -121,11 +121,11 @@ class _PickListState extends State<PickList> {
                                 ...List<Spacer>.filled(
                                   4,
                                   Spacer(
-                                    flex: 3,
+                                    flex: 2,
                                   ),
                                 ),
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: ElevatedButton(
                                   onPressed: () => Navigator.pushReplacement(
                                     context,
@@ -139,6 +139,35 @@ class _PickListState extends State<PickList> {
                                   child: Text(
                                     "Team info",
                                   ),
+                                ),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                        ),
+                        ListTile(
+                          title: Row(
+                            children: <Widget>[
+                              Spacer(),
+                              Expanded(
+                                child: Text(
+                                  "Didn't work on field: ${e.robotMatchStatusToAmount[RobotMatchStatus.didntWorkOnField]}",
+                                  style: TextStyle(
+                                    color: Colors.purple,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Didn't come to field: ${e.robotMatchStatusToAmount[RobotMatchStatus.didntComeToField]}",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Worked: ${e.robotMatchStatusToAmount[RobotMatchStatus.worked]}",
                                 ),
                               ),
                               Spacer()
@@ -160,24 +189,24 @@ class _PickListState extends State<PickList> {
                       leading: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          if (widget.screen.getIndex(e) + 1 <= 24)
+                          if (screen.getIndex(e) + 1 <= 24)
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8),
                               child: Text(
-                                (widget.screen.getIndex(e) + 1).toString(),
+                                (screen.getIndex(e) + 1).toString(),
                               ),
                             ),
-                          AdvancedSwitch(
-                            disabledOpacity: 1,
-                            controller: e.controller,
+                          FlutterSwitch(
+                            value: e.taken,
                             activeColor: Colors.red,
                             inactiveColor: primaryColor,
-                            activeChild: Text("Taken"),
-                            inactiveChild: Text("Available"),
                             height: 25,
                             width: 100,
-                            enabled: true,
+                            onToggle: (final bool val) {
+                              e.taken = val;
+                              onReorder(uiList);
+                            },
                           ),
                         ],
                       ),
@@ -185,9 +214,9 @@ class _PickListState extends State<PickList> {
                   : GestureDetector(
                       onDoubleTap: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute<CoachTeamData>(
+                          MaterialPageRoute<CoachTeamData<int>>(
                             builder: (final BuildContext context) =>
-                                CoachTeamData(e.team),
+                                CoachTeamData<int>(e.team),
                           ),
                         );
                       },
@@ -203,19 +232,29 @@ class _PickListState extends State<PickList> {
                           ],
                         ),
                         trailing: SizedBox(),
-                        leading: AdvancedSwitch(
-                          controller: e.controller,
-                          activeColor: Colors.red,
-                          inactiveColor: primaryColor,
-                          activeChild: Text(
-                            "Taken",
-                          ),
-                          inactiveChild: Text(
-                            "Available",
-                          ),
-                          height: 25,
-                          width: 100,
-                          enabled: true,
+                        leading: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            if (screen.getIndex(e) + 1 <= 24)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  (screen.getIndex(e) + 1).toString(),
+                                ),
+                              ),
+                            FlutterSwitch(
+                              value: e.taken,
+                              activeColor: Colors.red,
+                              inactiveColor: primaryColor,
+                              height: 25,
+                              width: 100,
+                              onToggle: (final bool val) {
+                                e.taken = val;
+                                onReorder(uiList);
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -248,12 +287,13 @@ class PickListTeam {
     required final double avgClimbPoints,
     required final double autoAim,
     required final double teleAim,
-    required final String? faultMessage,
+    required final List<String>? faultMessages,
     required final int amountOfMatches,
+    required final Map<RobotMatchStatus, int> robotMatchStatusToAmount,
   }) : this.controller(
           firstListIndex,
           secondListIndex,
-          ValueNotifier<bool>(taken),
+          taken,
           avgBallPoints,
           avgClimbPoints,
           autoAim,
@@ -264,21 +304,23 @@ class PickListTeam {
             validateName(name),
             colorsIndex,
           ),
-          faultMessage,
+          faultMessages,
           amountOfMatches,
+          robotMatchStatusToAmount,
         );
 
   PickListTeam.controller(
     this.firstListIndex,
     this.secondListIndex,
-    this.controller,
+    this.taken,
     this.avgBallPoints,
     this.avgClimbPoints,
     this.autoAim,
     this.teleAim,
     this.team,
-    this.faultMessage,
+    this.faultMessages,
     this.amountOfMatches,
+    this.robotMatchStatusToAmount,
   );
 
   final int amountOfMatches;
@@ -287,10 +329,12 @@ class PickListTeam {
   final double autoAim;
   final double teleAim;
   final LightTeam team;
-  final String? faultMessage;
+  final List<String>? faultMessages;
+  final Map<RobotMatchStatus, int> robotMatchStatusToAmount;
+
   int firstListIndex;
   int secondListIndex;
-  final ValueNotifier<bool> controller;
+  bool taken;
 
   @override
   String toString() {
