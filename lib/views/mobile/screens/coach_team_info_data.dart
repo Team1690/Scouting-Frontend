@@ -203,7 +203,7 @@ class CoachQuickData extends StatelessWidget {
   final QuickData data;
 
   @override
-  Widget build(final BuildContext context) => data.avgAutoLowScored.isNaN
+  Widget build(final BuildContext context) => data.amoutOfMatches == 0
       ? Center(child: Text("No data :("))
       : Column(
           children: <Widget>[
@@ -241,6 +241,15 @@ class CoachQuickData extends StatelessWidget {
                       ),
                       Text("Balls: ${data.avgBallPoints.toStringAsFixed(1)}"),
                       Text("Climb: ${data.avgClimbPoints.toStringAsFixed(1)}"),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Picklist",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      Text("First: ${data.firstPicklistIndex + 1}"),
+                      Text("Second: ${data.secondPicklistIndex + 1}"),
                     ],
                   ),
                 ),
@@ -274,10 +283,20 @@ class CoachQuickData extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Teleop: ${!data.scorePercentTele.isNaN ? "${data.scorePercentTele.toStringAsFixed(1)}%" : "Insufficient data"} ",
+                        "Auto: ${(data.avgAutoUpperScored + data.avgAutoLowScored).toStringAsFixed(1)}/${(data.avgAutoUpperScored + data.avgAutoLowScored + data.avgAutoMissed).toStringAsFixed(1)}",
                       ),
                       Text(
-                        "Auto: ${!data.scorePercentAuto.isNaN ? "${data.scorePercentAuto.toStringAsFixed(1)}%" : "Insufficient data"} ",
+                        "Teleop: ${(data.avgTeleUpperScored + data.avgTeleLowScored).toStringAsFixed(1)}/${(data.avgTeleUpperScored + data.avgTeleLowScored + data.avgTeleMissed).toStringAsFixed(1)}",
+                      ),
+                      Text(
+                        "Misc",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Text(
+                        "Ball sum: ${(data.avgAutoLowScored + data.avgAutoUpperScored + data.avgTeleLowScored + data.avgTeleUpperScored).toStringAsFixed(1)}",
+                      ),
+                      Text(
+                        "Best climb: ${data.highestLevelTitle}",
                       ),
                     ],
                   ),

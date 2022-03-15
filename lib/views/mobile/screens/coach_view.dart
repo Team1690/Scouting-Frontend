@@ -288,13 +288,16 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   match[e]["matches_aggregate"]["aggregate"]["avg"];
               final double autoLower =
                   (avg["auto_lower"] as double?) ?? double.nan;
-
+              final double autoMissed =
+                  (avg["auto_missed"] as double?) ?? double.nan;
               final double autoUpper =
                   (avg["auto_upper"] as double?) ?? double.nan;
               final double teleLower =
                   (avg["tele_lower"] as double?) ?? double.nan;
               final double teleUpper =
                   (avg["tele_upper"] as double?) ?? double.nan;
+              final double teleMissed =
+                  (avg["tele_missed"] as double?) ?? double.nan;
               final double avgBallPoints =
                   autoLower * 2 + autoUpper * 4 + teleLower + teleUpper * 2;
               final Iterable<int> climb = (match[e]["matches_aggregate"]
@@ -311,28 +314,17 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                           ) /
                           climb.length;
 
-              final double autoAim =
-                  (((avg["auto_upper"] as double? ?? double.nan) +
-                              (avg["auto_lower"] as double? ?? double.nan)) /
-                          ((avg["auto_upper"] as double? ?? double.nan) +
-                              (avg["auto_missed"] as double? ?? double.nan) +
-                              (avg["auto_lower"] as double? ?? double.nan))) *
-                      100;
-              final double teleAim =
-                  (((avg["tele_upper"] as double? ?? double.nan) +
-                              (avg["tele_lower"] as double? ?? double.nan)) /
-                          ((avg["tele_upper"] as double? ?? double.nan) +
-                              (avg["tele_missed"] as double? ?? double.nan) +
-                              (avg["tele_lower"] as double? ?? double.nan))) *
-                      100;
-
               return CoachViewLightTeam(
                 amountOfMatches: amountOfMatches,
                 avgBallPoints: avgBallPoints,
                 team: team,
                 avgClimbPoints: climbAvg,
-                autoBallAim: autoAim,
-                teleopBallAim: teleAim,
+                autoLower: autoLower,
+                autoMissed: autoMissed,
+                teleLower: teleLower,
+                autoUpper: autoUpper,
+                teleUpper: teleUpper,
+                teleMissed: teleMissed,
               );
             }).toList();
 
@@ -360,18 +352,26 @@ const List<String> teamValues = <String>[
 
 class CoachViewLightTeam {
   const CoachViewLightTeam({
-    required this.autoBallAim,
     required this.avgBallPoints,
     required this.avgClimbPoints,
-    required this.teleopBallAim,
     required this.team,
     required this.amountOfMatches,
+    required this.autoLower,
+    required this.autoMissed,
+    required this.autoUpper,
+    required this.teleLower,
+    required this.teleMissed,
+    required this.teleUpper,
   });
   final int amountOfMatches;
   final double avgBallPoints;
   final double avgClimbPoints;
-  final double teleopBallAim;
-  final double autoBallAim;
+  final double autoUpper;
+  final double autoLower;
+  final double autoMissed;
+  final double teleUpper;
+  final double teleLower;
+  final double teleMissed;
   final LightTeam team;
 }
 
@@ -458,7 +458,7 @@ Widget teamData(
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          "Teleop aim: ${team.teleopBallAim.toStringAsFixed(1)}%",
+                          "Teleop aim: ${(team.autoUpper + team.autoLower).toStringAsFixed(1)}/${(team.autoUpper + team.autoLower + team.autoMissed).toStringAsFixed(1)}",
                         ),
                       ),
                     ),
@@ -466,7 +466,7 @@ Widget teamData(
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          "Auto aim: ${team.autoBallAim.toStringAsFixed(1)}%",
+                          "Auto aim: ${(team.teleUpper + team.teleLower).toStringAsFixed(1)}/${(team.teleUpper + team.teleLower + team.teleMissed).toStringAsFixed(1)}",
                         ),
                       ),
                     ),

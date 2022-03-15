@@ -10,19 +10,23 @@ class QuickData {
     required this.avgTeleLowScored,
     required this.avgTeleMissed,
     required this.avgTeleUpperScored,
-    required this.scorePercentAuto,
-    required this.scorePercentTele,
+    required this.highestLevelTitle,
+    required this.firstPicklistIndex,
+    required this.secondPicklistIndex,
+    required this.amoutOfMatches,
   });
+  final int amoutOfMatches;
   final double avgBallPoints;
   final double avgClimbPoints;
   final double avgAutoUpperScored;
   final double avgAutoMissed;
   final double avgAutoLowScored;
-  final double scorePercentAuto;
   final double avgTeleUpperScored;
   final double avgTeleMissed;
   final double avgTeleLowScored;
-  final double scorePercentTele;
+  final String highestLevelTitle;
+  final int firstPicklistIndex;
+  final int secondPicklistIndex;
 }
 
 class SpecificData {

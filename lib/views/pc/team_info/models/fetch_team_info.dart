@@ -9,6 +9,8 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 const String teamInfoQuery = """
 query MyQuery(\$id: Int!) {
   team_by_pk(id: \$id) {
+    first_picklist_index
+    second_picklist_index
     id
     broken_robots {
 
@@ -148,6 +150,17 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                 .toList(),
           );
           final QuickData quickData = QuickData(
+            firstPicklistIndex:
+                team["team_by_pk"]["first_picklist_index"] as int,
+            secondPicklistIndex:
+                team["team_by_pk"]["second_picklist_index"] as int,
+            highestLevelTitle:
+                matches.map<dynamic>((final dynamic e) => e["climb"]).reduce(
+                      (final dynamic value, final dynamic element) =>
+                          (value["points"] as int) > (element["points"] as int)
+                              ? value
+                              : element,
+                    )["title"] as String,
             avgAutoLowScored: avgAutoLow,
             avgAutoMissed: avgAutoMissed,
             avgAutoUpperScored: avgAutoUpper,
@@ -167,12 +180,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             avgTeleLowScored: avgTeleLow,
             avgTeleMissed: avgTeleMissed,
             avgTeleUpperScored: avgTeleUpper,
-            scorePercentAuto: ((avgAutoUpper + avgAutoLow) /
-                    (avgAutoUpper + avgAutoMissed + avgAutoLow)) *
-                100,
-            scorePercentTele: ((avgTeleUpper + avgTeleLow) /
-                    (avgTeleUpper + avgTeleMissed + avgTeleLow)) *
-                100,
+            amoutOfMatches: matches.length,
           );
 
           final List<int> climbLineChartPoints =
