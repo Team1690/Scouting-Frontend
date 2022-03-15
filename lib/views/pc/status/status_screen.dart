@@ -1,25 +1,13 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
+import "package:scouting_frontend/views/pc/status/fetch_status.dart";
+import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 class StatusScreen extends StatelessWidget {
-  final List<MatchReceived> matches = List<MatchReceived>.generate(
-    50,
-    (final int index) => MatchReceived(
-      teams: <LightTeam>[
-        LightTeam(1, 1690, "ORBIT", 2),
-        LightTeam(1, 1690, "ORBIT", 2),
-        LightTeam(1, 1577, "ORBIT", 2),
-        LightTeam(1, 1690, "ORBIT", 2),
-        LightTeam(1, 1690, "ORBIT", 2),
-        LightTeam(1, 1690, "ORBIT", 2),
-      ],
-      receivedMatch: <bool>[false, true, true, false, false, true],
-    ),
-  );
-
   @override
   Widget build(final BuildContext context) {
     return DashboardScaffold(
@@ -27,64 +15,100 @@ class StatusScreen extends StatelessWidget {
         padding: const EdgeInsets.all(defaultPadding),
         child: DashboardCard(
           title: "Status",
-          body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            primary: false,
-            child: Column(
-              children: matches
-                  .map(
-                    (final MatchReceived e) => Card(
-                      color: bgColor,
-                      elevation: 2,
-                      margin: EdgeInsets.fromLTRB(5, 0, 5, defaultPadding),
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(
-                          defaultPadding,
-                          defaultPadding / 4,
-                          defaultPadding,
-                          defaultPadding / 4,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(defaultPadding / 2),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text("Quals #3"),
-                              ...e.teams
-                                  .asMap()
-                                  .entries
-                                  .map(
-                                    (final MapEntry<int, LightTeam> team) =>
-                                        Container(
-                                      width: 80,
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.all(
-                                        defaultPadding / 3,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: primaryWhite,
-                                          width: 1,
-                                        ),
-                                        color: e.receivedMatch[team.key]
-                                            ? Colors.green
-                                            : null,
-                                        borderRadius: defaultBorderRadius / 2,
-                                      ),
-                                      child: Text(
-                                        team.value.number.toString(),
-                                      ),
+          body: StreamBuilder<List<MatchReceived>>(
+            stream: fetchStatus(),
+            builder: (
+              final BuildContext context,
+              final AsyncSnapshot<List<MatchReceived>> snapshot,
+            ) {
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return snapshot.data.mapNullable(
+                    (final List<MatchReceived> matches) =>
+                        SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      primary: false,
+                      child: Column(
+                        children: matches
+                            .map(
+                              (final MatchReceived e) => Card(
+                                color: bgColor,
+                                elevation: 2,
+                                margin: EdgeInsets.fromLTRB(
+                                  5,
+                                  0,
+                                  5,
+                                  defaultPadding,
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    defaultPadding,
+                                    defaultPadding / 4,
+                                    defaultPadding,
+                                    defaultPadding / 4,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(
+                                      defaultPadding / 2,
                                     ),
-                                  )
-                                  .toList()
-                            ],
-                          ),
-                        ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          "${e.identifier.isRematch ? "Re " : ""}${e.identifier.type} ${e.identifier.number}",
+                                        ),
+                                        ...e.teams
+                                            .asMap()
+                                            .entries
+                                            .map(
+                                              (
+                                                final MapEntry<int, LightTeam>
+                                                    team,
+                                              ) =>
+                                                  Container(
+                                                width: 80,
+                                                alignment: Alignment.center,
+                                                padding: const EdgeInsets.all(
+                                                  defaultPadding / 3,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: primaryWhite,
+                                                    width: 1,
+                                                  ),
+                                                  color:
+                                                      e.receivedMatch[team.key]
+                                                          ? Colors.green
+                                                          : null,
+                                                  borderRadius:
+                                                      defaultBorderRadius / 2,
+                                                ),
+                                                child: Text(
+                                                  team.value.number.toString(),
+                                                ),
+                                              ),
+                                            )
+                                            .toList()
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
-                  )
-                  .toList(),
-            ),
+                  ) ??
+                  (throw Exception());
+            },
           ),
         ),
       ),
@@ -96,8 +120,9 @@ class MatchReceived {
   MatchReceived({
     required this.teams,
     required this.receivedMatch,
+    required this.identifier,
   });
-
+  final MatchIdentifier identifier;
   final List<LightTeam> teams;
   final List<bool> receivedMatch;
 }
