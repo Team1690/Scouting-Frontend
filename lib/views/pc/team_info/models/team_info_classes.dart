@@ -61,6 +61,17 @@ class MatchIdentifier {
   final String type;
   final int number;
   final bool isRematch;
+
+  @override
+  bool operator ==(final Object other) =>
+      other is MatchIdentifier &&
+      other.type == type &&
+      other.number == number &&
+      other.isRematch == isRematch;
+
+  @override
+  int get hashCode => Object.hash(type, number, isRematch);
+
   @override
   String toString() {
     return "${isRematch ? "R" : ""}${shortenType(type)}$number";
@@ -68,6 +79,8 @@ class MatchIdentifier {
 
   static String shortenType(final String type) {
     switch (type) {
+      case "Practice":
+        return "pr";
       case "Quals":
         return "";
       case "Finals":
