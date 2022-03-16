@@ -37,216 +37,135 @@ class TeamView extends StatelessWidget {
                       builder: (
                         final BuildContext context,
                         final void Function(void Function()) setState,
-                      ) =>
-                          DashboardCard(
-                        title: "Team view",
-                        body: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          primary: false,
-                          child: SingleChildScrollView(
+                      ) {
+                        DataColumn column(
+                          final String title,
+                          final int Function(TeamViewTeam, TeamViewTeam)
+                              compare,
+                        ) =>
+                            DataColumn(
+                              label: Text(title),
+                              numeric: true,
+                              onSort: (final int index, final __) {
+                                setState(() {
+                                  sortedColumn = index;
+                                  data.sort(
+                                    compare,
+                                  );
+                                });
+                              },
+                            );
+                        return DashboardCard(
+                          title: "Team view",
+                          body: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
                             primary: false,
-                            child: DataTable(
-                              sortColumnIndex: sortedColumn,
-                              sortAscending: false,
-                              columns: <DataColumn>[
-                                DataColumn(
-                                  label: Text("Team number"),
-                                  numeric: true,
-                                ),
-                                DataColumn(
-                                  label: Text("Tele upper"),
-                                  numeric: true,
-                                  onSort: (
-                                    final int index,
-                                    final _,
-                                  ) {
-                                    setState(() {
-                                      sortedColumn = index;
-                                      data.sort(
-                                        (
-                                          final TeamViewTeam a,
-                                          final TeamViewTeam b,
-                                        ) =>
-                                            b.teleUpperAvg
-                                                .compareTo(a.teleUpperAvg),
-                                      );
-                                    });
-                                  },
-                                ),
-                                DataColumn(
-                                  label: Text("Auto upper"),
-                                  numeric: true,
-                                  onSort: (final int index, final __) {
-                                    setState(() {
-                                      sortedColumn = index;
-                                      data.sort(
-                                        (
-                                          final TeamViewTeam a,
-                                          final TeamViewTeam b,
-                                        ) =>
-                                            b.autoUpperAvg
-                                                .compareTo(a.autoUpperAvg),
-                                      );
-                                    });
-                                  },
-                                ),
-                                DataColumn(
-                                  label: Text("Ball sum"),
-                                  numeric: true,
-                                  onSort: (final int index, final __) {
-                                    setState(() {
-                                      sortedColumn = index;
-                                      data.sort(
-                                        (
-                                          final TeamViewTeam a,
-                                          final TeamViewTeam b,
-                                        ) =>
-                                            b.ballAvg.compareTo(a.ballAvg),
-                                      );
-                                    });
-                                  },
-                                ),
-                                DataColumn(
-                                  label: Text("Ball points"),
-                                  numeric: true,
-                                  onSort: (final int index, final __) {
-                                    setState(() {
-                                      sortedColumn = index;
-                                      data.sort(
-                                        (
-                                          final TeamViewTeam a,
-                                          final TeamViewTeam b,
-                                        ) =>
-                                            b.ballPointAvg
-                                                .compareTo(a.ballPointAvg),
-                                      );
-                                    });
-                                  },
-                                ),
-                                DataColumn(
-                                  label: Text("Climb points"),
-                                  numeric: true,
-                                  onSort: (final int index, final __) {
-                                    sortedColumn = index;
-                                    setState(() {
-                                      sortedColumn = index;
-                                      data.sort(
-                                        (
-                                          final TeamViewTeam a,
-                                          final TeamViewTeam b,
-                                        ) =>
-                                            b.climbPointAvg
-                                                .compareTo(a.climbPointAvg),
-                                      );
-                                    });
-                                  },
-                                ),
-                                DataColumn(
-                                  label: Text("Broken matches"),
-                                  numeric: true,
-                                  onSort: (final int index, final __) {
-                                    sortedColumn = index;
-                                    setState(() {
-                                      sortedColumn = index;
-                                      data.sort(
-                                        (
-                                          final TeamViewTeam a,
-                                          final TeamViewTeam b,
-                                        ) =>
-                                            b.brokenMatches
-                                                .compareTo(a.brokenMatches),
-                                      );
-                                    });
-                                  },
-                                ),
-                                DataColumn(
-                                  label: Text("Climb percent"),
-                                  numeric: true,
-                                  onSort: (final int index, final __) {
-                                    sortedColumn = index;
-                                    setState(() {
-                                      sortedColumn = index;
-                                      data.sort(
-                                        (
-                                          final TeamViewTeam a,
-                                          final TeamViewTeam b,
-                                        ) =>
-                                            b.climbPercent
-                                                .compareTo(a.climbPercent),
-                                      );
-                                    });
-                                  },
-                                ),
-                              ],
-                              rows: <DataRow>[
-                                ...data.map(
-                                  (final TeamViewTeam e) => DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                        Text(
-                                          e.team.number.toString(),
-                                          style: TextStyle(color: e.team.color),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          e.teleUpperAvg == -1
-                                              ? "No data"
-                                              : e.teleUpperAvg
-                                                  .toStringAsFixed(1),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          e.autoUpperAvg == -1
-                                              ? "No data"
-                                              : e.autoUpperAvg
-                                                  .toStringAsFixed(1),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          e.ballAvg == -1
-                                              ? "No data"
-                                              : e.ballAvg.toStringAsFixed(1),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          e.ballPointAvg == -1
-                                              ? "No data"
-                                              : e.ballPointAvg
-                                                  .toStringAsFixed(1),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          e.climbPointAvg == -1
-                                              ? "No data"
-                                              : e.climbPointAvg
-                                                  .toStringAsFixed(1),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          e.brokenMatches.toString(),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          e.climbPercent == -1
-                                              ? "No data"
-                                              : "${e.climbPercent.toStringAsFixed(1)}%",
-                                        ),
-                                      )
-                                    ],
+                            child: SingleChildScrollView(
+                              primary: false,
+                              child: DataTable(
+                                sortColumnIndex: sortedColumn,
+                                sortAscending: false,
+                                columns: <DataColumn>[
+                                  DataColumn(
+                                    label: Text("Team number"),
+                                    numeric: true,
                                   ),
-                                )
-                              ],
+                                  column(
+                                    "Tele upper",
+                                    (
+                                      final TeamViewTeam a,
+                                      final TeamViewTeam b,
+                                    ) =>
+                                        b.teleUpperAvg
+                                            .compareTo(a.teleUpperAvg),
+                                  ),
+                                  column(
+                                    "Auto upper",
+                                    (
+                                      final TeamViewTeam a,
+                                      final TeamViewTeam b,
+                                    ) =>
+                                        b.autoUpperAvg
+                                            .compareTo(a.autoUpperAvg),
+                                  ),
+                                  column(
+                                    "Ball sum",
+                                    (
+                                      final TeamViewTeam a,
+                                      final TeamViewTeam b,
+                                    ) =>
+                                        b.ballAvg.compareTo(a.ballAvg),
+                                  ),
+                                  column(
+                                    "Ball points",
+                                    (
+                                      final TeamViewTeam a,
+                                      final TeamViewTeam b,
+                                    ) =>
+                                        b.ballPointAvg
+                                            .compareTo(a.ballPointAvg),
+                                  ),
+                                  column(
+                                    "Climb points",
+                                    (
+                                      final TeamViewTeam a,
+                                      final TeamViewTeam b,
+                                    ) =>
+                                        b.climbPointAvg
+                                            .compareTo(a.climbPointAvg),
+                                  ),
+                                  column(
+                                    "Climb percent",
+                                    (
+                                      final TeamViewTeam a,
+                                      final TeamViewTeam b,
+                                    ) =>
+                                        b.climbPercent
+                                            .compareTo(a.climbPercent),
+                                  ),
+                                  column(
+                                    "Broken matches",
+                                    (
+                                      final TeamViewTeam a,
+                                      final TeamViewTeam b,
+                                    ) =>
+                                        b.brokenMatches
+                                            .compareTo(a.brokenMatches),
+                                  ),
+                                ],
+                                rows: <DataRow>[
+                                  ...data.map(
+                                    (final TeamViewTeam e) => DataRow(
+                                      cells: <DataCell>[
+                                        DataCell(
+                                          Text(
+                                            e.team.number.toString(),
+                                            style:
+                                                TextStyle(color: e.team.color),
+                                          ),
+                                        ),
+                                        ...<double>[
+                                          e.teleUpperAvg,
+                                          e.autoUpperAvg,
+                                          e.ballAvg,
+                                          e.ballPointAvg,
+                                          e.climbPointAvg,
+                                        ].map(show),
+                                        show(e.climbPercent, true),
+                                        DataCell(
+                                          Text(
+                                            e.brokenMatches.toString(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ) ??
                   (throw Exception("No data"));
@@ -255,6 +174,14 @@ class TeamView extends StatelessWidget {
         ),
       );
 }
+
+DataCell show(final double value, [final bool isPercent = false]) => DataCell(
+      Text(
+        value == -1
+            ? "No data"
+            : "${value.toStringAsFixed(1)}${isPercent ? "%" : ""}",
+      ),
+    );
 
 class TeamViewTeam {
   const TeamViewTeam({
