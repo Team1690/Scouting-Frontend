@@ -16,8 +16,8 @@ class TeamView extends StatelessWidget {
   Widget build(final BuildContext context) => DashboardScaffold(
         body: Padding(
           padding: const EdgeInsets.all(defaultPadding),
-          child: FutureBuilder<List<TeamViewTeam>>(
-            future: fetchTeamView(),
+          child: StreamBuilder<List<TeamViewTeam>>(
+            stream: fetchTeamView(),
             builder: (
               final BuildContext context,
               final AsyncSnapshot<List<TeamViewTeam>> snapshot,
@@ -204,82 +204,86 @@ class TeamViewTeam {
   final int brokenMatches;
 }
 
-Future<List<TeamViewTeam>> fetchTeamView() async {
-  final QueryResult event =
-      await getClient().query(QueryOptions(document: gql(query)));
-  return event.mapQueryResult<List<TeamViewTeam>>(
-    (final Map<String, dynamic>? p0) =>
-        p0.mapNullable<List<TeamViewTeam>>((final Map<String, dynamic> data) {
-          final List<dynamic> teams = data["team"] as List<dynamic>;
-          return teams.map<TeamViewTeam>((final dynamic e) {
-            final dynamic avg = e["matches_aggregate"]["aggregate"]["avg"];
-            final List<int> climbPoints =
-                (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                    .map((final dynamic e) => e["climb"]["points"] as int)
-                    .toList();
-            final List<RobotMatchStatus> robotMatchStatuses =
-                (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                    .map(
-                      (final dynamic e) => titleToEnum(
-                        e["robot_match_status"]["title"] as String,
-                      ),
-                    )
-                    .toList();
-            final double teleUpper =
-                (avg["tele_upper"] as double?) ?? double.nan;
-            final double autoLower =
-                (avg["auto_lower"] as double?) ?? double.nan;
-            final double autoUpper =
-                (avg["auto_upper"] as double?) ?? double.nan;
-            final double teleLower =
-                (avg["tele_lower"] as double?) ?? double.nan;
-            final List<String> climb =
-                (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                    .map((final dynamic e) => e["climb"]["title"] as String)
-                    .where((final String element) => element != "No attempt")
-                    .toList();
-            final double climbPercent = (climb
-                        .where((final String element) => element != "Failed")
-                        .length /
-                    climb.length) *
-                100;
-            final double ballPointAvg =
-                autoUpper * 4 + teleUpper * 2 + autoLower * 2 + teleLower;
-            final double ballSum =
-                autoUpper + teleUpper + autoLower + teleLower;
-            final double climbPointAvg = climbPoints.isEmpty
-                ? 0
-                : climbPoints.length == 1
-                    ? climbPoints.single.toDouble()
-                    : climbPoints.reduce(
-                          (final int value, final int element) =>
-                              value + element,
-                        ) /
-                        climbPoints.length;
-            return TeamViewTeam(
-              climbPercent: climbPercent.isNaN ? -1 : climbPercent,
-              brokenMatches: robotMatchStatuses
-                  .where(
-                    (final RobotMatchStatus element) =>
-                        element != RobotMatchStatus.worked,
-                  )
-                  .length,
-              autoUpperAvg: avg["auto_upper"] as double? ?? -1,
-              ballAvg: ballSum.isNaN ? -1 : ballSum,
-              ballPointAvg: ballPointAvg.isNaN ? -1 : ballPointAvg,
-              teleUpperAvg: avg["tele_upper"] as double? ?? -1,
-              team: LightTeam.fromJson(e),
-              climbPointAvg: climbPointAvg.isNaN ? -1 : climbPointAvg,
-            );
-          }).toList();
-        }) ??
-        (throw Exception("No data")),
-  );
+Stream<List<TeamViewTeam>> fetchTeamView() {
+  return getClient().subscribe(SubscriptionOptions(document: gql(query))).map(
+        (final QueryResult event) => event.mapQueryResult<List<TeamViewTeam>>(
+          (final Map<String, dynamic>? p0) =>
+              p0.mapNullable<List<TeamViewTeam>>(
+                  (final Map<String, dynamic> data) {
+                final List<dynamic> teams = data["team"] as List<dynamic>;
+                return teams.map<TeamViewTeam>((final dynamic e) {
+                  final dynamic avg =
+                      e["matches_aggregate"]["aggregate"]["avg"];
+                  final List<int> climbPoints =
+                      (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                          .map((final dynamic e) => e["climb"]["points"] as int)
+                          .toList();
+                  final List<RobotMatchStatus> robotMatchStatuses =
+                      (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                          .map(
+                            (final dynamic e) => titleToEnum(
+                              e["robot_match_status"]["title"] as String,
+                            ),
+                          )
+                          .toList();
+                  final double teleUpper =
+                      (avg["tele_upper"] as double?) ?? double.nan;
+                  final double autoLower =
+                      (avg["auto_lower"] as double?) ?? double.nan;
+                  final double autoUpper =
+                      (avg["auto_upper"] as double?) ?? double.nan;
+                  final double teleLower =
+                      (avg["tele_lower"] as double?) ?? double.nan;
+                  final List<String> climb = (e["matches_aggregate"]["nodes"]
+                          as List<dynamic>)
+                      .map((final dynamic e) => e["climb"]["title"] as String)
+                      .where((final String element) => element != "No attempt")
+                      .toList();
+                  final double climbPercent = (climb
+                              .where(
+                                (final String element) => element != "Failed",
+                              )
+                              .length /
+                          climb.length) *
+                      100;
+                  final double ballPointAvg =
+                      autoUpper * 4 + teleUpper * 2 + autoLower * 2 + teleLower;
+                  final double ballSum =
+                      autoUpper + teleUpper + autoLower + teleLower;
+                  final double climbPointAvg = climbPoints.isEmpty
+                      ? 0
+                      : climbPoints.length == 1
+                          ? climbPoints.single.toDouble()
+                          : climbPoints.reduce(
+                                (final int value, final int element) =>
+                                    value + element,
+                              ) /
+                              climbPoints.length;
+                  return TeamViewTeam(
+                    climbPercent: climbPercent.isNaN ? -1 : climbPercent,
+                    brokenMatches: robotMatchStatuses
+                        .where(
+                          (final RobotMatchStatus element) =>
+                              element != RobotMatchStatus.worked,
+                        )
+                        .length,
+                    autoUpperAvg: avg["auto_upper"] as double? ?? -1,
+                    ballAvg: ballSum.isNaN ? -1 : ballSum,
+                    ballPointAvg: ballPointAvg.isNaN ? -1 : ballPointAvg,
+                    teleUpperAvg: avg["tele_upper"] as double? ?? -1,
+                    team: LightTeam.fromJson(e),
+                    climbPointAvg: climbPointAvg.isNaN ? -1 : climbPointAvg,
+                  );
+                }).toList();
+              }) ??
+              (throw Exception("No data")),
+        ),
+      );
 }
 
 const String query = """
 
-query MySubscription {
+subscription MySubscription {
   team {
     id
     name
