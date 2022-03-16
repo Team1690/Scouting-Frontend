@@ -16,11 +16,11 @@ class TeamView extends StatelessWidget {
   Widget build(final BuildContext context) => DashboardScaffold(
         body: Padding(
           padding: const EdgeInsets.all(defaultPadding),
-          child: StreamBuilder<List<TeamViewTeam>>(
+          child: StreamBuilder<List<_Team>>(
             stream: fetchTeamView(),
             builder: (
               final BuildContext context,
-              final AsyncSnapshot<List<TeamViewTeam>> snapshot,
+              final AsyncSnapshot<List<_Team>> snapshot,
             ) {
               if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
@@ -33,15 +33,14 @@ class TeamView extends StatelessWidget {
               }
               int? sortedColumn;
               return snapshot.data.mapNullable(
-                    (final List<TeamViewTeam> data) => StatefulBuilder(
+                    (final List<_Team> data) => StatefulBuilder(
                       builder: (
                         final BuildContext context,
                         final void Function(void Function()) setState,
                       ) {
                         DataColumn column(
                           final String title,
-                          final int Function(TeamViewTeam, TeamViewTeam)
-                              compare,
+                          final int Function(_Team, _Team) compare,
                         ) =>
                             DataColumn(
                               label: Text(title),
@@ -73,8 +72,8 @@ class TeamView extends StatelessWidget {
                                   column(
                                     "Tele upper",
                                     (
-                                      final TeamViewTeam a,
-                                      final TeamViewTeam b,
+                                      final _Team a,
+                                      final _Team b,
                                     ) =>
                                         b.teleUpperAvg
                                             .compareTo(a.teleUpperAvg),
@@ -82,8 +81,8 @@ class TeamView extends StatelessWidget {
                                   column(
                                     "Auto upper",
                                     (
-                                      final TeamViewTeam a,
-                                      final TeamViewTeam b,
+                                      final _Team a,
+                                      final _Team b,
                                     ) =>
                                         b.autoUpperAvg
                                             .compareTo(a.autoUpperAvg),
@@ -91,16 +90,16 @@ class TeamView extends StatelessWidget {
                                   column(
                                     "Ball sum",
                                     (
-                                      final TeamViewTeam a,
-                                      final TeamViewTeam b,
+                                      final _Team a,
+                                      final _Team b,
                                     ) =>
                                         b.ballAvg.compareTo(a.ballAvg),
                                   ),
                                   column(
                                     "Ball points",
                                     (
-                                      final TeamViewTeam a,
-                                      final TeamViewTeam b,
+                                      final _Team a,
+                                      final _Team b,
                                     ) =>
                                         b.ballPointAvg
                                             .compareTo(a.ballPointAvg),
@@ -108,8 +107,8 @@ class TeamView extends StatelessWidget {
                                   column(
                                     "Climb points",
                                     (
-                                      final TeamViewTeam a,
-                                      final TeamViewTeam b,
+                                      final _Team a,
+                                      final _Team b,
                                     ) =>
                                         b.climbPointAvg
                                             .compareTo(a.climbPointAvg),
@@ -117,8 +116,8 @@ class TeamView extends StatelessWidget {
                                   column(
                                     "Climb percent",
                                     (
-                                      final TeamViewTeam a,
-                                      final TeamViewTeam b,
+                                      final _Team a,
+                                      final _Team b,
                                     ) =>
                                         b.climbPercent
                                             .compareTo(a.climbPercent),
@@ -126,8 +125,8 @@ class TeamView extends StatelessWidget {
                                   column(
                                     "Broken matches",
                                     (
-                                      final TeamViewTeam a,
-                                      final TeamViewTeam b,
+                                      final _Team a,
+                                      final _Team b,
                                     ) =>
                                         b.brokenMatches
                                             .compareTo(a.brokenMatches),
@@ -135,7 +134,7 @@ class TeamView extends StatelessWidget {
                                 ],
                                 rows: <DataRow>[
                                   ...data.map(
-                                    (final TeamViewTeam e) => DataRow(
+                                    (final _Team e) => DataRow(
                                       cells: <DataCell>[
                                         DataCell(
                                           Text(
@@ -183,8 +182,8 @@ DataCell show(final double value, [final bool isPercent = false]) => DataCell(
       ),
     );
 
-class TeamViewTeam {
-  const TeamViewTeam({
+class _Team {
+  const _Team({
     required this.climbPercent,
     required this.autoUpperAvg,
     required this.ballAvg,
@@ -204,14 +203,13 @@ class TeamViewTeam {
   final int brokenMatches;
 }
 
-Stream<List<TeamViewTeam>> fetchTeamView() {
+Stream<List<_Team>> fetchTeamView() {
   return getClient().subscribe(SubscriptionOptions(document: gql(query))).map(
-        (final QueryResult event) => event.mapQueryResult<List<TeamViewTeam>>(
+        (final QueryResult event) => event.mapQueryResult<List<_Team>>(
           (final Map<String, dynamic>? p0) =>
-              p0.mapNullable<List<TeamViewTeam>>(
-                  (final Map<String, dynamic> data) {
+              p0.mapNullable<List<_Team>>((final Map<String, dynamic> data) {
                 final List<dynamic> teams = data["team"] as List<dynamic>;
-                return teams.map<TeamViewTeam>((final dynamic e) {
+                return teams.map<_Team>((final dynamic e) {
                   final dynamic avg =
                       e["matches_aggregate"]["aggregate"]["avg"];
                   final List<int> climbPoints =
@@ -259,7 +257,7 @@ Stream<List<TeamViewTeam>> fetchTeamView() {
                                     value + element,
                               ) /
                               climbPoints.length;
-                  return TeamViewTeam(
+                  return _Team(
                     climbPercent: climbPercent.isNaN ? -1 : climbPercent,
                     brokenMatches: robotMatchStatuses
                         .where(
