@@ -76,11 +76,12 @@ class _BaseLineChart<E extends num> extends StatelessWidget {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                colors: showShadow
-                    ? chartColors
-                        .map((final Color color) => color.withOpacity(0.3))
-                        .toList()
-                    : <Color>[Color(0x00000000)],
+                colors: chartColors
+                    .map(
+                      (final Color color) =>
+                          color.withOpacity(showShadow ? 0.3 : 0.1),
+                    )
+                    .toList(),
               ),
               spots: List<FlSpot>.generate(
                 dataSet[index].length,
