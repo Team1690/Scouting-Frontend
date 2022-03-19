@@ -39,25 +39,29 @@ class TeamView extends StatelessWidget {
                         final BuildContext context,
                         final void Function(void Function()) setState,
                       ) {
+                        num reverseIf<T extends num>(
+                          final bool condition,
+                          final T x,
+                        ) =>
+                            condition ? x : -x;
+
                         DataColumn column(
                           final String title,
-                          final int Function(_Team, _Team) Function(bool)
-                              compare,
+                          final num Function(_Team) f,
                         ) =>
                             DataColumn(
                               label: Text(title),
                               numeric: true,
                               onSort: (final int index, final __) {
                                 setState(() {
-                                  if (sortedColumn == index) {
-                                    isAscending = !isAscending;
-                                  } else {
-                                    isAscending = false;
-                                  }
+                                  isAscending =
+                                      sortedColumn == index && !isAscending;
                                   sortedColumn = index;
-
                                   data.sort(
-                                    compare(!isAscending),
+                                    (final _Team a, final _Team b) => reverseIf(
+                                      isAscending,
+                                      f(a).compareTo(f(b)),
+                                    ).toInt(),
                                   );
                                 });
                               },
@@ -79,64 +83,31 @@ class TeamView extends StatelessWidget {
                                   ),
                                   column(
                                     "Tele upper",
-                                    (final bool isDesc) =>
-                                        (final _Team a, final _Team b) => isDesc
-                                            ? b.teleUpperAvg
-                                                .compareTo(a.teleUpperAvg)
-                                            : a.teleUpperAvg
-                                                .compareTo(b.teleUpperAvg),
+                                    (final _Team a) => a.teleUpperAvg,
                                   ),
                                   column(
                                     "Auto upper",
-                                    (final bool isDesc) =>
-                                        (final _Team a, final _Team b) => isDesc
-                                            ? b.autoUpperAvg
-                                                .compareTo(a.autoUpperAvg)
-                                            : a.autoUpperAvg
-                                                .compareTo(b.autoUpperAvg),
+                                    (final _Team a) => a.autoUpperAvg,
                                   ),
                                   column(
                                     "Ball sum",
-                                    (final bool isDesc) =>
-                                        (final _Team a, final _Team b) => isDesc
-                                            ? b.ballAvg.compareTo(a.ballAvg)
-                                            : a.ballAvg.compareTo(b.ballAvg),
+                                    (final _Team a) => a.ballAvg,
                                   ),
                                   column(
                                     "Ball points",
-                                    (final bool isDesc) =>
-                                        (final _Team a, final _Team b) => isDesc
-                                            ? b.ballPointAvg
-                                                .compareTo(a.ballPointAvg)
-                                            : a.ballPointAvg
-                                                .compareTo(b.ballPointAvg),
+                                    (final _Team a) => a.ballPointAvg,
                                   ),
                                   column(
                                     "Climb points",
-                                    (final bool isDesc) =>
-                                        (final _Team a, final _Team b) => isDesc
-                                            ? b.climbPointAvg
-                                                .compareTo(a.climbPointAvg)
-                                            : a.climbPointAvg
-                                                .compareTo(b.climbPointAvg),
+                                    (final _Team a) => a.climbPointAvg,
                                   ),
                                   column(
                                     "Climb percent",
-                                    (final bool isDesc) =>
-                                        (final _Team a, final _Team b) => isDesc
-                                            ? b.climbPercent
-                                                .compareTo(a.climbPercent)
-                                            : a.climbPercent
-                                                .compareTo(b.climbPercent),
+                                    (final _Team a) => a.climbPercent,
                                   ),
                                   column(
                                     "Broken matches",
-                                    (final bool isDesc) =>
-                                        (final _Team a, final _Team b) => isDesc
-                                            ? b.brokenMatches
-                                                .compareTo(a.brokenMatches)
-                                            : a.brokenMatches
-                                                .compareTo(b.brokenMatches),
+                                    (final _Team a) => a.brokenMatches,
                                   ),
                                 ],
                                 rows: <DataRow>[
