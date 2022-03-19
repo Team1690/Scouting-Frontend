@@ -7,6 +7,13 @@ class LightTeam {
     final String name,
     final int colorsIndex,
   ) : this._inner(id, number, name, _colors[colorsIndex], colorsIndex);
+  LightTeam.fromJson(final dynamic e)
+      : this(
+          e["id"] as int,
+          e["number"] as int,
+          e["name"] as String,
+          e["colors_index"] as int,
+        );
   LightTeam._inner(
     this.id,
     this.number,
