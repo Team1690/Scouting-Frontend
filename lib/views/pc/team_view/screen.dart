@@ -156,7 +156,7 @@ DataCell show(final double value, [final bool isPercent = false]) => DataCell(
       Text(
         value == -1
             ? "No data"
-            : "${value.toStringAsFixed(1)}${isPercent ? "%" : ""}",
+            : "${value.toStringAsFixed(2)}${isPercent ? "%" : ""}",
       ),
     );
 
