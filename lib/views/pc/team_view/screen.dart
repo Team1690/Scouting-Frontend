@@ -39,7 +39,7 @@ class TeamView extends StatelessWidget {
                         final BuildContext context,
                         final void Function(void Function()) setState,
                       ) {
-                        num reverseIf<T extends num>(
+                        num reverseUnless<T extends num>(
                           final bool condition,
                           final T x,
                         ) =>
