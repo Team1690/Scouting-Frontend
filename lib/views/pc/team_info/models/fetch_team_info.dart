@@ -154,13 +154,19 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                 team["team_by_pk"]["first_picklist_index"] as int,
             secondPicklistIndex:
                 team["team_by_pk"]["second_picklist_index"] as int,
-            highestLevelTitle:
-                matches.map<dynamic>((final dynamic e) => e["climb"]).reduce(
-                      (final dynamic value, final dynamic element) =>
-                          (value["points"] as int) > (element["points"] as int)
-                              ? value
-                              : element,
-                    )["title"] as String,
+            highestLevelTitle: matches.isEmpty
+                ? "highestLevelTitle QuickData: this isn't supposed to be shown because of amoutOfMatches check in ui"
+                : matches.length == 1
+                    ? matches.single["climb"]["title"] as String
+                    : matches
+                        .map<dynamic>((final dynamic e) => e["climb"])
+                        .reduce(
+                          (final dynamic value, final dynamic element) =>
+                              (value["points"] as int) >
+                                      (element["points"] as int)
+                                  ? value
+                                  : element,
+                        )["title"] as String,
             avgAutoLowScored: avgAutoLow,
             avgAutoMissed: avgAutoMissed,
             avgAutoUpperScored: avgAutoUpper,
