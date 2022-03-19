@@ -317,9 +317,11 @@ class _FaultViewState extends State<FaultView> {
                                       Expanded(
                                         flex: 3,
                                         child: Text(
-                                          "Status: ${e.faultStatus.title}",
+                                          "Status: ${e.faultStatus}",
                                           style: TextStyle(
-                                            color: e.faultStatus.color,
+                                            color: faultTitleToColor(
+                                              e.faultStatus,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -426,9 +428,7 @@ Future<List<FaultEntry>> fetchFaults() async {
                       e["team"]["colors_index"] as int,
                     ),
                     e["id"] as int,
-                    FaultStatusExt.fromTitleString(
-                      e["fault_status"]["title"] as String,
-                    ),
+                    e["fault_status"]["title"] as String,
                   ),
                 )
                 .toList();
@@ -454,51 +454,21 @@ class FaultEntry {
   final String faultMessage;
   final int id;
   final LightTeam team;
-  final FaultStatus faultStatus;
+  final String faultStatus;
 }
 
-enum FaultStatus { fixed, inProgress, noProgress, unknown }
-
-extension FaultStatusExt on FaultStatus {
-  static FaultStatus fromTitleString(final String title) {
-    switch (title) {
-      case "Fixed":
-        return FaultStatus.fixed;
-      case "In progress":
-        return FaultStatus.inProgress;
-      case "No progress":
-        return FaultStatus.noProgress;
-      case "Unknown":
-        return FaultStatus.unknown;
-    }
-    throw Exception("Not a fault status");
+Color faultTitleToColor(final String title) {
+  switch (title) {
+    case "Fixed":
+      return Colors.green;
+    case "In progress":
+      return Colors.yellow;
+    case "No progress":
+      return Colors.red;
+    case "Unknown":
+      return Colors.orange;
   }
-
-  Color get color {
-    switch (this) {
-      case FaultStatus.fixed:
-        return Colors.green;
-      case FaultStatus.inProgress:
-        return Colors.yellow;
-      case FaultStatus.noProgress:
-        return Colors.red;
-      case FaultStatus.unknown:
-        return Colors.orange;
-    }
-  }
-
-  String get title {
-    switch (this) {
-      case FaultStatus.fixed:
-        return "Fixed";
-      case FaultStatus.inProgress:
-        return "In progress";
-      case FaultStatus.noProgress:
-        return "No progress";
-      case FaultStatus.unknown:
-        return "Unknown";
-    }
-  }
+  throw Exception("$title not a known title");
 }
 
 const String query = """
