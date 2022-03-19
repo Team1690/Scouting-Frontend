@@ -58,7 +58,8 @@ class TeamView extends StatelessWidget {
                                       sortedColumn == index && !isAscending;
                                   sortedColumn = index;
                                   data.sort(
-                                    (final _Team a, final _Team b) => reverseUnless(
+                                    (final _Team a, final _Team b) =>
+                                        reverseUnless(
                                       isAscending,
                                       f(a).compareTo(f(b)),
                                     ).toInt(),
