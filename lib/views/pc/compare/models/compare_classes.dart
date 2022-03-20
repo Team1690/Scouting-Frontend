@@ -16,6 +16,7 @@ class CompareTeam<E extends num> {
     required this.missedDataAuto,
     required this.missedDataTele,
     required this.team,
+    required this.allBallsScored,
   });
   final LightTeam team;
   final double avgAutoUpperScored;
@@ -24,6 +25,7 @@ class CompareTeam<E extends num> {
   final double teleUpperScoredPercentage;
   final double avgClimbPoints;
   final double climbPercentage;
+  final CompareLineChartData<E> allBallsScored;
   final CompareLineChartData<E> climbData;
   final CompareLineChartData<E> upperScoredDataTele;
   final CompareLineChartData<E> missedDataTele;
