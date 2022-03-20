@@ -130,6 +130,7 @@ class Team<E extends num> {
     required this.climbData,
     required this.scoredMissedDataTele,
     required this.scoredMissedDataAuto,
+    required this.scoredMissedDataAll,
   });
   final LightTeam team;
   final SpecificData specificData;
@@ -138,4 +139,5 @@ class Team<E extends num> {
   final LineChartData<E> climbData;
   final LineChartData<E> scoredMissedDataTele;
   final LineChartData<E> scoredMissedDataAuto;
+  final LineChartData<E> scoredMissedDataAll;
 }
