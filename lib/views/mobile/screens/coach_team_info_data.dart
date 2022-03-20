@@ -134,15 +134,15 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
                   ),
                 ),
               ),
-              Spacer(),
+              Spacer()
             ],
           ),
           Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FittedBox(
-                  fit: BoxFit.fitHeight,
+              FittedBox(
+                fit: BoxFit.fitHeight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Text("Autonomous"),
                 ),
               ),
@@ -165,6 +165,7 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
                   ),
                 ),
               ),
+              Spacer()
             ],
           ),
           Column(
@@ -183,15 +184,13 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
                   child: DashboardClimbLineChart<E>(
                     showShadow: true,
                     inputedColors: <Color>[primaryColor],
-                    matchNumbers: data.climbData.gameNumbers,
+                    gameNumbers: data.climbData.gameNumbers,
                     dataSet: data.climbData.points,
                     robotMatchStatuses: data.climbData.robotMatchStatuses,
                   ),
                 ),
               ),
-              Spacer(
-                flex: 3,
-              )
+              Spacer()
             ],
           )
         ],
