@@ -96,13 +96,7 @@ class PickList extends StatelessWidget {
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    "Ball avg: ${e.avgBallPoints.toStringAsFixed(1)}",
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    "Climb avg: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                                    "Ball point avg: ${e.avgBallPoints.toStringAsFixed(1)}",
                                   ),
                                 ),
                                 Expanded(
@@ -178,9 +172,29 @@ class PickList extends StatelessWidget {
                       title: Row(
                         children: <Widget>[
                           Expanded(
-                            flex: 3,
+                            flex: 1,
                             child: Text(
                               e.toString(),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Worked: ${e.robotMatchStatusToAmount[RobotMatchStatus.worked]}",
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Ball avg: ${e.avgBalls.toStringAsFixed(1)}",
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Climb points: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Auto balls: ${e.autoBallAvg.toStringAsFixed(1)}",
                             ),
                           ),
                         ],
@@ -290,42 +304,50 @@ class PickListTeam {
     required final List<String>? faultMessages,
     required final int amountOfMatches,
     required final Map<RobotMatchStatus, int> robotMatchStatusToAmount,
+    required final double autoBallAvg,
+    required final double avgBalls,
   }) : this.controller(
-          firstListIndex,
-          secondListIndex,
-          taken,
-          avgBallPoints,
-          avgClimbPoints,
-          autoAim,
-          teleAim,
-          LightTeam(
+          firstListIndex: firstListIndex,
+          secondListIndex: secondListIndex,
+          taken: taken,
+          avgBallPoints: avgBallPoints,
+          avgClimbPoints: avgClimbPoints,
+          autoAim: autoAim,
+          teleAim: teleAim,
+          team: LightTeam(
             validateId(id),
             validateNumber(number),
             validateName(name),
             colorsIndex,
           ),
-          faultMessages,
-          amountOfMatches,
-          robotMatchStatusToAmount,
+          faultMessages: faultMessages,
+          amountOfMatches: amountOfMatches,
+          robotMatchStatusToAmount: robotMatchStatusToAmount,
+          autoBallAvg: autoBallAvg,
+          avgBalls: avgBalls,
         );
 
-  PickListTeam.controller(
-    this.firstListIndex,
-    this.secondListIndex,
-    this.taken,
-    this.avgBallPoints,
-    this.avgClimbPoints,
-    this.autoAim,
-    this.teleAim,
-    this.team,
-    this.faultMessages,
-    this.amountOfMatches,
-    this.robotMatchStatusToAmount,
-  );
+  PickListTeam.controller({
+    required this.firstListIndex,
+    required this.secondListIndex,
+    required this.taken,
+    required this.avgBallPoints,
+    required this.avgClimbPoints,
+    required this.autoAim,
+    required this.teleAim,
+    required this.team,
+    required this.faultMessages,
+    required this.amountOfMatches,
+    required this.robotMatchStatusToAmount,
+    required this.autoBallAvg,
+    required this.avgBalls,
+  });
 
   final int amountOfMatches;
   final double avgBallPoints;
   final double avgClimbPoints;
+  final double autoBallAvg;
+  final double avgBalls;
   final double autoAim;
   final double teleAim;
   final LightTeam team;
