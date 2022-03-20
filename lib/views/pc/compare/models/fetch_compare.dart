@@ -189,11 +189,29 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                           )
                           .toList();
 
+                  final List<int> allBallsScored =
+                      (e["matches"] as List<dynamic>)
+                          .map(
+                            (final dynamic e) =>
+                                (e["auto_upper"] as int) +
+                                (e["tele_upper"] as int) +
+                                (e["auto_lower"] as int) +
+                                (e["tele_lower"] as int),
+                          )
+                          .toList();
                   final CompareLineChartData<E> upperScoredDataAutoLinechart =
                       CompareLineChartData<E>(
                     color: team.color,
                     title: "Auto upper",
                     points: upperScoredDataAuto.castToGeneric<E>().toList(),
+                    matchStatuses: matchStatuses,
+                  );
+
+                  final CompareLineChartData<E> allBallsScoredLinechart =
+                      CompareLineChartData<E>(
+                    color: team.color,
+                    title: "Ball scored",
+                    points: allBallsScored.castToGeneric<E>().toList(),
                     matchStatuses: matchStatuses,
                   );
 
@@ -206,6 +224,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                   );
 
                   return CompareTeam<E>(
+                    allBallsScored: allBallsScoredLinechart,
                     team: team,
                     autoUpperScoredPercentage: autoUpperScorePercentage,
                     avgAutoUpperScored: avgAutoUpper,

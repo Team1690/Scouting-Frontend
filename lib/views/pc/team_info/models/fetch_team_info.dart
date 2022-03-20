@@ -298,7 +298,34 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             ),
           );
 
+          List<E> combineLists(final List<E> listOne, final List<E> listTwo) =>
+              List<num>.generate(
+                listOne.length,
+                (final int index) => (listOne[index] + listTwo[index]),
+              ).castToGeneric<E>().toList();
+
+          final LineChartData<E> scoredMissedDataAll = LineChartData<E>(
+            gameNumbers: matchNumbers,
+            points: <List<E>>[
+              combineLists(upperScoredDataAuto, upperScoredDataTele),
+              combineLists(missedDataAuto, missedDataTele),
+              combineLists(lowerScoredDataAuto, lowerScoredDataTele)
+            ],
+            title: "Ball sum",
+            robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+              3,
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) => titleToEnum(
+                      e["robot_match_status"]["title"] as String,
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
+
           return Team<E>(
+            scoredMissedDataAll: scoredMissedDataAll,
             team: teamForQuery,
             specificData: specificData,
             pitViewData: pitData,
