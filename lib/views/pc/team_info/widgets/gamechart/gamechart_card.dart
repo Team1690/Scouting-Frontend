@@ -21,6 +21,7 @@ class Gamechart<E extends num> extends StatelessWidget {
                     widgets: <Widget>[
                       BallLineChart<E>(data.scoredMissedDataTele),
                       BallLineChart<E>(data.scoredMissedDataAuto),
+                      BallLineChart<E>(data.scoredMissedDataAll),
                       ClimbLineChart<E>(data.climbData),
                     ],
                   ),
