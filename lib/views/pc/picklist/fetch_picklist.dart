@@ -112,6 +112,12 @@ List<PickListTeam> parse(
                       )
                       .toList();
               return PickListTeam(
+                avgBalls: (avg["tele_upper"] as double? ?? double.nan) +
+                    (avg["tele_lower"] as double? ?? double.nan) +
+                    (avg["auto_upper"] as double? ?? double.nan) +
+                    (avg["auto_lower"] as double? ?? double.nan),
+                autoBallAvg: (avg["auto_upper"] as double? ?? double.nan) +
+                    (avg["auto_lower"] as double? ?? double.nan),
                 amountOfMatches: amountOfMatches,
                 colorsIndex: e["colors_index"] as int,
                 id: e["id"] as int,
