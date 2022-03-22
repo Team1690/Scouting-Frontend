@@ -49,6 +49,25 @@ class _PicklistCardState extends State<PicklistCard> {
           onPressed: () => save(List<PickListTeam>.from(data), context),
           icon: Icon(Icons.save),
         ),
+        IconButton(
+          tooltip: "Sort taken",
+          onPressed: () {
+            setState(() {
+              data.sort(
+                (final PickListTeam a, final PickListTeam b) =>
+                    a.taken == b.taken
+                        ? 0
+                        : a.taken
+                            ? 1
+                            : -1,
+              );
+              for (int i = 0; i < data.length; i++) {
+                currentPickList.setIndex(data[i], i);
+              }
+            });
+          },
+          icon: Icon(Icons.sort),
+        )
       ],
       title: currentPickList.title,
       body: PickList(

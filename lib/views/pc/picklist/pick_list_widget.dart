@@ -177,26 +177,28 @@ class PickList extends StatelessWidget {
                               e.toString(),
                             ),
                           ),
-                          Expanded(
-                            child: Text(
-                              "Worked: ${e.robotMatchStatusToAmount[RobotMatchStatus.worked]}",
+                          if (e.amountOfMatches != 0) ...<Widget>[
+                            Expanded(
+                              child: Text(
+                                "Worked: ${e.robotMatchStatusToAmount[RobotMatchStatus.worked]}",
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              "Ball avg: ${e.avgBalls.toStringAsFixed(1)}",
+                            Expanded(
+                              child: Text(
+                                "Ball avg: ${e.avgBalls.toStringAsFixed(1)}",
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              "Climb points: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                            Expanded(
+                              child: Text(
+                                "Climb points: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              "Auto balls: ${e.autoBallAvg.toStringAsFixed(1)}",
+                            Expanded(
+                              child: Text(
+                                "Auto balls: ${e.autoBallAvg.toStringAsFixed(1)}",
+                              ),
                             ),
-                          ),
+                          ]
                         ],
                       ),
                       trailing: SizedBox(),
