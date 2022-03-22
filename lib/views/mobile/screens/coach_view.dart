@@ -458,7 +458,7 @@ Widget teamData(
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          "Teleop aim: ${(team.autoUpper + team.autoLower).toStringAsFixed(1)}/${(team.autoUpper + team.autoLower + team.autoMissed).toStringAsFixed(1)}",
+                          "Auto aim: ${(team.autoUpper + team.autoLower).toStringAsFixed(1)}/${(team.autoUpper + team.autoLower + team.autoMissed).toStringAsFixed(1)}",
                         ),
                       ),
                     ),
@@ -466,7 +466,7 @@ Widget teamData(
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          "Auto aim: ${(team.teleUpper + team.teleLower).toStringAsFixed(1)}/${(team.teleUpper + team.teleLower + team.teleMissed).toStringAsFixed(1)}",
+                          "Tele aim: ${(team.teleUpper + team.teleLower).toStringAsFixed(1)}/${(team.teleUpper + team.teleLower + team.teleMissed).toStringAsFixed(1)}",
                         ),
                       ),
                     ),
