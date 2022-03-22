@@ -19,7 +19,7 @@ class Match implements HasuraVars {
 
   void clear(final BuildContext context) {
     team = null;
-    matchNumber = -1;
+    matchNumber = null;
     autoHigh = 0;
     autoLow = 0;
     autoMissed = 0;
@@ -27,8 +27,6 @@ class Match implements HasuraVars {
     teleMissed = 0;
     teleLow = 0;
     climbStatus = null;
-    name = null;
-    matchTypeId = null;
     isRematch = false;
     robotMatchStatusId =
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
