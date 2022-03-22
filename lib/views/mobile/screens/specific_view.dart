@@ -107,14 +107,20 @@ class _SpecificState extends State<Specific> {
                   SizedBox(
                     height: 14,
                   ),
-                  if (vars.faultMessage != null)
-                    TextField(
+                  AnimatedCrossFade(
+                    duration: Duration(milliseconds: 300),
+                    crossFadeState: vars.faultMessage == null
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    firstChild: Container(),
+                    secondChild: TextField(
                       textDirection: TextDirection.rtl,
                       onChanged: (final String value) {
                         vars.faultMessage = value;
                       },
                       decoration: InputDecoration(hintText: "Robot fault"),
                     ),
+                  ),
                   SizedBox(
                     height: 14,
                   ),
