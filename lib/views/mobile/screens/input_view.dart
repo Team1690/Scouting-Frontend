@@ -265,7 +265,6 @@ class _UserInputState extends State<UserInput> {
                       match.clear(context);
                       teamNumberController.clear();
                       matchNumberController.clear();
-                      scouterNameController.clear();
                     });
                   },
                   validate: () {
