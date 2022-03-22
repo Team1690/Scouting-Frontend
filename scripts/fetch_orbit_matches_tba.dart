@@ -113,7 +113,10 @@ mutation MyMutation($matches: [orbit_matches_insert_input!]!) {
 """;
 
 List<Match> parseResponse(
-    final http.Response response, final String event, final String matchType) {
+  final http.Response response,
+  final String event,
+  final String matchType,
+) {
   final List<dynamic> matchesUnParsed =
       (jsonDecode(response.body) as List<dynamic>)
           .where(
