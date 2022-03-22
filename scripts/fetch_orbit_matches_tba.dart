@@ -6,6 +6,31 @@ import "package:dotenv/dotenv.dart";
 import "package:graphql/client.dart";
 import "package:http/http.dart" as http;
 
+Future<Map<String, int>> fetchEnum(
+  final String table,
+) async {
+  final String query = """
+query {
+   
+    $table(order_by: {id: asc}) {
+        id
+        title
+    }
+}
+""";
+  return (await getClient().query(QueryOptions(document: gql(query))))
+      .mapQueryResult(
+    (final Map<String, dynamic>? data) =>
+        data.mapNullable(
+          (final Map<String, dynamic> result) => <String, int>{
+            for (final dynamic entry in (result[table] as List<dynamic>))
+              entry["title"] as String: entry["id"] as int
+          },
+        ) ??
+        (throw Exception("Query $table returned null")),
+  );
+}
+
 void main(final List<String> args) async {
   final ArgParser arg = ArgParser()
     ..addFlag(
@@ -20,6 +45,13 @@ void main(final List<String> args) async {
       help:
           "Name the event code you want to get teams from.\nYou can get the event code from the url of the event on tba website",
       valueHelp: "2021cc",
+    )
+    ..addOption(
+      "match-type",
+      abbr: "m",
+      help: "The match type to fetch the matches for",
+      valueHelp: "qm",
+      allowed: const <String>["qm", "qf", "sf", "f"],
     );
 
   final ArgResults results = arg.parse(args);
@@ -29,6 +61,7 @@ void main(final List<String> args) async {
     print(arg.usage);
     exit(0);
   }
+  final Map<String, int> matchTypes = (await fetchEnum("match_type"));
 
   final List<LightTeam> teams = await fetchTeams();
 
@@ -39,29 +72,53 @@ void main(final List<String> args) async {
         )),
   );
 
+  int tbaMatchTypeToId(final String tbaType) {
+    switch (tbaType) {
+      case "qm":
+        return matchTypes["Quals"]!;
+      case "qf":
+        return matchTypes["Quarter finals"]!;
+      case "sf":
+        return matchTypes["Semi finals"]!;
+      case "f":
+        return matchTypes["Finals"]!;
+    }
+    throw Exception("Not a match type");
+  }
+
+  final String matchType = (results["match-type"] as String?) ??
+      (throw ArgumentError(
+        "You need to add a match type add -h for help",
+      ));
   print(
     await sendMatches(
-      parseResponse(response, results["event"] as String),
+      parseResponse(
+        response,
+        results["event"] as String,
+        matchType,
+      ),
       getClient(),
       teams,
+      tbaMatchTypeToId(matchType),
     ),
   );
 }
 
-const String mutation = """
-mutation MyMutation(\$matches: [orbit_matches_insert_input!]!) {
-  insert_orbit_matches(objects: \$matches) {
+const String mutation = r"""
+mutation MyMutation($matches: [orbit_matches_insert_input!]!) {
+  insert_orbit_matches(objects: $matches, on_conflict: {constraint: orbit_matches_match_type_id_match_number_key, update_columns: happened}) {
     affected_rows
   }
 }
 """;
 
-List<Match> parseResponse(final http.Response response, final String event) {
+List<Match> parseResponse(
+    final http.Response response, final String event, final String matchType) {
   final List<dynamic> matchesUnParsed =
       (jsonDecode(response.body) as List<dynamic>)
           .where(
             (final dynamic element) =>
-                (element["key"] as String).startsWith("${event}_qm"),
+                (element["key"] as String).startsWith("${event}_$matchType"),
           )
           .toList();
 
@@ -82,6 +139,7 @@ List<Match> parseResponse(final http.Response response, final String event) {
               .cast<String>()
               .map((final String e) => int.parse(e.substring(3)))
               .toList(),
+          (e["winning_alliance"] as String).isNotEmpty,
         ),
       )
       .toList();
@@ -91,11 +149,13 @@ Future<QueryResult> sendMatches(
   final List<Match> matches,
   final GraphQLClient client,
   final List<LightTeam> teams,
+  final int matchTypeId,
 ) {
-  final Iterable<Map<String, int>> vars = matches.map<Map<String, int>>(
-    (final Match e) => <String, int>{
+  final Iterable<Map<String, dynamic>> vars = matches.map<Map<String, dynamic>>(
+    (final Match e) => <String, dynamic>{
       "match_number": e.number,
-      "match_type_id": 1,
+      "match_type_id": matchTypeId,
+      "happened": e.happened,
       for (int i = 0; i < 3; i++)
         "blue_$i": teams
             .where(
@@ -122,8 +182,9 @@ Future<QueryResult> sendMatches(
 }
 
 class Match {
-  const Match(this.number, this.blueAlliance, this.redAlliance);
+  const Match(this.number, this.blueAlliance, this.redAlliance, this.happened);
   final int number;
+  final bool happened;
   final List<int> redAlliance;
   final List<int> blueAlliance;
 }
