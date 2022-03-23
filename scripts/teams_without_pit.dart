@@ -2,43 +2,6 @@ import "package:dotenv/dotenv.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
-class LightTeam {
-  LightTeam(
-    final int id,
-    final int number,
-    final String name,
-    final int colorsIndex,
-  ) : this._inner(
-          id,
-          number,
-          name,
-          colorsIndex,
-        );
-  LightTeam.fromJson(final dynamic e)
-      : this(
-          e["id"] as int,
-          e["number"] as int,
-          e["name"] as String,
-          e["colors_index"] as int,
-        );
-  LightTeam._inner(
-    this.id,
-    this.number,
-    this.name,
-    this.colorsIndex,
-  );
-
-  @override
-  String toString() {
-    return "$number $name";
-  }
-
-  final int id;
-  final int number;
-  final String name;
-  final int colorsIndex;
-}
-
 void main(final List<String> args) async {
   load("dev.env");
   final QueryResult result =
@@ -48,8 +11,9 @@ void main(final List<String> args) async {
         p0.mapNullable((final Map<String, dynamic> data) {
       (data["team"] as List<dynamic>)
           .where((final dynamic element) => element["pit"] == null)
-          .map(LightTeam.fromJson)
-          .forEach(print);
+          .forEach(
+            (final dynamic team) => print("${team["name"]} ${team["number"]}"),
+          );
     }),
   );
 }
