@@ -1,4 +1,4 @@
-import 'package:dotenv/dotenv.dart';
+import "package:dotenv/dotenv.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
