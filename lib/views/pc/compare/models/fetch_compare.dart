@@ -105,15 +105,23 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                       .toList();
                   final Iterable<int> climbPoints = (e["matches"]
                           as List<dynamic>)
+                      .where(
+                        (final dynamic element) =>
+                            element["climb"]["title"] != "No attempt",
+                      )
                       .map((final dynamic e) => e["climb"]["points"] as int);
 
                   final int failedClimb = climbVals
                       .where(
-                        (final String element) =>
-                            element == "Failed" || element == "No attempt",
+                        (final String element) => element == "Failed",
                       )
                       .length;
-                  final int succededClimb = climbVals.length - failedClimb;
+                  final int succededClimb = climbVals
+                          .where(
+                            (final String element) => element != "No attempt",
+                          )
+                          .length -
+                      failedClimb;
                   final List<RobotMatchStatus> matchStatuses =
                       (e["matches"] as List<dynamic>)
                           .map(

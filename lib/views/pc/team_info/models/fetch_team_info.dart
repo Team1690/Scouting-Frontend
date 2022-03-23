@@ -138,6 +138,10 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               .toList();
 
           final List<int> climbPoints = matches
+              .where(
+                (final dynamic element) =>
+                    element["climb"]["title"] != "No attempt",
+              )
               .map((final dynamic e) => e["climb"]["points"] as int)
               .toList();
           final SpecificData specificData = SpecificData(
