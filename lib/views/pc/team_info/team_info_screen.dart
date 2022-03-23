@@ -50,14 +50,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
                 SizedBox(width: defaultPadding),
                 Expanded(
                   flex: 2,
-                  child: ToggleButtons(
-                    children: <Widget>[
-                      Icon(Icons.shield_rounded),
-                      Icon(Icons.remove_moderator_outlined),
-                    ],
-                    isSelected: <bool>[false, false],
-                    onPressed: (final int index) {},
-                  ),
+                  child: Container(),
                 ),
               ],
             ),
