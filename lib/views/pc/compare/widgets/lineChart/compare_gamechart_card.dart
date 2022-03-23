@@ -6,6 +6,7 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/common/no_team_selected.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/lineChart/compare_climb_line_chart.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/lineChart/compare_line_chart.dart";
@@ -74,6 +75,8 @@ class CompareGamechartCard<E extends num> extends StatelessWidget {
                     final BuildContext context,
                   ) {
                     return CarouselWithIndicator(
+                      direction:
+                          isPC(context) ? Axis.horizontal : Axis.vertical,
                       widgets: <Widget>[
                         CompareLineChart<E>(autoScored),
                         CompareLineChart<E>(autoMissed),
