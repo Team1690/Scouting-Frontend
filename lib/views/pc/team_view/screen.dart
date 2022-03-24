@@ -116,10 +116,30 @@ class TeamView extends StatelessWidget {
                                     (final _Team e) => DataRow(
                                       cells: <DataCell>[
                                         DataCell(
-                                          Text(
-                                            e.team.number.toString(),
-                                            style:
-                                                TextStyle(color: e.team.color),
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                    15.0,
+                                                  ),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: e.team.color,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  e.team.number.toString(),
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         ...<double>[
