@@ -36,10 +36,11 @@ class StatusScreen extends StatelessWidget {
                       scrollDirection: Axis.vertical,
                       primary: false,
                       child: Column(
-                        children: matches
+                        children: matches.reversed
                             .map(
                               (final MatchReceived e) => Card(
-                                color: bgColor,
+                                color:
+                                    e.teams.length != 6 ? Colors.red : bgColor,
                                 elevation: 2,
                                 margin: EdgeInsets.fromLTRB(
                                   5,
@@ -84,10 +85,6 @@ class StatusScreen extends StatelessWidget {
                                                     color: primaryWhite,
                                                     width: 1,
                                                   ),
-                                                  color:
-                                                      e.receivedMatch[team.key]
-                                                          ? Colors.green
-                                                          : null,
                                                   borderRadius:
                                                       defaultBorderRadius / 2,
                                                 ),
