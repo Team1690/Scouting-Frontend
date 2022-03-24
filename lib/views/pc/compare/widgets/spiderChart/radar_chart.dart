@@ -41,7 +41,10 @@ class SpiderChart extends StatelessWidget {
         ticks: ticks,
         axisColor: primaryWhite,
         outlineColor: secondaryWhite,
-        featuresTextStyle: Theme.of(context).textTheme.bodyText2!,
+        featuresTextStyle: Theme.of(context)
+            .textTheme
+            .bodyText2!
+            .copyWith(fontSize: isPC(context) ? null : 10),
         ticksTextStyle: TextStyle(fontSize: 0),
       ),
     );

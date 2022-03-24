@@ -1,11 +1,13 @@
 import "dart:collection";
 
+import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/teams_search_box.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/card.dart";
+import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/models/fetch_compare.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/lineChart/compare_gamechart_card.dart";
@@ -32,8 +34,22 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
 
   @override
   Widget build(final BuildContext context) {
-    return DashboardScaffold(
-      body: Padding(
+    return isPC(context)
+        ? DashboardScaffold(
+            body: compareScreen(context),
+          )
+        : Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              title: Text("Compare"),
+              centerTitle: true,
+            ),
+            drawer: SideNavBar(),
+            body: compareScreen(context),
+          );
+  }
+
+  Padding compareScreen(final BuildContext context) => Padding(
         padding: const EdgeInsets.all(defaultPadding),
         child: Column(
           children: <Widget>[
@@ -41,7 +57,7 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex: 1,
+                    flex: isPC(context) ? 1 : 2,
                     child: TeamsSearchBox(
                       teams: TeamProvider.of(context).teams
                         ..removeWhere(teams.contains),
@@ -85,15 +101,6 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                       ),
                     ),
                   ),
-                  ToggleButtons(
-                    children: <Widget>[
-                      Icon(Icons.shield_rounded),
-                      Icon(Icons.remove_moderator_outlined),
-                    ],
-                    isSelected: <bool>[false, false],
-                    //Currently unused feature
-                    onPressed: (final int index) {},
-                  ),
                 ],
               ),
             ),
@@ -118,55 +125,86 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                     );
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 4,
-                            child: DashboardCard(
-                              title: "Gamechart",
-                              body: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: defaultPadding,
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: DashboardCard(
-                              title: "Spiderchart",
-                              body: Container(),
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  }
-
-                  return snapshot.data.mapNullable(
-                        (final SplayTreeSet<CompareTeam<E>> data) => Row(
+                    if (isPC(context)) {
+                      return Center(
+                        child: Row(
                           children: <Widget>[
                             Expanded(
                               flex: 4,
-                              child: CompareGamechartCard<E>(data, teams),
+                              child: DashboardCard(
+                                title: "Gamechart",
+                                body: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
                             ),
-                            SizedBox(width: defaultPadding),
+                            SizedBox(
+                              width: defaultPadding,
+                            ),
                             Expanded(
                               flex: 3,
-                              child: SpiderChartCard<E>(teams, data),
-                            ),
+                              child: DashboardCard(
+                                title: "Spiderchart",
+                                body: Container(),
+                              ),
+                            )
                           ],
                         ),
-                      ) ??
+                      );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }
+
+                  return snapshot.data.mapNullable(
+                          (final SplayTreeSet<CompareTeam<E>> data) {
+                        if (isPC(context)) {
+                          return Row(
+                            children: <Widget>[
+                              Expanded(
+                                flex: 4,
+                                child: CompareGamechartCard<E>(data, teams),
+                              ),
+                              SizedBox(width: defaultPadding),
+                              Expanded(
+                                flex: 3,
+                                child: SpiderChartCard<E>(teams, data),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return CarouselSlider(
+                            items: <Widget>[
+                              Expanded(
+                                flex: 4,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: CompareGamechartCard<E>(data, teams),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: SpiderChartCard<E>(teams, data),
+                                ),
+                              ),
+                            ],
+                            options: CarouselOptions(
+                              height: 3500,
+                              aspectRatio: 2.0,
+                              viewportFraction: 1,
+                            ),
+                          );
+                        }
+                      }) ??
                       (throw Exception("No data"));
                 },
               ),
             )
           ],
         ),
-      ),
-    );
-  }
+      );
 }

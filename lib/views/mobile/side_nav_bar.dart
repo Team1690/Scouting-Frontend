@@ -7,6 +7,7 @@ import "package:scouting_frontend/views/mobile/screens/fault_view.dart";
 import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view.dart";
 import "package:scouting_frontend/views/mobile/screens/specific_view.dart";
+import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 
 class SideNavBar extends StatelessWidget {
@@ -78,6 +79,11 @@ class SideNavBar extends StatelessWidget {
             title: "Picklist",
             widget: PickListScreen.new,
           ),
+          NavbarTile(
+            icon: Icons.compare_arrows_rounded,
+            title: "Compare",
+            widget: CompareScreen<int>.new,
+          )
         ],
       ),
     );
