@@ -213,9 +213,13 @@ class _UserInputState extends State<UserInput> {
                 SizedBox(
                   height: 20,
                 ),
+                SectionDivider(label: "Robot fault"),
                 Switcher(
                   labels: <String>["Not on field", "Didn't work on field"],
-                  colors: <Color>[Colors.red, Colors.red],
+                  colors: <Color>[
+                    Colors.red,
+                    Color.fromARGB(255, 198, 29, 228)
+                  ],
                   onChange: (final int i) {
                     setState(() {
                       match.robotMatchStatusId = robotMatchStatusIndexToId[i]!;
@@ -261,7 +265,6 @@ class _UserInputState extends State<UserInput> {
                       match.clear(context);
                       teamNumberController.clear();
                       matchNumberController.clear();
-                      scouterNameController.clear();
                     });
                   },
                   validate: () {
