@@ -33,6 +33,7 @@ Stream<QueryResult> fetchPicklist() {
       }
       nodes {
         climb {
+          title
           points
         }
         robot_match_status{
@@ -72,11 +73,15 @@ List<PickListTeam> parse(
                   autoLower * 2 + autoUpper * 4 + teleLower + teleUpper * 2;
               final Iterable<int> climb = (e["matches_aggregate"]["nodes"]
                       as List<dynamic>)
+                  .where(
+                    (final dynamic element) =>
+                        element["climb"]["title"] != "No attempt",
+                  )
                   .map<int>((final dynamic e) => e["climb"]["points"] as int);
               final int amountOfMatches =
                   (e["matches_aggregate"]["nodes"] as List<dynamic>).length;
               final double climbAvg = climb.isEmpty
-                  ? double.nan
+                  ? 0
                   : climb.length == 1
                       ? climb.first.toDouble()
                       : climb.reduce(

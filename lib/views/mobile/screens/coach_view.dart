@@ -137,6 +137,7 @@ query MyQuery {
         }
         nodes {
           climb {
+            title
             points
           }
         }
@@ -160,6 +161,7 @@ query MyQuery {
         }
         nodes {
           climb {
+            title
             points
           }
         }
@@ -183,6 +185,7 @@ query MyQuery {
         }
         nodes {
           climb {
+            title
             points
           }
         }
@@ -206,6 +209,7 @@ query MyQuery {
         }
         nodes {
           climb {
+            title
             points
           }
         }
@@ -229,6 +233,7 @@ query MyQuery {
         }
         nodes {
           climb {
+            title
             points
           }
         }
@@ -252,6 +257,7 @@ query MyQuery {
         }
         nodes {
           climb {
+            title
             points
           }
         }
@@ -302,10 +308,16 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   autoLower * 2 + autoUpper * 4 + teleLower + teleUpper * 2;
               final Iterable<int> climb = (match[e]["matches_aggregate"]
                       ["nodes"] as List<dynamic>)
+                  .where(
+                    (final dynamic element) =>
+                        element["climb"]["title"] != "No attempt",
+                  )
                   .map<int>((final dynamic e) => e["climb"]["points"] as int);
-              final int amountOfMatches = climb.length;
+              final int amountOfMatches =
+                  (match[e]["matches_aggregate"]["nodes"] as List<dynamic>)
+                      .length;
               final double climbAvg = climb.isEmpty
-                  ? double.nan
+                  ? 0
                   : climb.length == 1
                       ? climb.first.toDouble()
                       : climb.reduce(

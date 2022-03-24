@@ -193,6 +193,10 @@ Stream<List<_Team>> fetchTeamView() {
                       e["matches_aggregate"]["aggregate"]["avg"];
                   final List<int> climbPoints =
                       (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                          .where(
+                            (final dynamic element) =>
+                                element["climb"]["title"] != "No attempt",
+                          )
                           .map((final dynamic e) => e["climb"]["points"] as int)
                           .toList();
                   final List<RobotMatchStatus> robotMatchStatuses =
