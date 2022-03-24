@@ -1,8 +1,12 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 
 import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/match_dropdown.dart";
+import "package:scouting_frontend/views/mobile/section_divider.dart";
+import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
@@ -16,9 +20,12 @@ class Specific extends StatefulWidget {
 class _SpecificState extends State<Specific> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController messageController = TextEditingController();
-  final TextEditingController teamSelectionController = TextEditingController();
   final SpecificVars vars = SpecificVars();
+  final TextEditingController matchNumberController = TextEditingController();
   final FocusNode node = FocusNode();
+
+  final TextEditingController scouterNameController = TextEditingController();
+  final TextEditingController teamNumberController = TextEditingController();
   @override
   Widget build(final BuildContext context) {
     return GestureDetector(
@@ -36,12 +43,79 @@ class _SpecificState extends State<Specific> {
               key: formKey,
               child: Column(
                 children: <Widget>[
-                  Padding(padding: EdgeInsets.all(14)),
+                  SectionDivider(label: "Match Details"),
+                  MatchTextBox(
+                    validate: (final String? p0) {
+                      if (p0 == null || p0.isEmpty) {
+                        return "Please enter a match number";
+                      }
+                      return null;
+                    },
+                    onChange: (final int value) => vars.matchNumber = value,
+                    controller: matchNumberController,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  TextFormField(
+                    controller: scouterNameController,
+                    validator: (final String? value) =>
+                        value != null && value.isNotEmpty
+                            ? null
+                            : "Please enter your name",
+                    onChanged: (final String p0) {
+                      vars.name = p0;
+                    },
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(),
+                      hintText: "Scouter names",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   TeamSelectionFuture(
+                    controller: teamNumberController,
                     onChange: (final LightTeam team) {
                       vars.teamId = team.id;
                     },
-                    controller: teamSelectionController,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Selector<int>(
+                    options:
+                        IdProvider.of(context).matchType.idToName.keys.toList(),
+                    placeholder: "Match type",
+                    value: vars.matchTypeId,
+                    makeItem: (final int id) =>
+                        IdProvider.of(context).matchType.idToName[id]!,
+                    onChange: (final int id) {
+                      vars.matchTypeId = id;
+                    },
+                    validate: (final int i) =>
+                        i.onNull("Please pick a match type"),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  ToggleButtons(
+                    fillColor: Color.fromARGB(10, 244, 67, 54),
+                    selectedColor: Colors.red,
+                    selectedBorderColor: Colors.red,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text("Rematch"),
+                      )
+                    ],
+                    isSelected: <bool>[vars.isRematch],
+                    onPressed: (final int i) {
+                      setState(() {
+                        vars.isRematch = !vars.isRematch;
+                      });
+                    },
                   ),
                   SizedBox(height: 14.0),
                   TextField(
@@ -131,18 +205,17 @@ class _SpecificState extends State<Specific> {
                       resetForm: () {
                         setState(() {
                           vars.reset();
-                          teamSelectionController.clear();
+                          matchNumberController.clear();
+                          scouterNameController.clear();
+                          teamNumberController.clear();
                           messageController.clear();
                         });
                       },
                       mutation: """
-                  mutation MyMutation (\$team_id: Int, \$message: String, \$fault_message: String){
-                  insert_specific(objects: {team_id: \$team_id, message: \$message,}) {
-                    returning {
-                  team_id
-                  message
-                    }
-                  }
+mutation MyMutation(\$team_id: Int, \$message: String, \$fault_message: String, \$is_rematch: Boolean, \$match_number: Int, \$match_type_id: Int, \$scouter_name: String) {
+  insert_specific(objects: {team_id: \$team_id, message: \$message, is_rematch: \$is_rematch, match_number: \$match_number, match_type_id: \$match_type_id, scouter_name: \$scouter_name}) {
+    affected_rows
+  }
                   ${vars.faultMessage == null ? "" : """
   insert_broken_robots(objects: {team_id: \$team_id, message: \$fault_message}) {
     affected_rows
