@@ -7,16 +7,44 @@ import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/pc/status/fetch_status.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
-class StatusScreen extends StatelessWidget {
+class StatusScreen extends StatefulWidget {
+  @override
+  State<StatusScreen> createState() => _StatusScreenState();
+}
+
+class _StatusScreenState extends State<StatusScreen> {
+  bool isSpecific = false;
   @override
   Widget build(final BuildContext context) {
     return DashboardScaffold(
       body: Padding(
         padding: const EdgeInsets.all(defaultPadding),
         child: DashboardCard(
+          titleWidgets: <IconButton>[
+            IconButton(
+              tooltip: "Matches",
+              onPressed: () {
+                if (isSpecific == false) return;
+                setState(() {
+                  isSpecific = false;
+                });
+              },
+              icon: Icon(Icons.error_outline),
+            ),
+            IconButton(
+              tooltip: "Specific",
+              onPressed: () {
+                if (isSpecific == true) return;
+                setState(() {
+                  isSpecific = true;
+                });
+              },
+              icon: Icon(Icons.search),
+            )
+          ],
           title: "Status",
           body: StreamBuilder<List<MatchReceived>>(
-            stream: fetchStatus(),
+            stream: fetchStatus(isSpecific),
             builder: (
               final BuildContext context,
               final AsyncSnapshot<List<MatchReceived>> snapshot,
@@ -39,8 +67,9 @@ class StatusScreen extends StatelessWidget {
                         children: matches.reversed
                             .map(
                               (final MatchReceived e) => Card(
-                                color:
-                                    e.teams.length != 6 ? Colors.red : bgColor,
+                                color: e.matchTeams.length != 6
+                                    ? Colors.red
+                                    : bgColor,
                                 elevation: 2,
                                 margin: EdgeInsets.fromLTRB(
                                   5,
@@ -66,7 +95,7 @@ class StatusScreen extends StatelessWidget {
                                         Text(
                                           "${e.identifier.isRematch ? "Re " : ""}${e.identifier.type} ${e.identifier.number}",
                                         ),
-                                        ...e.teams
+                                        ...e.matchTeams
                                             .asMap()
                                             .entries
                                             .map(
@@ -115,11 +144,9 @@ class StatusScreen extends StatelessWidget {
 
 class MatchReceived {
   MatchReceived({
-    required this.teams,
-    required this.receivedMatch,
+    required this.matchTeams,
     required this.identifier,
   });
   final MatchIdentifier identifier;
-  final List<LightTeam> teams;
-  final List<bool> receivedMatch;
+  final List<LightTeam> matchTeams;
 }

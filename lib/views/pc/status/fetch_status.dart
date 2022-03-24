@@ -6,7 +6,24 @@ import "package:scouting_frontend/views/pc/status/status_screen.dart";
 import "package:collection/collection.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
-Stream<List<MatchReceived>> fetchStatus() {
+Stream<List<MatchReceived>> fetchStatus(final bool specific) {
+  final String subscription = """
+subscription Status {
+  ${specific ? "specific" : "match_2022"}(order_by: {match_type: {order: asc}, match_number: asc, is_rematch: asc}) {
+    team {
+      colors_index
+      id
+      number
+      name
+    }
+    match_number
+    is_rematch
+    match_type {
+      title
+    }
+  }
+}
+""";
   return getClient()
       .subscribe(SubscriptionOptions(document: gql(subscription)))
       .map((final QueryResult event) {
@@ -14,7 +31,8 @@ Stream<List<MatchReceived>> fetchStatus() {
       (final Map<String, dynamic>? p0) =>
           p0.mapNullable<List<MatchReceived>>(
               (final Map<String, dynamic> data) {
-            final List<dynamic> matches = data["match_2022"] as List<dynamic>;
+            final List<dynamic> matches =
+                data[specific ? "specific" : "match_2022"] as List<dynamic>;
             final Map<MatchIdentifier, List<dynamic>> identifierToMatch =
                 matches.groupListsBy(
               (final dynamic element) => MatchIdentifier(
@@ -44,8 +62,7 @@ Stream<List<MatchReceived>> fetchStatus() {
                 .map(
                   (final MapEntry<MatchIdentifier, List<LightTeam>> e) =>
                       MatchReceived(
-                    teams: e.value,
-                    receivedMatch: List<bool>.filled(e.value.length, true),
+                    matchTeams: e.value,
                     identifier: e.key,
                   ),
                 )
@@ -55,21 +72,3 @@ Stream<List<MatchReceived>> fetchStatus() {
     );
   });
 }
-
-const String subscription = """
-subscription Status {
-  match_2022(order_by: {match_type: {order: asc}, match_number: asc, is_rematch: asc}) {
-    team {
-      colors_index
-      id
-      number
-      name
-    }
-    match_number
-    is_rematch
-    match_type {
-      title
-    }
-  }
-}
-""";
