@@ -35,10 +35,18 @@ class SpecificData {
 }
 
 class SpecificMatch {
-  const SpecificMatch(
-    this.message,
-  );
+  const SpecificMatch({
+    required this.message,
+    required this.isRematch,
+    required this.matchNumber,
+    required this.matchTypeId,
+    required this.scouterNames,
+  });
   final String message;
+  final int matchNumber;
+  final int matchTypeId;
+  final String scouterNames;
+  final bool isRematch;
 }
 
 class LineChartData<E extends num> {
