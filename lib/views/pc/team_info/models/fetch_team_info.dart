@@ -32,6 +32,10 @@ query MyQuery(\$id: Int!) {
     }
     specifics {
       message
+      match_number
+      match_type_id
+      is_rematch
+      scouter_name
     }
     matches_aggregate {
       aggregate {
@@ -148,7 +152,11 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             (teamByPk["specifics"] as List<dynamic>)
                 .map(
                   (final dynamic e) => SpecificMatch(
-                    e["message"] as String,
+                    message: e["message"] as String,
+                    isRematch: e["is_rematch"] as bool,
+                    matchNumber: e["match_number"] as int,
+                    matchTypeId: e["match_type_id"] as int,
+                    scouterNames: e["scouter_name"] as String,
                   ),
                 )
                 .toList(),
