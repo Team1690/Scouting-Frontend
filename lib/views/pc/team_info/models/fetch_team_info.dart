@@ -33,7 +33,7 @@ query MyQuery(\$id: Int!) {
     specifics {
       message
     }
-    matches_aggregate {
+    matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
           auto_lower
@@ -45,7 +45,7 @@ query MyQuery(\$id: Int!) {
         }
       }
     }
-    matches(order_by: {match_type: {order: asc}, match_number: asc,is_rematch: asc}) {
+    matches(where: {ignored: {_eq: false}}, order_by: {match_type: {order: asc}, match_number: asc,is_rematch: asc}) {
       climb {
         points
         title

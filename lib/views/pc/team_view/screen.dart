@@ -290,7 +290,7 @@ subscription MySubscription {
     name
     number
     colors_index
-    matches_aggregate {
+    matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
           auto_lower

@@ -124,7 +124,7 @@ query MyQuery {
       id
       name
       number
-      matches_aggregate {
+      matches_aggregate(where: {ignored: {_eq: false}}) {
         aggregate {
           avg {
             auto_upper
@@ -148,7 +148,7 @@ query MyQuery {
       id
       name
       number
-      matches_aggregate {
+      matches_aggregate(where: {ignored: {_eq: false}}) {
         aggregate {
           avg {
             auto_upper
@@ -172,7 +172,7 @@ query MyQuery {
       id
       name
       number
-      matches_aggregate {
+      matches_aggregate(where: {ignored: {_eq: false}}) {
         aggregate {
           avg {
             auto_upper
@@ -196,7 +196,7 @@ query MyQuery {
       id
       name
       number
-      matches_aggregate {
+      matches_aggregate(where: {ignored: {_eq: false}}) {
         aggregate {
           avg {
             auto_upper
@@ -220,7 +220,7 @@ query MyQuery {
       id
       name
       number
-      matches_aggregate {
+      matches_aggregate(where: {ignored: {_eq: false}}) {
         aggregate {
           avg {
             auto_upper
@@ -244,7 +244,7 @@ query MyQuery {
       id
       name
       number
-      matches_aggregate {
+      matches_aggregate(where: {ignored: {_eq: false}}) {
         aggregate {
           avg {
             auto_upper

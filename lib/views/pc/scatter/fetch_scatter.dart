@@ -11,7 +11,7 @@ query MyQuery {
     number
     id
     name
-    matches_aggregate {
+    matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
           auto_lower
@@ -21,7 +21,7 @@ query MyQuery {
         }
       }
     }
-    matches {
+    matches(where: {ignored: {_eq: false}}) {
       auto_lower
       auto_upper
       tele_lower
