@@ -20,7 +20,7 @@ Stream<QueryResult> fetchPicklist() {
       broken_robots{
     message
   }
-    matches_aggregate {
+    matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
           auto_lower

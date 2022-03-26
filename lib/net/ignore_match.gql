@@ -1,0 +1,19 @@
+mutation IgnoreMatch(
+  $match_number: Int!
+  $match_type: String!
+  $team_number: Int!
+  $is_rematch: Boolean = false
+  $ignored: Boolean!
+) {
+  update_match_2022(
+    where: {
+      match_number: { _eq: $match_number }
+      match_type: { title: { _eq: $match_type } }
+      team: { number: { _eq: $team_number } }
+      is_rematch: { _eq: $is_rematch }
+    }
+    _set: { ignored: $ignored }
+  ) {
+    affected_rows
+  }
+}
