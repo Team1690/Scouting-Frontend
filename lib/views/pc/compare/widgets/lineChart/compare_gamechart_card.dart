@@ -24,6 +24,8 @@ class CompareGamechartCard<E extends num> extends StatelessWidget {
     final List<CompareLineChartData<E>> teleScored =
         <CompareLineChartData<E>>[];
 
+    final List<CompareLineChartData<E>> points = <CompareLineChartData<E>>[];
+
     final List<CompareLineChartData<E>> teleMissed =
         <CompareLineChartData<E>>[];
 
@@ -38,19 +40,18 @@ class CompareGamechartCard<E extends num> extends StatelessWidget {
     final List<CompareLineChartData<E>> allBalls = <CompareLineChartData<E>>[];
     for (final CompareTeam<E> item in data) {
       if ((item.climbData.points.length > 1)) {
-        teleScored.add(
-          item.upperScoredDataTele,
-        );
+        teleScored.add(item.upperScoredDataTele);
+
+        points.add(item.pointsData);
+
         allBalls.add(item.allBallsScored);
-        teleMissed.add(
-          item.missedDataTele,
-        );
-        autoScored.add(
-          item.upperScoredDataAuto,
-        );
-        autoMissed.add(
-          item.missedDataAuto,
-        );
+
+        teleMissed.add(item.missedDataTele);
+
+        autoScored.add(item.upperScoredDataAuto);
+
+        autoMissed.add(item.missedDataAuto);
+
         climb.add(item.climbData);
       }
     }
@@ -83,6 +84,7 @@ class CompareGamechartCard<E extends num> extends StatelessWidget {
                         CompareLineChart<E>(teleScored),
                         CompareLineChart<E>(teleMissed),
                         CompareLineChart<E>(allBalls),
+                        CompareLineChart<E>(points),
                         CompareClimbLineChart<E>(climb)
                       ],
                     );
