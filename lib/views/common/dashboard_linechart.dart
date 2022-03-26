@@ -215,6 +215,7 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
     required this.inputedColors,
     required this.showShadow,
     required this.robotMatchStatuses,
+    this.sideTitlesInterval = 5,
   });
   final bool showShadow;
   final List<Color> inputedColors;
@@ -222,6 +223,7 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
   final List<List<E>> dataSet;
   final List<MatchIdentifier> gameNumbers;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
+  final double sideTitlesInterval;
   num get highestValue =>
       dataSet.map((final List<E> points) => points.reduce(max)).reduce(max);
 
@@ -241,7 +243,7 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
             )
             .toList(),
         rightTitles: SideTitles(
-          interval: 5,
+          interval: sideTitlesInterval,
           getTitles: (final double value) => value.toInt().toString(),
           showTitles: true,
           getTextStyles: (final BuildContext context, final double value) =>
