@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
@@ -22,10 +23,16 @@ class ScoutingSpecific extends StatelessWidget {
                   padding: const EdgeInsets.all(defaultPadding),
                   child: Column(
                     children: <Widget>[
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "${e.isRematch ? "Re " : ""}${IdProvider.of(context).matchType.idToName[e.matchTypeId].toString()} ${e.matchNumber}",
+                        ),
+                      ),
                       SizedBox(
                         width: double.infinity,
                         child: Text(
-                          e.message,
+                          "${e.scouterNames}:\n${e.message}",
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
                             color: primaryWhite,
