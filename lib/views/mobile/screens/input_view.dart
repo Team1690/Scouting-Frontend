@@ -111,6 +111,9 @@ class _UserInputState extends State<UserInput> {
                   height: 15,
                 ),
                 ToggleButtons(
+                  fillColor: Color.fromARGB(10, 244, 67, 54),
+                  selectedColor: Colors.red,
+                  selectedBorderColor: Colors.red,
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
