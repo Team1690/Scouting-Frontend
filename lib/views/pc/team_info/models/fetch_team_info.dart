@@ -323,7 +323,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               combineLists(missedDataAuto, missedDataTele),
               combineLists(lowerScoredDataAuto, lowerScoredDataTele)
             ],
-            title: "Ball sum",
+            title: "Tele+Auto",
             robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
               3,
               (teamByPk["matches"] as List<dynamic>)
@@ -336,7 +336,34 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             ),
           );
 
+          final LineChartData<E> pointsData = LineChartData<E>(
+            points: <List<E>>[
+              matches
+                  .map(
+                    (final dynamic e) =>
+                        (e["auto_upper"] as int) * 4 +
+                        (e["auto_lower"] as int) * 2 +
+                        (e["tele_upper"] as int) * 2 +
+                        (e["tele_lower"] as int) +
+                        (e["climb"]["points"] as int),
+                  )
+                  .castToGeneric<E>()
+                  .toList()
+            ],
+            title: "Points",
+            gameNumbers: matchNumbers,
+            robotMatchStatuses: <List<RobotMatchStatus>>[
+              (teamByPk["matches"] as List<dynamic>)
+                  .map(
+                    (final dynamic e) => titleToEnum(
+                      e["robot_match_status"]["title"] as String,
+                    ),
+                  )
+                  .toList()
+            ],
+          );
           return Team<E>(
+            pointsData: pointsData,
             scoredMissedDataAll: scoredMissedDataAll,
             team: teamForQuery,
             specificData: specificData,
