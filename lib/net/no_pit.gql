@@ -1,0 +1,6 @@
+query NoPit {
+  team(where: { _not: { pit: {} } }) {
+    number
+    name
+  }
+}
