@@ -1,5 +1,4 @@
 import "dart:collection";
-import "dart:math";
 
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -20,49 +19,11 @@ class CompareGamechartCard<E extends num> extends StatelessWidget {
     final Iterable<CompareTeam<E>> emptyTeams = data.where(
       (final CompareTeam<E> element) => element.climbData.points.length < 2,
     );
-
-    final List<CompareLineChartData<E>> teleScored =
-        <CompareLineChartData<E>>[];
-
-    final List<CompareLineChartData<E>> points = <CompareLineChartData<E>>[];
-
-    final List<CompareLineChartData<E>> teleMissed =
-        <CompareLineChartData<E>>[];
-
-    final List<CompareLineChartData<E>> climb = <CompareLineChartData<E>>[];
-
-    final List<CompareLineChartData<E>> autoScored =
-        <CompareLineChartData<E>>[];
-
-    final List<CompareLineChartData<E>> autoMissed =
-        <CompareLineChartData<E>>[];
-
-    final List<CompareLineChartData<E>> allBalls = <CompareLineChartData<E>>[];
-    for (final CompareTeam<E> item in data) {
-      if ((item.climbData.points.length > 1)) {
-        teleScored.add(item.upperScoredDataTele);
-
-        points.add(item.pointsData);
-
-        allBalls.add(item.allBallsScored);
-
-        teleMissed.add(item.missedDataTele);
-
-        autoScored.add(item.upperScoredDataAuto);
-
-        autoMissed.add(item.missedDataAuto);
-
-        climb.add(item.climbData);
-      }
-    }
-    int longestList = -1;
-    for (final CompareLineChartData<E> element in climb) {
-      longestList = max(
-        longestList,
-        element.points.length,
-      );
-    }
-
+    final List<Color> colors = data
+        .map(
+          (final CompareTeam<E> element) => element.team.color,
+        )
+        .toList();
     return DashboardCard(
       title: "Gamechart",
       body: teams.isEmpty
@@ -79,13 +40,76 @@ class CompareGamechartCard<E extends num> extends StatelessWidget {
                       direction:
                           isPC(context) ? Axis.horizontal : Axis.vertical,
                       widgets: <Widget>[
-                        CompareLineChart<E>(autoScored),
-                        CompareLineChart<E>(autoMissed),
-                        CompareLineChart<E>(teleScored),
-                        CompareLineChart<E>(teleMissed),
-                        CompareLineChart<E>(allBalls),
-                        CompareLineChart<E>(points),
-                        CompareClimbLineChart<E>(climb)
+                        CompareLineChart<E>(
+                          data
+                              .map(
+                                (final CompareTeam<E> element) =>
+                                    element.upperScoredDataAuto,
+                              )
+                              .toList(),
+                          colors,
+                          "Auto Upper",
+                        ),
+                        CompareLineChart<E>(
+                          data
+                              .map(
+                                (final CompareTeam<E> element) =>
+                                    element.missedDataAuto,
+                              )
+                              .toList(),
+                          colors,
+                          "Auto Missed",
+                        ),
+                        CompareLineChart<E>(
+                          data
+                              .map(
+                                (final CompareTeam<E> element) =>
+                                    element.upperScoredDataTele,
+                              )
+                              .toList(),
+                          colors,
+                          "Teleop Upper",
+                        ),
+                        CompareLineChart<E>(
+                          data
+                              .map(
+                                (final CompareTeam<E> element) =>
+                                    element.missedDataTele,
+                              )
+                              .toList(),
+                          colors,
+                          "Teleop Missed",
+                        ),
+                        CompareLineChart<E>(
+                          data
+                              .map(
+                                (final CompareTeam<E> element) =>
+                                    element.allBallsScored,
+                              )
+                              .toList(),
+                          colors,
+                          "Balls",
+                        ),
+                        CompareLineChart<E>(
+                          data
+                              .map(
+                                (final CompareTeam<E> element) =>
+                                    element.pointsData,
+                              )
+                              .toList(),
+                          colors,
+                          "Points",
+                        ),
+                        CompareClimbLineChart<E>(
+                          data
+                              .map(
+                                (final CompareTeam<E> element) =>
+                                    element.climbData,
+                              )
+                              .toList(),
+                          colors,
+                          "Climb",
+                        )
                       ],
                     );
                   },

@@ -1,4 +1,3 @@
-import "package:flutter/material.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
@@ -38,12 +37,8 @@ class CompareTeam<E extends num> {
 class CompareLineChartData<E extends num> {
   CompareLineChartData({
     required this.points,
-    required this.title,
-    required this.color,
     required this.matchStatuses,
   });
-  final String title;
   final List<E> points;
   final List<RobotMatchStatus> matchStatuses;
-  final Color color;
 }
