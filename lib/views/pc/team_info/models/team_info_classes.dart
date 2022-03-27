@@ -139,12 +139,14 @@ class Team<E extends num> {
     required this.scoredMissedDataTele,
     required this.scoredMissedDataAuto,
     required this.scoredMissedDataAll,
+    required this.pointsData,
   });
   final LightTeam team;
   final SpecificData specificData;
   final PitData? pitViewData;
   final QuickData quickData;
   final LineChartData<E> climbData;
+  final LineChartData<E> pointsData;
   final LineChartData<E> scoredMissedDataTele;
   final LineChartData<E> scoredMissedDataAuto;
   final LineChartData<E> scoredMissedDataAll;

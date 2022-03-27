@@ -6,15 +6,17 @@ import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 class CompareLineChart<E extends num> extends StatelessWidget {
-  const CompareLineChart(this.data);
+  const CompareLineChart(this.data, this.colors, this.title);
   final List<CompareLineChartData<E>> data;
+  final List<Color> colors;
+  final String title;
   @override
   Widget build(final BuildContext context) {
     return Stack(
       children: <Widget>[
         Align(
           alignment: Alignment(-1, -1),
-          child: Text(data[0].title),
+          child: Text(title),
         ),
         Padding(
           padding: const EdgeInsets.only(
@@ -28,8 +30,7 @@ class CompareLineChart<E extends num> extends StatelessWidget {
                 .map((final CompareLineChartData<E> e) => e.matchStatuses)
                 .toList(),
             showShadow: false,
-            inputedColors:
-                data.map((final CompareLineChartData<E> e) => e.color).toList(),
+            inputedColors: colors,
             gameNumbers: List<MatchIdentifier>.generate(
               data
                   .map((final CompareLineChartData<E> e) => e.points.length)

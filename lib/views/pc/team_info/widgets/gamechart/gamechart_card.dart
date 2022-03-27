@@ -4,6 +4,7 @@ import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/ball_line_chart.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/climb_line_chart.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/points_linechart.dart";
 
 class Gamechart<E extends num> extends StatelessWidget {
   const Gamechart(this.data);
@@ -22,6 +23,7 @@ class Gamechart<E extends num> extends StatelessWidget {
                       BallLineChart<E>(data.scoredMissedDataTele),
                       BallLineChart<E>(data.scoredMissedDataAuto),
                       BallLineChart<E>(data.scoredMissedDataAll),
+                      PointsLineChart<E>(data.pointsData),
                       ClimbLineChart<E>(data.climbData),
                     ],
                   ),

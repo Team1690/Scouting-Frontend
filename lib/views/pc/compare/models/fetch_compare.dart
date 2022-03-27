@@ -153,8 +153,6 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
 
                   final CompareLineChartData<E> climbData =
                       CompareLineChartData<E>(
-                    color: team.color,
-                    title: "Climb",
                     points: climbLineChartPoints.castToGeneric<E>().toList(),
                     matchStatuses: matchStatuses,
                   );
@@ -172,16 +170,12 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
 
                   final CompareLineChartData<E> upperScoredDataTeleLineChart =
                       CompareLineChartData<E>(
-                    color: team.color,
-                    title: "Teleop upper",
                     points: upperScoredDataTele.castToGeneric<E>().toList(),
                     matchStatuses: matchStatuses,
                   );
 
                   final CompareLineChartData<E> missedDataTeleLineChart =
                       CompareLineChartData<E>(
-                    color: team.color,
-                    title: "Teleop missed",
                     points: missedDataTele.castToGeneric<E>().toList(),
                     matchStatuses: matchStatuses,
                   );
@@ -209,29 +203,39 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                           .toList();
                   final CompareLineChartData<E> upperScoredDataAutoLinechart =
                       CompareLineChartData<E>(
-                    color: team.color,
-                    title: "Auto upper",
                     points: upperScoredDataAuto.castToGeneric<E>().toList(),
                     matchStatuses: matchStatuses,
                   );
 
                   final CompareLineChartData<E> allBallsScoredLinechart =
                       CompareLineChartData<E>(
-                    color: team.color,
-                    title: "Ball scored",
                     points: allBallsScored.castToGeneric<E>().toList(),
                     matchStatuses: matchStatuses,
                   );
 
                   final CompareLineChartData<E> missedDataAutoLinechart =
                       CompareLineChartData<E>(
-                    color: team.color,
-                    title: "Auto missed",
                     points: missedDataAuto.castToGeneric<E>().toList(),
+                    matchStatuses: matchStatuses,
+                  );
+                  final CompareLineChartData<E> pointsLinechart =
+                      CompareLineChartData<E>(
+                    points: (e["matches"] as List<dynamic>)
+                        .map(
+                          (final dynamic e) =>
+                              (e["auto_upper"] as int) * 4 +
+                              (e["auto_lower"] as int) * 2 +
+                              (e["tele_upper"] as int) * 2 +
+                              (e["tele_lower"] as int) +
+                              (e["climb"]["points"] as int),
+                        )
+                        .castToGeneric<E>()
+                        .toList(),
                     matchStatuses: matchStatuses,
                   );
 
                   return CompareTeam<E>(
+                    pointsData: pointsLinechart,
                     allBallsScored: allBallsScoredLinechart,
                     team: team,
                     autoUpperScoredPercentage: autoUpperScorePercentage,
