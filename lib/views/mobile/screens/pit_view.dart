@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
+import "package:graphql/client.dart";
 import "package:image_picker/image_picker.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/image_picker_widget.dart";
 import "package:scouting_frontend/views/mobile/firebase_submit_button.dart";
@@ -55,6 +57,18 @@ class _PitViewState extends State<PitView> {
       child: Scaffold(
         drawer: SideNavBar(),
         appBar: AppBar(
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<Scaffold>(
+                    builder: (final BuildContext context) => TeamsWithoutPit(),
+                  ),
+                );
+              },
+              icon: Icon(Icons.build),
+            )
+          ],
           centerTitle: true,
           title: Text("Pit"),
         ),
@@ -271,3 +285,74 @@ class _PitViewState extends State<PitView> {
     );
   }
 }
+
+class TeamsWithoutPit extends StatelessWidget {
+  const TeamsWithoutPit();
+
+  @override
+  Widget build(final BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text("Teams without pit"),
+          centerTitle: true,
+        ),
+        body: StreamBuilder<List<LightTeam>>(
+          stream: fetchTeamsWithoutPit(),
+          builder: (
+            final BuildContext context,
+            final AsyncSnapshot<List<LightTeam>> snapshot,
+          ) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(snapshot.error.toString()),
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView(
+              children: snapshot.data.mapNullable(
+                    (final List<LightTeam> p0) => p0
+                        .map(
+                          (final LightTeam e) => ListTile(
+                            title: Text("${e.number} ${e.name}"),
+                          ),
+                        )
+                        .toList(),
+                  ) ??
+                  (throw Exception("No data")),
+            );
+          },
+        ),
+      );
+}
+
+Stream<List<LightTeam>> fetchTeamsWithoutPit() => getClient()
+    .subscribe(
+      SubscriptionOptions(
+        document: gql(
+          r"""
+query NoPit {
+  team(where:  {_not: { pit: {} } }) {
+    number
+    name
+    id
+    colors_index
+  }
+}
+""",
+        ),
+      ),
+    )
+    .map(
+      (final QueryResult result) => result.mapQueryResult(
+        (final Map<String, dynamic>? p0) =>
+            p0.mapNullable(
+              (final Map<String, dynamic> p0) => (p0["team"] as List<dynamic>)
+                  .map(LightTeam.fromJson)
+                  .toList(),
+            ) ??
+            (throw Exception("No data")),
+      ),
+    );
