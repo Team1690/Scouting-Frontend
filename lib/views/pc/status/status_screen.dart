@@ -20,7 +20,7 @@ class _StatusScreenState extends State<StatusScreen> {
       body: Padding(
         padding: const EdgeInsets.all(defaultPadding),
         child: DashboardCard(
-          titleWidgets: <IconButton>[
+          titleWidgets: <Widget>[
             IconButton(
               tooltip: "Matches",
               onPressed: () {
@@ -40,7 +40,8 @@ class _StatusScreenState extends State<StatusScreen> {
                 });
               },
               icon: Icon(Icons.search),
-            )
+            ),
+            Text(isSpecific ? "Specific" : "Techincal")
           ],
           title: "Status",
           body: StreamBuilder<List<MatchReceived>>(
@@ -67,7 +68,7 @@ class _StatusScreenState extends State<StatusScreen> {
                         children: matches.reversed
                             .map(
                               (final MatchReceived e) => Card(
-                                color: e.matchTeams.length != 6
+                                color: e.matches.length != 6
                                     ? Colors.red
                                     : bgColor,
                                 elevation: 2,
@@ -95,13 +96,10 @@ class _StatusScreenState extends State<StatusScreen> {
                                         Text(
                                           "${e.identifier.isRematch ? "Re " : ""}${e.identifier.type} ${e.identifier.number}",
                                         ),
-                                        ...e.matchTeams
-                                            .asMap()
-                                            .entries
+                                        ...e.matches
                                             .map(
                                               (
-                                                final MapEntry<int, LightTeam>
-                                                    team,
+                                                final Match match,
                                               ) =>
                                                   Container(
                                                 width: 80,
@@ -117,8 +115,15 @@ class _StatusScreenState extends State<StatusScreen> {
                                                   borderRadius:
                                                       defaultBorderRadius / 2,
                                                 ),
-                                                child: Text(
-                                                  team.value.number.toString(),
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    Text(
+                                                      match.team.number
+                                                          .toString(),
+                                                    ),
+                                                    if (e.matches.length != 6)
+                                                      Text(match.scouter)
+                                                  ],
                                                 ),
                                               ),
                                             )
@@ -144,9 +149,23 @@ class _StatusScreenState extends State<StatusScreen> {
 
 class MatchReceived {
   MatchReceived({
-    required this.matchTeams,
-    required this.identifier,
-  });
+    required final List<Match> matches,
+    required final MatchIdentifier identifier,
+  }) : this._inner(
+          identifier,
+          matches
+            ..sort(
+              ((final Match a, final Match b) =>
+                  a.team.number.compareTo(b.team.number)),
+            ),
+        );
+  MatchReceived._inner(this.identifier, this.matches);
   final MatchIdentifier identifier;
-  final List<LightTeam> matchTeams;
+  final List<Match> matches;
+}
+
+class Match {
+  const Match({required this.scouter, required this.team});
+  final LightTeam team;
+  final String scouter;
 }
