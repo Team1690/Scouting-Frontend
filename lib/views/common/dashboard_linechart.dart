@@ -47,7 +47,7 @@ class _BaseLineChart<E extends num> extends StatelessWidget {
             return LineChartBarData(
               isCurved: false,
               colors: chartColors,
-              barWidth: 8,
+              barWidth: 2,
               isStrokeCapRound: true,
               dotData: FlDotData(
                 show: true,
@@ -79,7 +79,7 @@ class _BaseLineChart<E extends num> extends StatelessWidget {
                 colors: chartColors
                     .map(
                       (final Color color) =>
-                          color.withOpacity(showShadow ? 0.3 : 0.1),
+                          color.withOpacity(showShadow ? 0.3 : 0),
                     )
                     .toList(),
               ),
