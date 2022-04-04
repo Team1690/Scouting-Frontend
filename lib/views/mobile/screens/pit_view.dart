@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:image_picker/image_picker.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
@@ -35,11 +36,12 @@ class _PitViewState extends State<PitView> {
   final FocusNode node = FocusNode();
   final ValueNotifier<bool> advancedSwitchController =
       ValueNotifier<bool>(false);
+  final TextEditingController weightContoller = TextEditingController();
 
   void resetFrame() {
     setState(() {
       vars.reset();
-
+      weightContoller.text = vars.weight.toString();
       notesController.clear();
       wheelTypeController.clear();
       teamSelectionController.clear();
@@ -178,20 +180,52 @@ class _PitViewState extends State<PitView> {
                   SizedBox(
                     height: 20,
                   ),
+                  Switcher(
+                    selected: vars.canPassLowRung
+                            .mapNullable((final bool p0) => p0 ? 0 : 1) ??
+                        -1,
+                    labels: <String>[
+                      "Can pass\nlow rung",
+                      "Can't pass\nlow rung",
+                    ],
+                    colors: <Color>[
+                      Colors.green,
+                      Colors.red,
+                    ],
+                    onChange: (final int selection) {
+                      setState(() {
+                        vars.canPassLowRung =
+                            <int, bool>{1: false, 0: true}[selection];
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    controller: weightContoller,
+                    onChanged: (final String value) {
+                      vars.weight = value.isEmpty ? 0 : int.parse(value);
+                    },
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    decoration: InputDecoration(
+                      labelText: "Weight",
+                      prefixIcon: Icon(Icons.fitness_center),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   TextField(
                     controller: wheelTypeController,
                     onChanged: (final String value) {
                       vars.driveWheelType = value;
                     },
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(
-                        10,
-                        defaultPadding,
-                        10,
-                        defaultPadding,
-                      ),
-                      hintText: "Drive Wheel type",
-                      hintStyle: TextStyle(fontSize: 14),
+                      labelText: "Drive Wheel type",
                     ),
                   ),
                   SectionDivider(label: "Robot Image"),
@@ -241,6 +275,8 @@ class _PitViewState extends State<PitView> {
               \$notes:String, 
               \$has_shifter:Boolean,
               \$team_id:Int,
+              \$weight:Int!,
+              \$can_pass_low_rung:Boolean
               ) {
           insert_pit(objects: {
           url: \$url,
@@ -252,6 +288,8 @@ class _PitViewState extends State<PitView> {
           notes: \$notes,
           has_shifter: \$has_shifter,
           team_id: \$team_id,
+          weight:  \$weight,
+          can_pass_low_rung: \$can_pass_low_rung,
           }) {
               returning {
                 url
