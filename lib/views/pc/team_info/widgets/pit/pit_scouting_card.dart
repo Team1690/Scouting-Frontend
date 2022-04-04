@@ -1,6 +1,8 @@
+import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/common/card.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 class PitScoutingCard extends StatelessWidget {
@@ -28,7 +30,7 @@ class PitScoutingCard extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    "No Fault",
+                    "No Faults",
                     style: TextStyle(fontSize: 18),
                   ),
                   Spacer(
@@ -41,7 +43,7 @@ class PitScoutingCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Faults",
+                    "Faults  ",
                     style: TextStyle(fontSize: 18),
                   ),
                   Icon(
@@ -50,14 +52,25 @@ class PitScoutingCard extends StatelessWidget {
                   )
                 ],
               ),
-              ...data.faultMessages!.map(Text.new).toList().expand(
-                    (final Text element) => <Widget>[
-                      element,
-                      SizedBox(
-                        height: 20,
-                      )
-                    ],
-                  )
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: data.faultMessages!
+                    .map(
+                      (final String a) => Text(
+                        a,
+                        textDirection: TextDirection.rtl,
+                      ),
+                    )
+                    .expand(
+                      (final Text element) => <Widget>[
+                        element,
+                        SizedBox(
+                          height: 20,
+                        )
+                      ],
+                    )
+                    .toList(),
+              )
             ],
             Align(
               alignment: Alignment.center,
@@ -70,22 +83,9 @@ class PitScoutingCard extends StatelessWidget {
             Text("Drive motor: ${data.driveMotorType}"),
             Text("Drive motor amount: ${data.driveMotorAmount}"),
             Text("Drive wheel: ${data.driveWheelType}"),
-            Row(
-              children: <Widget>[
-                Text("Has shifter:"),
-                data.hasShifer.mapNullable(
-                      (final bool hasShifter) => hasShifter
-                          ? Icon(
-                              Icons.done,
-                              color: Colors.lightGreen,
-                            )
-                          : Icon(
-                              Icons.close,
-                              color: Colors.red,
-                            ),
-                    ) ??
-                    Text(" Not answered"),
-              ],
+            HasSomething(
+              title: "Has shifter:",
+              value: data.hasShifer,
             ),
             Text(
               "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
@@ -101,10 +101,83 @@ class PitScoutingCard extends StatelessWidget {
               data.notes,
               softWrap: true,
               textDirection: TextDirection.rtl,
-            )
+            ),
+            if (!isPC(context)) ...<Widget>[
+              SizedBox(
+                height: 30,
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).push<Scaffold>(
+                    PageRouteBuilder<Scaffold>(
+                      reverseTransitionDuration: Duration(milliseconds: 700),
+                      transitionDuration: Duration(milliseconds: 700),
+                      pageBuilder: (
+                        final BuildContext context,
+                        final Animation<double> a,
+                        final Animation<double> b,
+                      ) =>
+                          GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Scaffold(
+                          body: Center(
+                            child: Hero(
+                              tag: "Robot Image",
+                              child: CachedNetworkImage(
+                                width: double.infinity,
+                                imageUrl: data.url,
+                                placeholder: (
+                                  final BuildContext context,
+                                  final String url,
+                                ) =>
+                                    CircularProgressIndicator(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  child: Hero(
+                    tag: "Robot Image",
+                    child: CachedNetworkImage(
+                      imageUrl: data.url,
+                      placeholder:
+                          (final BuildContext context, final String url) =>
+                              CircularProgressIndicator(),
+                    ),
+                  ),
+                ),
+              )
+            ]
           ],
         ),
       ),
     );
   }
+}
+
+class HasSomething extends StatelessWidget {
+  const HasSomething({required this.title, required this.value});
+  final bool? value;
+  final String title;
+  @override
+  Widget build(final BuildContext context) => Row(
+        children: <Widget>[
+          Text(title),
+          value.mapNullable(
+                (final bool hasShifter) => hasShifter
+                    ? Icon(
+                        Icons.done,
+                        color: Colors.lightGreen,
+                      )
+                    : Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
+              ) ??
+              Text(" Not answered"),
+        ],
+      );
 }
