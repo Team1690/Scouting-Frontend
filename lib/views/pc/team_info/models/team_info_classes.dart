@@ -117,6 +117,8 @@ class PitData {
     required this.hasShifer,
     required this.url,
     required this.faultMessages,
+    required this.canPassLowRung,
+    required this.weight,
   });
   final String driveTrainType;
   final int driveMotorAmount;
@@ -125,6 +127,8 @@ class PitData {
   final bool? gearboxPurchased;
   final String driveMotorType;
   final String notes;
+  final bool? canPassLowRung;
+  final int weight;
   final String url;
   final List<String>? faultMessages;
 }
