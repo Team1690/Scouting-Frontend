@@ -482,6 +482,14 @@ Widget teamData(
                         ),
                       ),
                     ),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Text(
+                          "Teleop balls 20sc: ${(team.teleUpper * (2 / 9)).toStringAsFixed(1)}",
+                        ),
+                      ),
+                    ),
                     Spacer(
                       flex: 1,
                     )
