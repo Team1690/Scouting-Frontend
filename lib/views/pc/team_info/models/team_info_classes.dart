@@ -14,6 +14,7 @@ class QuickData {
     required this.firstPicklistIndex,
     required this.secondPicklistIndex,
     required this.amoutOfMatches,
+    required this.matchesClimbed,
   });
   final int amoutOfMatches;
   final double avgBallPoints;
@@ -27,6 +28,7 @@ class QuickData {
   final String highestLevelTitle;
   final int firstPicklistIndex;
   final int secondPicklistIndex;
+  final int matchesClimbed;
 }
 
 class SpecificData {

@@ -117,6 +117,14 @@ List<PickListTeam> parse(
                       )
                       .toList();
               return PickListTeam(
+                matchesClimbed:
+                    (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                        .where(
+                          (final dynamic element) =>
+                              element["climb"]["title"] != "No attempt" &&
+                              element["climb"]["title"] != "Failed",
+                        )
+                        .length,
                 avgBalls: (avg["tele_upper"] as double? ?? double.nan) +
                     (avg["tele_lower"] as double? ?? double.nan) +
                     (avg["auto_upper"] as double? ?? double.nan) +

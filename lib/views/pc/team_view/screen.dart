@@ -147,8 +147,12 @@ class TeamView extends StatelessWidget {
                                           e.autoUpperAvg,
                                           e.ballAvg,
                                           e.ballPointAvg,
-                                          e.climbPointAvg,
                                         ].map(show),
+                                        DataCell(
+                                          Text(
+                                            "${e.climbPointAvg.toStringAsFixed(1)} / ${e.matchesClimbed} / ${e.amountOfMatches}",
+                                          ),
+                                        ),
                                         show(e.climbPercent, true),
                                         DataCell(
                                           Text(
@@ -191,6 +195,8 @@ class _Team {
     required this.climbPointAvg,
     required this.ballPointAvg,
     required this.brokenMatches,
+    required this.amountOfMatches,
+    required this.matchesClimbed,
   });
   final double teleUpperAvg;
   final double autoUpperAvg;
@@ -200,6 +206,8 @@ class _Team {
   final double climbPointAvg;
   final double climbPercent;
   final int brokenMatches;
+  final int amountOfMatches;
+  final int matchesClimbed;
 }
 
 Stream<List<_Team>> fetchTeamView() {
@@ -261,6 +269,17 @@ Stream<List<_Team>> fetchTeamView() {
                               ) /
                               climbPoints.length;
                   return _Team(
+                    amountOfMatches:
+                        (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                            .length,
+                    matchesClimbed: (e["matches_aggregate"]["nodes"]
+                            as List<dynamic>)
+                        .map((final dynamic e) => e["climb"]["title"] as String)
+                        .where(
+                          (final String element) =>
+                              element != "No attempt" && element != "Failed",
+                        )
+                        .length,
                     climbPercent: climbPercent.isNaN ? -1 : climbPercent,
                     brokenMatches: robotMatchStatuses
                         .where(

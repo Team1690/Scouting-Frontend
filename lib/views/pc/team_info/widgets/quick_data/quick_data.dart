@@ -67,7 +67,7 @@ class QuickDataCard extends StatelessWidget {
                         Spacer(),
                         Text("Balls: ${data.avgBallPoints.toStringAsFixed(1)}"),
                         Text(
-                          "Climb: ${data.avgClimbPoints.toStringAsFixed(1)}",
+                          "Climb: ${data.avgClimbPoints.toStringAsFixed(1)}/${data.matchesClimbed}/${data.amoutOfMatches}",
                         ),
                         Spacer(
                           flex: 2,
