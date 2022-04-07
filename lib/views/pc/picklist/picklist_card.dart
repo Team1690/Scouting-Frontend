@@ -53,14 +53,12 @@ class _PicklistCardState extends State<PicklistCard> {
           tooltip: "Sort taken",
           onPressed: () {
             setState(() {
-              data.sort(
-                (final PickListTeam a, final PickListTeam b) =>
-                    a.taken == b.taken
-                        ? 0
-                        : a.taken
-                            ? 1
-                            : -1,
-              );
+              final List<PickListTeam> teamsUntaken = data
+                  .where((final PickListTeam element) => !element.taken)
+                  .toList();
+              final Iterable<PickListTeam> teamsTaken =
+                  data.where((final PickListTeam element) => element.taken);
+              data = teamsUntaken..addAll(teamsTaken);
               for (int i = 0; i < data.length; i++) {
                 currentPickList.setIndex(data[i], i);
               }
