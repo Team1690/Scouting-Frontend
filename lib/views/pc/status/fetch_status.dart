@@ -16,6 +16,7 @@ subscription Status {
       number
       name
     }
+    scouter_name
     match_number
     is_rematch
     match_type {
@@ -44,15 +45,18 @@ subscription Status {
             return identifierToMatch
                 .map(
                   (final MatchIdentifier key, final List<dynamic> value) =>
-                      MapEntry<MatchIdentifier, List<LightTeam>>(
+                      MapEntry<MatchIdentifier, List<Match>>(
                     key,
                     value
                         .map(
-                          (final dynamic e) => LightTeam(
-                            e["team"]["id"] as int,
-                            e["team"]["number"] as int,
-                            e["team"]["name"] as String,
-                            e["team"]["colors_index"] as int,
+                          (final dynamic e) => Match(
+                            team: LightTeam(
+                              e["team"]["id"] as int,
+                              e["team"]["number"] as int,
+                              e["team"]["name"] as String,
+                              e["team"]["colors_index"] as int,
+                            ),
+                            scouter: e["scouter_name"] as String,
                           ),
                         )
                         .toList(),
@@ -60,9 +64,9 @@ subscription Status {
                 )
                 .entries
                 .map(
-                  (final MapEntry<MatchIdentifier, List<LightTeam>> e) =>
+                  (final MapEntry<MatchIdentifier, List<Match>> e) =>
                       MatchReceived(
-                    matchTeams: e.value,
+                    matches: e.value,
                     identifier: e.key,
                   ),
                 )

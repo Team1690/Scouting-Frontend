@@ -102,13 +102,13 @@ class PickList extends StatelessWidget {
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    "Tele aim: ${e.teleAim.toStringAsFixed(1)}%",
+                                    "Tele aim: ${(e.teleUpper + e.teleLower).toStringAsFixed(1)}/${(e.teleUpper + e.teleLower + e.teleMissed).toStringAsFixed(1)}",
                                   ),
                                 ),
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    "Auto aim: ${e.autoAim.toStringAsFixed(1)}%",
+                                    "Auto aim: ${(e.autoUpper + e.autoLower).toStringAsFixed(1)}/${(e.autoUpper + e.autoLower + e.autoMissed).toStringAsFixed(1)}",
                                   ),
                                 ),
                               ] else
@@ -143,6 +143,9 @@ class PickList extends StatelessWidget {
                           title: Row(
                             children: <Widget>[
                               Spacer(),
+                              Expanded(
+                                child: Text("Best climb: ${e.maxClimbTitle}"),
+                              ),
                               Expanded(
                                 child: Text(
                                   "Didn't work on field: ${e.robotMatchStatusToAmount[RobotMatchStatus.didntWorkOnField]}",
@@ -301,8 +304,13 @@ class PickListTeam {
     required final bool taken,
     required final double avgBallPoints,
     required final double avgClimbPoints,
-    required final double autoAim,
-    required final double teleAim,
+    required final double autoLower,
+    required final double autoUpper,
+    required final double teleUpper,
+    required final double teleLower,
+    required final double teleMissed,
+    required final double autoMissed,
+    required final String maxClimbTitle,
     required final List<String>? faultMessages,
     required final int amountOfMatches,
     required final Map<RobotMatchStatus, int> robotMatchStatusToAmount,
@@ -315,8 +323,10 @@ class PickListTeam {
           taken: taken,
           avgBallPoints: avgBallPoints,
           avgClimbPoints: avgClimbPoints,
-          autoAim: autoAim,
-          teleAim: teleAim,
+          autoLower: autoLower,
+          autoUpper: autoUpper,
+          teleLower: teleLower,
+          teleUpper: teleUpper,
           team: LightTeam(
             validateId(id),
             validateNumber(number),
@@ -329,6 +339,9 @@ class PickListTeam {
           autoBallAvg: autoBallAvg,
           avgBalls: avgBalls,
           matchesClimbed: matchesClimbed,
+          autoMissed: autoMissed,
+          teleMissed: teleMissed,
+          maxClimbTitle: maxClimbTitle,
         );
 
   PickListTeam.controller({
@@ -337,8 +350,10 @@ class PickListTeam {
     required this.taken,
     required this.avgBallPoints,
     required this.avgClimbPoints,
-    required this.autoAim,
-    required this.teleAim,
+    required this.autoLower,
+    required this.teleUpper,
+    required this.teleLower,
+    required this.autoUpper,
     required this.team,
     required this.faultMessages,
     required this.amountOfMatches,
@@ -346,15 +361,23 @@ class PickListTeam {
     required this.autoBallAvg,
     required this.avgBalls,
     required this.matchesClimbed,
+    required this.autoMissed,
+    required this.teleMissed,
+    required this.maxClimbTitle,
   });
-
+  final String maxClimbTitle;
   final int amountOfMatches;
   final double avgBallPoints;
   final double avgClimbPoints;
   final double autoBallAvg;
   final double avgBalls;
-  final double autoAim;
-  final double teleAim;
+  final double autoUpper;
+  final double autoLower;
+  final double autoMissed;
+  final double teleUpper;
+  final double teleLower;
+  final double teleMissed;
+
   final LightTeam team;
   final List<String>? faultMessages;
   final Map<RobotMatchStatus, int> robotMatchStatusToAmount;

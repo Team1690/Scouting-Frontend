@@ -103,6 +103,10 @@ class TeamView extends StatelessWidget {
                                     (final _Team a) => a.climbPointAvg,
                                   ),
                                   column(
+                                    "Max climb",
+                                    (final _Team a) => a.maxClimb.order,
+                                  ),
+                                  column(
                                     "Climb percent",
                                     (final _Team a) => a.climbPercent,
                                   ),
@@ -153,6 +157,7 @@ class TeamView extends StatelessWidget {
                                             "${e.climbPointAvg.toStringAsFixed(1)} / ${e.matchesClimbed} / ${e.amountOfMatches}",
                                           ),
                                         ),
+                                        DataCell(Text(e.maxClimb.title)),
                                         show(e.climbPercent, true),
                                         DataCell(
                                           Text(
@@ -197,7 +202,9 @@ class _Team {
     required this.brokenMatches,
     required this.amountOfMatches,
     required this.matchesClimbed,
+    required this.maxClimb,
   });
+  final MaxClimb maxClimb;
   final double teleUpperAvg;
   final double autoUpperAvg;
   final double ballAvg;
@@ -268,6 +275,16 @@ Stream<List<_Team>> fetchTeamView() {
                                     value + element,
                               ) /
                               climbPoints.length;
+                  final dynamic maxClimb =
+                      (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                          .map<dynamic>((final dynamic e) => e["climb"])
+                          .reduce(
+                            (final dynamic value, final dynamic element) =>
+                                (value["points"] as int) >
+                                        (element["points"] as int)
+                                    ? value
+                                    : element,
+                          );
                   return _Team(
                     amountOfMatches:
                         (e["matches_aggregate"]["nodes"] as List<dynamic>)
@@ -280,6 +297,10 @@ Stream<List<_Team>> fetchTeamView() {
                               element != "No attempt" && element != "Failed",
                         )
                         .length,
+                    maxClimb: MaxClimb(
+                      order: maxClimb["order"] as int,
+                      title: maxClimb["title"] as String,
+                    ),
                     climbPercent: climbPercent.isNaN ? -1 : climbPercent,
                     brokenMatches: robotMatchStatuses
                         .where(
@@ -301,7 +322,14 @@ Stream<List<_Team>> fetchTeamView() {
       );
 }
 
+class MaxClimb {
+  const MaxClimb({required this.order, required this.title});
+  final int order;
+  final String title;
+}
+
 const String query = """
+
 
 subscription MySubscription {
   team {
@@ -322,6 +350,7 @@ subscription MySubscription {
         climb {
           title
           points
+          order
         }
         robot_match_status {
           title

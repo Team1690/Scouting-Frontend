@@ -90,20 +90,6 @@ List<PickListTeam> parse(
                           ) /
                           climb.length;
 
-              final double autoAim =
-                  (((avg["auto_upper"] as double? ?? double.nan) +
-                              (avg["auto_lower"] as double? ?? double.nan)) /
-                          ((avg["auto_upper"] as double? ?? double.nan) +
-                              (avg["auto_missed"] as double? ?? double.nan) +
-                              (avg["auto_lower"] as double? ?? double.nan))) *
-                      100;
-              final double teleAim =
-                  (((avg["tele_upper"] as double? ?? double.nan) +
-                              (avg["tele_lower"] as double? ?? double.nan)) /
-                          ((avg["tele_upper"] as double? ?? double.nan) +
-                              (avg["tele_missed"] as double? ?? double.nan) +
-                              (avg["tele_lower"] as double? ?? double.nan))) *
-                      100;
               final List<String> faultMessages =
                   (e["broken_robots"] as List<dynamic>)
                       .map((final dynamic e) => e["message"] as String)
@@ -139,8 +125,20 @@ List<PickListTeam> parse(
                 firstListIndex: e["first_picklist_index"] as int,
                 secondListIndex: e["second_picklist_index"] as int,
                 taken: e["taken"] as bool,
-                autoAim: autoAim,
-                teleAim: teleAim,
+                autoLower: avg["auto_lower"] as double? ?? double.nan,
+                autoUpper: avg["auto_upper"] as double? ?? double.nan,
+                autoMissed: avg["auto_missed"] as double? ?? double.nan,
+                teleLower: avg["tele_lower"] as double? ?? double.nan,
+                teleUpper: avg["tele_upper"] as double? ?? double.nan,
+                teleMissed: avg["tele_missed"] as double? ?? double.nan,
+                maxClimbTitle:
+                    (e["matches_aggregate"]["nodes"] as List<dynamic>).reduce(
+                  (final dynamic value, final dynamic element) =>
+                      (value["climb"]["points"] as int) >
+                              (element["climb"]["points"] as int)
+                          ? value
+                          : element,
+                )["climb"]["title"] as String,
                 avgBallPoints: avgBallPoints,
                 avgClimbPoints: climbAvg,
                 faultMessages: faultMessages.isEmpty ? null : faultMessages,
