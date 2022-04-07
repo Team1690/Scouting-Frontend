@@ -120,9 +120,7 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                   final AsyncSnapshot<SplayTreeSet<CompareTeam<E>>?> snapshot,
                 ) {
                   if (snapshot.hasError) {
-                    return DashboardScaffold(
-                      body: Text(snapshot.error!.toString()),
-                    );
+                    return Text(snapshot.error!.toString());
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     if (isPC(context)) {
@@ -177,19 +175,13 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                         } else {
                           return CarouselSlider(
                             items: <Widget>[
-                              Expanded(
-                                flex: 4,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: CompareGamechartCard<E>(data, teams),
-                                ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: CompareGamechartCard<E>(data, teams),
                               ),
-                              Expanded(
-                                flex: 3,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: SpiderChartCard<E>(teams, data),
-                                ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: SpiderChartCard<E>(teams, data),
                               ),
                             ],
                             options: CarouselOptions(
