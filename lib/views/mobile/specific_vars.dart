@@ -23,7 +23,6 @@ class SpecificVars implements HasuraVars {
   }
 
   void reset() {
-    matchTypeId = null;
     isRematch = false;
     matchNumber = null;
     faultMessage = null;
