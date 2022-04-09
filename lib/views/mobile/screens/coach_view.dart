@@ -319,13 +319,16 @@ Widget teamData(
         children: <Widget>[
           Spacer(),
           Expanded(
-            child: Text(
-              team.team.number.toString(),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: team.team.number == 1690
-                    ? FontWeight.w900
-                    : FontWeight.normal,
+            child: FittedBox(
+              fit: BoxFit.fitHeight,
+              child: Text(
+                team.team.number.toString(),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: team.team.number == 1690
+                      ? FontWeight.w900
+                      : FontWeight.normal,
+                ),
               ),
             ),
           ),
