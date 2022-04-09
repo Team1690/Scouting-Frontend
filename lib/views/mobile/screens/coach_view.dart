@@ -244,9 +244,11 @@ const List<String> teamValues = <String>[
   "blue_0_team",
   "blue_1_team",
   "blue_2_team",
+  "blue_3_team",
   "red_0_team",
   "red_1_team",
-  "red_2_team"
+  "red_2_team",
+  "red_3_team",
 ];
 
 class CoachViewLightTeam {
