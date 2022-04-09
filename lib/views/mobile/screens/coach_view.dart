@@ -156,68 +156,81 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
             final int number = match["match_number"] as int;
             final String matchType = match["match_type"]["title"] as String;
             final bool happened = match["happened"] as bool;
-            final List<CoachViewLightTeam> teams =
-                teamValues.map<CoachViewLightTeam>((final String e) {
-              final LightTeam team = LightTeam(
-                match[e]["id"] as int,
-                match[e]["number"] as int,
-                match[e]["name"] as String,
-                match[e]["colors_index"] as int,
-              );
-              final dynamic avg =
-                  match[e]["matches_aggregate"]["aggregate"]["avg"];
-              final double autoLower =
-                  (avg["auto_lower"] as double?) ?? double.nan;
-              final double autoMissed =
-                  (avg["auto_missed"] as double?) ?? double.nan;
-              final double autoUpper =
-                  (avg["auto_upper"] as double?) ?? double.nan;
-              final double teleLower =
-                  (avg["tele_lower"] as double?) ?? double.nan;
-              final double teleUpper =
-                  (avg["tele_upper"] as double?) ?? double.nan;
-              final double teleMissed =
-                  (avg["tele_missed"] as double?) ?? double.nan;
-              final double avgBallPoints =
-                  autoLower * 2 + autoUpper * 4 + teleLower + teleUpper * 2;
-              final Iterable<int> climb = (match[e]["matches_aggregate"]
-                      ["nodes"] as List<dynamic>)
-                  .where(
-                    (final dynamic element) =>
-                        element["climb"]["title"] != "No attempt",
-                  )
-                  .map<int>((final dynamic e) => e["climb"]["points"] as int);
-              final int amountOfMatches =
-                  (match[e]["matches_aggregate"]["nodes"] as List<dynamic>)
-                      .length;
-              final double climbAvg = climb.isEmpty
-                  ? 0
-                  : climb.length == 1
-                      ? climb.first.toDouble()
-                      : climb.reduce(
-                            (final int value, final int element) =>
-                                value + element,
-                          ) /
-                          climb.length;
+            final List<CoachViewLightTeam> teams = teamValues
+                .map<CoachViewLightTeam?>((final String e) {
+                  // Couldn't use mapNullable properly because this variable is dynamic
+                  if (match[e] == null) {
+                    return null;
+                  }
+                  final LightTeam team = LightTeam(
+                    match[e]["id"] as int,
+                    match[e]["number"] as int,
+                    match[e]["name"] as String,
+                    match[e]["colors_index"] as int,
+                  );
+                  final dynamic avg =
+                      match[e]["matches_aggregate"]["aggregate"]["avg"];
+                  final double autoLower =
+                      (avg["auto_lower"] as double?) ?? double.nan;
+                  final double autoMissed =
+                      (avg["auto_missed"] as double?) ?? double.nan;
+                  final double autoUpper =
+                      (avg["auto_upper"] as double?) ?? double.nan;
+                  final double teleLower =
+                      (avg["tele_lower"] as double?) ?? double.nan;
+                  final double teleUpper =
+                      (avg["tele_upper"] as double?) ?? double.nan;
+                  final double teleMissed =
+                      (avg["tele_missed"] as double?) ?? double.nan;
+                  final double avgBallPoints =
+                      autoLower * 2 + autoUpper * 4 + teleLower + teleUpper * 2;
+                  final Iterable<int> climb =
+                      (match[e]["matches_aggregate"]["nodes"] as List<dynamic>)
+                          .where(
+                            (final dynamic element) =>
+                                element["climb"]["title"] != "No attempt",
+                          )
+                          .map<int>(
+                            (final dynamic e) => e["climb"]["points"] as int,
+                          );
+                  final int amountOfMatches =
+                      (match[e]["matches_aggregate"]["nodes"] as List<dynamic>)
+                          .length;
+                  final double climbAvg = climb.isEmpty
+                      ? 0
+                      : climb.length == 1
+                          ? climb.first.toDouble()
+                          : climb.reduce(
+                                (final int value, final int element) =>
+                                    value + element,
+                              ) /
+                              climb.length;
 
-              return CoachViewLightTeam(
-                amountOfMatches: amountOfMatches,
-                avgBallPoints: avgBallPoints,
-                team: team,
-                avgClimbPoints: climbAvg,
-                autoLower: autoLower,
-                autoMissed: autoMissed,
-                teleLower: teleLower,
-                autoUpper: autoUpper,
-                teleUpper: teleUpper,
-                teleMissed: teleMissed,
-              );
-            }).toList();
+                  return CoachViewLightTeam(
+                    amountOfMatches: amountOfMatches,
+                    avgBallPoints: avgBallPoints,
+                    team: team,
+                    avgClimbPoints: climbAvg,
+                    autoLower: autoLower,
+                    autoMissed: autoMissed,
+                    teleLower: teleLower,
+                    autoUpper: autoUpper,
+                    teleUpper: teleUpper,
+                    teleMissed: teleMissed,
+                    isBlue: e.startsWith("blue"),
+                  );
+                })
+                .whereType<CoachViewLightTeam>()
+                .toList();
 
             return CoachData(
               happened: happened,
-              blueAlliance: teams.sublist(0, 3),
-              redAlliance: teams.sublist(3),
+              blueAlliance: teams
+                  .where((final CoachViewLightTeam element) => element.isBlue)
+                  .toList(),
+              redAlliance: teams
+                  .where((final CoachViewLightTeam element) => !element.isBlue)
+                  .toList(),
               matchNumber: number,
               matchType: matchType,
             );
@@ -248,6 +261,7 @@ class CoachViewLightTeam {
     required this.teleLower,
     required this.teleMissed,
     required this.teleUpper,
+    required this.isBlue,
   });
   final int amountOfMatches;
   final double avgBallPoints;
@@ -259,6 +273,7 @@ class CoachViewLightTeam {
   final double teleLower;
   final double teleMissed;
   final LightTeam team;
+  final bool isBlue;
 }
 
 class CoachData {
