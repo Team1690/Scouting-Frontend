@@ -75,17 +75,12 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
                 child: Padding(
                   padding: const EdgeInsets.all(0.625),
                   child: Column(
-                    children: List<Widget>.generate(
-                      3,
-                      (final int index) => Expanded(
-                        flex: 2,
-                        child: teamData(
-                          data.blueAlliance[index],
-                          context,
-                          true,
-                        ),
-                      ),
-                    ),
+                    children: data.blueAlliance
+                        .map(
+                          (final CoachViewLightTeam e) =>
+                              Expanded(child: teamData(e, context, true)),
+                        )
+                        .toList(),
                   ),
                 ),
               ),
@@ -93,14 +88,12 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
                 child: Padding(
                   padding: const EdgeInsets.all(0.625),
                   child: Column(
-                    children: List<Widget>.generate(
-                      3,
-                      (final int index) => Expanded(
-                        flex: 2,
-                        child:
-                            teamData(data.redAlliance[index], context, false),
-                      ),
-                    ),
+                    children: data.redAlliance
+                        .map(
+                          (final CoachViewLightTeam e) =>
+                              Expanded(child: teamData(e, context, false)),
+                        )
+                        .toList(),
                   ),
                 ),
               )
