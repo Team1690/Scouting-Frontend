@@ -103,7 +103,7 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
       ],
     );
 
-const String query = """
+final String query = """
 query MyQuery {
   orbit_matches(order_by: {match_type: {order: asc}, match_number: asc}) {
     happened
@@ -111,8 +111,8 @@ query MyQuery {
     match_type {
       title
     }
-    blue_0_team {
-  
+    ${teamValues.map(
+          (final String e) => """$e{
       colors_index
       id
       name
@@ -135,127 +135,8 @@ query MyQuery {
           }
         }
       }
-    }
-    blue_1_team {
-      colors_index
-      id
-      name
-      number
-      matches_aggregate(where: {ignored: {_eq: false}}) {
-        aggregate {
-          avg {
-            auto_upper
-            auto_lower
-            tele_lower
-            tele_upper
-            tele_missed
-            auto_missed
-          }
-        }
-        nodes {
-          climb {
-            title
-            points
-          }
-        }
-      }
-    }
-    blue_2_team {
-      colors_index
-      id
-      name
-      number
-      matches_aggregate(where: {ignored: {_eq: false}}) {
-        aggregate {
-          avg {
-            auto_upper
-            auto_lower
-            tele_lower
-            tele_upper
-            tele_missed
-            auto_missed
-          }
-        }
-        nodes {
-          climb {
-            title
-            points
-          }
-        }
-      }
-    }
-    red_0_team {
-      colors_index
-      id
-      name
-      number
-      matches_aggregate(where: {ignored: {_eq: false}}) {
-        aggregate {
-          avg {
-            auto_upper
-            auto_lower
-            tele_lower
-            tele_upper
-            tele_missed
-            auto_missed
-          }
-        }
-        nodes {
-          climb {
-            title
-            points
-          }
-        }
-      }
-    }
-    red_1_team {
-      colors_index
-      id
-      name
-      number
-      matches_aggregate(where: {ignored: {_eq: false}}) {
-        aggregate {
-          avg {
-            auto_upper
-            auto_lower
-            tele_lower
-            tele_upper
-            tele_missed
-            auto_missed
-          }
-        }
-        nodes {
-          climb {
-            title
-            points
-          }
-        }
-      }
-    }
-    red_2_team {
-      colors_index
-      id
-      name
-      number
-      matches_aggregate(where: {ignored: {_eq: false}}) {
-        aggregate {
-          avg {
-            auto_upper
-            auto_lower
-            tele_lower
-            tele_upper
-            tele_missed
-            auto_missed
-          }
-        }
-        nodes {
-          climb {
-            title
-            points
-          }
-        }
-      }
-    }
+    }""",
+        ).join(" ")}
   }
 }
 
