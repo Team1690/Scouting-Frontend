@@ -27,9 +27,9 @@ class CoachView extends StatelessWidget {
               innerCoachData.mapNullable(
                 (final CoachData p0) => Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute<CompareScreen<int>>(
+                  MaterialPageRoute<CompareScreen>(
                     builder: (final BuildContext context) =>
-                        CompareScreen<int>(<LightTeam>[
+                        CompareScreen(<LightTeam>[
                       ...p0.blueAlliance
                           .map((final CoachViewLightTeam e) => e.team),
                       ...p0.redAlliance

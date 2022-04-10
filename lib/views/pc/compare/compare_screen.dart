@@ -15,18 +15,14 @@ import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/spider_ch
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
-class CompareScreen<E extends num> extends StatefulWidget {
-  CompareScreen([this.initialTeams = const <LightTeam>[]]);
-  final List<LightTeam> initialTeams;
-=======
 class CompareScreen extends StatefulWidget {
-    CompareScreen([this.initialTeams = const <LightTeam>[]]);
+  CompareScreen([this.initialTeams = const <LightTeam>[]]);
   final List<LightTeam> initialTeams;
   @override
   _CompareScreenState createState() => _CompareScreenState();
 }
 
-class _CompareScreenState extends State<CompareScreen<E>> {
+class _CompareScreenState extends State<CompareScreen> {
   late final SplayTreeSet<LightTeam> teams = SplayTreeSet<LightTeam>(
     (final LightTeam p0, final LightTeam p1) => p0.id.compareTo(p1.id),
   )..addAll(widget.initialTeams);
