@@ -2,9 +2,9 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
-class BallLineChart<E extends num> extends StatelessWidget {
+class BallLineChart extends StatelessWidget {
   const BallLineChart(this.data);
-  final LineChartData<E> data;
+  final LineChartData data;
   @override
   Widget build(final BuildContext context) => Stack(
         children: <Widget>[
@@ -42,7 +42,7 @@ class BallLineChart<E extends num> extends StatelessWidget {
               right: 20.0,
               top: 40,
             ),
-            child: DashboardLineChart<E>(
+            child: DashboardLineChart(
               showShadow: true,
               gameNumbers: data.gameNumbers,
               inputedColors: <Color>[

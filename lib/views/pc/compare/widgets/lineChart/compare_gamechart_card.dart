@@ -10,18 +10,18 @@ import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/lineChart/compare_climb_line_chart.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/lineChart/compare_line_chart.dart";
 
-class CompareGamechartCard<E extends num> extends StatelessWidget {
+class CompareGamechartCard extends StatelessWidget {
   const CompareGamechartCard(this.data, this.teams);
-  final SplayTreeSet<CompareTeam<E>> data;
+  final SplayTreeSet<CompareTeam> data;
   final SplayTreeSet<LightTeam> teams;
   @override
   Widget build(final BuildContext context) {
-    final Iterable<CompareTeam<E>> emptyTeams = data.where(
-      (final CompareTeam<E> element) => element.climbData.points.length < 2,
+    final Iterable<CompareTeam> emptyTeams = data.where(
+      (final CompareTeam element) => element.climbData.points.length < 2,
     );
     final List<Color> colors = data
         .map(
-          (final CompareTeam<E> element) => element.team.color,
+          (final CompareTeam element) => element.team.color,
         )
         .toList();
     return DashboardCard(
@@ -30,7 +30,7 @@ class CompareGamechartCard<E extends num> extends StatelessWidget {
           ? NoTeamSelected()
           : emptyTeams.isNotEmpty
               ? Text(
-                  "teams: ${emptyTeams.map((final CompareTeam<E> e) => e.team.number).toString()} have insufficient data please remove them",
+                  "teams: ${emptyTeams.map((final CompareTeam e) => e.team.number).toString()} have insufficient data please remove them",
                 )
               : Builder(
                   builder: (
@@ -40,70 +40,70 @@ class CompareGamechartCard<E extends num> extends StatelessWidget {
                       direction:
                           isPC(context) ? Axis.horizontal : Axis.vertical,
                       widgets: <Widget>[
-                        CompareLineChart<E>(
+                        CompareLineChart(
                           data
                               .map(
-                                (final CompareTeam<E> element) =>
+                                (final CompareTeam element) =>
                                     element.upperScoredDataAuto,
                               )
                               .toList(),
                           colors,
                           "Auto Upper",
                         ),
-                        CompareLineChart<E>(
+                        CompareLineChart(
                           data
                               .map(
-                                (final CompareTeam<E> element) =>
+                                (final CompareTeam element) =>
                                     element.missedDataAuto,
                               )
                               .toList(),
                           colors,
                           "Auto Missed",
                         ),
-                        CompareLineChart<E>(
+                        CompareLineChart(
                           data
                               .map(
-                                (final CompareTeam<E> element) =>
+                                (final CompareTeam element) =>
                                     element.upperScoredDataTele,
                               )
                               .toList(),
                           colors,
                           "Teleop Upper",
                         ),
-                        CompareLineChart<E>(
+                        CompareLineChart(
                           data
                               .map(
-                                (final CompareTeam<E> element) =>
+                                (final CompareTeam element) =>
                                     element.missedDataTele,
                               )
                               .toList(),
                           colors,
                           "Teleop Missed",
                         ),
-                        CompareLineChart<E>(
+                        CompareLineChart(
                           data
                               .map(
-                                (final CompareTeam<E> element) =>
+                                (final CompareTeam element) =>
                                     element.allBallsScored,
                               )
                               .toList(),
                           colors,
                           "Balls",
                         ),
-                        CompareLineChart<E>(
+                        CompareLineChart(
                           data
                               .map(
-                                (final CompareTeam<E> element) =>
+                                (final CompareTeam element) =>
                                     element.pointsData,
                               )
                               .toList(),
                           colors,
                           "Points",
                         ),
-                        CompareClimbLineChart<E>(
+                        CompareClimbLineChart(
                           data
                               .map(
-                                (final CompareTeam<E> element) =>
+                                (final CompareTeam element) =>
                                     element.climbData,
                               )
                               .toList(),

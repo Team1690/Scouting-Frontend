@@ -47,7 +47,7 @@ query MyQuery(\$ids: [Int!]) {
 }
 """;
 
-Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
+Future<SplayTreeSet<CompareTeam>> fetchData(
   final List<int> ids,
 ) async {
   final GraphQLClient client = getClient();
@@ -60,13 +60,13 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
       },
     ),
   );
-  return result.mapQueryResult<SplayTreeSet<CompareTeam<E>>>(
+  return result.mapQueryResult<SplayTreeSet<CompareTeam>>(
       (final Map<String, dynamic>? data) {
-    return data.mapNullable<SplayTreeSet<CompareTeam<E>>>(
+    return data.mapNullable<SplayTreeSet<CompareTeam>>(
           (final Map<String, dynamic> teams) {
-            return SplayTreeSet<CompareTeam<E>>.from(
+            return SplayTreeSet<CompareTeam>.from(
                 (teams["team"] as List<dynamic>)
-                    .map<CompareTeam<E>>((final dynamic e) {
+                    .map<CompareTeam>((final dynamic e) {
                   final LightTeam team = LightTeam(
                     e["id"] as int,
                     e["number"] as int,
@@ -151,9 +151,8 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     throw Exception("Not a climb value");
                   }).toList();
 
-                  final CompareLineChartData<E> climbData =
-                      CompareLineChartData<E>(
-                    points: climbLineChartPoints.castToGeneric<E>().toList(),
+                  final CompareLineChartData climbData = CompareLineChartData(
+                    points: climbLineChartPoints.toList(),
                     matchStatuses: matchStatuses,
                   );
 
@@ -168,15 +167,15 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                           )
                           .toList();
 
-                  final CompareLineChartData<E> upperScoredDataTeleLineChart =
-                      CompareLineChartData<E>(
-                    points: upperScoredDataTele.castToGeneric<E>().toList(),
+                  final CompareLineChartData upperScoredDataTeleLineChart =
+                      CompareLineChartData(
+                    points: upperScoredDataTele.toList(),
                     matchStatuses: matchStatuses,
                   );
 
-                  final CompareLineChartData<E> missedDataTeleLineChart =
-                      CompareLineChartData<E>(
-                    points: missedDataTele.castToGeneric<E>().toList(),
+                  final CompareLineChartData missedDataTeleLineChart =
+                      CompareLineChartData(
+                    points: missedDataTele.toList(),
                     matchStatuses: matchStatuses,
                   );
 
@@ -201,25 +200,25 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                                 (e["tele_lower"] as int),
                           )
                           .toList();
-                  final CompareLineChartData<E> upperScoredDataAutoLinechart =
-                      CompareLineChartData<E>(
-                    points: upperScoredDataAuto.castToGeneric<E>().toList(),
+                  final CompareLineChartData upperScoredDataAutoLinechart =
+                      CompareLineChartData(
+                    points: upperScoredDataAuto.toList(),
                     matchStatuses: matchStatuses,
                   );
 
-                  final CompareLineChartData<E> allBallsScoredLinechart =
-                      CompareLineChartData<E>(
-                    points: allBallsScored.castToGeneric<E>().toList(),
+                  final CompareLineChartData allBallsScoredLinechart =
+                      CompareLineChartData(
+                    points: allBallsScored.toList(),
                     matchStatuses: matchStatuses,
                   );
 
-                  final CompareLineChartData<E> missedDataAutoLinechart =
-                      CompareLineChartData<E>(
-                    points: missedDataAuto.castToGeneric<E>().toList(),
+                  final CompareLineChartData missedDataAutoLinechart =
+                      CompareLineChartData(
+                    points: missedDataAuto.toList(),
                     matchStatuses: matchStatuses,
                   );
-                  final CompareLineChartData<E> pointsLinechart =
-                      CompareLineChartData<E>(
+                  final CompareLineChartData pointsLinechart =
+                      CompareLineChartData(
                     points: (e["matches"] as List<dynamic>)
                         .map(
                           (final dynamic e) =>
@@ -229,12 +228,11 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                               (e["tele_lower"] as int) +
                               (e["climb"]["points"] as int),
                         )
-                        .castToGeneric<E>()
                         .toList(),
                     matchStatuses: matchStatuses,
                   );
 
-                  return CompareTeam<E>(
+                  return CompareTeam(
                     pointsData: pointsLinechart,
                     allBallsScored: allBallsScoredLinechart,
                     team: team,
@@ -258,7 +256,7 @@ Future<SplayTreeSet<CompareTeam<E>>> fetchData<E extends num>(
                     upperScoredDataTele: upperScoredDataTeleLineChart,
                     missedDataTele: missedDataTeleLineChart,
                   );
-                }), (final CompareTeam<E> team1, final CompareTeam<E> team2) {
+                }), (final CompareTeam team1, final CompareTeam team2) {
               return team1.team.id.compareTo(team2.team.id);
             });
           },

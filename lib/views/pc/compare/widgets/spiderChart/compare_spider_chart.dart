@@ -5,12 +5,12 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/radar_chart.dart";
 
-class CompareSpiderChart<E extends num> extends StatelessWidget {
+class CompareSpiderChart extends StatelessWidget {
   const CompareSpiderChart(this.data);
-  final SplayTreeSet<CompareTeam<E>> data;
+  final SplayTreeSet<CompareTeam> data;
 
-  Iterable<CompareTeam<E>> get emptyTeams => data
-      .where((final CompareTeam<E> team) => team.climbData.points.length < 2);
+  Iterable<CompareTeam> get emptyTeams =>
+      data.where((final CompareTeam team) => team.climbData.points.length < 2);
 
   @override
   Widget build(final BuildContext context) {
@@ -23,31 +23,31 @@ class CompareSpiderChart<E extends num> extends StatelessWidget {
                 final double autoRatio = 100 /
                     data
                         .map(
-                          (final CompareTeam<E> e) => e.avgAutoUpperScored,
+                          (final CompareTeam e) => e.avgAutoUpperScored,
                         )
                         .reduce(max);
                 final double teleRatio = 100 /
                     data
                         .map(
-                          (final CompareTeam<E> e) => e.avgTeleUpperScored,
+                          (final CompareTeam e) => e.avgTeleUpperScored,
                         )
                         .reduce(max);
                 final double climbPointsRatio = 100 /
                     data
                         .map(
-                          (final CompareTeam<E> e) => e.avgClimbPoints,
+                          (final CompareTeam e) => e.avgClimbPoints,
                         )
                         .reduce(max);
                 return SpiderChart(
                   colors: data
                       .map(
-                        (final CompareTeam<E> element) => element.team.color,
+                        (final CompareTeam element) => element.team.color,
                       )
                       .toList(),
                   numberOfFeatures: 6,
                   data: data
                       .map<List<int>>(
-                        (final CompareTeam<E> e) => <double>[
+                        (final CompareTeam e) => <double>[
                           e.avgAutoUpperScored * autoRatio,
                           e.autoUpperScoredPercentage,
                           e.avgTeleUpperScored * teleRatio,
