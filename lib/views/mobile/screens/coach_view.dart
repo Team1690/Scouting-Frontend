@@ -7,15 +7,41 @@ import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
+import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
 
 class CoachView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
+    int page = -1;
+    List<CoachData>? coachData;
     return Scaffold(
       drawer: SideNavBar(),
       appBar: AppBar(
         centerTitle: true,
         title: Text("Coach"),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              if (page == -1) return;
+              final CoachData? innerCoachData = coachData?[page];
+              innerCoachData.mapNullable(
+                (final CoachData p0) => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute<CompareScreen<int>>(
+                    builder: (final BuildContext context) =>
+                        CompareScreen<int>(<LightTeam>[
+                      ...p0.blueAlliance
+                          .map((final CoachViewLightTeam e) => e.team),
+                      ...p0.redAlliance
+                          .map((final CoachViewLightTeam e) => e.team)
+                    ]),
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Icons.compare_arrows),
+          )
+        ],
       ),
       body: FutureBuilder<List<CoachData>>(
         future: fetchMatches(context),
@@ -34,8 +60,14 @@ class CoachView extends StatelessWidget {
                 final int initialIndex = data.indexWhere(
                   (final CoachData element) => !element.happened,
                 );
+                coachData = data;
+                page = initialIndex;
                 return CarouselSlider(
                   options: CarouselOptions(
+                    onPageChanged:
+                        (final int index, final CarouselPageChangedReason _) {
+                      page = index;
+                    },
                     enableInfiniteScroll: false,
                     height: double.infinity,
                     aspectRatio: 2.0,
