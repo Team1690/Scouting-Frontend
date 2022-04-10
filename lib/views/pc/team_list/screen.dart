@@ -9,15 +9,15 @@ import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
-class TeamView extends StatelessWidget {
-  const TeamView();
+class TeamList extends StatelessWidget {
+  const TeamList();
 
   @override
   Widget build(final BuildContext context) => DashboardScaffold(
         body: Padding(
           padding: const EdgeInsets.all(defaultPadding),
           child: StreamBuilder<List<_Team>>(
-            stream: fetchTeamView(),
+            stream: fetchTeamList(),
             builder: (
               final BuildContext context,
               final AsyncSnapshot<List<_Team>> snapshot,
@@ -68,7 +68,7 @@ class TeamView extends StatelessWidget {
                               },
                             );
                         return DashboardCard(
-                          title: "Team view",
+                          title: "Team list",
                           body: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             primary: false,
@@ -209,7 +209,7 @@ class _Team {
   final int brokenMatches;
 }
 
-Stream<List<_Team>> fetchTeamView() {
+Stream<List<_Team>> fetchTeamList() {
   return getClient().subscribe(SubscriptionOptions(document: gql(query))).map(
         (final QueryResult event) => event.mapQueryResult<List<_Team>>(
           (final Map<String, dynamic>? p0) =>
