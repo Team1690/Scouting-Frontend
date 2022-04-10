@@ -6,7 +6,7 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart"
     show MatchIdentifier, RobotMatchStatus;
 
-class _BaseLineChart<E extends num> extends StatelessWidget {
+class _BaseLineChart extends StatelessWidget {
   const _BaseLineChart({
     required this.showShadow,
     required this.inputedColors,
@@ -25,7 +25,7 @@ class _BaseLineChart<E extends num> extends StatelessWidget {
   final List<LineTooltipItem?> Function(List<LineBarSpot>) getToolipItems;
   final bool showShadow;
   final List<Color> inputedColors;
-  final List<List<E>> dataSet;
+  final List<List<int>> dataSet;
   final List<MatchIdentifier> gameNumbers;
   final SideTitles rightTitles;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
@@ -47,7 +47,7 @@ class _BaseLineChart<E extends num> extends StatelessWidget {
             return LineChartBarData(
               isCurved: false,
               colors: chartColors,
-              barWidth: 8,
+              barWidth: 2,
               isStrokeCapRound: true,
               dotData: FlDotData(
                 show: true,
@@ -79,7 +79,7 @@ class _BaseLineChart<E extends num> extends StatelessWidget {
                 colors: chartColors
                     .map(
                       (final Color color) =>
-                          color.withOpacity(showShadow ? 0.3 : 0.1),
+                          color.withOpacity(showShadow ? 0.3 : 0),
                     )
                     .toList(),
               ),
@@ -149,7 +149,7 @@ class _BaseLineChart<E extends num> extends StatelessWidget {
   }
 }
 
-class DashboardClimbLineChart<E extends num> extends StatelessWidget {
+class DashboardClimbLineChart extends StatelessWidget {
   const DashboardClimbLineChart({
     required this.dataSet,
     required this.inputedColors,
@@ -161,10 +161,10 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
   final List<MatchIdentifier> gameNumbers;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
 
-  final List<List<E>> dataSet;
+  final List<List<int>> dataSet;
   final bool showShadow;
   @override
-  Widget build(final BuildContext context) => _BaseLineChart<E>(
+  Widget build(final BuildContext context) => _BaseLineChart(
         robotMatchStatuses: robotMatchStatuses,
         showShadow: showShadow,
         inputedColors: inputedColors,
@@ -207,7 +207,7 @@ class DashboardClimbLineChart<E extends num> extends StatelessWidget {
       );
 }
 
-class DashboardLineChart<E extends num> extends StatelessWidget {
+class DashboardLineChart extends StatelessWidget {
   const DashboardLineChart({
     required this.dataSet,
     required this.gameNumbers,
@@ -220,15 +220,15 @@ class DashboardLineChart<E extends num> extends StatelessWidget {
   final bool showShadow;
   final List<Color> inputedColors;
   final int distanceFromHighest;
-  final List<List<E>> dataSet;
+  final List<List<int>> dataSet;
   final List<MatchIdentifier> gameNumbers;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
   final double sideTitlesInterval;
-  num get highestValue =>
-      dataSet.map((final List<E> points) => points.reduce(max)).reduce(max);
+  int get highestValue =>
+      dataSet.map((final List<int> points) => points.reduce(max)).reduce(max);
 
   @override
-  Widget build(final BuildContext context) => _BaseLineChart<E>(
+  Widget build(final BuildContext context) => _BaseLineChart(
         robotMatchStatuses: robotMatchStatuses,
         showShadow: showShadow,
         inputedColors: inputedColors,

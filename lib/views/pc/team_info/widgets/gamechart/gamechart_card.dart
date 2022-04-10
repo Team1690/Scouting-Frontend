@@ -6,9 +6,9 @@ import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/ball_line
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/climb_line_chart.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/points_linechart.dart";
 
-class Gamechart<E extends num> extends StatelessWidget {
+class Gamechart extends StatelessWidget {
   const Gamechart(this.data);
-  final Team<E> data;
+  final Team data;
   @override
   Widget build(final BuildContext context) => DashboardCard(
         title: "Game Chart",
@@ -20,11 +20,11 @@ class Gamechart<E extends num> extends StatelessWidget {
                 ? Text("Not enough data for line chart")
                 : CarouselWithIndicator(
                     widgets: <Widget>[
-                      BallLineChart<E>(data.scoredMissedDataTele),
-                      BallLineChart<E>(data.scoredMissedDataAuto),
-                      BallLineChart<E>(data.scoredMissedDataAll),
-                      PointsLineChart<E>(data.pointsData),
-                      ClimbLineChart<E>(data.climbData),
+                      BallLineChart(data.scoredMissedDataTele),
+                      BallLineChart(data.scoredMissedDataAuto),
+                      BallLineChart(data.scoredMissedDataAll),
+                      PointsLineChart(data.pointsData),
+                      ClimbLineChart(data.climbData),
                     ],
                   ),
       );

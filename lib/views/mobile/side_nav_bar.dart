@@ -82,7 +82,7 @@ class SideNavBar extends StatelessWidget {
           NavbarTile(
             icon: Icons.compare_arrows_rounded,
             title: "Compare",
-            widget: CompareScreen<int>.new,
+            widget: CompareScreen.new,
           )
         ],
       ),

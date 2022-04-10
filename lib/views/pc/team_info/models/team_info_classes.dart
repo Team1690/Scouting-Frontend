@@ -49,14 +49,14 @@ class SpecificMatch {
   final bool isRematch;
 }
 
-class LineChartData<E extends num> {
+class LineChartData {
   LineChartData({
     required this.points,
     required this.title,
     required this.gameNumbers,
     required this.robotMatchStatuses,
   });
-  final List<List<E>> points;
+  final List<List<int>> points;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
   final List<MatchIdentifier> gameNumbers;
   final String title;
@@ -129,7 +129,7 @@ class PitData {
   final List<String>? faultMessages;
 }
 
-class Team<E extends num> {
+class Team {
   Team({
     required this.team,
     required this.specificData,
@@ -145,9 +145,9 @@ class Team<E extends num> {
   final SpecificData specificData;
   final PitData? pitViewData;
   final QuickData quickData;
-  final LineChartData<E> climbData;
-  final LineChartData<E> pointsData;
-  final LineChartData<E> scoredMissedDataTele;
-  final LineChartData<E> scoredMissedDataAuto;
-  final LineChartData<E> scoredMissedDataAll;
+  final LineChartData climbData;
+  final LineChartData pointsData;
+  final LineChartData scoredMissedDataTele;
+  final LineChartData scoredMissedDataAuto;
+  final LineChartData scoredMissedDataAll;
 }
