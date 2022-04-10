@@ -22,11 +22,11 @@ class CoachTeamData<E extends int> extends StatelessWidget {
           "${team.number} ${team.name}",
         ),
       ),
-      body: FutureBuilder<Team<E>>(
-        future: fetchTeamInfo<E>(team, context), //fetchTeam(team.id, context),
+      body: FutureBuilder<Team>(
+        future: fetchTeamInfo(team, context), //fetchTeam(team.id, context),
         builder: (
           final BuildContext context,
-          final AsyncSnapshot<Team<E>> snapshot,
+          final AsyncSnapshot<Team> snapshot,
         ) {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
@@ -36,7 +36,7 @@ class CoachTeamData<E extends int> extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else {
-            return snapshot.data.mapNullable((final Team<E> data) {
+            return snapshot.data.mapNullable((final Team data) {
                   return CarouselWithIndicator(
                     enableInfininteScroll: true,
                     initialPage: 0,
@@ -49,7 +49,7 @@ class CoachTeamData<E extends int> extends StatelessWidget {
                               ? Center(
                                   child: Text("No data :("),
                                 )
-                              : CoachTeamInfoLineCharts<E>(data),
+                              : CoachTeamInfoLineCharts(data),
                         ),
                       ),
                       Padding(
@@ -93,16 +93,16 @@ class CoachTeamData<E extends int> extends StatelessWidget {
   }
 }
 
-class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
+class CoachTeamInfoLineCharts extends StatelessWidget {
   CoachTeamInfoLineCharts(this.data);
-  final Team<E> data;
+  final Team data;
   @override
   Widget build(final BuildContext context) => CarouselWithIndicator(
         direction: Axis.vertical,
         enableInfininteScroll: true,
         widgets: <Widget>[
           CoachTeamInfoLineChart(
-            DashboardLineChart<E>(
+            DashboardLineChart(
               showShadow: true,
               gameNumbers: data.scoredMissedDataTele.gameNumbers,
               distanceFromHighest: 4,
@@ -117,7 +117,7 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
             "Teleop",
           ),
           CoachTeamInfoLineChart(
-            DashboardLineChart<E>(
+            DashboardLineChart(
               showShadow: true,
               gameNumbers: data.scoredMissedDataAuto.gameNumbers,
               robotMatchStatuses: data.scoredMissedDataAuto.robotMatchStatuses,
@@ -132,7 +132,7 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
             "Autonomous",
           ),
           CoachTeamInfoLineChart(
-            DashboardLineChart<E>(
+            DashboardLineChart(
               showShadow: true,
               gameNumbers: data.scoredMissedDataAll.gameNumbers,
               robotMatchStatuses: data.scoredMissedDataAll.robotMatchStatuses,
@@ -147,7 +147,7 @@ class CoachTeamInfoLineCharts<E extends num> extends StatelessWidget {
             "Balls",
           ),
           CoachTeamInfoLineChart(
-            DashboardClimbLineChart<E>(
+            DashboardClimbLineChart(
               showShadow: true,
               inputedColors: <Color>[primaryColor],
               gameNumbers: data.climbData.gameNumbers,

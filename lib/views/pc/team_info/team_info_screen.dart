@@ -58,7 +58,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
             Expanded(
               flex: 10,
               child: chosenTeam.mapNullable(
-                    TeamInfoData<double>.new,
+                    TeamInfoData.new,
                   ) ??
                   NoTeamSelected(),
             ),

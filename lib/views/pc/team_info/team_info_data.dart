@@ -9,17 +9,17 @@ import "package:scouting_frontend/views/pc/team_info/widgets/quick_data/quick_da
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/specific/specific_card.dart";
 
-class TeamInfoData<E extends num> extends StatelessWidget {
+class TeamInfoData extends StatelessWidget {
   TeamInfoData(this.team);
   final LightTeam team;
 
   @override
   Widget build(final BuildContext context) {
-    return FutureBuilder<Team<E>>(
-      future: fetchTeamInfo<E>(team, context),
+    return FutureBuilder<Team>(
+      future: fetchTeamInfo(team, context),
       builder: (
         final BuildContext context,
-        final AsyncSnapshot<Team<E>> snapShot,
+        final AsyncSnapshot<Team> snapShot,
       ) {
         if (snapShot.hasError) {
           return Center(child: Text(snapShot.error.toString()));
@@ -29,7 +29,7 @@ class TeamInfoData<E extends num> extends StatelessWidget {
           );
         }
         return snapShot.data.mapNullable<Widget>(
-              (final Team<E> data) => Row(
+              (final Team data) => Row(
                 children: <Widget>[
                   Expanded(
                     flex: 5,
@@ -42,7 +42,7 @@ class TeamInfoData<E extends num> extends StatelessWidget {
                         SizedBox(height: defaultPadding),
                         Expanded(
                           flex: 6,
-                          child: Gamechart<E>(data),
+                          child: Gamechart(data),
                         )
                       ],
                     ),

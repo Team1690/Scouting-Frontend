@@ -15,12 +15,12 @@ import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/spider_ch
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
-class CompareScreen<E extends num> extends StatefulWidget {
+class CompareScreen extends StatefulWidget {
   @override
-  _CompareScreenState<E> createState() => _CompareScreenState<E>();
+  _CompareScreenState createState() => _CompareScreenState();
 }
 
-class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
+class _CompareScreenState extends State<CompareScreen> {
   final SplayTreeSet<LightTeam> teams = SplayTreeSet<LightTeam>(
     (final LightTeam p0, final LightTeam p1) => p0.id.compareTo(p1.id),
   );
@@ -107,17 +107,17 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
             SizedBox(height: defaultPadding),
             Expanded(
               flex: 5,
-              child: FutureBuilder<SplayTreeSet<CompareTeam<E>>>(
+              child: FutureBuilder<SplayTreeSet<CompareTeam>>(
                 future: teams.isEmpty
-                    ? Future<SplayTreeSet<CompareTeam<E>>>(
-                        always(SplayTreeSet<CompareTeam<E>>()),
+                    ? Future<SplayTreeSet<CompareTeam>>(
+                        always(SplayTreeSet<CompareTeam>()),
                       )
-                    : fetchData<E>(
+                    : fetchData(
                         teams.map((final LightTeam e) => e.id).toList(),
                       ),
                 builder: (
                   final BuildContext context,
-                  final AsyncSnapshot<SplayTreeSet<CompareTeam<E>>?> snapshot,
+                  final AsyncSnapshot<SplayTreeSet<CompareTeam>?> snapshot,
                 ) {
                   if (snapshot.hasError) {
                     return Text(snapshot.error!.toString());
@@ -156,19 +156,19 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                     }
                   }
 
-                  return snapshot.data.mapNullable(
-                          (final SplayTreeSet<CompareTeam<E>> data) {
+                  return snapshot.data
+                          .mapNullable((final SplayTreeSet<CompareTeam> data) {
                         if (isPC(context)) {
                           return Row(
                             children: <Widget>[
                               Expanded(
                                 flex: 4,
-                                child: CompareGamechartCard<E>(data, teams),
+                                child: CompareGamechartCard(data, teams),
                               ),
                               SizedBox(width: defaultPadding),
                               Expanded(
                                 flex: 3,
-                                child: SpiderChartCard<E>(teams, data),
+                                child: SpiderChartCard(teams, data),
                               ),
                             ],
                           );
@@ -177,11 +177,11 @@ class _CompareScreenState<E extends num> extends State<CompareScreen<E>> {
                             items: <Widget>[
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 8),
-                                child: CompareGamechartCard<E>(data, teams),
+                                child: CompareGamechartCard(data, teams),
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 8),
-                                child: SpiderChartCard<E>(teams, data),
+                                child: SpiderChartCard(teams, data),
                               ),
                             ],
                             options: CarouselOptions(

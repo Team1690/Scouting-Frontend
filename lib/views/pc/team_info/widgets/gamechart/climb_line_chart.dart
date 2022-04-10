@@ -3,10 +3,10 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
-class ClimbLineChart<E extends num> extends StatelessWidget {
+class ClimbLineChart extends StatelessWidget {
   const ClimbLineChart(this.data);
 
-  final LineChartData<E> data;
+  final LineChartData data;
   @override
   Widget build(final BuildContext context) => Stack(
         children: <Widget>[
@@ -21,7 +21,7 @@ class ClimbLineChart<E extends num> extends StatelessWidget {
               right: 20.0,
               top: 40,
             ),
-            child: DashboardClimbLineChart<E>(
+            child: DashboardClimbLineChart(
               showShadow: true,
               inputedColors: <Color>[primaryColor],
               gameNumbers: data.gameNumbers,

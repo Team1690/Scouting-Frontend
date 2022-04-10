@@ -76,7 +76,7 @@ query MyQuery(\$id: Int!) {
 
 """;
 
-Future<Team<E>> fetchTeamInfo<E extends num>(
+Future<Team> fetchTeamInfo(
   final LightTeam teamForQuery,
   final BuildContext context,
 ) async {
@@ -237,9 +237,9 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
               )
               .toList();
 
-          final LineChartData<E> climbData = LineChartData<E>(
+          final LineChartData climbData = LineChartData(
             gameNumbers: matchNumbers,
-            points: <List<E>>[climbLineChartPoints.castToGeneric<E>().toList()],
+            points: <List<int>>[climbLineChartPoints.toList()],
             title: "Climb",
             robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
               3,
@@ -252,22 +252,17 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             ),
           );
 
-          final List<E> upperScoredDataTele = matches
-              .map((final dynamic e) => e["tele_upper"] as int)
-              .castToGeneric<E>()
-              .toList();
-          final List<E> missedDataTele = matches
+          final List<int> upperScoredDataTele =
+              matches.map((final dynamic e) => e["tele_upper"] as int).toList();
+          final List<int> missedDataTele = matches
               .map((final dynamic e) => e["tele_missed"] as int)
-              .castToGeneric<E>()
               .toList();
 
-          final List<E> lowerScoredDataTele = matches
-              .map((final dynamic e) => e["tele_lower"] as int)
-              .castToGeneric<E>()
-              .toList();
-          final LineChartData<E> scoredMissedDataTele = LineChartData<E>(
+          final List<int> lowerScoredDataTele =
+              matches.map((final dynamic e) => e["tele_lower"] as int).toList();
+          final LineChartData scoredMissedDataTele = LineChartData(
             gameNumbers: matchNumbers,
-            points: <List<E>>[
+            points: <List<int>>[
               upperScoredDataTele,
               missedDataTele,
               lowerScoredDataTele
@@ -284,22 +279,17 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             ),
           );
 
-          final List<E> upperScoredDataAuto = matches
-              .map((final dynamic e) => e["auto_upper"] as int)
-              .castToGeneric<E>()
-              .toList();
-          final List<E> missedDataAuto = matches
+          final List<int> upperScoredDataAuto =
+              matches.map((final dynamic e) => e["auto_upper"] as int).toList();
+          final List<int> missedDataAuto = matches
               .map((final dynamic e) => e["auto_missed"] as int)
-              .castToGeneric<E>()
               .toList();
-          final List<E> lowerScoredDataAuto = matches
-              .map((final dynamic e) => e["auto_lower"] as int)
-              .castToGeneric<E>()
-              .toList();
+          final List<int> lowerScoredDataAuto =
+              matches.map((final dynamic e) => e["auto_lower"] as int).toList();
 
-          final LineChartData<E> scoredMissedDataAuto = LineChartData<E>(
+          final LineChartData scoredMissedDataAuto = LineChartData(
             gameNumbers: matchNumbers,
-            points: <List<E>>[
+            points: <List<int>>[
               upperScoredDataAuto,
               missedDataAuto,
               lowerScoredDataAuto
@@ -317,15 +307,18 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             ),
           );
 
-          List<E> combineLists(final List<E> listOne, final List<E> listTwo) =>
-              List<num>.generate(
+          List<int> combineLists(
+            final List<int> listOne,
+            final List<int> listTwo,
+          ) =>
+              List<int>.generate(
                 listOne.length,
                 (final int index) => (listOne[index] + listTwo[index]),
-              ).castToGeneric<E>().toList();
+              ).toList();
 
-          final LineChartData<E> scoredMissedDataAll = LineChartData<E>(
+          final LineChartData scoredMissedDataAll = LineChartData(
             gameNumbers: matchNumbers,
-            points: <List<E>>[
+            points: <List<int>>[
               combineLists(upperScoredDataAuto, upperScoredDataTele),
               combineLists(missedDataAuto, missedDataTele),
               combineLists(lowerScoredDataAuto, lowerScoredDataTele)
@@ -343,8 +336,8 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
             ),
           );
 
-          final LineChartData<E> pointsData = LineChartData<E>(
-            points: <List<E>>[
+          final LineChartData pointsData = LineChartData(
+            points: <List<int>>[
               matches
                   .map(
                     (final dynamic e) =>
@@ -354,7 +347,6 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                         (e["tele_lower"] as int) +
                         (e["climb"]["points"] as int),
                   )
-                  .castToGeneric<E>()
                   .toList()
             ],
             title: "Points",
@@ -369,7 +361,7 @@ Future<Team<E>> fetchTeamInfo<E extends num>(
                   .toList()
             ],
           );
-          return Team<E>(
+          return Team(
             pointsData: pointsData,
             scoredMissedDataAll: scoredMissedDataAll,
             team: teamForQuery,
