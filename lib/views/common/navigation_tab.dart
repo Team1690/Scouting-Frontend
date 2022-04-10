@@ -5,7 +5,7 @@ import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/status/status_screen.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
-import "package:scouting_frontend/views/pc/team_view/screen.dart";
+import "package:scouting_frontend/views/pc/team_list/screen.dart";
 
 class NavigationTab extends StatelessWidget {
   @override
@@ -85,13 +85,13 @@ class NavigationTab extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text("Team view"),
-            leading: Icon(Icons.addchart_sharp),
+            title: const Text("Team list"),
+            leading: Icon(Icons.list_alt),
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute<TeamView>(
-                  builder: (final BuildContext context) => TeamView(),
+                MaterialPageRoute<TeamList>(
+                  builder: (final BuildContext context) => TeamList(),
                 ),
               );
             },
