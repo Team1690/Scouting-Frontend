@@ -53,9 +53,8 @@ class NavigationTab extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute<CompareScreen<int>>(
-                  builder: (final BuildContext context) =>
-                      CompareScreen<double>(),
+                MaterialPageRoute<CompareScreen>(
+                  builder: (final BuildContext context) => CompareScreen(),
                 ),
               );
             },

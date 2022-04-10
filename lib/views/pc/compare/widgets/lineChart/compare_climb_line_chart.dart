@@ -5,9 +5,9 @@ import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
-class CompareClimbLineChart<E extends num> extends StatelessWidget {
+class CompareClimbLineChart extends StatelessWidget {
   const CompareClimbLineChart(this.data, this.colors, this.title);
-  final List<CompareLineChartData<E>> data;
+  final List<CompareLineChartData> data;
   final List<Color> colors;
   final String title;
   @override
@@ -25,15 +25,15 @@ class CompareClimbLineChart<E extends num> extends StatelessWidget {
             right: 20.0,
             top: 40,
           ),
-          child: DashboardClimbLineChart<E>(
+          child: DashboardClimbLineChart(
             robotMatchStatuses: data
-                .map((final CompareLineChartData<E> e) => e.matchStatuses)
+                .map((final CompareLineChartData e) => e.matchStatuses)
                 .toList(),
             showShadow: false,
             inputedColors: colors,
             gameNumbers: List<MatchIdentifier>.generate(
               data
-                  .map((final CompareLineChartData<E> e) => e.points.length)
+                  .map((final CompareLineChartData e) => e.points.length)
                   .reduce(max),
               (final int index) => MatchIdentifier(
                 number: index + 1,
@@ -43,7 +43,7 @@ class CompareClimbLineChart<E extends num> extends StatelessWidget {
             ),
             dataSet: data
                 .map(
-                  (final CompareLineChartData<E> e) => e.points,
+                  (final CompareLineChartData e) => e.points,
                 )
                 .toList(),
           ),

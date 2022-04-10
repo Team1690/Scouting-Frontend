@@ -1,7 +1,7 @@
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
-class CompareTeam<E extends num> {
+class CompareTeam {
   CompareTeam({
     required this.autoUpperScoredPercentage,
     required this.avgAutoUpperScored,
@@ -25,20 +25,20 @@ class CompareTeam<E extends num> {
   final double teleUpperScoredPercentage;
   final double avgClimbPoints;
   final double climbPercentage;
-  final CompareLineChartData<E> allBallsScored;
-  final CompareLineChartData<E> climbData;
-  final CompareLineChartData<E> upperScoredDataTele;
-  final CompareLineChartData<E> missedDataTele;
-  final CompareLineChartData<E> upperScoredDataAuto;
-  final CompareLineChartData<E> missedDataAuto;
-  final CompareLineChartData<E> pointsData;
+  final CompareLineChartData allBallsScored;
+  final CompareLineChartData climbData;
+  final CompareLineChartData upperScoredDataTele;
+  final CompareLineChartData missedDataTele;
+  final CompareLineChartData upperScoredDataAuto;
+  final CompareLineChartData missedDataAuto;
+  final CompareLineChartData pointsData;
 }
 
-class CompareLineChartData<E extends num> {
+class CompareLineChartData {
   CompareLineChartData({
     required this.points,
     required this.matchStatuses,
   });
-  final List<E> points;
+  final List<int> points;
   final List<RobotMatchStatus> matchStatuses;
 }

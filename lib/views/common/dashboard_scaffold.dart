@@ -40,10 +40,10 @@ class DashboardScaffold extends StatelessWidget {
               event.runtimeType == RawKeyDownEvent,
         );
 
-        keyboardShortcut<CompareScreen<int>>(
+        keyboardShortcut<CompareScreen>(
           context,
           event,
-          CompareScreen<int>(),
+          CompareScreen(),
           (final RawKeyEvent event) =>
               event.isControlPressed &&
               event.physicalKey == PhysicalKeyboardKey.period &&
