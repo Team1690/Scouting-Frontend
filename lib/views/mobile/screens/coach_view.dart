@@ -238,30 +238,30 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                               ) /
                               climb.length;
 
-              return CoachViewLightTeam(
-                matchesClimbed:
-                    (match[e]["matches_aggregate"]["nodes"] as List<dynamic>)
+                  return CoachViewLightTeam(
+                    matchesClimbed: (match[e]["matches_aggregate"]["nodes"]
+                            as List<dynamic>)
                         .where(
                           (final dynamic element) =>
                               element["climb"]["title"] != "No attempt" &&
                               element["climb"]["title"] != "Failed",
                         )
                         .length,
-                amountOfMatches: amountOfMatches,
-                avgBallPoints: avgBallPoints,
-                team: team,
-                avgClimbPoints: climbAvg,
-                autoLower: autoLower,
-                autoMissed: autoMissed,
-                teleLower: teleLower,
-                autoUpper: autoUpper,
-                teleUpper: teleUpper,
-                teleMissed: teleMissed,
-                 isBlue: e.startsWith("blue"),
-              );
-            })
-            .whereType<CoachViewLightTeam>()
-            .toList();
+                    amountOfMatches: amountOfMatches,
+                    avgBallPoints: avgBallPoints,
+                    team: team,
+                    avgClimbPoints: climbAvg,
+                    autoLower: autoLower,
+                    autoMissed: autoMissed,
+                    teleLower: teleLower,
+                    autoUpper: autoUpper,
+                    teleUpper: teleUpper,
+                    teleMissed: teleMissed,
+                    isBlue: e.startsWith("blue"),
+                  );
+                })
+                .whereType<CoachViewLightTeam>()
+                .toList();
 
             return CoachData(
               happened: happened,
