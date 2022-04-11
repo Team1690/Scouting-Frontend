@@ -5,6 +5,7 @@ import "package:scouting_frontend/models/team_model.dart";
 
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/match_dropdown.dart";
+import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
@@ -33,6 +34,7 @@ class _SpecificState extends State<Specific> {
       child: Scaffold(
         drawer: SideNavBar(),
         appBar: AppBar(
+          actions: <Widget>[RobotImageButton(teamId: vars.teamId)],
           centerTitle: true,
           title: Text("Specific"),
         ),

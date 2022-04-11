@@ -4,7 +4,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/mobile/main_app_bar.dart";
+import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
@@ -42,7 +42,14 @@ class _UserInputState extends State<UserInput> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: SideNavBar(),
-      appBar: MainAppBar(),
+      appBar: AppBar(
+        actions: <Widget>[RobotImageButton(teamId: match.team?.id)],
+        centerTitle: true,
+        elevation: 5,
+        title: const Text(
+          "Orbit Scouting",
+        ),
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: formKey,
