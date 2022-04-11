@@ -327,6 +327,14 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                           climb.length;
 
               return CoachViewLightTeam(
+                matchesClimbed:
+                    (match[e]["matches_aggregate"]["nodes"] as List<dynamic>)
+                        .where(
+                          (final dynamic element) =>
+                              element["climb"]["title"] != "No attempt" &&
+                              element["climb"]["title"] != "Failed",
+                        )
+                        .length,
                 amountOfMatches: amountOfMatches,
                 avgBallPoints: avgBallPoints,
                 team: team,
@@ -374,6 +382,7 @@ class CoachViewLightTeam {
     required this.teleLower,
     required this.teleMissed,
     required this.teleUpper,
+    required this.matchesClimbed,
   });
   final int amountOfMatches;
   final double avgBallPoints;
@@ -384,6 +393,7 @@ class CoachViewLightTeam {
   final double teleUpper;
   final double teleLower;
   final double teleMissed;
+  final int matchesClimbed;
   final LightTeam team;
 }
 
@@ -462,7 +472,7 @@ Widget teamData(
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}",
+                          "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}/${team.matchesClimbed}/${team.amountOfMatches}",
                         ),
                       ),
                     ),

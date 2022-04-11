@@ -162,6 +162,13 @@ Future<Team> fetchTeamInfo(
                 .toList(),
           );
           final QuickData quickData = QuickData(
+            matchesClimbed: matches
+                .where(
+                  (final dynamic element) =>
+                      element["climb"]["title"] != "No attempt" &&
+                      element["climb"]["title"] != "Failed",
+                )
+                .length,
             firstPicklistIndex:
                 team["team_by_pk"]["first_picklist_index"] as int,
             secondPicklistIndex:

@@ -229,7 +229,9 @@ class CoachQuickData extends StatelessWidget {
                         ),
                       ),
                       Text("Balls: ${data.avgBallPoints.toStringAsFixed(1)}"),
-                      Text("Climb: ${data.avgClimbPoints.toStringAsFixed(1)}"),
+                      Text(
+                        "Climb: ${data.avgClimbPoints.toStringAsFixed(1)}/${data.matchesClimbed}/${data.amoutOfMatches}",
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Text(

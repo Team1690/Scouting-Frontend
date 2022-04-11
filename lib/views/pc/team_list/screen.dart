@@ -151,8 +151,12 @@ class TeamList extends StatelessWidget {
                                           e.autoUpperAvg,
                                           e.ballAvg,
                                           e.ballPointAvg,
-                                          e.climbPointAvg,
                                         ].map(show),
+                                        DataCell(
+                                          Text(
+                                            "${e.climbPointAvg.toStringAsFixed(1)} / ${e.matchesClimbed} / ${e.amountOfMatches}",
+                                          ),
+                                        ),
                                         DataCell(Text(e.maxClimb.title)),
                                         show(e.climbPercent, true),
                                         DataCell(
@@ -196,6 +200,8 @@ class _Team {
     required this.climbPointAvg,
     required this.ballPointAvg,
     required this.brokenMatches,
+    required this.amountOfMatches,
+    required this.matchesClimbed,
     required this.maxClimb,
   });
   final MaxClimb maxClimb;
@@ -207,6 +213,8 @@ class _Team {
   final double climbPointAvg;
   final double climbPercent;
   final int brokenMatches;
+  final int amountOfMatches;
+  final int matchesClimbed;
 }
 
 Stream<List<_Team>> fetchTeamList() {
@@ -278,6 +286,17 @@ Stream<List<_Team>> fetchTeamList() {
                                     : element,
                           );
                   return _Team(
+                    amountOfMatches:
+                        (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                            .length,
+                    matchesClimbed: (e["matches_aggregate"]["nodes"]
+                            as List<dynamic>)
+                        .map((final dynamic e) => e["climb"]["title"] as String)
+                        .where(
+                          (final String element) =>
+                              element != "No attempt" && element != "Failed",
+                        )
+                        .length,
                     maxClimb: MaxClimb(
                       order: maxClimb["order"] as int,
                       title: maxClimb["title"] as String,
