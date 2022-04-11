@@ -193,7 +193,7 @@ class PickList extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                "Climb points: ${e.avgClimbPoints.toStringAsFixed(1)}",
+                                "Climb points: ${e.avgClimbPoints.toStringAsFixed(1)}/${e.matchesClimbed}/${e.amountOfMatches}",
                               ),
                             ),
                             Expanded(
@@ -316,6 +316,7 @@ class PickListTeam {
     required final Map<RobotMatchStatus, int> robotMatchStatusToAmount,
     required final double autoBallAvg,
     required final double avgBalls,
+    required final int matchesClimbed,
   }) : this.controller(
           firstListIndex: firstListIndex,
           secondListIndex: secondListIndex,
@@ -337,6 +338,7 @@ class PickListTeam {
           robotMatchStatusToAmount: robotMatchStatusToAmount,
           autoBallAvg: autoBallAvg,
           avgBalls: avgBalls,
+          matchesClimbed: matchesClimbed,
           autoMissed: autoMissed,
           teleMissed: teleMissed,
           maxClimbTitle: maxClimbTitle,
@@ -358,6 +360,7 @@ class PickListTeam {
     required this.robotMatchStatusToAmount,
     required this.autoBallAvg,
     required this.avgBalls,
+    required this.matchesClimbed,
     required this.autoMissed,
     required this.teleMissed,
     required this.maxClimbTitle,
@@ -378,6 +381,7 @@ class PickListTeam {
   final LightTeam team;
   final List<String>? faultMessages;
   final Map<RobotMatchStatus, int> robotMatchStatusToAmount;
+  final int matchesClimbed;
 
   int firstListIndex;
   int secondListIndex;

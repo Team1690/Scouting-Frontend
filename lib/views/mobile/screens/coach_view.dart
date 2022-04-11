@@ -238,22 +238,30 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                               ) /
                               climb.length;
 
-                  return CoachViewLightTeam(
-                    amountOfMatches: amountOfMatches,
-                    avgBallPoints: avgBallPoints,
-                    team: team,
-                    avgClimbPoints: climbAvg,
-                    autoLower: autoLower,
-                    autoMissed: autoMissed,
-                    teleLower: teleLower,
-                    autoUpper: autoUpper,
-                    teleUpper: teleUpper,
-                    teleMissed: teleMissed,
-                    isBlue: e.startsWith("blue"),
-                  );
-                })
-                .whereType<CoachViewLightTeam>()
-                .toList();
+              return CoachViewLightTeam(
+                matchesClimbed:
+                    (match[e]["matches_aggregate"]["nodes"] as List<dynamic>)
+                        .where(
+                          (final dynamic element) =>
+                              element["climb"]["title"] != "No attempt" &&
+                              element["climb"]["title"] != "Failed",
+                        )
+                        .length,
+                amountOfMatches: amountOfMatches,
+                avgBallPoints: avgBallPoints,
+                team: team,
+                avgClimbPoints: climbAvg,
+                autoLower: autoLower,
+                autoMissed: autoMissed,
+                teleLower: teleLower,
+                autoUpper: autoUpper,
+                teleUpper: teleUpper,
+                teleMissed: teleMissed,
+                 isBlue: e.startsWith("blue"),
+              );
+            })
+            .whereType<CoachViewLightTeam>()
+            .toList();
 
             return CoachData(
               happened: happened,
@@ -296,6 +304,7 @@ class CoachViewLightTeam {
     required this.teleMissed,
     required this.teleUpper,
     required this.isBlue,
+    required this.matchesClimbed,
   });
   final int amountOfMatches;
   final double avgBallPoints;
@@ -306,6 +315,7 @@ class CoachViewLightTeam {
   final double teleUpper;
   final double teleLower;
   final double teleMissed;
+  final int matchesClimbed;
   final LightTeam team;
   final bool isBlue;
 }
@@ -388,7 +398,7 @@ Widget teamData(
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}",
+                          "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}/${team.matchesClimbed}/${team.amountOfMatches}",
                         ),
                       ),
                     ),

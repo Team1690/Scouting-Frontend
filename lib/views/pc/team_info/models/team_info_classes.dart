@@ -14,6 +14,7 @@ class QuickData {
     required this.firstPicklistIndex,
     required this.secondPicklistIndex,
     required this.amoutOfMatches,
+    required this.matchesClimbed,
   });
   final int amoutOfMatches;
   final double avgBallPoints;
@@ -27,6 +28,7 @@ class QuickData {
   final String highestLevelTitle;
   final int firstPicklistIndex;
   final int secondPicklistIndex;
+  final int matchesClimbed;
 }
 
 class SpecificData {
@@ -117,6 +119,8 @@ class PitData {
     required this.hasShifer,
     required this.url,
     required this.faultMessages,
+    required this.canPassLowRung,
+    required this.weight,
   });
   final String driveTrainType;
   final int driveMotorAmount;
@@ -125,6 +129,8 @@ class PitData {
   final bool? gearboxPurchased;
   final String driveMotorType;
   final String notes;
+  final bool? canPassLowRung;
+  final int weight;
   final String url;
   final List<String>? faultMessages;
 }
