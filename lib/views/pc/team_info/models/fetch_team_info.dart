@@ -17,6 +17,8 @@ query MyQuery(\$id: Int!) {
     message
     }
     pit {
+      weight
+      can_pass_low_rung
       drive_motor_amount
       drive_wheel_type
       gearbox_purchased
@@ -106,6 +108,8 @@ Future<Team> fetchTeamInfo(
                   .toList();
           final PitData? pitData = pit.mapNullable<PitData>(
             (final Map<String, dynamic> p0) => PitData(
+              canPassLowRung: p0["can_pass_low_rung"] as bool?,
+              weight: p0["weight"] as int,
               driveMotorAmount: p0["drive_motor_amount"] as int,
               driveWheelType: p0["drive_wheel_type"] as String,
               gearboxPurchased: p0["gearbox_purchased"] as bool?,
