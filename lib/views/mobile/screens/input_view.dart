@@ -1,4 +1,4 @@
-import 'dart:async';
+import "dart:async";
 
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
