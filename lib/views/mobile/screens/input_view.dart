@@ -24,10 +24,7 @@ class _UserInputState extends State<UserInput> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
-  late Match match = Match(
-    robotMatchStatusId:
-        IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
-  );
+  late Match match = Match(context);
   // -1 means nothing
 
   late final Map<int, int> robotMatchStatusIndexToId = <int, int>{
@@ -68,9 +65,8 @@ class _UserInputState extends State<UserInput> {
                     }
                     return null;
                   },
-                  onChange: (final int? value) => match = match.copyWith(
-                    matchNumber: () => value,
-                  ),
+                  onChange: (final int? value) =>
+                      match = match.copyWith(matchNumber: () => value),
                   controller: matchNumberController,
                 ),
                 SizedBox(

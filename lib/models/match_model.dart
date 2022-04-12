@@ -5,7 +5,8 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class Match implements HasuraVars {
-  const Match({
+  Match(
+    final BuildContext context, {
     this.team,
     this.matchNumber,
     this.autoUpper = 0,
@@ -14,11 +15,27 @@ class Match implements HasuraVars {
     this.teleUpper = 0,
     this.teleMissed = 0,
     this.teleLower = 0,
-    required this.robotMatchStatusId,
     this.isRematch = false,
     this.climbStatus,
     this.matchTypeId,
     this.name,
+  }) : robotMatchStatusId =
+            IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
+
+  const Match.copy({
+    required this.team,
+    required this.matchNumber,
+    required this.autoUpper,
+    required this.autoLower,
+    required this.autoMissed,
+    required this.teleUpper,
+    required this.teleMissed,
+    required this.teleLower,
+    required this.robotMatchStatusId,
+    required this.isRematch,
+    required this.climbStatus,
+    required this.matchTypeId,
+    required this.name,
   });
 
   Match copyWith({
@@ -36,7 +53,7 @@ class Match implements HasuraVars {
     final int Function()? robotMatchStatusId,
     final LightTeam? Function()? team,
   }) =>
-      Match(
+      Match.copy(
         matchNumber: checkCopy(matchNumber, this.matchNumber),
         isRematch: checkCopy(isRematch, this.isRematch),
         autoUpper: checkCopy(autoUpper, this.autoUpper),
@@ -92,7 +109,7 @@ class Match implements HasuraVars {
       "auto_upper": autoUpper,
       "auto_missed": autoMissed,
       "climb_id": climbStatus,
-      "match_number": matchNumber!,
+      "match_number": matchNumber,
       "team_id": team?.id,
       "tele_lower": teleLower,
       "tele_upper": teleUpper,
