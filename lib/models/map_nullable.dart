@@ -1,6 +1,10 @@
 T Function() always<T>(final T result) => () => result;
 T Function(I) always2<T, I>(final T result) => (final I _ignored) => result;
 T identity<T>(final T result) => result;
+T functionIdentity<T>(final T Function() f) => f();
+
+T checkCopy<T>(final T Function()? f, final T thisVariable) =>
+    f.fold(always(thisVariable), functionIdentity);
 
 extension MapNullable<A> on A? {
   B fold<B>(final B Function() onEmpty, final B Function(A) onSome) =>
