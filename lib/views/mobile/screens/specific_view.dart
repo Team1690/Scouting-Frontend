@@ -53,7 +53,7 @@ class _SpecificState extends State<Specific> {
                       }
                       return null;
                     },
-                    onChange: (final int value) => vars.matchNumber = value,
+                    onChange: (final int? value) => vars.matchNumber = value,
                     controller: matchNumberController,
                   ),
                   SizedBox(

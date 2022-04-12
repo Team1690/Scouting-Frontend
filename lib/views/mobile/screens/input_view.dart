@@ -68,7 +68,7 @@ class _UserInputState extends State<UserInput> {
                     }
                     return null;
                   },
-                  onChange: (final int value) => match = match.copyWith(
+                  onChange: (final int? value) => match = match.copyWith(
                     matchNumber: () => value,
                   ),
                   controller: matchNumberController,
@@ -133,6 +133,7 @@ class _UserInputState extends State<UserInput> {
                   onPressed: (final int i) {
                     setState(() {
                       match = match.copyWith(isRematch: () => !match.isRematch);
+                      print(match.toHasuraVars());
                     });
                   },
                 ),

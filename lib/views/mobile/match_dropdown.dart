@@ -8,7 +8,7 @@ class MatchTextBox extends StatefulWidget {
     required this.validate,
   });
   final String? Function(String?) validate;
-  final void Function(int) onChange;
+  final void Function(int?) onChange;
   final TextEditingController controller;
 
   @override
@@ -28,7 +28,7 @@ class _MatchTextBoxState extends State<MatchTextBox> {
         setState(() => _validate = value.isEmpty);
         value.isNotEmpty
             ? widget.onChange(int.parse(value))
-            : widget.onChange(100);
+            : widget.onChange(null);
       },
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly
