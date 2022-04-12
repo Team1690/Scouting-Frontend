@@ -24,7 +24,7 @@ class _UserInputState extends State<UserInput> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
-  late final Match match = Match(
+  late Match match = Match(
     robotMatchStatusId:
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
   );
@@ -68,7 +68,9 @@ class _UserInputState extends State<UserInput> {
                     }
                     return null;
                   },
-                  onChange: (final int value) => match.matchNumber = value,
+                  onChange: (final int value) => match = match.copyWith(
+                    matchNumber: () => value,
+                  ),
                   controller: matchNumberController,
                 ),
                 SizedBox(
@@ -81,7 +83,7 @@ class _UserInputState extends State<UserInput> {
                           ? null
                           : "Please enter your name",
                   onChanged: (final String p0) {
-                    match.name = p0;
+                    match = match.copyWith(name: () => p0);
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.person),
@@ -95,7 +97,7 @@ class _UserInputState extends State<UserInput> {
                 TeamSelectionFuture(
                   controller: teamNumberController,
                   onChange: (final LightTeam team) {
-                    match.team = team;
+                    match = match.copyWith(team: () => team);
                   },
                 ),
                 SizedBox(
@@ -109,7 +111,7 @@ class _UserInputState extends State<UserInput> {
                   makeItem: (final int id) =>
                       IdProvider.of(context).matchType.idToName[id]!,
                   onChange: (final int id) {
-                    match.matchTypeId = id;
+                    match = match.copyWith(matchTypeId: () => id);
                   },
                   validate: (final int i) =>
                       i.onNull("Please pick a match type"),
@@ -130,7 +132,7 @@ class _UserInputState extends State<UserInput> {
                   isSelected: <bool>[match.isRematch],
                   onPressed: (final int i) {
                     setState(() {
-                      match.isRematch = !match.isRematch;
+                      match = match.copyWith(isRematch: () => !match.isRematch);
                     });
                   },
                 ),
@@ -144,10 +146,10 @@ class _UserInputState extends State<UserInput> {
                 Counter(
                   label: "Upper scored",
                   icon: Icons.sports_baseball,
-                  count: match.autoHigh,
+                  count: match.autoUpper,
                   onChange: (final int p0) {
                     setState(() {
-                      match.autoHigh = p0;
+                      match = match.copyWith(autoUpper: () => p0);
                     });
                   },
                 ),
@@ -157,10 +159,10 @@ class _UserInputState extends State<UserInput> {
                 Counter(
                   label: "Lower scored",
                   icon: Icons.sports_baseball_outlined,
-                  count: match.autoLow,
+                  count: match.autoLower,
                   onChange: (final int p0) {
                     setState(() {
-                      match.autoLow = p0;
+                      match = match.copyWith(autoLower: () => p0);
                     });
                   },
                 ),
@@ -173,7 +175,7 @@ class _UserInputState extends State<UserInput> {
                   icon: Icons.error,
                   onChange: (final int p0) {
                     setState(() {
-                      match.autoMissed = p0;
+                      match = match.copyWith(autoMissed: () => p0);
                     });
                   },
                 ),
@@ -185,12 +187,12 @@ class _UserInputState extends State<UserInput> {
                   height: 10,
                 ),
                 Counter(
-                  count: match.teleHigh,
+                  count: match.teleUpper,
                   label: "Upper scored",
                   icon: Icons.sports_baseball,
                   onChange: (final int p0) {
                     setState(() {
-                      match.teleHigh = p0;
+                      match = match.copyWith(teleUpper: () => p0);
                     });
                   },
                 ),
@@ -198,12 +200,12 @@ class _UserInputState extends State<UserInput> {
                   height: 20,
                 ),
                 Counter(
-                  count: match.teleLow,
+                  count: match.teleLower,
                   label: "Lower scored",
                   icon: Icons.sports_baseball_outlined,
                   onChange: (final int p0) {
                     setState(() {
-                      match.teleLow = p0;
+                      match = match.copyWith(teleLower: () => p0);
                     });
                   },
                 ),
@@ -216,7 +218,7 @@ class _UserInputState extends State<UserInput> {
                   icon: Icons.error,
                   onChange: (final int p0) {
                     setState(() {
-                      match.teleMissed = p0;
+                      match = match.copyWith(teleMissed: () => p0);
                     });
                   },
                 ),
@@ -232,7 +234,9 @@ class _UserInputState extends State<UserInput> {
                   ],
                   onChange: (final int i) {
                     setState(() {
-                      match.robotMatchStatusId = robotMatchStatusIndexToId[i]!;
+                      match = match.copyWith(
+                        robotMatchStatusId: () => robotMatchStatusIndexToId[i]!,
+                      );
                     });
                   },
                   selected: <int, int>{
@@ -260,7 +264,7 @@ class _UserInputState extends State<UserInput> {
                         IdProvider.of(context).climb.idToName[p0]!,
                     onChange: (final int p0) {
                       setState(() {
-                        match.climbStatus = p0;
+                        match = match.copyWith(climbStatus: () => p0);
                       });
                     },
                     value: match.climbStatus,
@@ -272,7 +276,7 @@ class _UserInputState extends State<UserInput> {
                 SubmitButton(
                   resetForm: () {
                     setState(() {
-                      match.clear(context);
+                      match = match.clear(context);
                       teamNumberController.clear();
                       matchNumberController.clear();
                     });
