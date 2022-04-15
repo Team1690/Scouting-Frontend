@@ -52,9 +52,6 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () async {
-        if (!widget.validate()) {
-          return;
-        }
         if (_state == ButtonState.fail) {
           Navigator.push(
             context,
@@ -71,6 +68,18 @@ class _SubmitButtonState extends State<SubmitButton> {
               },
             ),
           );
+        }
+        if (!widget.validate()) {
+          setState(() {
+            _state = ButtonState.fail;
+            _errorMessage = "You forgot to enter some fields";
+          });
+          Future<void>.delayed(Duration(seconds: 5), () {
+            setState(() {
+              _state = ButtonState.idle;
+            });
+          });
+          return;
         }
         if (_state == ButtonState.loading) {
           return;
