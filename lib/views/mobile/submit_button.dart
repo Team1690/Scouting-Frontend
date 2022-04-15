@@ -94,11 +94,21 @@ class _SubmitButtonState extends State<SubmitButton> {
             variables: widget.vars.toHasuraVars(),
           ),
         );
-        if (queryResult.hasException) {
+        final OperationException? exception = queryResult.exception;
+        if (exception != null) {
           setState(() {
             _state = ButtonState.fail;
           });
-          _errorMessage = queryResult.exception!.graphqlErrors.first.message;
+          final List<GraphQLError> errors = exception.graphqlErrors;
+          if (errors.length == 1) {
+            final GraphQLError error = errors.single;
+            _errorMessage = error.extensions?["code"]?.toString() ==
+                    "constraint-violation"
+                ? "That match already exisits check if you scouted that correct robot/wrote the correct match"
+                : error.message;
+          } else {
+            _errorMessage = errors.join(", ");
+          }
         } else {
           widget.resetForm();
           setState(() {
