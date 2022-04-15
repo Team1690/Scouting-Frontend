@@ -17,16 +17,16 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
-  final Map<String, Map<String, int>> enums = await fetchEnums(
-    <String>[
-      "climb_2022",
-      "drivetrain",
-      "drivemotor",
-      "match_type",
-      "robot_match_status",
-      "fault_status",
-    ],
-  );
+  final Map<String, Map<String, int>> enums = await fetchEnums(<String>[
+    "climb_2022",
+    "drivetrain",
+    "drivemotor",
+    "match_type",
+    "robot_match_status",
+    "fault_status",
+  ], <String>[
+    "match_type"
+  ]);
 
   final Map<String, int> climbs = enums["climb_2022"]!;
   final Map<String, int> driveTrains = enums["drivetrain"]!;
