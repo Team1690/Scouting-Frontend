@@ -51,7 +51,7 @@ void main(final List<String> args) async {
       abbr: "m",
       help: "The match type to fetch the matches for",
       valueHelp: "qm",
-      allowed: const <String>["qm", "qf", "sf", "f", "rb"],
+      allowed: const <String>["qm", "qf", "sf", "f", "rb", "ef"],
     );
 
   final ArgResults results = arg.parse(args);
