@@ -93,8 +93,10 @@ class MatchIdentifier {
 
   static String shortenType(final String type) {
     switch (type) {
+      case "Pre scouting":
+        return "pre";
       case "Practice":
-        return "pr";
+        return "pra";
       case "Quals":
         return "";
       case "Finals":
@@ -103,6 +105,10 @@ class MatchIdentifier {
         return "sf";
       case "Quarter finals":
         return "qf";
+      case "Round robin":
+        return "rb";
+      case "Einstein finals":
+        return "ef";
     }
     throw Exception("Not a supported match type");
   }
