@@ -51,7 +51,7 @@ void main(final List<String> args) async {
       abbr: "m",
       help: "The match type to fetch the matches for",
       valueHelp: "qm",
-      allowed: const <String>["qm", "qf", "sf", "f"],
+      allowed: const <String>["qm", "qf", "sf", "f", "rb"],
     );
 
   final ArgResults results = arg.parse(args);
@@ -64,15 +64,13 @@ void main(final List<String> args) async {
   final Map<String, int> matchTypes = (await fetchEnum("match_type"));
 
   final List<LightTeam> teams = await fetchTeams();
+  final String event = (results["event"] as String?) ??
+      (throw ArgumentError(
+        "You need to add an event code add -h for help",
+      ));
+  final http.Response response = await fetchTeamMatches(event);
 
-  final http.Response response = await fetchTeamMatches(
-    (results["event"] as String?) ??
-        (throw ArgumentError(
-          "You need to add an event code add -h for help",
-        )),
-  );
-
-  int tbaMatchTypeToId(final String tbaType) {
+  int userTypeToId(final String tbaType) {
     switch (tbaType) {
       case "qm":
         return matchTypes["Quals"]!;
@@ -82,24 +80,47 @@ void main(final List<String> args) async {
         return matchTypes["Semi finals"]!;
       case "f":
         return matchTypes["Finals"]!;
+      case "rb":
+        return matchTypes["Round robin"]!;
+      case "ef":
+        return matchTypes["Einstein finals"]!;
     }
-    throw Exception("Not a match type");
+    throw Exception("Not a match type $tbaType");
   }
 
   final String matchType = (results["match-type"] as String?) ??
       (throw ArgumentError(
         "You need to add a match type add -h for help",
       ));
+  String userTypeToTbaType(final String userType) {
+    switch (userType) {
+      case "rb":
+        assert(
+          event.contains("cmptx"),
+          "Cant have round robin when its not a championship",
+        );
+        return "sf";
+      case "ef":
+        assert(
+          event.contains("cmptx"),
+          "Cant have einstein finals when its not a championship",
+        );
+        return "f";
+      default:
+        return userType;
+    }
+  }
+
   print(
     await sendMatches(
       parseResponse(
         response,
         results["event"] as String,
-        matchType,
+        userTypeToTbaType(matchType),
       ),
       getClient(),
       teams,
-      tbaMatchTypeToId(matchType),
+      userTypeToId(matchType),
     ),
   );
 }
