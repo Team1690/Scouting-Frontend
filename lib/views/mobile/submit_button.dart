@@ -52,9 +52,6 @@ class _SubmitButtonState extends State<SubmitButton> {
         )
       },
       onPressed: () async {
-        if (!widget.validate()) {
-          return;
-        }
         if (_state == ButtonState.fail) {
           Navigator.push(
             context,
@@ -72,6 +69,18 @@ class _SubmitButtonState extends State<SubmitButton> {
             ),
           );
         }
+        if (!widget.validate()) {
+          setState(() {
+            _state = ButtonState.fail;
+            _errorMessage = "You forgot to enter some fields";
+          });
+          Future<void>.delayed(Duration(seconds: 5), () {
+            setState(() {
+              _state = ButtonState.idle;
+            });
+          });
+          return;
+        }
         if (_state == ButtonState.loading) {
           return;
         }
@@ -85,11 +94,21 @@ class _SubmitButtonState extends State<SubmitButton> {
             variables: widget.vars.toHasuraVars(),
           ),
         );
-        if (queryResult.hasException) {
+        final OperationException? exception = queryResult.exception;
+        if (exception != null) {
           setState(() {
             _state = ButtonState.fail;
           });
-          _errorMessage = queryResult.exception!.graphqlErrors.first.message;
+          final List<GraphQLError> errors = exception.graphqlErrors;
+          if (errors.length == 1) {
+            final GraphQLError error = errors.single;
+            _errorMessage = error.extensions?["code"]?.toString() ==
+                    "constraint-violation"
+                ? "That match already exisits check if you scouted that correct robot/wrote the correct match"
+                : error.message;
+          } else {
+            _errorMessage = errors.join(", ");
+          }
         } else {
           widget.resetForm();
           setState(() {
