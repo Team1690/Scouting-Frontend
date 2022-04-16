@@ -16,14 +16,16 @@ import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
 class CompareScreen extends StatefulWidget {
+  CompareScreen([this.initialTeams = const <LightTeam>[]]);
+  final List<LightTeam> initialTeams;
   @override
   _CompareScreenState createState() => _CompareScreenState();
 }
 
 class _CompareScreenState extends State<CompareScreen> {
-  final SplayTreeSet<LightTeam> teams = SplayTreeSet<LightTeam>(
+  late final SplayTreeSet<LightTeam> teams = SplayTreeSet<LightTeam>(
     (final LightTeam p0, final LightTeam p1) => p0.id.compareTo(p1.id),
-  );
+  )..addAll(widget.initialTeams);
   final TextEditingController controller = TextEditingController();
   void removeTeam(final MapEntry<int, LightTeam> index) {
     teams.removeWhere(
