@@ -1,5 +1,6 @@
+import "dart:math";
+
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/mobile/stepper.dart";
 
 class Counter extends StatelessWidget {
   Counter({
@@ -16,7 +17,6 @@ class Counter extends StatelessWidget {
   final IconData icon;
 
   final void Function(int) onChange;
-
   final int stepValue;
   final int upperLimit;
   final int lowerLimit;
@@ -25,42 +25,109 @@ class Counter extends StatelessWidget {
   final int count;
   @override
   Widget build(final BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: <Widget>[
-        Expanded(
-          flex: 2,
-          child: Icon(
-            icon,
-            color: Colors.blue,
-            size: 30,
-            semanticLabel: "Text to announce in accessibility modes",
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Text(
-              label,
-              maxLines: 1,
-              textScaleFactor: 1.5,
+        Row(
+          children: <Widget>[
+            Spacer(),
+            Expanded(
+              child: Icon(
+                icon,
+                color: Colors.blue,
+                size: 30,
+                semanticLabel: "Text to announce in accessibility modes",
+              ),
             ),
+            Expanded(
+              flex: 2,
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  textScaleFactor: 1.5,
+                ),
+              ),
+            ),
+            Spacer(
+              flex: 2,
+            )
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Spacer(),
+              Expanded(
+                flex: 6,
+                child: RoundedIconButton(
+                  color: Colors.red,
+                  icon: Icons.remove,
+                  onPress: () => onChange(max(lowerLimit, count - stepValue)),
+                  onLongPress: () =>
+                      onChange(max(lowerLimit, count - longPressedValue)),
+                ),
+              ),
+              Expanded(
+                flex: 4,
+                child: Text(
+                  "$count",
+                  style: TextStyle(fontSize: 40),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                flex: 6,
+                child: RoundedIconButton(
+                  color: Colors.green,
+                  icon: Icons.add,
+                  onPress: () {
+                    onChange(min(upperLimit, count + stepValue));
+                  },
+                  onLongPress: () {
+                    onChange(min(upperLimit, count + longPressedValue));
+                  },
+                ),
+              ),
+              Spacer(),
+            ],
           ),
         ),
-        Expanded(
-          flex: 4,
-          child: CustomStepper(
-            iconSize: 30,
-            lowerLimit: lowerLimit,
-            upperLimit: upperLimit,
-            value: count,
-            stepValue: stepValue,
-            longPressStepValue: longPressedValue,
-            onChanged: onChange,
-          ),
-        )
       ],
+    );
+  }
+}
+
+class RoundedIconButton extends StatelessWidget {
+  RoundedIconButton({
+    required this.icon,
+    required this.onPress,
+    required this.onLongPress,
+    final Color? color,
+  }) : color = color ?? Colors.amber;
+
+  final IconData icon;
+  final void Function() onPress;
+  final void Function() onLongPress;
+  final Color color;
+
+  @override
+  Widget build(final BuildContext context) {
+    return RawMaterialButton(
+      elevation: 6.0,
+      onPressed: onPress,
+      onLongPress: onLongPress,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      fillColor: color,
+      child: Icon(
+        icon,
+        color: Colors.white,
+        size: 70,
+      ),
     );
   }
 }
