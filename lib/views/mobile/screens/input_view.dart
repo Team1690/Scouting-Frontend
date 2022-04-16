@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
@@ -20,6 +22,22 @@ class UserInput extends StatefulWidget {
 }
 
 class _UserInputState extends State<UserInput> {
+  void flickerScreen(final int newValue, final int oldValue) {
+    screenColor = oldValue > newValue
+        ? Colors.red
+        : oldValue < newValue
+            ? Colors.green
+            : null;
+
+    Timer(Duration(milliseconds: 10), () {
+      setState(() {
+        screenColor = null;
+      });
+    });
+  }
+
+  Color? screenColor;
+
   final TextEditingController matchNumberController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
@@ -50,243 +68,261 @@ class _UserInputState extends State<UserInput> {
           "Orbit Scouting",
         ),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Container(
-            margin: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 10,
-            ),
-            child: Column(
-              children: <Widget>[
-                SectionDivider(label: "Match Details"),
-                MatchTextBox(
-                  validate: (final String? p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return "Please enter a match number";
-                    }
-                    return null;
-                  },
-                  onChange: (final int value) => match.matchNumber = value,
-                  controller: matchNumberController,
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Container(
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
                 ),
-                SizedBox(
-                  height: 15,
-                ),
-                TextFormField(
-                  controller: scouterNameController,
-                  validator: (final String? value) =>
-                      value != null && value.isNotEmpty
-                          ? null
-                          : "Please enter your name",
-                  onChanged: (final String p0) {
-                    match.name = p0;
-                  },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.person),
-                    border: OutlineInputBorder(),
-                    hintText: "Scouter name",
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                TeamSelectionFuture(
-                  controller: teamNumberController,
-                  onChange: (final LightTeam team) {
-                    match.team = team;
-                  },
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Selector<int>(
-                  options:
-                      IdProvider.of(context).matchType.idToName.keys.toList(),
-                  placeholder: "Match type",
-                  value: match.matchTypeId,
-                  makeItem: (final int id) =>
-                      IdProvider.of(context).matchType.idToName[id]!,
-                  onChange: (final int id) {
-                    match.matchTypeId = id;
-                  },
-                  validate: (final int i) =>
-                      i.onNull("Please pick a match type"),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ToggleButtons(
-                  fillColor: Color.fromARGB(10, 244, 67, 54),
-                  selectedColor: Colors.red,
-                  selectedBorderColor: Colors.red,
+                child: Column(
                   children: <Widget>[
+                    SectionDivider(label: "Match Details"),
+                    MatchTextBox(
+                      validate: (final String? p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "Please enter a match number";
+                        }
+                        return null;
+                      },
+                      onChange: (final int value) => match.matchNumber = value,
+                      controller: matchNumberController,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      controller: scouterNameController,
+                      validator: (final String? value) =>
+                          value != null && value.isNotEmpty
+                              ? null
+                              : "Please enter your name",
+                      onChanged: (final String p0) {
+                        match.name = p0;
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.person),
+                        border: OutlineInputBorder(),
+                        hintText: "Scouter name",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    TeamSelectionFuture(
+                      controller: teamNumberController,
+                      onChange: (final LightTeam team) {
+                        match.team = team;
+                      },
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Selector<int>(
+                      options: IdProvider.of(context)
+                          .matchType
+                          .idToName
+                          .keys
+                          .toList(),
+                      placeholder: "Match type",
+                      value: match.matchTypeId,
+                      makeItem: (final int id) =>
+                          IdProvider.of(context).matchType.idToName[id]!,
+                      onChange: (final int id) {
+                        match.matchTypeId = id;
+                      },
+                      validate: (final int i) =>
+                          i.onNull("Please pick a match type"),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    ToggleButtons(
+                      fillColor: Color.fromARGB(10, 244, 67, 54),
+                      selectedColor: Colors.red,
+                      selectedBorderColor: Colors.red,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text("Rematch"),
+                        )
+                      ],
+                      isSelected: <bool>[match.isRematch],
+                      onPressed: (final int i) {
+                        setState(() {
+                          match.isRematch = !match.isRematch;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SectionDivider(label: "Autonomous"),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Counter(
+                      label: "Upper scored",
+                      icon: Icons.sports_baseball,
+                      count: match.autoHigh,
+                      onChange: (final int p0) {
+                        setState(() {
+                          flickerScreen(p0, match.autoHigh);
+                          match.autoHigh = p0;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Counter(
+                      label: "Lower scored",
+                      icon: Icons.sports_baseball_outlined,
+                      count: match.autoLow,
+                      onChange: (final int p0) {
+                        setState(() {
+                          flickerScreen(p0, match.autoLow);
+                          match.autoLow = p0;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Counter(
+                      count: match.autoMissed,
+                      label: "      Missed      ",
+                      icon: Icons.error,
+                      onChange: (final int p0) {
+                        setState(() {
+                          flickerScreen(p0, match.autoMissed);
+                          match.autoMissed = p0;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SectionDivider(label: "Teleoperated"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Counter(
+                      count: match.teleHigh,
+                      label: "Upper scored",
+                      icon: Icons.sports_baseball,
+                      onChange: (final int p0) {
+                        setState(() {
+                          flickerScreen(p0, match.teleHigh);
+                          match.teleHigh = p0;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Counter(
+                      count: match.teleLow,
+                      label: "Lower scored",
+                      icon: Icons.sports_baseball_outlined,
+                      onChange: (final int p0) {
+                        setState(() {
+                          flickerScreen(p0, match.teleLow);
+                          match.teleLow = p0;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Counter(
+                      count: match.teleMissed,
+                      label: "      Missed      ",
+                      icon: Icons.error,
+                      onChange: (final int p0) {
+                        setState(() {
+                          flickerScreen(p0, match.teleMissed);
+                          match.teleMissed = p0;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SectionDivider(label: "Robot fault"),
+                    Switcher(
+                      labels: <String>["Not on field", "Didn't work on field"],
+                      colors: <Color>[
+                        Colors.red,
+                        Color.fromARGB(255, 198, 29, 228)
+                      ],
+                      onChange: (final int i) {
+                        setState(() {
+                          match.robotMatchStatusId =
+                              robotMatchStatusIndexToId[i]!;
+                        });
+                      },
+                      selected: <int, int>{
+                        for (final MapEntry<int, int> i
+                            in robotMatchStatusIndexToId.entries)
+                          i.value: i.key
+                      }[match.robotMatchStatusId]!,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SectionDivider(label: "Climb"),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("Rematch"),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Selector<int>(
+                        validate: (final int? p0) =>
+                            p0.onNull("Please pick a climb result"),
+                        options:
+                            IdProvider.of(context).climb.idToName.keys.toList(),
+                        placeholder: "Choose a climb result",
+                        makeItem: (final int p0) =>
+                            IdProvider.of(context).climb.idToName[p0]!,
+                        onChange: (final int p0) {
+                          setState(() {
+                            match.climbStatus = p0;
+                          });
+                        },
+                        value: match.climbStatus,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SubmitButton(
+                      resetForm: () {
+                        setState(() {
+                          match.clear(context);
+                          teamNumberController.clear();
+                          matchNumberController.clear();
+                        });
+                      },
+                      validate: () {
+                        return formKey.currentState!.validate();
+                      },
+                      vars: match,
+                      mutation: mutation,
                     )
                   ],
-                  isSelected: <bool>[match.isRematch],
-                  onPressed: (final int i) {
-                    setState(() {
-                      match.isRematch = !match.isRematch;
-                    });
-                  },
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                SectionDivider(label: "Autonomous"),
-                SizedBox(
-                  height: 20,
-                ),
-                Counter(
-                  label: "Upper scored",
-                  icon: Icons.sports_baseball,
-                  count: match.autoHigh,
-                  onChange: (final int p0) {
-                    setState(() {
-                      match.autoHigh = p0;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Counter(
-                  label: "Lower scored",
-                  icon: Icons.sports_baseball_outlined,
-                  count: match.autoLow,
-                  onChange: (final int p0) {
-                    setState(() {
-                      match.autoLow = p0;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Counter(
-                  count: match.autoMissed,
-                  label: "      Missed      ",
-                  icon: Icons.error,
-                  onChange: (final int p0) {
-                    setState(() {
-                      match.autoMissed = p0;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SectionDivider(label: "Teleoperated"),
-                SizedBox(
-                  height: 10,
-                ),
-                Counter(
-                  count: match.teleHigh,
-                  label: "Upper scored",
-                  icon: Icons.sports_baseball,
-                  onChange: (final int p0) {
-                    setState(() {
-                      match.teleHigh = p0;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Counter(
-                  count: match.teleLow,
-                  label: "Lower scored",
-                  icon: Icons.sports_baseball_outlined,
-                  onChange: (final int p0) {
-                    setState(() {
-                      match.teleLow = p0;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Counter(
-                  count: match.teleMissed,
-                  label: "      Missed      ",
-                  icon: Icons.error,
-                  onChange: (final int p0) {
-                    setState(() {
-                      match.teleMissed = p0;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SectionDivider(label: "Robot fault"),
-                Switcher(
-                  labels: <String>["Not on field", "Didn't work on field"],
-                  colors: <Color>[
-                    Colors.red,
-                    Color.fromARGB(255, 198, 29, 228)
-                  ],
-                  onChange: (final int i) {
-                    setState(() {
-                      match.robotMatchStatusId = robotMatchStatusIndexToId[i]!;
-                    });
-                  },
-                  selected: <int, int>{
-                    for (final MapEntry<int, int> i
-                        in robotMatchStatusIndexToId.entries)
-                      i.value: i.key
-                  }[match.robotMatchStatusId]!,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SectionDivider(label: "Climb"),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Selector<int>(
-                    validate: (final int? p0) =>
-                        p0.onNull("Please pick a climb result"),
-                    options:
-                        IdProvider.of(context).climb.idToName.keys.toList(),
-                    placeholder: "Choose a climb result",
-                    makeItem: (final int p0) =>
-                        IdProvider.of(context).climb.idToName[p0]!,
-                    onChange: (final int p0) {
-                      setState(() {
-                        match.climbStatus = p0;
-                      });
-                    },
-                    value: match.climbStatus,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SubmitButton(
-                  resetForm: () {
-                    setState(() {
-                      match.clear(context);
-                      teamNumberController.clear();
-                      matchNumberController.clear();
-                    });
-                  },
-                  validate: () {
-                    return formKey.currentState!.validate();
-                  },
-                  vars: match,
-                  mutation: mutation,
-                )
-              ],
+              ),
             ),
           ),
-        ),
+          if (screenColor != null)
+            Container(
+              color: screenColor,
+            )
+        ],
       ),
     );
   }
