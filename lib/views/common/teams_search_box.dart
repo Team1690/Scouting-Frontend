@@ -25,11 +25,11 @@ class TeamsSearchBox extends StatelessWidget {
       textFieldConfiguration: TextFieldConfiguration(
         onSubmitted: (final String number) {
           try {
-            onChange(
-              teams.firstWhere(
-                (final LightTeam team) => team.number.toString() == number,
-              ),
+            final LightTeam team = teams.firstWhere(
+              (final LightTeam team) => team.number.toString() == number,
             );
+            onChange(team);
+            typeAheadController.text = "${team.number} ${team.name}";
           } on StateError catch (_) {
             //ignoed
           }
