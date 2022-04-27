@@ -27,17 +27,17 @@ extension MapQueryResult on QueryResult {
 }
 
 extension MapSnapshot<T> on AsyncSnapshot<T> {
-  V mapSnapshot<V>(
-    final V Function(T) f,
-    final V Function() onWaiting,
-    final V Function() onNoData,
-    final V Function() onError,
-  ) =>
+  V mapSnapshot<V>({
+    required final V Function(T) onSuccess,
+    required final V Function() onWaiting,
+    required final V Function() onNoData,
+    required final V Function(Object?) onError,
+  }) =>
       hasError
-          ? onError()
+          ? onError(error)
           : (ConnectionState.waiting == connectionState
               ? onWaiting()
-              : (hasData ? f(data!) : onNoData()));
+              : (hasData ? onSuccess(data!) : onNoData()));
 }
 
 Future<List<LightTeam>> fetchTeams() async {
