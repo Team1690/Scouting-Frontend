@@ -34,20 +34,23 @@ class RobotImage extends StatelessWidget {
                       (final Map<String, dynamic>? p0) =>
                           p0.mapNullable<Widget>(
                               (final Map<String, dynamic> p0) {
-                            final dynamic pit = p0["team_by_pk"]["pit"];
-                            if (pit == null) {
-                              return Center(
-                                child: Text(
-                                  "No pit entry for this team",
-                                ),
-                              );
-                            } else {
-                              return Center(
-                                child: CachedNetworkImage(
-                                  imageUrl: pit["url"] as String,
-                                ),
-                              );
-                            }
+                            final Map<String, dynamic>? pit = p0["team_by_pk"]
+                                ["pit"] as Map<String, dynamic>?;
+                            return pit.mapNullable(
+                                  (final Map<String, dynamic> p0) => Center(
+                                    child: CachedNetworkImage(
+                                      progressIndicatorBuilder:
+                                          (final _, final __, final ___) =>
+                                              CircularProgressIndicator(),
+                                      imageUrl: p0["url"] as String,
+                                    ),
+                                  ),
+                                ) ??
+                                Center(
+                                  child: Text(
+                                    "No pit entry for this team",
+                                  ),
+                                );
                           }) ??
                           (throw Exception("No data")),
                     );
@@ -64,26 +67,27 @@ class RobotImageButton extends StatelessWidget {
     required this.teamId,
   });
 
-  final int? teamId;
+  final int? Function() teamId;
 
   @override
   Widget build(final BuildContext context) => IconButton(
         onPressed: () {
-          teamId.mapNullable((final int teamId) {
-                ScaffoldMessenger.of(context).clearSnackBars();
-                Navigator.of(context).push(
-                  MaterialPageRoute<RobotImage>(
-                    builder: (final BuildContext context) => RobotImage(teamId),
-                  ),
-                );
-              }) ??
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.red,
-                  content:
-                      Text("Cant show photo of team without team selected"),
-                ),
-              );
+          final int? teamIdInt = teamId();
+          if (teamIdInt != null) {
+            ScaffoldMessenger.of(context).clearSnackBars();
+            Navigator.of(context).push(
+              MaterialPageRoute<RobotImage>(
+                builder: (final BuildContext context) => RobotImage(teamIdInt),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.red,
+                content: Text("Cant show photo of team without team selected"),
+              ),
+            );
+          }
         },
         icon: Icon(Icons.camera_alt),
       );
