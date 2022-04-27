@@ -1,6 +1,7 @@
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
+import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
@@ -17,6 +18,11 @@ Stream<QueryResult> fetchPicklist() {
     number
     second_picklist_index
     taken
+    pit{
+      drivetrain{
+        title
+      }
+    }
       broken_robots{
     message
   }
@@ -80,15 +86,11 @@ List<PickListTeam> parse(
                   .map<int>((final dynamic e) => e["climb"]["points"] as int);
               final int amountOfMatches =
                   (e["matches_aggregate"]["nodes"] as List<dynamic>).length;
-              final double climbAvg = climb.isEmpty
-                  ? 0
-                  : climb.length == 1
-                      ? climb.first.toDouble()
-                      : climb.reduce(
-                            (final int value, final int element) =>
-                                value + element,
-                          ) /
-                          climb.length;
+              final double climbAvg = (climb.reduceSafe(
+                        (final int value, final int element) => value + element,
+                      ) ??
+                      0) /
+                  climb.length;
 
               final List<String> faultMessages =
                   (e["broken_robots"] as List<dynamic>)
@@ -103,6 +105,7 @@ List<PickListTeam> parse(
                       )
                       .toList();
               return PickListTeam(
+                drivetrain: e["pit"]?["drivetrain"]["title"] as String?,
                 matchesClimbed:
                     (e["matches_aggregate"]["nodes"] as List<dynamic>)
                         .where(
@@ -118,10 +121,7 @@ List<PickListTeam> parse(
                 autoBallAvg: (avg["auto_upper"] as double? ?? double.nan) +
                     (avg["auto_lower"] as double? ?? double.nan),
                 amountOfMatches: amountOfMatches,
-                colorsIndex: e["colors_index"] as int,
-                id: e["id"] as int,
-                number: e["number"] as int,
-                name: e["name"] as String,
+                team: LightTeam.fromJson(e),
                 firstListIndex: e["first_picklist_index"] as int,
                 secondListIndex: e["second_picklist_index"] as int,
                 taken: e["taken"] as bool,
@@ -132,13 +132,15 @@ List<PickListTeam> parse(
                 teleUpper: avg["tele_upper"] as double? ?? double.nan,
                 teleMissed: avg["tele_missed"] as double? ?? double.nan,
                 maxClimbTitle:
-                    (e["matches_aggregate"]["nodes"] as List<dynamic>).reduce(
-                  (final dynamic value, final dynamic element) =>
-                      (value["climb"]["points"] as int) >
-                              (element["climb"]["points"] as int)
-                          ? value
-                          : element,
-                )["climb"]["title"] as String,
+                    ((e["matches_aggregate"]["nodes"] as List<dynamic>)
+                            .reduceSafe(
+                          (final dynamic value, final dynamic element) =>
+                              (value["climb"]["points"] as int) >
+                                      (element["climb"]["points"] as int)
+                                  ? value
+                                  : element,
+                        )?["climb"]?["title"] as String?) ??
+                        "No data",
                 avgBallPoints: avgBallPoints,
                 avgClimbPoints: climbAvg,
                 faultMessages: faultMessages.isEmpty ? null : faultMessages,
