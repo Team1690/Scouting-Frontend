@@ -219,7 +219,7 @@ mutation MyMutation(\$team_id: Int, \$message: String, \$fault_message: String, 
     affected_rows
   }
                   ${vars.faultMessage == null ? "" : """
-  insert_broken_robots(objects: {team_id: \$team_id, message: \$fault_message}) {
+  insert_faults(objects: {team_id: \$team_id, message: \$fault_message}) {
     affected_rows
   }"""}
                   }
