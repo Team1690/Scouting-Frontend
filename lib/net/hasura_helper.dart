@@ -31,10 +31,10 @@ extension MapSnapshot<T> on AsyncSnapshot<T> {
     required final V Function(T) onSuccess,
     required final V Function() onWaiting,
     required final V Function() onNoData,
-    required final V Function(Object?) onError,
+    required final V Function(Object) onError,
   }) =>
       hasError
-          ? onError(error)
+          ? onError(error!)
           : (ConnectionState.waiting == connectionState
               ? onWaiting()
               : (hasData ? onSuccess(data!) : onNoData()));
