@@ -20,8 +20,7 @@ class FaultView extends StatelessWidget {
         centerTitle: true,
         actions: <Widget>[
           AddFault(
-            onFinished: (final QueryResult result) =>
-                handleQueryResult(result, context),
+            onFinished: handleQueryResult(context),
           )
         ],
       ),
@@ -78,29 +77,17 @@ class FaultTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           EditFault(
-            onFinished: (
-              final QueryResult result,
-            ) =>
-                handleQueryResult(
-              result,
-              context,
-            ),
+            onFinished: handleQueryResult(context),
             faultMessage: e.faultMessage,
             faultId: e.id,
           ),
           DeleteFault(
             faultId: e.id,
-            onFinished: (final QueryResult result) => handleQueryResult(
-              result,
-              context,
-            ),
+            onFinished: handleQueryResult(context),
           ),
           ChangeFaultStatus(
             faultId: e.id,
-            onFinished: (final QueryResult result) => handleQueryResult(
-              result,
-              context,
-            ),
+            onFinished: handleQueryResult(context),
           ),
         ],
       ),
@@ -134,18 +121,19 @@ class FaultTile extends StatelessWidget {
   }
 }
 
-void handleQueryResult(final QueryResult result, final BuildContext context) {
-  ScaffoldMessenger.of(context).clearSnackBars();
-  if (result.hasException) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: Duration(seconds: 5),
-        content: Text("Error: ${result.exception}"),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-}
+void Function(QueryResult) handleQueryResult(final BuildContext context) =>
+    (final QueryResult result) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      if (result.hasException) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 5),
+            content: Text("Error: ${result.exception}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    };
 
 void showLoadingSnackBar(final BuildContext context) =>
     ScaffoldMessenger.of(context).showSnackBar(
