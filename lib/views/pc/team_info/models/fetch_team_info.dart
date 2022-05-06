@@ -12,7 +12,7 @@ query MyQuery(\$id: Int!) {
     first_picklist_index
     second_picklist_index
     id
-    broken_robots {
+    faults {
 
     message
     }
@@ -103,7 +103,7 @@ Future<Team> fetchTeamInfo(
               (teamByPk["pit"] as Map<String, dynamic>?);
 
           final List<String> faultMessages =
-              (teamByPk["broken_robots"] as List<dynamic>)
+              (teamByPk["faults"] as List<dynamic>)
                   .map((final dynamic e) => e["message"] as String)
                   .toList();
           final PitData? pitData = pit.mapNullable<PitData>(

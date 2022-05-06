@@ -61,7 +61,7 @@ class _UserInputState extends State<UserInput> {
       resizeToAvoidBottomInset: false,
       drawer: SideNavBar(),
       appBar: AppBar(
-        actions: <Widget>[RobotImageButton(teamId: match.team?.id)],
+        actions: <Widget>[RobotImageButton(teamId: () => match.team?.id)],
         centerTitle: true,
         elevation: 5,
         title: const Text(

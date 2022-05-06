@@ -23,8 +23,8 @@ Stream<QueryResult> fetchPicklist() {
         title
       }
     }
-      broken_robots{
-    message
+      faults{
+      message
   }
     matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
@@ -92,10 +92,9 @@ List<PickListTeam> parse(
                       0) /
                   climb.length;
 
-              final List<String> faultMessages =
-                  (e["broken_robots"] as List<dynamic>)
-                      .map((final dynamic e) => e["message"] as String)
-                      .toList();
+              final List<String> faultMessages = (e["faults"] as List<dynamic>)
+                  .map((final dynamic e) => e["message"] as String)
+                  .toList();
               final List<RobotMatchStatus> robotMatchStatuses =
                   (e["matches_aggregate"]["nodes"] as List<dynamic>)
                       .map(
