@@ -275,16 +275,16 @@ Stream<List<_Team>> fetchTeamList() {
                                     value + element,
                               ) /
                               climbPoints.length;
-                  final dynamic maxClimb =
+                  final List<dynamic> climbs =
                       (e["matches_aggregate"]["nodes"] as List<dynamic>)
                           .map<dynamic>((final dynamic e) => e["climb"])
-                          .reduce(
-                            (final dynamic value, final dynamic element) =>
-                                (value["points"] as int) >
-                                        (element["points"] as int)
-                                    ? value
-                                    : element,
-                          );
+                          .toList();
+                  final dynamic maxClimb = climbs.reduceSafe(
+                    (final dynamic value, final dynamic element) =>
+                        (value["points"] as int) > (element["points"] as int)
+                            ? value
+                            : element,
+                  );
                   return _Team(
                     amountOfMatches:
                         (e["matches_aggregate"]["nodes"] as List<dynamic>)
@@ -298,8 +298,10 @@ Stream<List<_Team>> fetchTeamList() {
                         )
                         .length,
                     maxClimb: MaxClimb(
-                      order: maxClimb["order"] as int,
-                      title: maxClimb["title"] as String,
+                      order: maxClimb == null ? -1 : maxClimb["order"] as int,
+                      title: maxClimb == null
+                          ? "Never climbed"
+                          : maxClimb["title"] as String,
                     ),
                     climbPercent: climbPercent.isNaN ? -1 : climbPercent,
                     brokenMatches: robotMatchStatuses

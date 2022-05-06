@@ -182,6 +182,9 @@ class PickList extends StatelessWidget {
                           ),
                           if (e.amountOfMatches != 0) ...<Widget>[
                             Expanded(
+                              child: Text(e.drivetrain ?? "No pit :("),
+                            ),
+                            Expanded(
                               child: Text(
                                 "Worked: ${e.robotMatchStatusToAmount[RobotMatchStatus.worked]}",
                               ),
@@ -295,56 +298,6 @@ String validateName(final String name) =>
 
 class PickListTeam {
   PickListTeam({
-    required final int colorsIndex,
-    required final int id,
-    required final int number,
-    required final String name,
-    required final int firstListIndex,
-    required final int secondListIndex,
-    required final bool taken,
-    required final double avgBallPoints,
-    required final double avgClimbPoints,
-    required final double autoLower,
-    required final double autoUpper,
-    required final double teleUpper,
-    required final double teleLower,
-    required final double teleMissed,
-    required final double autoMissed,
-    required final String maxClimbTitle,
-    required final List<String>? faultMessages,
-    required final int amountOfMatches,
-    required final Map<RobotMatchStatus, int> robotMatchStatusToAmount,
-    required final double autoBallAvg,
-    required final double avgBalls,
-    required final int matchesClimbed,
-  }) : this.controller(
-          firstListIndex: firstListIndex,
-          secondListIndex: secondListIndex,
-          taken: taken,
-          avgBallPoints: avgBallPoints,
-          avgClimbPoints: avgClimbPoints,
-          autoLower: autoLower,
-          autoUpper: autoUpper,
-          teleLower: teleLower,
-          teleUpper: teleUpper,
-          team: LightTeam(
-            validateId(id),
-            validateNumber(number),
-            validateName(name),
-            colorsIndex,
-          ),
-          faultMessages: faultMessages,
-          amountOfMatches: amountOfMatches,
-          robotMatchStatusToAmount: robotMatchStatusToAmount,
-          autoBallAvg: autoBallAvg,
-          avgBalls: avgBalls,
-          matchesClimbed: matchesClimbed,
-          autoMissed: autoMissed,
-          teleMissed: teleMissed,
-          maxClimbTitle: maxClimbTitle,
-        );
-
-  PickListTeam.controller({
     required this.firstListIndex,
     required this.secondListIndex,
     required this.taken,
@@ -364,7 +317,9 @@ class PickListTeam {
     required this.autoMissed,
     required this.teleMissed,
     required this.maxClimbTitle,
+    required this.drivetrain,
   });
+  final String? drivetrain;
   final String maxClimbTitle;
   final int amountOfMatches;
   final double avgBallPoints;
