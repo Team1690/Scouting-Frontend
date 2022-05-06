@@ -28,11 +28,23 @@ class LightTeam {
     this.colorsIndex,
   );
 
+  @override
+  int get hashCode => Object.hashAll(<Object?>[id, number, colorsIndex, color]);
+
   final int id;
   final int number;
   final String name;
   final Color color;
   final int colorsIndex;
+
+  @override
+  bool operator ==(final Object other) {
+    return other is LightTeam &&
+        other.name == name &&
+        other.id == id &&
+        other.number == number &&
+        other.colorsIndex == colorsIndex;
+  }
 }
 
 const Map<int, Color> _teamNumberToColor = <int, Color>{
