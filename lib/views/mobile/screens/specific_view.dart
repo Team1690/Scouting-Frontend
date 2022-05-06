@@ -34,7 +34,7 @@ class _SpecificState extends State<Specific> {
       child: Scaffold(
         drawer: SideNavBar(),
         appBar: AppBar(
-          actions: <Widget>[RobotImageButton(teamId: vars.teamId)],
+          actions: <Widget>[RobotImageButton(teamId: () => vars.teamId)],
           centerTitle: true,
           title: Text("Specific"),
         ),
