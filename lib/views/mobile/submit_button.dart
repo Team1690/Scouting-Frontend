@@ -88,8 +88,8 @@ class _SubmitButtonState extends State<SubmitButton> {
           _state = ButtonState.loading;
         });
         final GraphQLClient client = getClient();
-        final QueryResult queryResult = await client.mutate(
-          MutationOptions(
+        final QueryResult<void> queryResult = await client.mutate(
+          MutationOptions<void>(
             document: gql(widget.mutation),
             variables: widget.vars.toHasuraVars(),
           ),

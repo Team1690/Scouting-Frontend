@@ -131,8 +131,11 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
 
         final GraphQLClient client = getClient();
 
-        final QueryResult graphqlQueryResult = await client.mutate(
-          MutationOptions(document: gql(widget.mutation), variables: vars),
+        final QueryResult<void> graphqlQueryResult = await client.mutate(
+          MutationOptions<void>(
+            document: gql(widget.mutation),
+            variables: vars,
+          ),
         );
 
         if (graphqlQueryResult.hasException) {

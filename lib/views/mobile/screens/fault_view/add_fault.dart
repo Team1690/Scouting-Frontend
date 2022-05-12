@@ -8,7 +8,7 @@ import "package:scouting_frontend/views/mobile/screens/fault_view.dart";
 
 class AddFault extends StatelessWidget {
   const AddFault({required this.onFinished});
-  final void Function(QueryResult) onFinished;
+  final void Function(QueryResult<void>) onFinished;
 
   @override
   Widget build(final BuildContext context) {
@@ -67,7 +67,8 @@ class AddFault extends StatelessWidget {
         ))
             .mapNullable((final NewFault p0) async {
           showLoadingSnackBar(context);
-          final QueryResult result = await _addFault(p0.team.id, p0.message);
+          final QueryResult<void> result =
+              await _addFault(p0.team.id, p0.message);
           onFinished(result);
         });
       },
@@ -76,9 +77,9 @@ class AddFault extends StatelessWidget {
   }
 }
 
-Future<QueryResult> _addFault(final int teamId, final String message) {
+Future<QueryResult<void>> _addFault(final int teamId, final String message) {
   return getClient().mutate(
-    MutationOptions(
+    MutationOptions<void>(
       document: gql(_addFaultMutation),
       variables: <String, dynamic>{"team_id": teamId, "fault_message": message},
     ),

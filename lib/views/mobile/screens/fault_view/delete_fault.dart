@@ -6,7 +6,7 @@ import "package:scouting_frontend/views/mobile/screens/fault_view.dart";
 class DeleteFault extends StatelessWidget {
   const DeleteFault({required this.faultId, required this.onFinished});
   final int faultId;
-  final void Function(QueryResult) onFinished;
+  final void Function(QueryResult<void>) onFinished;
 
   @override
   Widget build(final BuildContext context) {
@@ -14,16 +14,16 @@ class DeleteFault extends StatelessWidget {
       icon: Icon(Icons.delete),
       onPressed: () async {
         showLoadingSnackBar(context);
-        final QueryResult result = await deleteFault(faultId);
+        final QueryResult<void> result = await deleteFault(faultId);
         onFinished(result);
       },
     );
   }
 }
 
-Future<QueryResult> deleteFault(final int id) async {
+Future<QueryResult<void>> deleteFault(final int id) async {
   return getClient().mutate(
-    MutationOptions(
+    MutationOptions<void>(
       document: gql(_deleteFaultMutaton),
       variables: <String, dynamic>{"id": id},
     ),
