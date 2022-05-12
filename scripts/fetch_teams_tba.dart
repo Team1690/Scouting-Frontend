@@ -64,13 +64,13 @@ mutation MyMutation($teams: [team_insert_input!]!) {
 }
 """;
 
-Future<QueryResult> sendTeams(
+Future<QueryResult<void>> sendTeams(
   final List<dynamic> teams,
   final GraphQLClient client,
 ) async {
   int index = 0;
   return client.mutate(
-    MutationOptions(
+    MutationOptions<void>(
       document: gql(mutation),
       variables: <String, dynamic>{
         "teams": teams

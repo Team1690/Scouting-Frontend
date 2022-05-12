@@ -14,11 +14,11 @@ class RobotImage extends StatelessWidget {
           title: Text("Robot image"),
           centerTitle: true,
         ),
-        body: StreamBuilder<QueryResult>(
+        body: StreamBuilder<QueryResult<Widget>>(
           stream: fetchRobotImageUrl(teamId),
           builder: (
             final BuildContext context,
-            final AsyncSnapshot<QueryResult> snapshot,
+            final AsyncSnapshot<QueryResult<Widget>> snapshot,
           ) {
             if (snapshot.hasError) {
               return Text(snapshot.error.toString());
@@ -29,31 +29,8 @@ class RobotImage extends StatelessWidget {
               );
             }
             return snapshot.data.mapNullable(
-                  (final QueryResult event) {
-                    return event.mapQueryResult(
-                      (final Map<String, dynamic>? p0) =>
-                          p0.mapNullable<Widget>(
-                              (final Map<String, dynamic> p0) {
-                            final Map<String, dynamic>? pit = p0["team_by_pk"]
-                                ["pit"] as Map<String, dynamic>?;
-                            return pit.mapNullable(
-                                  (final Map<String, dynamic> p0) => Center(
-                                    child: CachedNetworkImage(
-                                      progressIndicatorBuilder:
-                                          (final _, final __, final ___) =>
-                                              CircularProgressIndicator(),
-                                      imageUrl: p0["url"] as String,
-                                    ),
-                                  ),
-                                ) ??
-                                Center(
-                                  child: Text(
-                                    "No pit entry for this team",
-                                  ),
-                                );
-                          }) ??
-                          (throw Exception("No data")),
-                    );
+                  (final QueryResult<Widget> event) {
+                    return event.mapQueryResult();
                   },
                 ) ??
                 (throw Exception("No data"));
@@ -93,10 +70,28 @@ class RobotImageButton extends StatelessWidget {
       );
 }
 
-Stream<QueryResult> fetchRobotImageUrl(final int teamId) {
+Stream<QueryResult<Widget>> fetchRobotImageUrl(final int teamId) {
   return getClient().subscribe(
-    SubscriptionOptions(
+    SubscriptionOptions<Widget>(
       variables: <String, dynamic>{"id": teamId},
+      parserFn: (final Map<String, dynamic> p0) {
+        final Map<String, dynamic>? pit =
+            p0["team_by_pk"]["pit"] as Map<String, dynamic>?;
+        return pit.mapNullable(
+              (final Map<String, dynamic> p0) => Center(
+                child: CachedNetworkImage(
+                  progressIndicatorBuilder: (final _, final __, final ___) =>
+                      CircularProgressIndicator(),
+                  imageUrl: p0["url"] as String,
+                ),
+              ),
+            ) ??
+            Center(
+              child: Text(
+                "No pit entry for this team",
+              ),
+            );
+      },
       document: gql(
         r"""
 query MyQuery($id: Int!) {

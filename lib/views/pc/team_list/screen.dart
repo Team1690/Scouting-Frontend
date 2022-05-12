@@ -218,109 +218,110 @@ class _Team {
 }
 
 Stream<List<_Team>> fetchTeamList() {
-  return getClient().subscribe(SubscriptionOptions(document: gql(query))).map(
-        (final QueryResult event) => event.mapQueryResult<List<_Team>>(
-          (final Map<String, dynamic>? p0) =>
-              p0.mapNullable<List<_Team>>((final Map<String, dynamic> data) {
-                final List<dynamic> teams = data["team"] as List<dynamic>;
-                return teams.map<_Team>((final dynamic e) {
-                  final dynamic avg =
-                      e["matches_aggregate"]["aggregate"]["avg"];
-                  final List<int> climbPoints =
-                      (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                          .where(
-                            (final dynamic element) =>
-                                element["climb"]["title"] != "No attempt",
-                          )
-                          .map((final dynamic e) => e["climb"]["points"] as int)
-                          .toList();
-                  final List<RobotMatchStatus> robotMatchStatuses =
-                      (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                          .map(
-                            (final dynamic e) => titleToEnum(
-                              e["robot_match_status"]["title"] as String,
-                            ),
-                          )
-                          .toList();
-                  final double teleUpper =
-                      (avg["tele_upper"] as double?) ?? double.nan;
-                  final double autoLower =
-                      (avg["auto_lower"] as double?) ?? double.nan;
-                  final double autoUpper =
-                      (avg["auto_upper"] as double?) ?? double.nan;
-                  final double teleLower =
-                      (avg["tele_lower"] as double?) ?? double.nan;
-                  final List<String> climb = (e["matches_aggregate"]["nodes"]
-                          as List<dynamic>)
+  return getClient()
+      .subscribe(
+        SubscriptionOptions<List<_Team>>(
+          document: gql(query),
+          parserFn: (final Map<String, dynamic> data) {
+            final List<dynamic> teams = data["team"] as List<dynamic>;
+            return teams.map<_Team>((final dynamic e) {
+              final dynamic avg = e["matches_aggregate"]["aggregate"]["avg"];
+              final List<int> climbPoints =
+                  (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                      .where(
+                        (final dynamic element) =>
+                            element["climb"]["title"] != "No attempt",
+                      )
+                      .map((final dynamic e) => e["climb"]["points"] as int)
+                      .toList();
+              final List<RobotMatchStatus> robotMatchStatuses =
+                  (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                      .map(
+                        (final dynamic e) => titleToEnum(
+                          e["robot_match_status"]["title"] as String,
+                        ),
+                      )
+                      .toList();
+              final double teleUpper =
+                  (avg["tele_upper"] as double?) ?? double.nan;
+              final double autoLower =
+                  (avg["auto_lower"] as double?) ?? double.nan;
+              final double autoUpper =
+                  (avg["auto_upper"] as double?) ?? double.nan;
+              final double teleLower =
+                  (avg["tele_lower"] as double?) ?? double.nan;
+              final List<String> climb =
+                  (e["matches_aggregate"]["nodes"] as List<dynamic>)
                       .map((final dynamic e) => e["climb"]["title"] as String)
                       .where((final String element) => element != "No attempt")
                       .toList();
-                  final double climbPercent = (climb
-                              .where(
-                                (final String element) => element != "Failed",
-                              )
-                              .length /
-                          climb.length) *
-                      100;
-                  final double ballPointAvg =
-                      autoUpper * 4 + teleUpper * 2 + autoLower * 2 + teleLower;
-                  final double ballSum =
-                      autoUpper + teleUpper + autoLower + teleLower;
-                  final double climbPointAvg = climbPoints.isEmpty
-                      ? 0
-                      : climbPoints.length == 1
-                          ? climbPoints.single.toDouble()
-                          : climbPoints.reduce(
-                                (final int value, final int element) =>
-                                    value + element,
-                              ) /
-                              climbPoints.length;
-                  final List<dynamic> climbs =
-                      (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                          .map<dynamic>((final dynamic e) => e["climb"])
-                          .toList();
-                  final dynamic maxClimb = climbs.reduceSafe(
-                    (final dynamic value, final dynamic element) =>
-                        (value["points"] as int) > (element["points"] as int)
-                            ? value
-                            : element,
-                  );
-                  return _Team(
-                    amountOfMatches:
-                        (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                            .length,
-                    matchesClimbed: (e["matches_aggregate"]["nodes"]
-                            as List<dynamic>)
+              final double climbPercent = (climb
+                          .where(
+                            (final String element) => element != "Failed",
+                          )
+                          .length /
+                      climb.length) *
+                  100;
+              final double ballPointAvg =
+                  autoUpper * 4 + teleUpper * 2 + autoLower * 2 + teleLower;
+              final double ballSum =
+                  autoUpper + teleUpper + autoLower + teleLower;
+              final double climbPointAvg = climbPoints.isEmpty
+                  ? 0
+                  : climbPoints.length == 1
+                      ? climbPoints.single.toDouble()
+                      : climbPoints.reduce(
+                            (final int value, final int element) =>
+                                value + element,
+                          ) /
+                          climbPoints.length;
+              final List<dynamic> climbs =
+                  (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                      .map<dynamic>((final dynamic e) => e["climb"])
+                      .toList();
+              final dynamic maxClimb = climbs.reduceSafe(
+                (final dynamic value, final dynamic element) =>
+                    (value["points"] as int) > (element["points"] as int)
+                        ? value
+                        : element,
+              );
+              return _Team(
+                amountOfMatches:
+                    (e["matches_aggregate"]["nodes"] as List<dynamic>).length,
+                matchesClimbed:
+                    (e["matches_aggregate"]["nodes"] as List<dynamic>)
                         .map((final dynamic e) => e["climb"]["title"] as String)
                         .where(
                           (final String element) =>
                               element != "No attempt" && element != "Failed",
                         )
                         .length,
-                    maxClimb: MaxClimb(
-                      order: maxClimb == null ? -1 : maxClimb["order"] as int,
-                      title: maxClimb == null
-                          ? "Never climbed"
-                          : maxClimb["title"] as String,
-                    ),
-                    climbPercent: climbPercent.isNaN ? -1 : climbPercent,
-                    brokenMatches: robotMatchStatuses
-                        .where(
-                          (final RobotMatchStatus element) =>
-                              element != RobotMatchStatus.worked,
-                        )
-                        .length,
-                    autoUpperAvg: avg["auto_upper"] as double? ?? -1,
-                    ballAvg: ballSum.isNaN ? -1 : ballSum,
-                    ballPointAvg: ballPointAvg.isNaN ? -1 : ballPointAvg,
-                    teleUpperAvg: avg["tele_upper"] as double? ?? -1,
-                    team: LightTeam.fromJson(e),
-                    climbPointAvg: climbPointAvg.isNaN ? -1 : climbPointAvg,
-                  );
-                }).toList();
-              }) ??
-              (throw Exception("No data")),
+                maxClimb: MaxClimb(
+                  order: maxClimb == null ? -1 : maxClimb["order"] as int,
+                  title: maxClimb == null
+                      ? "Never climbed"
+                      : maxClimb["title"] as String,
+                ),
+                climbPercent: climbPercent.isNaN ? -1 : climbPercent,
+                brokenMatches: robotMatchStatuses
+                    .where(
+                      (final RobotMatchStatus element) =>
+                          element != RobotMatchStatus.worked,
+                    )
+                    .length,
+                autoUpperAvg: avg["auto_upper"] as double? ?? -1,
+                ballAvg: ballSum.isNaN ? -1 : ballSum,
+                ballPointAvg: ballPointAvg.isNaN ? -1 : ballPointAvg,
+                teleUpperAvg: avg["tele_upper"] as double? ?? -1,
+                team: LightTeam.fromJson(e),
+                climbPointAvg: climbPointAvg.isNaN ? -1 : climbPointAvg,
+              );
+            }).toList();
+          },
         ),
+      )
+      .map(
+        (final QueryResult<List<_Team>> event) => event.mapQueryResult(),
       );
 }
 

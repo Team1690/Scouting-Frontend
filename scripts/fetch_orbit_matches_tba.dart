@@ -18,17 +18,16 @@ query {
     }
 }
 """;
-  return (await getClient().query(QueryOptions(document: gql(query))))
-      .mapQueryResult(
-    (final Map<String, dynamic>? data) =>
-        data.mapNullable(
-          (final Map<String, dynamic> result) => <String, int>{
-            for (final dynamic entry in (result[table] as List<dynamic>))
-              entry["title"] as String: entry["id"] as int
-          },
-        ) ??
-        (throw Exception("Query $table returned null")),
-  );
+  return (await getClient().query(
+    QueryOptions<Map<String, int>>(
+      document: gql(query),
+      parserFn: (final Map<String, dynamic> result) => <String, int>{
+        for (final dynamic entry in (result[table] as List<dynamic>))
+          entry["title"] as String: entry["id"] as int
+      },
+    ),
+  ))
+      .mapQueryResult();
 }
 
 void main(final List<String> args) async {
@@ -169,7 +168,7 @@ List<Match> parseResponse(
       .toList();
 }
 
-Future<QueryResult> sendMatches(
+Future<QueryResult<void>> sendMatches(
   final List<Match> matches,
   final GraphQLClient client,
   final List<LightTeam> teams,
@@ -198,7 +197,7 @@ Future<QueryResult> sendMatches(
   );
 
   return client.mutate(
-    MutationOptions(
+    MutationOptions<void>(
       document: gql(mutation),
       variables: <String, dynamic>{"matches": vars.toList()},
     ),
@@ -242,12 +241,11 @@ query FetchTeams {
 }
   """;
 
-  final QueryResult result =
-      await client.query(QueryOptions(document: gql(query)));
-
-  return result.mapQueryResult(
-        (final Map<String, dynamic>? data) => data.mapNullable(
-          (final Map<String, dynamic> teams) => (teams["team"] as List<dynamic>)
+  final QueryResult<List<LightTeam>> result = await client.query(
+    QueryOptions<List<LightTeam>>(
+      document: gql(query),
+      parserFn: (final Map<String, dynamic> teams) =>
+          (teams["team"] as List<dynamic>)
               .map(
                 (final dynamic e) => LightTeam(
                   e["id"] as int,
@@ -256,9 +254,10 @@ query FetchTeams {
                 ),
               )
               .toList(),
-        ),
-      ) ??
-      (throw Exception("No teams queried"));
+    ),
+  );
+
+  return result.mapQueryResult();
 }
 
 GraphQLClient getClient() {
@@ -271,9 +270,12 @@ GraphQLClient getClient() {
   return GraphQLClient(link: link, cache: GraphQLCache());
 }
 
-extension MapQueryResult on QueryResult {
-  T mapQueryResult<T>(final T Function(Map<String, dynamic>?) f) =>
-      hasException ? throw exception! : f(data);
+extension MapQueryResult<A> on QueryResult<A> {
+  A mapQueryResult() => (hasException
+      ? throw exception!
+      : data == null
+          ? (throw Exception("Data returned null"))
+          : parsedData!);
 }
 
 T Function() always<T>(final T result) => () => result;

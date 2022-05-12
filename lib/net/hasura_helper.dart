@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 
 GraphQLClient getClient() {
   final HttpLink httpLink = HttpLink(
@@ -59,12 +58,11 @@ query FetchTeams {
 }
   """;
 
-  final QueryResult result =
-      await client.query(QueryOptions(document: gql(query)));
-
-  return result.mapQueryResult(
-        (final Map<String, dynamic>? data) => data.mapNullable(
-          (final Map<String, dynamic> teams) => (teams["team"] as List<dynamic>)
+  final QueryResult<List<LightTeam>> result = await client.query(
+    QueryOptions<List<LightTeam>>(
+      document: gql(query),
+      parserFn: (final Map<String, dynamic> teams) =>
+          (teams["team"] as List<dynamic>)
               .map(
                 (final dynamic e) => LightTeam(
                   e["id"] as int,
@@ -74,7 +72,8 @@ query FetchTeams {
                 ),
               )
               .toList(),
-        ),
-      ) ??
-      (throw Exception("No teams queried"));
+    ),
+  );
+
+  return result.mapQueryResult();
 }
