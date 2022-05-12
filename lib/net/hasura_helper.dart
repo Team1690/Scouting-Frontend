@@ -21,10 +21,16 @@ GraphQLClient getClient() {
   );
 }
 
-extension MapQueryResult on QueryResult {
-  T mapQueryResult<T>(final T Function(Map<String, dynamic>?) f) =>
-      hasException ? throw exception! : f(data);
+extension MapQueryResult<A> on QueryResult<A> {
+  A mapQueryResult() => (hasException
+      ? throw exception!
+      : data == null
+          ? (throw Exception("Data returned null"))
+          : parsedData!);
 }
+
+A queryResultToParsed<A>(final QueryResult<A> result) =>
+    result.mapQueryResult();
 
 extension MapSnapshot<T> on AsyncSnapshot<T> {
   V mapSnapshot<V>({
