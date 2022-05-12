@@ -12,6 +12,12 @@ const double defaultPadding = 20.0;
 const BorderRadius defaultBorderRadius = BorderRadius.all(Radius.circular(10));
 
 final ThemeData darkModeTheme = ThemeData.dark().copyWith(
+  pageTransitionsTheme: PageTransitionsTheme(
+    builders: <TargetPlatform, PageTransitionsBuilder>{
+      for (final TargetPlatform platform in TargetPlatform.values)
+        platform: FadeUpwardsPageTransitionsBuilder()
+    },
+  ),
   scaffoldBackgroundColor: bgColor,
   textTheme: GoogleFonts.poppinsTextTheme().apply(bodyColor: Colors.white),
   canvasColor: secondaryColor,
