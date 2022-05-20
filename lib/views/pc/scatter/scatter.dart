@@ -25,8 +25,7 @@ class Scatter extends StatelessWidget {
               ) {
                 if (snapshot.hasError) {
                   return Text(
-                    "Error has happened in the future! " +
-                        snapshot.error.toString(),
+                    "Error has happened in the future! ${snapshot.error}",
                   );
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
@@ -82,16 +81,33 @@ class Scatter extends StatelessWidget {
                               ),
                             ),
                             titlesData: FlTitlesData(
-                              rightTitles: SideTitles(showTitles: false),
-                              topTitles: SideTitles(showTitles: false),
                               show: true,
-                              bottomTitles: SideTitles(
-                                interval: 5,
-                                showTitles: true,
+                              topTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
                               ),
-                              leftTitles: SideTitles(
-                                interval: 5,
-                                showTitles: true,
+                              rightTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              bottomTitles: AxisTitles(
+                                axisNameSize: 26,
+                                axisNameWidget: Text(
+                                  "Average ball points",
+                                ),
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  interval: 5,
+                                ),
+                              ),
+                              leftTitles: AxisTitles(
+                                axisNameSize: 26,
+                                axisNameWidget: Text(
+                                  "Ball point standard deviation",
+                                ),
+                                sideTitles: SideTitles(
+                                  reservedSize: 22,
+                                  showTitles: true,
+                                  interval: 5,
+                                ),
                               ),
                             ),
                             gridData: FlGridData(
@@ -108,17 +124,6 @@ class Scatter extends StatelessWidget {
                                   true,
                               getDrawingVerticalLine: (final double value) =>
                                   FlLine(color: Colors.black.withOpacity(0.1)),
-                            ),
-                            axisTitleData: FlAxisTitleData(
-                              show: true,
-                              bottomTitle: AxisTitle(
-                                showTitle: true,
-                                titleText: "Average ball points",
-                              ),
-                              leftTitle: AxisTitle(
-                                showTitle: true,
-                                titleText: "Ball point standard deviation",
-                              ),
                             ),
                             borderData: FlBorderData(
                               show: true,

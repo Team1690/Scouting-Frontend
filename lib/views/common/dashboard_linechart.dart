@@ -42,56 +42,47 @@ class _BaseLineChart extends StatelessWidget {
         ),
         lineBarsData: List<LineChartBarData>.generate(
           dataSet.length,
-          (final int index) {
-            final List<Color> chartColors = <Color>[inputedColors[index]];
-            return LineChartBarData(
-              isCurved: false,
-              colors: chartColors,
-              barWidth: 2,
-              isStrokeCapRound: true,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (
-                  final FlSpot spot,
-                  final double d,
-                  final LineChartBarData a,
-                  final int v,
-                ) =>
-                    FlDotCirclePainter(
-                  strokeWidth: 4,
-                  radius: 6,
-                  color: secondaryColor,
-                  strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
-                          RobotMatchStatus.didntComeToField
-                      ? Colors.red
-                      : Colors.purple,
-                ),
-                checkToShowDot:
-                    (final FlSpot spot, final LineChartBarData data) {
-                  return robotMatchStatuses[index][spot.x.toInt()] ==
+          (final int index) => LineChartBarData(
+            isCurved: false,
+            color: inputedColors[index],
+            barWidth: 2,
+            isStrokeCapRound: true,
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (
+                final FlSpot spot,
+                final double d,
+                final LineChartBarData a,
+                final int v,
+              ) =>
+                  FlDotCirclePainter(
+                strokeWidth: 4,
+                radius: 6,
+                color: secondaryColor,
+                strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
+                        RobotMatchStatus.didntComeToField
+                    ? Colors.red
+                    : Colors.purple,
+              ),
+              checkToShowDot:
+                  (final FlSpot spot, final LineChartBarData data) =>
+                      robotMatchStatuses[index][spot.x.toInt()] ==
                           RobotMatchStatus.didntComeToField ||
                       robotMatchStatuses[index][spot.x.toInt()] ==
-                          RobotMatchStatus.didntWorkOnField;
-                },
+                          RobotMatchStatus.didntWorkOnField,
+            ),
+            belowBarData: BarAreaData(
+              show: true,
+              color: inputedColors[index].withOpacity(showShadow ? 0.3 : 0),
+            ),
+            spots: List<FlSpot>.generate(
+              dataSet[index].length,
+              (final int inner) => FlSpot(
+                inner.toDouble(),
+                dataSet[index][inner].toDouble(),
               ),
-              belowBarData: BarAreaData(
-                show: true,
-                colors: chartColors
-                    .map(
-                      (final Color color) =>
-                          color.withOpacity(showShadow ? 0.3 : 0),
-                    )
-                    .toList(),
-              ),
-              spots: List<FlSpot>.generate(
-                dataSet[index].length,
-                (final int inner) => FlSpot(
-                  inner.toDouble(),
-                  dataSet[index][inner].toDouble(),
-                ),
-              ),
-            );
-          },
+            ),
+          ),
         ),
         gridData: FlGridData(
           verticalInterval: 1,
@@ -113,29 +104,24 @@ class _BaseLineChart extends StatelessWidget {
         ),
         titlesData: FlTitlesData(
           show: true,
-          topTitles: SideTitles(
-            getTitles: (final double value) {
-              return gameNumbers[value.toInt()].toString();
-            },
-            showTitles: true,
-            interval: 1,
-            getTextStyles: (final BuildContext context, final double value) =>
-                TextStyle(
-              color: Colors.white,
-              fontSize: isPC(context) ? 16 : 8,
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: rightTitles),
+          topTitles: AxisTitles(
+            sideTitles: SideTitles(
+              reservedSize: 20,
+              getTitlesWidget:
+                  (final double value, final TitleMeta titleMeta) => Text(
+                gameNumbers[value.toInt()].toString(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: isPC(context) ? 12 : 8,
+                ),
+              ),
+              showTitles: true,
+              interval: 1,
             ),
-            checkToShowTitle: (
-              final double minValue,
-              final double maxValue,
-              final SideTitles sideTitles,
-              final double appliedInterval,
-              final double value,
-            ) =>
-                value == value.floorToDouble(),
           ),
-          rightTitles: rightTitles,
-          bottomTitles: SideTitles(showTitles: false),
-          leftTitles: SideTitles(showTitles: false),
         ),
         borderData: FlBorderData(
           show: true,
@@ -175,32 +161,35 @@ class DashboardClimbLineChart extends StatelessWidget {
               (final LineBarSpot e) => LineTooltipItem(
                 <int, String>{0: "Failed", -1: "No attempt"}[e.y.toInt()] ??
                     "Level ${e.y.toInt()}",
-                TextStyle(color: e.bar.colors[0]),
+                TextStyle(color: e.bar.color),
               ),
             )
             .toList(),
         rightTitles: SideTitles(
           interval: 1,
-          getTitles: (final double value) {
-            switch (value.toInt()) {
-              case -1:
-                return "No attempt";
-              case 0:
-                return "Failed";
-              default:
-                return value == 5 || value == -2
-                    ? ""
-                    : "level ${value.toInt()}";
-            }
-          },
-          showTitles: true,
-          getTextStyles: (final BuildContext context, final double value) =>
-              TextStyle(
-            color: Colors.white,
-            fontSize: 12,
+          getTitlesWidget: (final double value, final TitleMeta _) => Padding(
+            padding: const EdgeInsets.all(6),
+            child: Text(
+              () {
+                switch (value.toInt()) {
+                  case -1:
+                    return "No attempt";
+                  case 0:
+                    return "Failed";
+                  default:
+                    return value == 5 || value == -2
+                        ? ""
+                        : "level ${value.toInt()}";
+                }
+              }(),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+              ),
+            ),
           ),
+          showTitles: true,
           reservedSize: 70,
-          margin: 12,
         ),
         minY: -1,
         maxY: 5,
@@ -238,21 +227,26 @@ class DashboardLineChart extends StatelessWidget {
             .map(
               (final LineBarSpot e) => LineTooltipItem(
                 e.y.toInt().toString(),
-                TextStyle(color: e.bar.colors[0]),
+                TextStyle(color: e.bar.color),
               ),
             )
             .toList(),
         rightTitles: SideTitles(
           interval: sideTitlesInterval,
-          getTitles: (final double value) => value.toInt().toString(),
-          showTitles: true,
-          getTextStyles: (final BuildContext context, final double value) =>
-              TextStyle(
-            color: Colors.white,
-            fontSize: 16,
+          getTitlesWidget: (final double value, final TitleMeta a) => Padding(
+            padding: const EdgeInsets.all(4),
+            child: Text(
+              value % a.appliedInterval.toInt() == 0
+                  ? value.toInt().toString()
+                  : "",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
           ),
+          showTitles: true,
           reservedSize: 28,
-          margin: 12,
         ),
         maxY: highestValue.toDouble() + distanceFromHighest,
         minY: 0,
