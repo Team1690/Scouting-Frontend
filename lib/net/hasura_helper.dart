@@ -42,7 +42,7 @@ extension MapSnapshot<T> on AsyncSnapshot<T> {
           ? onError(error!)
           : (ConnectionState.waiting == connectionState
               ? onWaiting()
-              : (hasData ? onSuccess(data!) : onNoData()));
+              : (hasData ? onSuccess(data as T) : onNoData()));
 }
 
 Future<List<LightTeam>> fetchTeams() async {
