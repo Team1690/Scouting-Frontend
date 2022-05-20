@@ -19,7 +19,7 @@ class CompareScreen extends StatefulWidget {
   CompareScreen([this.initialTeams = const <LightTeam>[]]);
   final List<LightTeam> initialTeams;
   @override
-  _CompareScreenState createState() => _CompareScreenState();
+  State<CompareScreen> createState() => _CompareScreenState();
 }
 
 class _CompareScreenState extends State<CompareScreen> {

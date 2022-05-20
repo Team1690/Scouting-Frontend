@@ -18,7 +18,7 @@ class SubmitButton extends StatefulWidget {
   final void Function() resetForm;
 
   @override
-  _SubmitButtonState createState() => _SubmitButtonState();
+  State<SubmitButton> createState() => _SubmitButtonState();
 }
 
 class _SubmitButtonState extends State<SubmitButton> {

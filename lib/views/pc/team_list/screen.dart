@@ -17,7 +17,7 @@ class TeamList extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.all(defaultPadding),
           child: StreamBuilder<List<_Team>>(
-            stream: fetchTeamList(),
+            stream: _fetchTeamList(),
             builder: (
               final BuildContext context,
               final AsyncSnapshot<List<_Team>> snapshot,
@@ -217,7 +217,7 @@ class _Team {
   final int matchesClimbed;
 }
 
-Stream<List<_Team>> fetchTeamList() {
+Stream<List<_Team>> _fetchTeamList() {
   return getClient()
       .subscribe(
         SubscriptionOptions<List<_Team>>(
