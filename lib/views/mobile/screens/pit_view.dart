@@ -368,7 +368,9 @@ class TeamsWithoutPit extends StatelessWidget {
 
 Stream<List<LightTeam>> fetchTeamsWithoutPit() => getClient()
     .subscribe(
-      SubscriptionOptions(
+      SubscriptionOptions<List<LightTeam>>(
+        parserFn: (final Map<String, dynamic> p0) =>
+            (p0["team"] as List<dynamic>).map(LightTeam.fromJson).toList(),
         document: gql(
           r"""
 query NoPit {
@@ -384,13 +386,5 @@ query NoPit {
       ),
     )
     .map(
-      (final QueryResult result) => result.mapQueryResult(
-        (final Map<String, dynamic>? p0) =>
-            p0.mapNullable(
-              (final Map<String, dynamic> p0) => (p0["team"] as List<dynamic>)
-                  .map(LightTeam.fromJson)
-                  .toList(),
-            ) ??
-            (throw Exception("No data")),
-      ),
+      queryResultToParsed,
     );

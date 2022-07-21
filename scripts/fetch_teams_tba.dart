@@ -29,7 +29,7 @@ void main(final List<String> args) async {
     );
 
   final ArgResults results = arg.parse(args);
-  load("dev.env");
+  final DotEnv env = DotEnv()..load(<String>["dev.env"]);
 
   if (results.wasParsed("help")) {
     print(arg.usage);
@@ -39,6 +39,7 @@ void main(final List<String> args) async {
   final http.Response response = await fetchTeamsFromTba(
     results["event"] as String? ??
         (throw ArgumentError("You need to add an event code add -h for help")),
+    env,
   );
 
   if (results.wasParsed("print")) {
@@ -46,10 +47,10 @@ void main(final List<String> args) async {
     exit(0);
   }
   final dynamic teams = jsonDecode(response.body);
-  print(await sendTeams(teams as List<dynamic>, getClient()));
+  print(await sendTeams(teams as List<dynamic>, getClient(env)));
 }
 
-Future<http.Response> fetchTeamsFromTba(final String event) {
+Future<http.Response> fetchTeamsFromTba(final String event, final DotEnv env) {
   return http.get(
     Uri.parse("https://thebluealliance.com/api/v3/event/$event/teams"),
     headers: <String, String>{"X-TBA-Auth-Key": env["TBA_API_KEY"]!},
@@ -64,13 +65,13 @@ mutation MyMutation($teams: [team_insert_input!]!) {
 }
 """;
 
-Future<QueryResult> sendTeams(
+Future<QueryResult<void>> sendTeams(
   final List<dynamic> teams,
   final GraphQLClient client,
 ) async {
   int index = 0;
   return client.mutate(
-    MutationOptions(
+    MutationOptions<void>(
       document: gql(mutation),
       variables: <String, dynamic>{
         "teams": teams
@@ -87,7 +88,7 @@ Future<QueryResult> sendTeams(
   );
 }
 
-GraphQLClient getClient() {
+GraphQLClient getClient(final DotEnv env) {
   final HttpLink link = HttpLink(
     "https://orbitdb.hasura.app/v1/graphql",
     defaultHeaders: <String, String>{

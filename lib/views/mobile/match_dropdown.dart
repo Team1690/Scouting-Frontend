@@ -12,7 +12,7 @@ class MatchTextBox extends StatefulWidget {
   final TextEditingController controller;
 
   @override
-  _MatchTextBoxState createState() => _MatchTextBoxState();
+  State<MatchTextBox> createState() => _MatchTextBoxState();
 }
 
 class _MatchTextBoxState extends State<MatchTextBox> {

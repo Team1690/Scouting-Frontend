@@ -28,11 +28,11 @@ class PickListScreen extends StatelessWidget {
   Padding pickList(final BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(defaultPadding),
-      child: StreamBuilder<QueryResult>(
+      child: StreamBuilder<List<PickListTeam>>(
         stream: fetchPicklist(),
         builder: (
           final BuildContext context,
-          final AsyncSnapshot<QueryResult> snapshot,
+          final AsyncSnapshot<List<PickListTeam>> snapshot,
         ) {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
@@ -45,7 +45,7 @@ class PickListScreen extends StatelessWidget {
               child: Text("No Teams"),
             );
           }
-          return PicklistCard(initialData: parse(snapshot.data!));
+          return PicklistCard(initialData: snapshot.data!);
         },
       ),
     );
@@ -99,8 +99,8 @@ void save(
         .toList()
   };
 
-  final QueryResult result = await client
-      .mutate(MutationOptions(document: gql(query), variables: vars));
+  final QueryResult<void> result = await client
+      .mutate(MutationOptions<void>(document: gql(query), variables: vars));
   if (context != null) {
     if (result.hasException) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -144,7 +144,7 @@ extension CurrentPickListExtension on CurrentPickList {
   }
 
   String get title =>
-      name[0].toUpperCase() + name.substring(1).toLowerCase() + " Picklist";
+      "${name[0].toUpperCase()}${name.substring(1).toLowerCase()} Picklist";
 
   CurrentPickList nextScreen() =>
       map(() => CurrentPickList.second, () => CurrentPickList.first);

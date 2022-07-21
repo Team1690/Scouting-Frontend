@@ -1,6 +1,5 @@
 import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 
 String tablesToQuerys(
   final List<String> tables,
@@ -27,18 +26,18 @@ query {
    ${tablesToQuerys(tables, tablesToOrderByOrderColumn)}
 }
 """;
-  return (await getClient().query(QueryOptions(document: gql(query))))
-      .mapQueryResult(
-    (final Map<String, dynamic>? data) =>
-        data.mapNullable(
-          (final Map<String, dynamic> result) => <String, Map<String, int>>{
-            for (final String table in tables)
-              table: <String, int>{
-                for (final dynamic entry in (result[table] as List<dynamic>))
-                  entry["title"] as String: entry["id"] as int
-              }
-          },
-        ) ??
-        (throw Exception("Query $tables returned null")),
-  );
+  return (await getClient().query(
+    QueryOptions<Map<String, Map<String, int>>>(
+      document: gql(query),
+      parserFn: (final Map<String, dynamic> result) =>
+          <String, Map<String, int>>{
+        for (final String table in tables)
+          table: <String, int>{
+            for (final dynamic entry in (result[table] as List<dynamic>))
+              entry["title"] as String: entry["id"] as int
+          }
+      },
+    ),
+  ))
+      .mapQueryResult();
 }

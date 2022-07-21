@@ -12,7 +12,7 @@ class EditFault extends StatelessWidget {
   });
   final String faultMessage;
   final int faultId;
-  final void Function(QueryResult) onFinished;
+  final void Function(QueryResult<void>) onFinished;
   @override
   Widget build(final BuildContext context) {
     return IconButton(
@@ -63,7 +63,7 @@ class EditFault extends StatelessWidget {
           final String message,
         ) async {
           showLoadingSnackBar(context);
-          final QueryResult result = await updateFaultMessage(
+          final QueryResult<void> result = await updateFaultMessage(
             faultId,
             message,
           );
@@ -74,12 +74,12 @@ class EditFault extends StatelessWidget {
   }
 }
 
-Future<QueryResult> updateFaultMessage(
+Future<QueryResult<void>> updateFaultMessage(
   final int id,
   final String message,
 ) async {
   return getClient().mutate(
-    MutationOptions(
+    MutationOptions<void>(
       document: gql(updateMessage),
       variables: <String, dynamic>{"id": id, "message": message},
     ),

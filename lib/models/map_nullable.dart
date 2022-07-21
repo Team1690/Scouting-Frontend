@@ -1,5 +1,5 @@
 T Function() always<T>(final T result) => () => result;
-T Function(I) always2<T, I>(final T result) => (final I _ignored) => result;
+T Function(I) always2<T, I>(final T result) => (final I _) => result;
 T identity<T>(final T result) => result;
 
 extension MapNullable<A> on A? {

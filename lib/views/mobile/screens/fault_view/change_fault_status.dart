@@ -9,7 +9,7 @@ import "package:scouting_frontend/views/mobile/switcher.dart";
 class ChangeFaultStatus extends StatelessWidget {
   const ChangeFaultStatus({required this.faultId, required this.onFinished});
   final int faultId;
-  final void Function(QueryResult) onFinished;
+  final void Function(QueryResult<void>) onFinished;
   @override
   Widget build(final BuildContext context) {
     return IconButton(
@@ -91,7 +91,7 @@ class ChangeFaultStatus extends StatelessWidget {
         ))
             .mapNullable((final int p0) async {
           showLoadingSnackBar(context);
-          final QueryResult result = await updateFaultStatus(faultId, p0);
+          final QueryResult<void> result = await updateFaultStatus(faultId, p0);
           onFinished(result);
         });
       },
@@ -100,12 +100,12 @@ class ChangeFaultStatus extends StatelessWidget {
   }
 }
 
-Future<QueryResult> updateFaultStatus(
+Future<QueryResult<void>> updateFaultStatus(
   final int id,
   final int faultStatusId,
 ) async {
   return getClient().mutate(
-    MutationOptions(
+    MutationOptions<void>(
       document: gql(_updateFaultStatusMutation),
       variables: <String, dynamic>{"id": id, "fault_status_id": faultStatusId},
     ),

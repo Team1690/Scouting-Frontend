@@ -1,5 +1,4 @@
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/status/status_screen.dart";
@@ -42,37 +41,35 @@ Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
   final V Function(dynamic) parseV,
 ) {
   return getClient()
-      .subscribe(SubscriptionOptions(document: gql(subscription)))
-      .map((final QueryResult event) {
-    return event.mapQueryResult<List<StatusItem<I, V>>>(
-      (final Map<String, dynamic>? p0) =>
-          p0.mapNullable<List<StatusItem<I, V>>>(
-              (final Map<String, dynamic> data) {
-            final List<dynamic> matches =
-                data[specific ? "specific" : "match_2022"] as List<dynamic>;
-            final Map<I, List<dynamic>> identifierToMatch =
-                matches.groupListsBy(
-              parseI,
-            );
-            return identifierToMatch
-                .map(
-                  (final I key, final List<dynamic> value) =>
-                      MapEntry<I, List<V>>(
-                    key,
-                    value.map(parseV).toList(),
-                  ),
-                )
-                .entries
-                .map<StatusItem<I, V>>(
-                  (final MapEntry<I, List<V>> e) => StatusItem<I, V>(
-                    values: e.value,
-                    identifier: e.key,
-                  ),
-                )
-                .toList();
-          }) ??
-          (throw Exception("No data")),
-    );
+      .subscribe(
+    SubscriptionOptions<List<StatusItem<I, V>>>(
+      document: gql(subscription),
+      parserFn: (final Map<String, dynamic> data) {
+        final List<dynamic> matches =
+            data[specific ? "specific" : "match_2022"] as List<dynamic>;
+        final Map<I, List<dynamic>> identifierToMatch = matches.groupListsBy(
+          parseI,
+        );
+        return identifierToMatch
+            .map(
+              (final I key, final List<dynamic> value) => MapEntry<I, List<V>>(
+                key,
+                value.map(parseV).toList(),
+              ),
+            )
+            .entries
+            .map<StatusItem<I, V>>(
+              (final MapEntry<I, List<V>> e) => StatusItem<I, V>(
+                values: e.value,
+                identifier: e.key,
+              ),
+            )
+            .toList();
+      },
+    ),
+  )
+      .map((final QueryResult<List<StatusItem<I, V>>> event) {
+    return event.mapQueryResult();
   });
 }
 

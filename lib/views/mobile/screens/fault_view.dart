@@ -64,8 +64,10 @@ class FaultView extends StatelessWidget {
   }
 }
 
-void Function(QueryResult) handleQueryResult(final BuildContext context) =>
-    (final QueryResult result) {
+void Function(QueryResult<T>) handleQueryResult<T>(
+  final BuildContext context,
+) =>
+    (final QueryResult<T> result) {
       ScaffoldMessenger.of(context).clearSnackBars();
       if (result.hasException) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -92,33 +94,29 @@ void showLoadingSnackBar(final BuildContext context) =>
 
 Stream<List<FaultEntry>> fetchFaults() {
   final GraphQLClient client = getClient();
-  final Stream<QueryResult> result =
-      client.subscribe(SubscriptionOptions(document: gql(query)));
-  return result.map(
-    (final QueryResult event) => event.mapQueryResult(
-      (final Map<String, dynamic>? data) =>
-          data.mapNullable<List<FaultEntry>>(
-            (final Map<String, dynamic> data) {
-              return (data["faults"] as List<dynamic>)
-                  .map(
-                    (final dynamic e) => FaultEntry(
-                      e["message"] as String,
-                      LightTeam(
-                        e["team"]["id"] as int,
-                        e["team"]["number"] as int,
-                        e["team"]["name"] as String,
-                        e["team"]["colors_index"] as int,
-                      ),
-                      e["id"] as int,
-                      e["fault_status"]["title"] as String,
-                    ),
-                  )
-                  .toList();
-            },
-          ) ??
-          (throw Exception("No data")),
+  final Stream<QueryResult<List<FaultEntry>>> result = client.subscribe(
+    SubscriptionOptions<List<FaultEntry>>(
+      document: gql(query),
+      parserFn: (final Map<String, dynamic> data) {
+        return (data["faults"] as List<dynamic>)
+            .map(
+              (final dynamic e) => FaultEntry(
+                e["message"] as String,
+                LightTeam(
+                  e["team"]["id"] as int,
+                  e["team"]["number"] as int,
+                  e["team"]["name"] as String,
+                  e["team"]["colors_index"] as int,
+                ),
+                e["id"] as int,
+                e["fault_status"]["title"] as String,
+              ),
+            )
+            .toList();
+      },
     ),
   );
+  return result.map(queryResultToParsed);
 }
 
 class NewFault {

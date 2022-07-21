@@ -18,7 +18,7 @@ class SubmitButton extends StatefulWidget {
   final void Function() resetForm;
 
   @override
-  _SubmitButtonState createState() => _SubmitButtonState();
+  State<SubmitButton> createState() => _SubmitButtonState();
 }
 
 class _SubmitButtonState extends State<SubmitButton> {
@@ -88,8 +88,8 @@ class _SubmitButtonState extends State<SubmitButton> {
           _state = ButtonState.loading;
         });
         final GraphQLClient client = getClient();
-        final QueryResult queryResult = await client.mutate(
-          MutationOptions(
+        final QueryResult<void> queryResult = await client.mutate(
+          MutationOptions<void>(
             document: gql(widget.mutation),
             variables: widget.vars.toHasuraVars(),
           ),

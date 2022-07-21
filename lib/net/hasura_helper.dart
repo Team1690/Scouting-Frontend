@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 
 GraphQLClient getClient() {
   final HttpLink httpLink = HttpLink(
@@ -21,10 +20,16 @@ GraphQLClient getClient() {
   );
 }
 
-extension MapQueryResult on QueryResult {
-  T mapQueryResult<T>(final T Function(Map<String, dynamic>?) f) =>
-      hasException ? throw exception! : f(data);
+extension MapQueryResult<A> on QueryResult<A> {
+  A mapQueryResult() => (hasException
+      ? throw exception!
+      : data == null
+          ? (throw Exception("Data returned null"))
+          : parsedData!);
 }
+
+A queryResultToParsed<A>(final QueryResult<A> result) =>
+    result.mapQueryResult();
 
 extension MapSnapshot<T> on AsyncSnapshot<T> {
   V mapSnapshot<V>({
@@ -37,7 +42,7 @@ extension MapSnapshot<T> on AsyncSnapshot<T> {
           ? onError(error!)
           : (ConnectionState.waiting == connectionState
               ? onWaiting()
-              : (hasData ? onSuccess(data!) : onNoData()));
+              : (hasData ? onSuccess(data as T) : onNoData()));
 }
 
 Future<List<LightTeam>> fetchTeams() async {
@@ -53,12 +58,11 @@ query FetchTeams {
 }
   """;
 
-  final QueryResult result =
-      await client.query(QueryOptions(document: gql(query)));
-
-  return result.mapQueryResult(
-        (final Map<String, dynamic>? data) => data.mapNullable(
-          (final Map<String, dynamic> teams) => (teams["team"] as List<dynamic>)
+  final QueryResult<List<LightTeam>> result = await client.query(
+    QueryOptions<List<LightTeam>>(
+      document: gql(query),
+      parserFn: (final Map<String, dynamic> teams) =>
+          (teams["team"] as List<dynamic>)
               .map(
                 (final dynamic e) => LightTeam(
                   e["id"] as int,
@@ -68,7 +72,8 @@ query FetchTeams {
                 ),
               )
               .toList(),
-        ),
-      ) ??
-      (throw Exception("No teams queried"));
+    ),
+  );
+
+  return result.mapQueryResult();
 }
