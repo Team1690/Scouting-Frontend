@@ -1,13 +1,12 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
+import "package:scouting_frontend/models/matches_model.dart";
+import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/common/matches_search_box_future.dart";
 
 import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/views/mobile/match_dropdown.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
-import "package:scouting_frontend/views/mobile/section_divider.dart";
-import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
@@ -27,6 +26,7 @@ class _SpecificState extends State<Specific> {
 
   final TextEditingController scouterNameController = TextEditingController();
   final TextEditingController teamNumberController = TextEditingController();
+  final TextEditingController matchController = TextEditingController();
   @override
   Widget build(final BuildContext context) {
     return GestureDetector(
@@ -34,7 +34,7 @@ class _SpecificState extends State<Specific> {
       child: Scaffold(
         drawer: SideNavBar(),
         appBar: AppBar(
-          actions: <Widget>[RobotImageButton(teamId: () => vars.teamId)],
+          actions: <Widget>[RobotImageButton(teamId: () => vars.team?.id)],
           centerTitle: true,
           title: Text("Specific"),
         ),
@@ -45,20 +45,6 @@ class _SpecificState extends State<Specific> {
               key: formKey,
               child: Column(
                 children: <Widget>[
-                  SectionDivider(label: "Match Details"),
-                  MatchTextBox(
-                    validate: (final String? p0) {
-                      if (p0 == null || p0.isEmpty) {
-                        return "Please enter a match number";
-                      }
-                      return null;
-                    },
-                    onChange: (final int value) => vars.matchNumber = value,
-                    controller: matchNumberController,
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
                   TextFormField(
                     controller: scouterNameController,
                     validator: (final String? value) =>
@@ -80,24 +66,39 @@ class _SpecificState extends State<Specific> {
                   TeamSelectionFuture(
                     controller: teamNumberController,
                     onChange: (final LightTeam team) {
-                      vars.teamId = team.id;
+                      setState(() {
+                        vars.team = team;
+                      });
                     },
                   ),
                   SizedBox(
                     height: 15,
                   ),
-                  Selector<int>(
-                    options:
-                        IdProvider.of(context).matchType.idToName.keys.toList(),
-                    placeholder: "Match type",
-                    value: vars.matchTypeId,
-                    makeItem: (final int id) =>
-                        IdProvider.of(context).matchType.idToName[id]!,
-                    onChange: (final int id) {
-                      vars.matchTypeId = id;
+                  MatchSelectionFuture(
+                    controller: matchController,
+                    team: vars.team,
+                    matches: vars.team.mapNullable(
+                          (final LightTeam p0) => MatchesProvider.of(context)
+                              .matches
+                              .where(
+                                (final ScheduleMatch element) =>
+                                    (element.red0.id == p0.id ||
+                                        element.red1.id == p0.id ||
+                                        element.red2.id == p0.id ||
+                                        element.red3?.id == p0.id ||
+                                        element.blue0.id == p0.id ||
+                                        element.blue1.id == p0.id ||
+                                        element.blue2.id == p0.id ||
+                                        element.blue3?.id == p0.id),
+                              )
+                              .toList(),
+                        ) ??
+                        <ScheduleMatch>[],
+                    onChange: (final ScheduleMatch selectedMatch) {
+                      setState(() {
+                        vars.matchesId = selectedMatch.id;
+                      });
                     },
-                    validate: (final int i) =>
-                        i.onNull("Please pick a match type"),
                   ),
                   SizedBox(
                     height: 15,
@@ -214,8 +215,8 @@ class _SpecificState extends State<Specific> {
                         });
                       },
                       mutation: """
-mutation MyMutation(\$team_id: Int, \$message: String, \$fault_message: String, \$is_rematch: Boolean, \$match_number: Int, \$match_type_id: Int, \$scouter_name: String) {
-  insert_specific(objects: {team_id: \$team_id, message: \$message, is_rematch: \$is_rematch, match_number: \$match_number, match_type_id: \$match_type_id, scouter_name: \$scouter_name}) {
+mutation InsertSpecific(\$team_id: Int, \$message: String, \$fault_message: String, \$is_rematch: Boolean, \$scouter_name: String,\$matches_id:Int!) {
+  insert_specific(objects: {team_id: \$team_id, message: \$message, is_rematch: \$is_rematch,  scouter_name: \$scouter_name,matches_id:\$matches_id}) {
     affected_rows
   }
                   ${vars.faultMessage == null ? "" : """
