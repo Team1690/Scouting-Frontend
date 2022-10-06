@@ -1,4 +1,6 @@
 import "package:scouting_frontend/models/id_providers.dart";
+import "package:scouting_frontend/models/matches_model.dart";
+import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/constants.dart";
@@ -14,7 +16,9 @@ class App extends StatelessWidget {
     required this.matchTypeIds,
     required this.robotMatchStatusIds,
     required this.faultStatus,
+    required this.matches,
   });
+  final List<ScheduleMatch> matches;
   final Map<String, int> robotMatchStatusIds;
   final List<LightTeam> teams;
   final Map<String, int> climdIds;
@@ -26,18 +30,21 @@ class App extends StatelessWidget {
   Widget build(final BuildContext context) {
     return TeamProvider(
       teams: teams,
-      child: IdProvider(
-        matchTypeIds: matchTypeIds,
-        climbIds: climdIds,
-        drivemotorIds: driveMotorIds,
-        drivetrainIds: drivetrainIds,
-        robotMatchStatusIds: robotMatchStatusIds,
-        faultStatus: faultStatus,
-        child: MaterialApp(
-          title: "Orbit Scouting",
-          home: isPC(context) ? TeamInfoScreen() : UserInput(),
-          theme: darkModeTheme,
-          debugShowCheckedModeBanner: false,
+      child: MatchesProvider(
+        matches: matches,
+        child: IdProvider(
+          matchTypeIds: matchTypeIds,
+          climbIds: climdIds,
+          drivemotorIds: driveMotorIds,
+          drivetrainIds: drivetrainIds,
+          robotMatchStatusIds: robotMatchStatusIds,
+          faultStatus: faultStatus,
+          child: MaterialApp(
+            title: "Orbit Scouting",
+            home: isPC(context) ? TeamInfoScreen() : UserInput(),
+            theme: darkModeTheme,
+            debugShowCheckedModeBanner: false,
+          ),
         ),
       ),
     );

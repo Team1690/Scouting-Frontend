@@ -38,14 +38,14 @@ class IdProvider extends InheritedWidget {
         );
 
   IdProvider._inner({
-    required final Widget child,
+    required super.child,
     required this.climb,
     required this.driveTrain,
     required this.drivemotor,
     required this.matchType,
     required this.robotMatchStatus,
     required this.faultStatus,
-  }) : super(child: child);
+  });
   final IdTable robotMatchStatus;
   final IdTable matchType;
   final IdTable climb;
@@ -76,9 +76,9 @@ class TeamProvider extends InheritedWidget {
           ),
         );
   const TeamProvider._inner({
-    required final Widget child,
-    required final this.numberToTeam,
-  }) : super(child: child);
+    required super.child,
+    required this.numberToTeam,
+  });
   final Map<int, LightTeam> numberToTeam;
   List<LightTeam> get teams => numberToTeam.values.toList();
   @override

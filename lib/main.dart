@@ -3,7 +3,9 @@ import "dart:io";
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/net/fetch_matches.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/app.dart";
 
@@ -34,10 +36,12 @@ void main() async {
   final Map<String, int> matchTypes = enums["match_type"]!;
   final Map<String, int> robotMatchStatuses = enums["robot_match_status"]!;
   final Map<String, int> faultStatus = enums["fault_status"]!;
+  final List<ScheduleMatch> matches = await fetchMatches();
   final List<LightTeam> teams = await fetchTeams();
 
   runApp(
     App(
+      matches: matches,
       faultStatus: faultStatus,
       matchTypeIds: matchTypes,
       teams: teams,

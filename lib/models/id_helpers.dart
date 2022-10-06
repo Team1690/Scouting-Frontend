@@ -22,7 +22,7 @@ Future<Map<String, Map<String, int>>> fetchEnums(
   final List<String> tablesToOrderByOrderColumn,
 ) async {
   final String query = """
-query {
+query FetchEnums{
    ${tablesToQuerys(tables, tablesToOrderByOrderColumn)}
 }
 """;
