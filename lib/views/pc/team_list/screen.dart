@@ -47,9 +47,11 @@ class TeamList extends StatelessWidget {
 
                         DataColumn column(
                           final String title,
-                          final num Function(_Team) f,
-                        ) =>
+                          final num Function(_Team) f, [
+                          final String? toolTip,
+                        ]) =>
                             DataColumn(
+                              tooltip: toolTip,
                               label: Text(title),
                               numeric: true,
                               onSort: (final int index, final __) {
@@ -101,6 +103,7 @@ class TeamList extends StatelessWidget {
                                   column(
                                     "Climb points",
                                     (final _Team a) => a.climbPointAvg,
+                                    "Avg points / Matches Climbed / Matches played",
                                   ),
                                   column(
                                     "Max climb",
