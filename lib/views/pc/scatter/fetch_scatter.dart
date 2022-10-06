@@ -5,7 +5,7 @@ import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/scatter/scatter.dart";
 
 const String query = """
-query MyQuery {
+query Scatter {
   team {
     colors_index
     number

@@ -31,7 +31,7 @@ Future<QueryResult<void>> deleteFault(final int id) async {
 }
 
 const String _deleteFaultMutaton = """
-mutation MyMutation(\$id: Int) {
+mutation DeleteFault(\$id: Int) {
   delete_faults(where: {id: {_eq: \$id}}) {
     affected_rows
   }

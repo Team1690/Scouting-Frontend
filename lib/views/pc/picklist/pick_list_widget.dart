@@ -236,9 +236,9 @@ class PickList extends StatelessWidget {
                   : GestureDetector(
                       onDoubleTap: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute<CoachTeamData<int>>(
+                          MaterialPageRoute<CoachTeamData>(
                             builder: (final BuildContext context) =>
-                                CoachTeamData<int>(e.team),
+                                CoachTeamData(e.team),
                           ),
                         );
                       },

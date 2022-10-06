@@ -7,14 +7,13 @@ import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 const String teamInfoQuery = """
-query MyQuery(\$id: Int!) {
+query TeamInfo(\$id: Int!) {
   team_by_pk(id: \$id) {
     first_picklist_index
     second_picklist_index
     id
     faults {
-
-    message
+      message
     }
     pit {
       weight
@@ -34,8 +33,10 @@ query MyQuery(\$id: Int!) {
     }
     specifics {
       message
-      match_number
-      match_type_id
+      match {
+        match_number
+        match_type_id
+      }
       is_rematch
       scouter_name
     }
@@ -51,30 +52,36 @@ query MyQuery(\$id: Int!) {
         }
       }
     }
-    matches(where: {ignored: {_eq: false}}, order_by: {match_type: {order: asc}, match_number: asc,is_rematch: asc}) {
+    matches(
+      where: {ignored: {_eq: false}}
+      order_by: [{match: {match_type: {order: asc}}}, {match: {match_number: asc}}, {is_rematch: asc}]
+    ) {
       climb {
         points
         title
       }
-      match_type {
-        title
+      match {
+        match_type {
+          title
+        }
       }
-      robot_match_status{
+      robot_match_status {
         title
       }
       is_rematch
       auto_lower
       auto_upper
       auto_missed
-      match_number
+      match {
+        match_number
+      }
       tele_lower
       tele_upper
       tele_missed
     }
-
   }
-
 }
+
 
 """;
 
@@ -149,8 +156,8 @@ Future<Team> fetchTeamInfo(
                 (final dynamic e) => SpecificMatch(
                   message: e["message"] as String,
                   isRematch: e["is_rematch"] as bool,
-                  matchNumber: e["match_number"] as int,
-                  matchTypeId: e["match_type_id"] as int,
+                  matchNumber: e["match"]["match_number"] as int,
+                  matchTypeId: e["match"]["match_type_id"] as int,
                   scouterNames: e["scouter_name"] as String,
                 ),
               )
@@ -221,8 +228,8 @@ Future<Team> fetchTeamInfo(
         final List<MatchIdentifier> matchNumbers = matches
             .map(
               (final dynamic e) => MatchIdentifier(
-                number: e["match_number"] as int,
-                type: e["match_type"]["title"] as String,
+                number: e["match"]["match_number"] as int,
+                type: e["match"]["match_type"]["title"] as String,
                 isRematch: e["is_rematch"] as bool,
               ),
             )

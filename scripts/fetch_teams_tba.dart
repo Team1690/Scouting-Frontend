@@ -58,7 +58,7 @@ Future<http.Response> fetchTeamsFromTba(final String event, final DotEnv env) {
 }
 
 const String mutation = r"""
-mutation MyMutation($teams: [team_insert_input!]!) {
+mutation InsertTeams($teams: [team_insert_input!]!) {
   insert_team(objects: $teams, on_conflict: {constraint: team_number_key}) {
     affected_rows
   }

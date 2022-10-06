@@ -113,7 +113,7 @@ Future<QueryResult<void>> updateFaultStatus(
 }
 
 const String _updateFaultStatusMutation = r"""
-mutation MyMutation($id: Int!, $fault_status_id: Int!) {
+mutation UpdateFaultStatus($id: Int!, $fault_status_id: Int!) {
   update_faults_by_pk(pk_columns: {id: $id}, _set: {fault_status_id: $fault_status_id}) {
     id
   }

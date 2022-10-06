@@ -87,7 +87,7 @@ Future<QueryResult<void>> _addFault(final int teamId, final String message) {
 }
 
 const String _addFaultMutation = """
-mutation Mymutation(\$team_id:Int,\$fault_message:String){
+mutation AddFault(\$team_id:Int,\$fault_message:String){
   insert_faults(objects: {team_id: \$team_id, message: \$fault_message}) {
     affected_rows
   }
