@@ -7,32 +7,13 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 
 Stream<List<StatusItem<LightTeam, String>>> fetchPreScoutingStatus(
   final bool specific,
-) {
-  final String subscription = """
-subscription Status {
-  ${specific ? "specific" : "match_2022"}(order_by: {match_type: {order: asc}, match_number: asc, is_rematch: asc},where:{match_type: {title:{_eq:"Pre scouting"}}}) {
-    team {
-      colors_index
-      id
-      number
-      name
-    }
-    scouter_name
-    match_number
-    is_rematch
-    match_type {
-      title
-    }
-  }
-}
-""";
-  return fetchBase(
-    subscription,
-    specific,
-    (final dynamic element) => LightTeam.fromJson(element["team"]),
-    (final dynamic e) => e["scouter_name"] as String,
-  );
-}
+) =>
+    fetchBase(
+      getSubscription(specific, true),
+      specific,
+      (final dynamic element) => LightTeam.fromJson(element["team"]),
+      (final dynamic e) => e["scouter_name"] as String,
+    );
 
 Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
   final String subscription,
@@ -75,10 +56,32 @@ Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
 
 Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
   final bool specific,
-) {
-  final String subscription = """
+) =>
+    fetchBase(
+      getSubscription(specific, false),
+      specific,
+      (final dynamic element) => MatchIdentifier(
+        number: element["match"]["match_number"] as int,
+        type: element["match"]["match_type"]["title"] as String,
+        isRematch: element["is_rematch"] as bool,
+      ),
+      (final dynamic e) => Match(
+        team: LightTeam(
+          e["team"]["id"] as int,
+          e["team"]["number"] as int,
+          e["team"]["name"] as String,
+          e["team"]["colors_index"] as int,
+        ),
+        scouter: e["scouter_name"] as String,
+      ),
+    );
+
+String getSubscription(final bool specific, final bool preScouting) => """
 subscription Status {
-  ${specific ? "specific" : "match_2022"}(order_by: {match_type: {order: asc}, match_number: asc, is_rematch: asc},,where:{match_type: {title:{_neq:"Pre scouting"}}}) {
+  ${specific ? "specific" : "match_2022"}(
+    order_by: [{match: {match_type: {order: asc}}}, {match: {match_number: asc}}, {is_rematch: asc}]
+    where: {match: {match_type: {title: {${preScouting ? "_eq" : "_neq"}: "Pre scouting"}}}}
+  ) {
     team {
       colors_index
       id
@@ -86,30 +89,13 @@ subscription Status {
       name
     }
     scouter_name
-    match_number
     is_rematch
-    match_type {
-      title
+    match {
+      match_number
+      match_type {
+        title
+      }
     }
   }
 }
 """;
-  return fetchBase(
-    subscription,
-    specific,
-    (final dynamic element) => MatchIdentifier(
-      number: element["match_number"] as int,
-      type: element["match_type"]["title"] as String,
-      isRematch: element["is_rematch"] as bool,
-    ),
-    (final dynamic e) => Match(
-      team: LightTeam(
-        e["team"]["id"] as int,
-        e["team"]["number"] as int,
-        e["team"]["name"] as String,
-        e["team"]["colors_index"] as int,
-      ),
-      scouter: e["scouter_name"] as String,
-    ),
-  );
-}
