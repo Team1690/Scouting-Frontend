@@ -6,7 +6,6 @@ import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 class Match implements HasuraVars {
   Match({
     this.team,
-    this.matchNumber,
     this.autoHigh = 0,
     this.autoLow = 0,
     this.autoMissed = 0,
@@ -19,7 +18,7 @@ class Match implements HasuraVars {
 
   void clear(final BuildContext context) {
     team = null;
-    matchNumber = null;
+    matchesId = null;
     autoHigh = 0;
     autoLow = 0;
     autoMissed = 0;
@@ -32,12 +31,12 @@ class Match implements HasuraVars {
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
   }
 
-  int? matchNumber;
+  bool preScouting = false;
   bool isRematch;
+  int? matchesId;
   int autoHigh;
   int autoMissed;
   int autoLow;
-  int? matchTypeId;
   int teleHigh;
   int teleMissed;
   int teleLow;
@@ -53,13 +52,12 @@ class Match implements HasuraVars {
       "auto_upper": autoHigh,
       "auto_missed": autoMissed,
       "climb_id": climbStatus,
-      "match_number": matchNumber!,
       "team_id": team?.id,
       "tele_lower": teleLow,
       "tele_upper": teleHigh,
       "tele_missed": teleMissed,
       "scouter_name": name,
-      "match_type_id": matchTypeId,
+      "matches_id": matchesId,
       "robot_match_status_id": robotMatchStatusId,
       "is_rematch": isRematch,
     };

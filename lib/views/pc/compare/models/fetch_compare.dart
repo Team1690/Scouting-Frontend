@@ -8,7 +8,7 @@ import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 const String query = """
-query MyQuery(\$ids: [Int!]) {
+query FetchCompare(\$ids: [Int!]) {
   team(where: {id: {_in: \$ids}}) {
     matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
@@ -22,7 +22,7 @@ query MyQuery(\$ids: [Int!]) {
         }
       }
     }
-    matches(where: {ignored: {_eq: false}}, order_by: {match_type: {order: asc}, match_number: asc,is_rematch: asc}) {
+    matches(where: {ignored: {_eq: false}},order_by:[ {match: {match_type: {order: asc}}},{ match:{match_number:asc}},{is_rematch: asc}]) {
       climb {
         points
         title
@@ -33,7 +33,9 @@ query MyQuery(\$ids: [Int!]) {
       auto_lower
       auto_upper
       auto_missed
-      match_number
+      match{
+        match_number
+      }
       tele_lower
       tele_upper
       tele_missed

@@ -5,13 +5,15 @@ import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
+import "package:scouting_frontend/models/matches_model.dart";
+import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/common/matches_search_box_future.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
-import "package:scouting_frontend/views/mobile/match_dropdown.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
@@ -38,7 +40,7 @@ class _UserInputState extends State<UserInput> {
 
   Color? screenColor;
 
-  final TextEditingController matchNumberController = TextEditingController();
+  final TextEditingController matchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
@@ -80,20 +82,6 @@ class _UserInputState extends State<UserInput> {
                 ),
                 child: Column(
                   children: <Widget>[
-                    SectionDivider(label: "Match Details"),
-                    MatchTextBox(
-                      validate: (final String? p0) {
-                        if (p0 == null || p0.isEmpty) {
-                          return "Please enter a match number";
-                        }
-                        return null;
-                      },
-                      onChange: (final int value) => match.matchNumber = value,
-                      controller: matchNumberController,
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
                     TextFormField(
                       controller: scouterNameController,
                       validator: (final String? value) =>
@@ -115,27 +103,43 @@ class _UserInputState extends State<UserInput> {
                     TeamSelectionFuture(
                       controller: teamNumberController,
                       onChange: (final LightTeam team) {
-                        match.team = team;
+                        setState(() {
+                          match.team = team;
+                        });
                       },
                     ),
                     SizedBox(
                       height: 15,
                     ),
-                    Selector<int>(
-                      options: IdProvider.of(context)
-                          .matchType
-                          .idToName
-                          .keys
-                          .toList(),
-                      placeholder: "Match type",
-                      value: match.matchTypeId,
-                      makeItem: (final int id) =>
-                          IdProvider.of(context).matchType.idToName[id]!,
-                      onChange: (final int id) {
-                        match.matchTypeId = id;
+                    MatchSelectionFuture(
+                      controller: matchController,
+                      team: match.team,
+                      matches: match.team.mapNullable(
+                            (final LightTeam p0) => MatchesProvider.of(context)
+                                .matches
+                                .where(
+                                  (final ScheduleMatch element) =>
+                                      IdProvider.of(context)
+                                              .matchType
+                                              .idToName[element.matchTypeId] ==
+                                          "Pre scouting" ||
+                                      (element.red0.id == p0.id ||
+                                          element.red1.id == p0.id ||
+                                          element.red2.id == p0.id ||
+                                          element.red3?.id == p0.id ||
+                                          element.blue0.id == p0.id ||
+                                          element.blue1.id == p0.id ||
+                                          element.blue2.id == p0.id ||
+                                          element.blue3?.id == p0.id),
+                                )
+                                .toList(),
+                          ) ??
+                          <ScheduleMatch>[],
+                      onChange: (final ScheduleMatch selectedMatch) {
+                        setState(() {
+                          match.matchesId = selectedMatch.id;
+                        });
                       },
-                      validate: (final int i) =>
-                          i.onNull("Please pick a match type"),
                     ),
                     SizedBox(
                       height: 15,
@@ -304,7 +308,7 @@ class _UserInputState extends State<UserInput> {
                         setState(() {
                           match.clear(context);
                           teamNumberController.clear();
-                          matchNumberController.clear();
+                          matchController.clear();
                         });
                       },
                       validate: () {
@@ -328,9 +332,9 @@ class _UserInputState extends State<UserInput> {
   }
 }
 
-const String mutation = """
-mutation MyMutation(\$auto_lower: Int, \$auto_upper: Int, \$auto_missed: Int, \$climb_id: Int, \$match_number: Int, \$team_id: Int, \$tele_lower: Int, \$tele_upper: Int, \$tele_missed: Int, \$scouter_name: String, \$match_type_id:Int, \$robot_match_status_id: Int,\$is_rematch: Boolean) {
-  insert_match_2022(objects: {auto_lower: \$auto_lower, auto_upper: \$auto_upper, auto_missed: \$auto_missed, climb_id: \$climb_id, match_number: \$match_number, team_id: \$team_id, tele_lower: \$tele_lower, tele_upper: \$tele_upper, tele_missed: \$tele_missed, scouter_name: \$scouter_name, match_type_id: \$match_type_id, robot_match_status_id: \$robot_match_status_id, is_rematch: \$is_rematch}) {
+const String mutation = r"""
+mutation InsertMatch($auto_lower: Int, $auto_upper: Int, $auto_missed: Int, $climb_id: Int, $matches_id: Int, $team_id: Int, $tele_lower: Int, $tele_upper: Int, $tele_missed: Int, $scouter_name: String, $robot_match_status_id: Int, $is_rematch: Boolean) {
+  insert_match_2022(objects: {auto_lower: $auto_lower, auto_upper: $auto_upper, auto_missed: $auto_missed, climb_id: $climb_id, team_id: $team_id, tele_lower: $tele_lower, tele_upper: $tele_upper, tele_missed: $tele_missed, scouter_name: $scouter_name, robot_match_status_id: $robot_match_status_id, is_rematch: $is_rematch, matches_id: $matches_id}) {
     returning {
       id
     }

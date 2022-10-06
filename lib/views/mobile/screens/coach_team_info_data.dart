@@ -10,7 +10,7 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 import "package:scouting_frontend/views/pc/team_info/widgets/pit/pit_scouting_card.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/specific/scouting_specific.dart";
 
-class CoachTeamData<E extends int> extends StatelessWidget {
+class CoachTeamData extends StatelessWidget {
   const CoachTeamData(this.team);
   final LightTeam team;
   @override

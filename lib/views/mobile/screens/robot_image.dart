@@ -94,7 +94,7 @@ Stream<QueryResult<Widget>> fetchRobotImageUrl(final int teamId) {
       },
       document: gql(
         r"""
-query MyQuery($id: Int!) {
+query RobotImage($id: Int!) {
   team_by_pk(id: $id) {
     pit {
       url

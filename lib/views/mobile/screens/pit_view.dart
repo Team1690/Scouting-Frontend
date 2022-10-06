@@ -279,7 +279,7 @@ class _PitViewState extends State<PitView> {
                     validate: () => formKey.currentState!.validate(),
                     getResult: () => result,
                     mutation: """
-          mutation MyMutation(
+          mutation InsertPit(
               \$url: String,
               \$drive_motor_amount: Int,
               \$drivemotor_id: Int,

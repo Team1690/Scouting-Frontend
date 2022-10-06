@@ -3,10 +3,10 @@ import "package:scouting_frontend/views/constants.dart";
 
 class Switcher extends StatelessWidget {
   Switcher({
-    required final this.labels,
-    required final this.colors,
+    required this.labels,
+    required this.colors,
     required this.onChange,
-    final this.height = 70,
+    this.height = 70,
     required this.selected,
   });
 

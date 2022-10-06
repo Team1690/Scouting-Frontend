@@ -112,10 +112,7 @@ class PreScoutingStatus extends StatelessWidget {
               ),
               items: matches..addAll(teamsNotInData),
               validate: (final StatusItem<LightTeam, String> e) =>
-                  e.values.length == 4 &&
-                  e.values.every(
-                    (final String element) => element == e.values.first,
-                  ),
+                  e.values.length == 4,
             );
           },
           onWaiting: () => Center(

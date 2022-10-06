@@ -5,9 +5,9 @@ import "package:scouting_frontend/models/team_model.dart";
 
 class TeamsSearchBox extends StatelessWidget {
   TeamsSearchBox({
-    required final this.teams,
-    required final this.onChange,
-    required final this.typeAheadController,
+    required this.teams,
+    required this.onChange,
+    required this.typeAheadController,
   });
 
   final List<LightTeam> teams;

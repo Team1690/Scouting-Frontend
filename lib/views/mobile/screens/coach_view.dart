@@ -136,8 +136,8 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
     );
 
 final String query = """
-query MyQuery {
-  orbit_matches(order_by: {match_type: {order: asc}, match_number: asc}) {
+query FetchCoach {
+  matches(order_by: {match_type: {order: asc}, match_number: asc}) {
     happened
     match_number
     match_type {
@@ -181,8 +181,13 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
     QueryOptions<List<CoachData>>(
       document: gql(query),
       parserFn: (final Map<String, dynamic> data) {
-        final List<dynamic> matches = (data["orbit_matches"] as List<dynamic>);
-        return matches.map((final dynamic match) {
+        final List<dynamic> matches = (data["matches"] as List<dynamic>);
+        return matches
+            .where(
+          (final dynamic element) => teamValues
+              .any((final String team) => element[team]?["number"] == 1690),
+        )
+            .map((final dynamic match) {
           final int number = match["match_number"] as int;
           final String matchType = match["match_type"]["title"] as String;
           final bool happened = match["happened"] as bool;
@@ -280,14 +285,14 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
 }
 
 const List<String> teamValues = <String>[
-  "blue_0_team",
-  "blue_1_team",
-  "blue_2_team",
-  "blue_3_team",
-  "red_0_team",
-  "red_1_team",
-  "red_2_team",
-  "red_3_team",
+  "blue_0",
+  "blue_1",
+  "blue_2",
+  "blue_3",
+  "red_0",
+  "red_1",
+  "red_2",
+  "red_3",
 ];
 
 class CoachViewLightTeam {
@@ -353,9 +358,8 @@ Widget teamData(
       ),
       onPressed: () => Navigator.push(
         context,
-        MaterialPageRoute<CoachTeamData<int>>(
-          builder: (final BuildContext context) =>
-              CoachTeamData<int>(team.team),
+        MaterialPageRoute<CoachTeamData>(
+          builder: (final BuildContext context) => CoachTeamData(team.team),
         ),
       ),
       child: Column(
