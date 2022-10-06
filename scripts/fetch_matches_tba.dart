@@ -8,8 +8,7 @@ import "package:http/http.dart" as http;
 
 Future<Map<String, int>> fetchEnum(final String table, final DotEnv env) async {
   final String query = """
-query {
-   
+query FetchEnum{
     $table(order_by: {id: asc}) {
         id
         title
@@ -123,8 +122,8 @@ void main(final List<String> args) async {
 }
 
 const String mutation = r"""
-mutation MyMutation($matches: [orbit_matches_insert_input!]!) {
-  insert_orbit_matches(objects: $matches, on_conflict: {constraint: orbit_matches_match_type_id_match_number_key, update_columns: happened}) {
+mutation InsertMatches($matches: [matches_insert_input!]!) {
+  insert_matches(objects: $matches, on_conflict: {constraint: matches_match_number_match_type_id_key, update_columns: happened}) {
     affected_rows
   }
 }
@@ -178,14 +177,14 @@ Future<QueryResult<void>> sendMatches(
       "match_type_id": matchTypeId,
       "happened": e.happened,
       for (int i = 0; i < 3; i++)
-        "blue_$i": teams
+        "blue_${i}_id": teams
             .where(
               (final LightTeam element) => element.number == e.blueAlliance[i],
             )
             .first
             .id,
       for (int i = 0; i < 3; i++)
-        "red_$i": teams
+        "red_${i}_id": teams
             .where(
               (final LightTeam element) => element.number == e.redAlliance[i],
             )
@@ -213,7 +212,7 @@ class Match {
 Future<http.Response> fetchTeamMatches(final String event, final DotEnv env) {
   return http.get(
     Uri.parse(
-      "https://www.thebluealliance.com/api/v3/team/frc1690/event/$event/matches/simple",
+      "https://www.thebluealliance.com/api/v3/event/$event/matches/simple",
     ),
     headers: <String, String>{"X-TBA-Auth-Key": env["TBA_API_KEY"]!},
   );
