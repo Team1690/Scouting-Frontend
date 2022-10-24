@@ -18,7 +18,7 @@ Future<List<ScheduleMatch>> fetchMatches() async {
   final GraphQLClient client = getClient();
   final String query = """
 query{
-  matches{
+  matches (order_by:[{match_type:{order:asc}},{match_number:asc},]){
     ${allianceMembers.map(
             (final String e) => """$e{
       id
