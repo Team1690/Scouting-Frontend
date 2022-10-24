@@ -25,9 +25,9 @@ class UserInput extends StatefulWidget {
 
 class _UserInputState extends State<UserInput> {
   void flickerScreen(final int newValue, final int oldValue) {
-    screenColor = oldValue > newValue
+    screenColor = oldValue > newValue && toggleLightsState
         ? Colors.red
-        : oldValue < newValue
+        : oldValue < newValue && toggleLightsState
             ? Colors.green
             : null;
 
@@ -44,6 +44,7 @@ class _UserInputState extends State<UserInput> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
+  bool toggleLightsState = true;
   late final Match match = Match(
     robotMatchStatusId:
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
@@ -63,7 +64,19 @@ class _UserInputState extends State<UserInput> {
       resizeToAvoidBottomInset: false,
       drawer: SideNavBar(),
       appBar: AppBar(
-        actions: <Widget>[RobotImageButton(teamId: () => match.team?.id)],
+        actions: <Widget>[
+          RobotImageButton(teamId: () => match.team?.id),
+          ToggleButtons(
+            children: <Icon>[Icon(Icons.lightbulb)],
+            isSelected: <bool>[toggleLightsState],
+            onPressed: (final int i) {
+              setState(() {
+                toggleLightsState = !toggleLightsState;
+              });
+            },
+            renderBorder: false,
+          )
+        ],
         centerTitle: true,
         elevation: 5,
         title: const Text(
