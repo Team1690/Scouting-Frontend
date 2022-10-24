@@ -203,7 +203,7 @@ packages:
       name: fl_chart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.55.1"
+    version: "0.55.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -435,7 +435,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.6.0"
+    version: "4.7.0"
   lints:
     dependency: "direct dev"
     description:

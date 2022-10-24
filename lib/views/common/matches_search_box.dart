@@ -48,11 +48,7 @@ class MatchSearchBox extends StatelessWidget {
               (final ScheduleMatch element) =>
                   element.matchNumber.toString().startsWith(pattern),
             )
-            .toList()
-          ..sort(
-            (final ScheduleMatch a, final ScheduleMatch b) =>
-                a.matchNumber.compareTo(b.matchNumber),
-          ),
+            .toList(),
         itemBuilder:
             (final BuildContext context, final ScheduleMatch suggestion) =>
                 ListTile(
