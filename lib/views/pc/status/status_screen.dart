@@ -152,7 +152,7 @@ class RegularStatus extends StatelessWidget {
                 Text(
                   match.team.number.toString(),
                 ),
-                if (item.values.length != 6) Text(match.scouter)
+                Text(match.scouter)
               ],
             ),
             items: matches.reversed.toList(),
