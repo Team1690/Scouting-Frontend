@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
-import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/matches_search_box.dart";
 
 class MatchSelectionFuture extends StatelessWidget {

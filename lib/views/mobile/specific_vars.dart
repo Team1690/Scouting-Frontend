@@ -1,4 +1,4 @@
-import 'package:scouting_frontend/models/matches_model.dart';
+import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
