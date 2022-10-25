@@ -9,18 +9,13 @@ class MatchSelectionFuture extends StatelessWidget {
     required this.onChange,
     required this.controller,
     required this.matches,
-    required this.team,
   });
 
   final TextEditingController controller;
   final void Function(ScheduleMatch) onChange;
   final List<ScheduleMatch> matches;
-  final LightTeam? team;
   @override
   Widget build(final BuildContext context) {
-    if (team == null) {
-      return Text("No team selected :(");
-    }
     if (MatchesProvider.of(context).matches.isEmpty) {
       return Text("No matches found :(");
     } else {

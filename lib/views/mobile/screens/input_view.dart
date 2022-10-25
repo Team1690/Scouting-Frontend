@@ -113,44 +113,38 @@ class _UserInputState extends State<UserInput> {
                     SizedBox(
                       height: 15,
                     ),
-                    TeamSelectionFuture(
-                      controller: teamNumberController,
-                      onChange: (final LightTeam team) {
+                    MatchSelectionFuture(
+                      controller: matchController,
+                      matches: MatchesProvider.of(context).matches,
+                      onChange: (final ScheduleMatch selectedMatch) {
                         setState(() {
-                          match.team = team;
+                          match.match = selectedMatch;
                         });
                       },
                     ),
                     SizedBox(
                       height: 15,
                     ),
-                    MatchSelectionFuture(
-                      controller: matchController,
-                      team: match.team,
-                      matches: match.team.mapNullable(
-                            (final LightTeam p0) => MatchesProvider.of(context)
-                                .matches
-                                .where(
-                                  (final ScheduleMatch element) =>
-                                      IdProvider.of(context)
-                                              .matchType
-                                              .idToName[element.matchTypeId] ==
-                                          "Pre scouting" ||
-                                      (element.red0.id == p0.id ||
-                                          element.red1.id == p0.id ||
-                                          element.red2.id == p0.id ||
-                                          element.red3?.id == p0.id ||
-                                          element.blue0.id == p0.id ||
-                                          element.blue1.id == p0.id ||
-                                          element.blue2.id == p0.id ||
-                                          element.blue3?.id == p0.id),
-                                )
-                                .toList(),
-                          ) ??
-                          <ScheduleMatch>[],
-                      onChange: (final ScheduleMatch selectedMatch) {
+                    TeamSelectionFuture(
+                      teams: match.match?.matchTypeId ==
+                              IdProvider.of(context)
+                                  .matchType
+                                  .nameToId["Practice"]!
+                          ? TeamProvider.of(context).teams
+                          : <LightTeam?>[
+                              match.match?.blue0,
+                              match.match?.blue1,
+                              match.match?.blue2,
+                              match.match?.blue3,
+                              match.match?.red0,
+                              match.match?.red1,
+                              match.match?.red2,
+                              match.match?.red3
+                            ].whereType<LightTeam>().toList(),
+                      controller: teamNumberController,
+                      onChange: (final LightTeam team) {
                         setState(() {
-                          match.matchesId = selectedMatch.id;
+                          match.team = team;
                         });
                       },
                     ),
