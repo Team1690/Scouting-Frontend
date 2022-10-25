@@ -85,6 +85,7 @@ class _PitViewState extends State<PitView> {
               child: Column(
                 children: <Widget>[
                   TeamSelectionFuture(
+                    teams: TeamProvider.of(context).teams,
                     controller: teamSelectionController,
                     onChange: (final LightTeam lightTeam) {
                       vars.teamId = lightTeam.id;

@@ -5,10 +5,11 @@ import "package:scouting_frontend/views/common/teams_search_box.dart";
 
 class TeamSelectionFuture extends StatelessWidget {
   TeamSelectionFuture({
+    required this.teams,
     required this.onChange,
     required this.controller,
   });
-
+  final List<LightTeam> teams;
   final TextEditingController controller;
   final void Function(LightTeam) onChange;
 
@@ -19,7 +20,7 @@ class TeamSelectionFuture extends StatelessWidget {
     } else {
       return TeamsSearchBox(
         typeAheadController: controller,
-        teams: TeamProvider.of(context).teams,
+        teams: teams,
         onChange: onChange,
       );
     }

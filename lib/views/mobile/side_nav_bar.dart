@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
@@ -37,6 +38,7 @@ class SideNavBar extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: TeamSelectionFuture(
+              teams: TeamProvider.of(context).teams,
               onChange: (final LightTeam team) {
                 teamSelectionController.clear();
                 Navigator.of(context).push(
