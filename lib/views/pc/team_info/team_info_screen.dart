@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
@@ -42,6 +43,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
                 Expanded(
                   flex: 1,
                   child: TeamSelectionFuture(
+                    teams: TeamProvider.of(context).teams,
                     controller: widget.controller,
                     onChange: (final LightTeam newTeam) =>
                         setState(() => chosenTeam = newTeam),

@@ -1,5 +1,6 @@
 import "package:flutter/cupertino.dart";
 import "package:scouting_frontend/models/id_providers.dart";
+import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
@@ -18,7 +19,7 @@ class Match implements HasuraVars {
 
   void clear(final BuildContext context) {
     team = null;
-    matchesId = null;
+    match = null;
     autoHigh = 0;
     autoLow = 0;
     autoMissed = 0;
@@ -33,7 +34,7 @@ class Match implements HasuraVars {
 
   bool preScouting = false;
   bool isRematch;
-  int? matchesId;
+  ScheduleMatch? match;
   int autoHigh;
   int autoMissed;
   int autoLow;
@@ -57,7 +58,7 @@ class Match implements HasuraVars {
       "tele_upper": teleHigh,
       "tele_missed": teleMissed,
       "scouter_name": name,
-      "matches_id": matchesId,
+      "matches_id": match?.id,
       "robot_match_status_id": robotMatchStatusId,
       "is_rematch": isRematch,
     };

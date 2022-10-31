@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
@@ -60,10 +61,34 @@ class _SpecificState extends State<Specific> {
                       hintText: "Scouter names",
                     ),
                   ),
+                  MatchSelectionFuture(
+                    controller: matchController,
+                    matches: MatchesProvider.of(context).matches,
+                    onChange: (final ScheduleMatch selectedMatch) {
+                      setState(() {
+                        vars.matches = selectedMatch;
+                      });
+                    },
+                  ),
                   SizedBox(
                     height: 15,
                   ),
                   TeamSelectionFuture(
+                    teams: vars.matches?.matchTypeId ==
+                            IdProvider.of(context)
+                                .matchType
+                                .nameToId["Practice"]!
+                        ? TeamProvider.of(context).teams
+                        : <LightTeam?>[
+                            vars.matches?.blue0,
+                            vars.matches?.blue1,
+                            vars.matches?.blue2,
+                            vars.matches?.blue3,
+                            vars.matches?.red0,
+                            vars.matches?.red1,
+                            vars.matches?.red2,
+                            vars.matches?.red3,
+                          ].whereType<LightTeam>().toList(),
                     controller: teamNumberController,
                     onChange: (final LightTeam team) {
                       setState(() {
@@ -73,32 +98,6 @@ class _SpecificState extends State<Specific> {
                   ),
                   SizedBox(
                     height: 15,
-                  ),
-                  MatchSelectionFuture(
-                    controller: matchController,
-                    team: vars.team,
-                    matches: vars.team.mapNullable(
-                          (final LightTeam p0) => MatchesProvider.of(context)
-                              .matches
-                              .where(
-                                (final ScheduleMatch element) =>
-                                    (element.red0.id == p0.id ||
-                                        element.red1.id == p0.id ||
-                                        element.red2.id == p0.id ||
-                                        element.red3?.id == p0.id ||
-                                        element.blue0.id == p0.id ||
-                                        element.blue1.id == p0.id ||
-                                        element.blue2.id == p0.id ||
-                                        element.blue3?.id == p0.id),
-                              )
-                              .toList(),
-                        ) ??
-                        <ScheduleMatch>[],
-                    onChange: (final ScheduleMatch selectedMatch) {
-                      setState(() {
-                        vars.matchesId = selectedMatch.id;
-                      });
-                    },
                   ),
                   SizedBox(
                     height: 15,
