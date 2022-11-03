@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/pc/matches/matches_screen.dart";
 import "package:scouting_frontend/views/pc/scatter/scatters_screen.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/status/status_screen.dart";
@@ -94,7 +95,19 @@ class NavigationTab extends StatelessWidget {
                 ),
               );
             },
-          )
+          ),
+          ListTile(
+            title: const Text("Matches"),
+            leading: Icon(Icons.add_circle_outline),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute<CompareScreen>(
+                  builder: (final BuildContext context) => MatchesScreen(),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
