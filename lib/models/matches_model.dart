@@ -13,7 +13,9 @@ class ScheduleMatch {
     required this.blue2,
     required this.blue3,
     required this.id,
+    required this.happened,
   });
+  final bool happened;
   final int id;
   final int matchNumber;
   final int matchTypeId;
