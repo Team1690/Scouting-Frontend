@@ -5,11 +5,13 @@ import "package:scouting_frontend/views/common/teams_search_box.dart";
 
 class TeamSelectionFuture extends StatelessWidget {
   TeamSelectionFuture({
-    required this.teams,
+    this.teams,
     required this.onChange,
     required this.controller,
+    this.dontValidate = false,
   });
-  final List<LightTeam> teams;
+  final bool dontValidate;
+  final List<LightTeam>? teams;
   final TextEditingController controller;
   final void Function(LightTeam) onChange;
 
@@ -19,8 +21,9 @@ class TeamSelectionFuture extends StatelessWidget {
       return Text("No teams available :(");
     } else {
       return TeamsSearchBox(
+        dontValidate: dontValidate,
         typeAheadController: controller,
-        teams: teams,
+        teams: teams ?? TeamProvider.of(context).teams,
         onChange: onChange,
       );
     }
