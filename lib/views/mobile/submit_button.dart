@@ -116,9 +116,11 @@ class _SubmitButtonState extends State<SubmitButton> {
           });
         }
         Future<void>.delayed(Duration(seconds: 5), () {
-          setState(() {
-            _state = ButtonState.idle;
-          });
+          if (mounted) {
+            setState(() {
+              _state = ButtonState.idle;
+            });
+          }
         });
       },
       state: _state,

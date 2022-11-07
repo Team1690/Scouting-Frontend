@@ -8,8 +8,9 @@ class TeamsSearchBox extends StatelessWidget {
     required this.teams,
     required this.onChange,
     required this.typeAheadController,
+    this.dontValidate = false,
   });
-
+  final bool dontValidate;
   final List<LightTeam> teams;
   final void Function(LightTeam) onChange;
   final TextEditingController typeAheadController;
@@ -17,6 +18,9 @@ class TeamsSearchBox extends StatelessWidget {
   Widget build(final BuildContext context) {
     return TypeAheadFormField<LightTeam>(
       validator: (final String? value) {
+        if (dontValidate) {
+          return null;
+        }
         if (value == "") {
           return "Please pick a team";
         }
