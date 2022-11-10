@@ -5,8 +5,9 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/matches_search_box_future.dart";
-
 import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/dropdown_line.dart";
+
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
@@ -20,14 +21,14 @@ class Specific extends StatefulWidget {
 
 class _SpecificState extends State<Specific> {
   final GlobalKey<FormState> formKey = GlobalKey();
-  final TextEditingController messageController = TextEditingController();
+  List<TextEditingController> controllers =
+      List<TextEditingController>.generate(
+    11,
+    (final int i) => TextEditingController(),
+  );
   final SpecificVars vars = SpecificVars();
-  final TextEditingController matchNumberController = TextEditingController();
   final FocusNode node = FocusNode();
 
-  final TextEditingController scouterNameController = TextEditingController();
-  final TextEditingController teamNumberController = TextEditingController();
-  final TextEditingController matchController = TextEditingController();
   @override
   Widget build(final BuildContext context) {
     return GestureDetector(
@@ -40,14 +41,14 @@ class _SpecificState extends State<Specific> {
           title: Text("Specific"),
         ),
         body: Padding(
-          padding: EdgeInsets.all(14),
+          padding: EdgeInsets.all(defaultPadding),
           child: SingleChildScrollView(
             child: Form(
               key: formKey,
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: scouterNameController,
+                    controller: controllers[0], //index of nameController
                     validator: (final String? value) =>
                         value != null && value.isNotEmpty
                             ? null
@@ -61,8 +62,11 @@ class _SpecificState extends State<Specific> {
                       hintText: "Scouter names",
                     ),
                   ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   MatchSelectionFuture(
-                    controller: matchController,
+                    controller: controllers[1], //index of matchController
                     matches: MatchesProvider.of(context).matches,
                     onChange: (final ScheduleMatch selectedMatch) {
                       setState(() {
@@ -89,7 +93,7 @@ class _SpecificState extends State<Specific> {
                             vars.matches?.red2,
                             vars.matches?.red3,
                           ].whereType<LightTeam>().toList(),
-                    controller: teamNumberController,
+                    controller: controllers[2], //index of teamController
                     onChange: (final LightTeam team) {
                       setState(() {
                         vars.team = team;
@@ -119,29 +123,95 @@ class _SpecificState extends State<Specific> {
                       });
                     },
                   ),
-                  SizedBox(height: 14.0),
-                  TextField(
-                    focusNode: node,
-                    textDirection: TextDirection.rtl,
-                    controller: messageController,
-                    onChanged: (final String text) {
-                      vars.message = text;
+                  SizedBox(height: 15.0),
+                  DropdownLine<String>(
+                    onTap: () {
+                      setState(() {
+                        vars.drivetrainAndDriving =
+                            vars.drivetrainAndDriving.onNull(
+                          controllers[3].text,
+                        ); //index of drivingController
+                      });
                     },
-                    style: TextStyle(color: Colors.white),
-                    cursorColor: Colors.white,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 4.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 4.0),
-                      ),
-                      fillColor: secondaryColor,
-                      filled: true,
-                    ),
-                    maxLines: 18,
+                    value: vars.drivetrainAndDriving,
+                    onChange: (final String p0) =>
+                        vars.drivetrainAndDriving = p0,
+                    controller: controllers[3], //index of drivingController
+                    label: "Driving & Drivetrain",
                   ),
-                  SizedBox(height: 14),
+                  SizedBox(height: 15.0),
+                  DropdownLine<String>(
+                    onTap: () {
+                      setState(() {
+                        vars.intakeAndConveyor = vars.intakeAndConveyor.onNull(
+                          controllers[4].text,
+                        ); //index of intakeController
+                      });
+                    },
+                    value: vars.intakeAndConveyor,
+                    onChange: (final String p0) => vars.intakeAndConveyor = p0,
+                    controller: controllers[4], //index of intakeController
+                    label: "Intake & Conveyor",
+                  ),
+                  SizedBox(height: 15.0),
+                  DropdownLine<String>(
+                    value: vars.shooter,
+                    onTap: () {
+                      setState(() {
+                        vars.shooter = vars.shooter.onNull(
+                          controllers[5].text,
+                        ); //index of shooterController
+                      });
+                    },
+                    onChange: (final String p0) => vars.shooter = p0,
+                    controller: controllers[5], //index of shooterController
+                    label: "Shooter",
+                  ),
+                  SizedBox(height: 15.0),
+                  DropdownLine<String>(
+                    onTap: () {
+                      setState(() {
+                        vars.climb = vars.climb.onNull(
+                          controllers[6].text,
+                        ); //index of climbController
+                      });
+                    },
+                    value: vars.climb,
+                    onChange: (final String p0) => vars.climb = p0,
+                    controller: controllers[6], //index of climbController
+                    label: "Climb",
+                  ),
+                  SizedBox(height: 15.0),
+                  DropdownLine<String>(
+                    onTap: () {
+                      setState(() {
+                        vars.generalNotes = vars.generalNotes.onNull(
+                          controllers[7].text,
+                        ); //index of notesController
+                      });
+                    },
+                    value: vars.generalNotes,
+                    onChange: (final String p0) => vars.generalNotes = p0,
+                    controller: controllers[7], //index of notesController
+                    label: "General Notes",
+                  ),
+                  SizedBox(height: 15.0),
+                  DropdownLine<String>(
+                    onTap: () {
+                      setState(() {
+                        vars.defense = vars.defense.onNull(
+                          controllers[8].text,
+                        ); //index of defenseController
+                      });
+                    },
+                    value: vars.defense,
+                    onChange: (final String p0) => vars.defense = p0,
+                    controller: controllers[8], //index of defenseController
+                    label: "Defense",
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Row(
@@ -181,7 +251,7 @@ class _SpecificState extends State<Specific> {
                     ),
                   ),
                   SizedBox(
-                    height: 14,
+                    height: 15,
                   ),
                   AnimatedCrossFade(
                     duration: Duration(milliseconds: 300),
@@ -190,6 +260,7 @@ class _SpecificState extends State<Specific> {
                         : CrossFadeState.showSecond,
                     firstChild: Container(),
                     secondChild: TextField(
+                      controller: controllers[9], //index of faultController
                       textDirection: TextDirection.rtl,
                       onChanged: (final String value) {
                         vars.faultMessage = value;
@@ -198,7 +269,7 @@ class _SpecificState extends State<Specific> {
                     ),
                   ),
                   SizedBox(
-                    height: 14,
+                    height: 15,
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
@@ -207,16 +278,16 @@ class _SpecificState extends State<Specific> {
                       resetForm: () {
                         setState(() {
                           vars.reset();
-                          matchNumberController.clear();
-                          scouterNameController.clear();
-                          teamNumberController.clear();
-                          messageController.clear();
+                          for (final TextEditingController controller
+                              in controllers) {
+                            controller.clear();
+                          }
                         });
                       },
                       mutation: """
-mutation InsertSpecific(\$team_id: Int, \$message: String, \$fault_message: String, \$is_rematch: Boolean, \$scouter_name: String,\$matches_id:Int!) {
-  insert_specific(objects: {team_id: \$team_id, message: \$message, is_rematch: \$is_rematch,  scouter_name: \$scouter_name,matches_id:\$matches_id}) {
-    affected_rows
+mutation A(\$team_id: Int, \$is_rematch: Boolean, \$scouter_name: String, \$matches_id: Int, \$drivetrain_and_driving: String, \$intake_and_conveyor: String, \$shooter: String, \$climb: String, \$general_notes: String, \$defense: String, \$fault_message:String){
+  insert_specific_2023(objects: { team_id: \$team_id, is_rematch: \$is_rematch, scouter_name: \$scouter_name, matches_id: \$matches_id, drivetrain_and_driving: \$drivetrain_and_driving, intake_and_conveyor: \$intake_and_conveyor, shooter: \$shooter, climb: \$climb, general_notes: \$general_notes, defense: \$defense}){
+  	affected_rows
   }
                   ${vars.faultMessage == null ? "" : """
   insert_faults(objects: {team_id: \$team_id, message: \$fault_message}) {
