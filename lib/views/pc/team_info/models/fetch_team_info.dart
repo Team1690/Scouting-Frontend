@@ -31,14 +31,19 @@ query TeamInfo(\$id: Int!) {
         title
       }
     }
-    specifics {
-      message
-      match {
-        match_number
-        match_type_id
-      }
+    specifics_2023{
+      climb
+      defense
+      shooter
+      drivetrain_and_driving
+      general_notes
+      intake_and_conveyor
       is_rematch
       scouter_name
+      match{
+        match_type_id 
+        match_number
+      }
     }
     matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
@@ -151,10 +156,15 @@ Future<Team> fetchTeamInfo(
             .map((final dynamic e) => e["climb"]["points"] as int)
             .toList();
         final SpecificData specificData = SpecificData(
-          (teamByPk["specifics"] as List<dynamic>)
+          (teamByPk["specifics_2023"] as List<dynamic>)
               .map(
                 (final dynamic e) => SpecificMatch(
-                  message: e["message"] as String,
+                  drivetrainAndDriving: e["drivetrain_and_driving"] as String?,
+                  intakeAndConveyor: e["intake_and_conveyor"] as String?,
+                  shooter: e["shooter"] as String?,
+                  climb: e["climb"] as String?,
+                  generalNotes: e["general_notes"] as String?,
+                  defense: e["defense"] as String?,
                   isRematch: e["is_rematch"] as bool,
                   matchNumber: e["match"]["match_number"] as int,
                   matchTypeId: e["match"]["match_type_id"] as int,

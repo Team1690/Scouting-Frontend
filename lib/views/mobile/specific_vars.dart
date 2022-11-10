@@ -4,7 +4,12 @@ import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class SpecificVars implements HasuraVars {
   LightTeam? team;
-  String message = "";
+  String? drivetrainAndDriving;
+  String? intakeAndConveyor;
+  String? shooter;
+  String? climb;
+  String? defense;
+  String? generalNotes;
   ScheduleMatch? matches;
   String name = "";
   bool isRematch = false;
@@ -14,7 +19,12 @@ class SpecificVars implements HasuraVars {
   Map<String, dynamic> toHasuraVars() {
     return <String, dynamic>{
       "team_id": team?.id,
-      "message": message,
+      "drivetrain_and_driving": drivetrainAndDriving,
+      "intake_and_conveyor": intakeAndConveyor,
+      "shooter": shooter,
+      "climb": climb,
+      "defense": defense,
+      "general_notes": generalNotes,
       "is_rematch": isRematch,
       "matches_id": matches?.id,
       "scouter_name": name,
@@ -27,6 +37,11 @@ class SpecificVars implements HasuraVars {
     matches = null;
     faultMessage = null;
     team = null;
-    message = "";
+    drivetrainAndDriving = null;
+    intakeAndConveyor = null;
+    shooter = null;
+    climb = null;
+    defense = null;
+    generalNotes = null;
   }
 }
