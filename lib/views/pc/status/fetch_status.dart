@@ -73,24 +73,38 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
         type: element["match"]["match_type"]["title"] as String,
         isRematch: element["is_rematch"] as bool,
       ),
-      (final dynamic e) => Match(
-        team: StatusLightTeam(
-          specific
-              ? 0
-              : (e["auto_upper"] as int) * 4 +
-                  (e["auto_lower"] as int) * 2 +
-                  (e["tele_upper"] as int) * 2 +
-                  (e["tele_lower"] as int) +
-                  (e["climb"]["points"] as int),
-          LightTeam(
-            e["team"]["id"] as int,
-            e["team"]["number"] as int,
-            e["team"]["name"] as String,
-            e["team"]["colors_index"] as int,
+      (final dynamic e) {
+        final ScheduleMatch scheduleMatch = (MatchesProvider.of(context)
+            .matches
+            .where(
+              (final ScheduleMatch element) =>
+                  element.matchNumber == e["match"]["match_number"] as int,
+            )
+            .toList()
+            .single);
+        return Match(
+          team: StatusLightTeam(
+            specific
+                ? 0
+                : (e["auto_upper"] as int) * 4 +
+                    (e["auto_lower"] as int) * 2 +
+                    (e["tele_upper"] as int) * 2 +
+                    (e["tele_lower"] as int) +
+                    (e["climb"]["points"] as int),
+            scheduleMatch.red0.id == e["team"]["id"] ||
+                scheduleMatch.red1.id == e["team"]["id"] ||
+                scheduleMatch.red2.id == e["team"]["id"] ||
+                scheduleMatch.red3?.id == e["team"]["id"],
+            LightTeam(
+              e["team"]["id"] as int,
+              e["team"]["number"] as int,
+              e["team"]["name"] as String,
+              e["team"]["colors_index"] as int,
+            ),
           ),
-        ),
-        scouter: e["scouter_name"] as String,
-      ),
+          scouter: e["scouter_name"] as String,
+        );
+      },
       (final MatchIdentifier identifier, final List<Match> currentValues) {
         final ScheduleMatch match = MatchesProvider.of(context)
             .matches
@@ -123,7 +137,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
             )
             .map(
               (final LightTeam e) =>
-                  Match(scouter: "?", team: StatusLightTeam(0, e)),
+                  Match(scouter: "?", team: StatusLightTeam(0, false, e)),
             )
             .toList();
       },
@@ -152,7 +166,7 @@ subscription Status {
     tele_missed
     climb{
       points
-    }
+    } 
 """ : ""}
     match {
       match_number
