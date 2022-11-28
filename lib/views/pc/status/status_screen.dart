@@ -104,7 +104,7 @@ class PreScoutingStatus extends StatelessWidget {
             return StatusList<LightTeam, String>(
               pushUnvalidatedToTheTop: true,
               getTitle: (final StatusItem<LightTeam, String> e) =>
-                  "${e.identifier.number} ${e.identifier.name}",
+                  Text("${e.identifier.number} ${e.identifier.name}"),
               getValueBox: (
                 final String scouter,
                 final StatusItem<LightTeam, String> item,
@@ -145,22 +145,74 @@ class RegularStatus extends StatelessWidget {
               StatusList<MatchIdentifier, Match>(
             missingBuilder: (final Match p0) =>
                 Text(p0.team.team.number.toString()),
-            getTitle: (final StatusItem<MatchIdentifier, Match> e) =>
-                "${e.identifier.isRematch ? "Re " : ""}${e.identifier.type} ${e.identifier.number}",
+            getTitle: (final StatusItem<MatchIdentifier, Match> e) => Column(
+              children: <Widget>[
+                Text(
+                  "${e.identifier.isRematch ? "Re " : ""}${e.identifier.type} ${e.identifier.number}",
+                ),
+                if (!isSpecific)
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        style: TextStyle(color: Colors.blue),
+                        "${e.values.where((final Match element) => element.team.isRed == true).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
+                      ),
+                      Text(" - "),
+                      Text(
+                        style: TextStyle(color: Colors.red),
+                        "${e.values.where((final Match element) => element.team.isRed == false).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
+                      )
+                    ],
+                  )
+              ],
+            ),
             getValueBox: (
               final Match match,
               final StatusItem<MatchIdentifier, Match> item,
             ) =>
                 Column(
               children: <Widget>[
-                Text(
-                  match.team.team.number.toString(),
-                ),
-                Text(match.scouter),
-                if (!isSpecific) Text(match.team.points.toString())
+                if (match.team.isRed)
+                  Text(
+                    style: TextStyle(color: Colors.red),
+                    match.team.team.number.toString(),
+                  )
+                else
+                  Text(
+                    style: TextStyle(color: Colors.blue),
+                    match.team.team.number.toString(),
+                  ),
+                if (match.team.isRed)
+                  Text(
+                    style: TextStyle(color: Colors.red),
+                    match.scouter,
+                  )
+                else
+                  Text(
+                    style: TextStyle(color: Colors.blue),
+                    match.scouter,
+                  ),
+                if (!isSpecific)
+                  if (match.team.isRed)
+                    Text(
+                      style: TextStyle(color: Colors.red),
+                      match.team.points.toString(),
+                    )
+                  else
+                    Text(
+                      style: TextStyle(color: Colors.blue),
+                      match.team.points.toString(),
+                    ),
               ],
             ),
-            items: matches.reversed.toList(),
+            items: matches
+              ..forEach(
+                (final StatusItem<MatchIdentifier, Match> e) => e.values.sort(
+                  (final Match a, final Match b) => a.team.isRed == b.team.isRed
+                      ? 0
+                      : (a.team.isRed ? 1 : -1),
+                ),
+              ),
             validate: always2(true),
           ),
           onWaiting: () => Center(
@@ -200,7 +252,7 @@ class StatusList<T, V> extends StatelessWidget {
   final Widget Function(V)? missingBuilder;
   final List<StatusItem<T, V>> items;
   final bool Function(StatusItem<T, V>) validate;
-  final String Function(StatusItem<T, V>) getTitle;
+  final Widget Function(StatusItem<T, V>) getTitle;
   final Widget Function(V, StatusItem<T, V>) getValueBox;
   final bool pushUnvalidatedToTheTop;
 
@@ -235,7 +287,7 @@ class StatusList<T, V> extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(getTitle(e)),
+                        getTitle(e),
                         ...e.values
                             .map(
                               (
@@ -291,9 +343,10 @@ class StatusBox extends StatelessWidget {
 }
 
 class StatusLightTeam {
-  const StatusLightTeam(this.points, this.team);
+  const StatusLightTeam(this.points, this.isRed, this.team);
   final LightTeam team;
   final int points;
+  final bool isRed;
 }
 
 class Match {
