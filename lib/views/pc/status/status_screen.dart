@@ -8,6 +8,7 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/pc/status/fetch_status.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
+import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 
 class StatusScreen extends StatefulWidget {
   @override
@@ -170,28 +171,38 @@ class RegularStatus extends StatelessWidget {
               final Match match,
               final StatusItem<MatchIdentifier, Match> item,
             ) =>
-                Column(
-              children: <Widget>[
-                Text(
-                  style: TextStyle(
-                    color: match.team.isRed ? Colors.red : Colors.blue,
-                  ),
-                  match.team.team.number.toString(),
-                ),
-                Text(
-                  style: TextStyle(
-                    color: match.team.isRed ? Colors.red : Colors.blue,
-                  ),
-                  match.scouter,
-                ),
-                if (!isSpecific)
+                GestureDetector(
+              onTap: (() => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute<TeamInfoScreen>(
+                      builder: (final BuildContext context) => TeamInfoScreen(
+                        initalTeam: match.team.team,
+                      ),
+                    ),
+                  )),
+              child: Column(
+                children: <Widget>[
                   Text(
                     style: TextStyle(
                       color: match.team.isRed ? Colors.red : Colors.blue,
                     ),
-                    match.team.points.toString(),
+                    match.team.team.number.toString(),
                   ),
-              ],
+                  Text(
+                    style: TextStyle(
+                      color: match.team.isRed ? Colors.red : Colors.blue,
+                    ),
+                    match.scouter,
+                  ),
+                  if (!isSpecific)
+                    Text(
+                      style: TextStyle(
+                        color: match.team.isRed ? Colors.red : Colors.blue,
+                      ),
+                      match.team.points.toString(),
+                    ),
+                ],
+              ),
             ),
             items: matches
               ..forEach(
@@ -310,6 +321,7 @@ class StatusBox extends StatelessWidget {
   final Widget child;
   final Color? backgroundColor;
   @override
+  //TODO
   Widget build(final BuildContext context) {
     return Container(
       width: 80,
