@@ -8,7 +8,7 @@ import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/fetch_team_info.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/pit/pit_scouting_card.dart";
-import "package:scouting_frontend/views/pc/team_info/widgets/specific/scouting_specific.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/specific/specific_card.dart";
 
 class CoachTeamData extends StatelessWidget {
   const CoachTeamData(this.team);
@@ -60,9 +60,7 @@ class CoachTeamData extends StatelessWidget {
                               ? Center(
                                   child: Text("No data :("),
                                 )
-                              : ScoutingSpecific(
-                                  msg: data.specificData,
-                                ),
+                              : SpecificCard(data.specificData),
                         ),
                       ),
                       Padding(
