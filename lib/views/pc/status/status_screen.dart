@@ -174,22 +174,23 @@ class RegularStatus extends StatelessWidget {
               children: <Widget>[
                 Text(
                   style: TextStyle(
-                      color: match.team.isRed ? Colors.red : Colors.blue),
+                    color: match.team.isRed ? Colors.red : Colors.blue,
+                  ),
                   match.team.team.number.toString(),
                 ),
-                if (match.team.isRed)
+                Text(
+                  style: TextStyle(
+                    color: match.team.isRed ? Colors.red : Colors.blue,
+                  ),
+                  match.scouter,
+                ),
+                if (!isSpecific)
                   Text(
                     style: TextStyle(
-                        color: match.team.isRed ? Colors.red : Colors.blue),
-                    match.scouter,
-                  ),
-                if (!isSpecific)
-                  if (match.team.isRed)
-                    Text(
-                      style: TextStyle(
-                          color: match.team.isRed ? Colors.red : Colors.blue),
-                      match.team.points.toString(),
+                      color: match.team.isRed ? Colors.red : Colors.blue,
                     ),
+                    match.team.points.toString(),
+                  ),
               ],
             ),
             items: matches
