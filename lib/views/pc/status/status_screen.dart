@@ -155,12 +155,12 @@ class RegularStatus extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         style: TextStyle(color: Colors.blue),
-                        "${e.values.where((final Match element) => element.team.isRed == true).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
+                        "${e.values.where((final Match element) => element.team.isRed == false).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
                       ),
                       Text(" - "),
                       Text(
                         style: TextStyle(color: Colors.red),
-                        "${e.values.where((final Match element) => element.team.isRed == false).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
+                        "${e.values.where((final Match element) => element.team.isRed == true).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
                       )
                     ],
                   )
