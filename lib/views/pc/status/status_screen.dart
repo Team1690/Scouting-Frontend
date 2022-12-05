@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
+import "package:scouting_frontend/models/matches_model.dart";
+import 'package:scouting_frontend/models/matches_provider.dart';
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
@@ -103,6 +105,7 @@ class PreScoutingStatus extends StatelessWidget {
                     .toList();
 
             return StatusList<LightTeam, String>(
+              validateSpecificValue: (final _, final __) => true,
               pushUnvalidatedToTheTop: true,
               getTitle: (final StatusItem<LightTeam, String> e) =>
                   Text("${e.identifier.number} ${e.identifier.name}"),
@@ -144,6 +147,30 @@ class RegularStatus extends StatelessWidget {
           onNoData: () => throw Exception("No data"),
           onSuccess: (final List<StatusItem<MatchIdentifier, Match>> matches) =>
               StatusList<MatchIdentifier, Match>(
+            validateSpecificValue: (
+              final Match match,
+              final StatusItem<MatchIdentifier, Match> statusItem,
+            ) {
+              final ScheduleMatch scheduleMatch =
+                  MatchesProvider.of(context).matches.firstWhere(
+                        (final ScheduleMatch element) =>
+                            IdProvider.of(context)
+                                    .matchType
+                                    .idToName[element.matchTypeId] ==
+                                statusItem.identifier.type &&
+                            statusItem.identifier.number == element.matchNumber,
+                      );
+              return <LightTeam?>[
+                scheduleMatch.blue0,
+                scheduleMatch.blue1,
+                scheduleMatch.blue2,
+                scheduleMatch.blue3,
+                scheduleMatch.red0,
+                scheduleMatch.red1,
+                scheduleMatch.red2,
+                scheduleMatch.red3
+              ].contains(match.team.team);
+            },
             missingBuilder: (final Match p0) =>
                 Text(p0.team.team.number.toString()),
             getTitle: (final StatusItem<MatchIdentifier, Match> e) => Column(
@@ -204,7 +231,7 @@ class RegularStatus extends StatelessWidget {
                 ],
               ),
             ),
-            items: matches
+            items: matches.reversed.toList()
               ..forEach(
                 (final StatusItem<MatchIdentifier, Match> e) => e.values.sort(
                   (final Match a, final Match b) => a.team.isRed == b.team.isRed
@@ -238,6 +265,7 @@ class StatusList<T, V> extends StatelessWidget {
     required this.getTitle,
     required this.validate,
     required this.getValueBox,
+    required this.validateSpecificValue,
     this.missingBuilder,
     this.pushUnvalidatedToTheTop = false,
   }) {
@@ -253,6 +281,7 @@ class StatusList<T, V> extends StatelessWidget {
   final bool Function(StatusItem<T, V>) validate;
   final Widget Function(StatusItem<T, V>) getTitle;
   final Widget Function(V, StatusItem<T, V>) getValueBox;
+  final bool Function(V, StatusItem<T, V>) validateSpecificValue;
   final bool pushUnvalidatedToTheTop;
 
   @override
@@ -294,6 +323,9 @@ class StatusList<T, V> extends StatelessWidget {
                               ) =>
                                   StatusBox(
                                 child: getValueBox(match, e),
+                                backgroundColor: validateSpecificValue(match, e)
+                                    ? null
+                                    : Colors.red,
                               ),
                             )
                             .toList(),
