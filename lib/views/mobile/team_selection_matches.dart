@@ -21,20 +21,30 @@ class TeamSelectionMatches extends StatelessWidget {
     return TeamsSearchBox(
       suggestionBuilder: (final LightTeam p0) {
         final ScheduleMatch? match = this.match;
-        if (match == null) return "No match schedule";
-        if (match.matchTypeId ==
-            IdProvider.of(context).matchType.nameToId["Practice"]!) {
-          return "${p0.number} ${p0.name}";
-        }
-        if (p0.id == match.blue0.id) return "blue1 ${p0.number} ${p0.name}";
-        if (p0.id == match.blue1.id) return "blue2 ${p0.number} ${p0.name}";
-        if (p0.id == match.blue2.id) return "blue3 ${p0.number} ${p0.name}";
-        if (p0.id == match.red0.id) return "red1 ${p0.number} ${p0.name}";
-        if (p0.id == match.red1.id) return "red2 ${p0.number} ${p0.name}";
-        if (p0.id == match.red2.id) return "red3 ${p0.number} ${p0.name}";
-        if (p0.id == match.blue3?.id) return "blue4 ${p0.number} ${p0.name}";
-        if (p0.id == match.red3?.id) return "red4 ${p0.number} ${p0.name}";
-        throw Exception("team not in match");
+        return match == null
+            ? "No match in schedule"
+            : match.matchTypeId ==
+                    IdProvider.of(context).matchType.nameToId["Practice"]!
+                ? "${p0.number} ${p0.name}"
+                : p0.id == match.blue0.id
+                    ? "blue1 ${p0.number} ${p0.name}"
+                    : p0.id == match.blue1.id
+                        ? "blue2 ${p0.number} ${p0.name}"
+                        : p0.id == match.blue2.id
+                            ? "blue3 ${p0.number} ${p0.name}"
+                            : p0.id == match.red3?.id
+                                ? "red4 ${p0.number} ${p0.name}"
+                                : p0.id == match.red0.id
+                                    ? "red1 ${p0.number} ${p0.name}"
+                                    : p0.id == match.red1.id
+                                        ? "red2 ${p0.number} ${p0.name}"
+                                        : p0.id == match.red2.id
+                                            ? "red3 ${p0.number} ${p0.name}"
+                                            : p0.id == match.blue3?.id
+                                                ? "blue4 ${p0.number} ${p0.name}"
+                                                : throw Exception(
+                                                    "team not in match",
+                                                  );
       },
       teams: match == null
           ? <LightTeam>[]
