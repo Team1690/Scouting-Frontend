@@ -5,7 +5,7 @@ mutation IgnoreMatch(
   $is_rematch: Boolean = false
   $ignored: Boolean!
 ) {
-  update_match_2022(
+  update_match(
     where: {
       match_number: { _eq: $match_number }
       match_type: { title: { _eq: $match_type } }
