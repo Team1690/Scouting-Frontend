@@ -329,7 +329,7 @@ class _UserInputState extends State<UserInput> {
 
 const String mutation = r"""
 mutation InsertMatch($auto_lower: Int, $auto_upper: Int, $auto_missed: Int, $climb_id: Int, $matches_id: Int, $team_id: Int, $tele_lower: Int, $tele_upper: Int, $tele_missed: Int, $scouter_name: String, $robot_match_status_id: Int, $is_rematch: Boolean) {
-  insert_match_2022(objects: {auto_lower: $auto_lower, auto_upper: $auto_upper, auto_missed: $auto_missed, climb_id: $climb_id, team_id: $team_id, tele_lower: $tele_lower, tele_upper: $tele_upper, tele_missed: $tele_missed, scouter_name: $scouter_name, robot_match_status_id: $robot_match_status_id, is_rematch: $is_rematch, matches_id: $matches_id}) {
+  insert_match(objects: {auto_lower: $auto_lower, auto_upper: $auto_upper, auto_missed: $auto_missed, climb_id: $climb_id, team_id: $team_id, tele_lower: $tele_lower, tele_upper: $tele_upper, tele_missed: $tele_missed, scouter_name: $scouter_name, robot_match_status_id: $robot_match_status_id, is_rematch: $is_rematch, matches_id: $matches_id}) {
     returning {
       id
     }

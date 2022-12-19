@@ -4,10 +4,10 @@ import "package:scouting_frontend/models/team_model.dart";
 
 GraphQLClient getClient() {
   final HttpLink httpLink = HttpLink(
-    "https://orbitdb.hasura.app/v1/graphql",
+    "https://orbitdb2023.hasura.app/v1/graphql",
   );
   final WebSocketLink webSocketLink = WebSocketLink(
-    "wss://orbitdb.hasura.app/v1/graphql",
+    "wss://orbitdb2023.hasura.app/v1/graphql",
     config: SocketClientConfig(),
   );
   return GraphQLClient(

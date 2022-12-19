@@ -38,17 +38,55 @@ class SpecificData {
 
 class SpecificMatch {
   const SpecificMatch({
-    required this.message,
     required this.isRematch,
     required this.matchNumber,
     required this.matchTypeId,
     required this.scouterNames,
+    required this.drivetrainAndDriving,
+    required this.intakeAndConveyor,
+    required this.shooter,
+    required this.climb,
+    required this.generalNotes,
+    required this.defense,
   });
-  final String message;
   final int matchNumber;
   final int matchTypeId;
   final String scouterNames;
   final bool isRematch;
+
+  final String? drivetrainAndDriving;
+  final String? intakeAndConveyor;
+  final String? shooter;
+  final String? climb;
+  final String? defense;
+  final String? generalNotes;
+
+  bool isNull(final String val) {
+    switch (val) {
+      case "DriveTrain And Driving":
+        return drivetrainAndDriving == null ? true : false;
+      case "Intake And Conveyor":
+        return intakeAndConveyor == null ? true : false;
+      case "Shooter":
+        return shooter == null ? true : false;
+      case "Climb":
+        return climb == null ? true : false;
+      case "Defense":
+        return defense == null ? true : false;
+      case "General Notes":
+        return generalNotes == null ? true : false;
+      case "All":
+      default:
+        return (drivetrainAndDriving == null &&
+                intakeAndConveyor == null &&
+                shooter == null &&
+                climb == null &&
+                defense == null &&
+                generalNotes == null)
+            ? true
+            : false;
+    }
+  }
 }
 
 class LineChartData {
