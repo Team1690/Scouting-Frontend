@@ -101,6 +101,19 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
               e["team"]["name"] as String,
               e["team"]["colors_index"] as int,
             ),
+            e["team"]["id"] == scheduleMatch.red0.id ||
+                    e["team"]["id"] == scheduleMatch.blue0.id
+                ? 0
+                : e["team"]["id"] == scheduleMatch.red1.id ||
+                        e["team"]["id"] == scheduleMatch.blue1.id
+                    ? 1
+                    : e["team"]["id"] == scheduleMatch.red2.id ||
+                            e["team"]["id"] == scheduleMatch.blue2.id
+                        ? 2
+                        : e["team"]["id"] == scheduleMatch.red3?.id ||
+                                e["team"]["id"] == scheduleMatch.blue3?.id
+                            ? 3
+                            : -1,
           ),
           scouter: e["scouter_name"] as String,
         );
@@ -137,7 +150,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
             )
             .map(
               (final LightTeam e) =>
-                  Match(scouter: "?", team: StatusLightTeam(0, false, e)),
+                  Match(scouter: "?", team: StatusLightTeam(0, false, e, -1)),
             )
             .toList();
       },
