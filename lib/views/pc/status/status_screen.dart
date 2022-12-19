@@ -71,7 +71,6 @@ class _StatusScreenState extends State<StatusScreen> {
 class PreScoutingStatus extends StatelessWidget {
   const PreScoutingStatus(this.isSpecific);
   final bool isSpecific;
-
   @override
   Widget build(final BuildContext context) =>
       StreamBuilder<List<StatusItem<LightTeam, String>>>(
@@ -105,7 +104,7 @@ class PreScoutingStatus extends StatelessWidget {
                     .toList();
 
             return StatusList<LightTeam, String>(
-              validateSpecificValue: (final _, final __) => true,
+              validateSpecificValue: (final _, final __) => null,
               pushUnvalidatedToTheTop: true,
               getTitle: (final StatusItem<LightTeam, String> e) =>
                   Text("${e.identifier.number} ${e.identifier.name}"),
@@ -150,27 +149,8 @@ class RegularStatus extends StatelessWidget {
             validateSpecificValue: (
               final Match match,
               final StatusItem<MatchIdentifier, Match> statusItem,
-            ) {
-              final ScheduleMatch scheduleMatch =
-                  MatchesProvider.of(context).matches.firstWhere(
-                        (final ScheduleMatch element) =>
-                            IdProvider.of(context)
-                                    .matchType
-                                    .idToName[element.matchTypeId] ==
-                                statusItem.identifier.type &&
-                            statusItem.identifier.number == element.matchNumber,
-                      );
-              return <LightTeam?>[
-                scheduleMatch.blue0,
-                scheduleMatch.blue1,
-                scheduleMatch.blue2,
-                scheduleMatch.blue3,
-                scheduleMatch.red0,
-                scheduleMatch.red1,
-                scheduleMatch.red2,
-                scheduleMatch.red3
-              ].contains(match.team.team);
-            },
+            ) =>
+                match.team.alliancePos != -1 ? null : Colors.red,
             missingBuilder: (final Match p0) =>
                 Text(p0.team.team.number.toString()),
             getTitle: (final StatusItem<MatchIdentifier, Match> e) => Column(
@@ -209,24 +189,18 @@ class RegularStatus extends StatelessWidget {
                   )),
               child: Column(
                 children: <Widget>[
-                  Text(
-                    style: TextStyle(
-                      color: match.team.isRed ? Colors.red : Colors.blue,
-                    ),
-                    match.team.team.number.toString(),
+                  TextByTeam(
+                    match: match,
+                    text: match.team.team.number.toString(),
                   ),
-                  Text(
-                    style: TextStyle(
-                      color: match.team.isRed ? Colors.red : Colors.blue,
-                    ),
-                    match.scouter,
+                  TextByTeam(
+                    match: match,
+                    text: match.scouter,
                   ),
                   if (!isSpecific)
-                    Text(
-                      style: TextStyle(
-                        color: match.team.isRed ? Colors.red : Colors.blue,
-                      ),
-                      match.team.points.toString(),
+                    TextByTeam(
+                      match: match,
+                      text: match.team.points.toString(),
                     ),
                 ],
               ),
@@ -281,7 +255,7 @@ class StatusList<T, V> extends StatelessWidget {
   final bool Function(StatusItem<T, V>) validate;
   final Widget Function(StatusItem<T, V>) getTitle;
   final Widget Function(V, StatusItem<T, V>) getValueBox;
-  final bool Function(V, StatusItem<T, V>) validateSpecificValue;
+  final MaterialColor? Function(V, StatusItem<T, V>) validateSpecificValue;
   final bool pushUnvalidatedToTheTop;
 
   @override
@@ -323,9 +297,8 @@ class StatusList<T, V> extends StatelessWidget {
                               ) =>
                                   StatusBox(
                                 child: getValueBox(match, e),
-                                backgroundColor: validateSpecificValue(match, e)
-                                    ? null
-                                    : Colors.red,
+                                backgroundColor:
+                                    validateSpecificValue(match, e),
                               ),
                             )
                             .toList(),
@@ -344,6 +317,19 @@ class StatusList<T, V> extends StatelessWidget {
             )
             .toList(),
       ),
+    );
+  }
+}
+
+class TextByTeam extends StatelessWidget {
+  const TextByTeam({required this.match, required this.text});
+  final Match match;
+  final String text;
+  @override
+  Widget build(final BuildContext context) {
+    return Text(
+      style: TextStyle(color: match.team.isRed ? Colors.red : Colors.blue),
+      text,
     );
   }
 }
@@ -374,10 +360,11 @@ class StatusBox extends StatelessWidget {
 }
 
 class StatusLightTeam {
-  const StatusLightTeam(this.points, this.isRed, this.team);
+  const StatusLightTeam(this.points, this.isRed, this.team, this.alliancePos);
   final LightTeam team;
   final int points;
   final bool isRed;
+  final int alliancePos;
 }
 
 class Match {
