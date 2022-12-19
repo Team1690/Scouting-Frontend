@@ -31,7 +31,7 @@ query TeamInfo(\$id: Int!) {
         title
       }
     }
-    specifics_2023{
+    specifics{
       climb
       defense
       shooter
@@ -156,7 +156,7 @@ Future<Team> fetchTeamInfo(
             .map((final dynamic e) => e["climb"]["points"] as int)
             .toList();
         final SpecificData specificData = SpecificData(
-          (teamByPk["specifics_2023"] as List<dynamic>)
+          (teamByPk["specifics"] as List<dynamic>)
               .map(
                 (final dynamic e) => SpecificMatch(
                   drivetrainAndDriving: e["drivetrain_and_driving"] as String?,
