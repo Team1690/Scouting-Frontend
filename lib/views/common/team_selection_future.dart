@@ -21,7 +21,7 @@ class TeamSelectionFuture extends StatelessWidget {
       return Text("No teams available :(");
     } else {
       return TeamsSearchBox(
-        suggestionBuilder: (final LightTeam p0) => "${p0.number} ${p0.name}",
+        buildSuggestion: (final LightTeam p0) => "${p0.number} ${p0.name}",
         dontValidate: dontValidate,
         typeAheadController: controller,
         teams: teams ?? TeamProvider.of(context).teams,
