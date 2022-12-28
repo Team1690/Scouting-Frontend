@@ -1,8 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
-import "package:scouting_frontend/models/matches_model.dart";
-import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
