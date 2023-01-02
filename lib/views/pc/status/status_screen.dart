@@ -358,10 +358,11 @@ class StatusBox extends StatelessWidget {
 }
 
 class StatusLightTeam {
-  const StatusLightTeam(this.points, this.isRed, this.team, this.alliancePos);
+  const StatusLightTeam(
+      this.points, this.allianceColor, this.team, this.alliancePos);
   final LightTeam team;
   final int points;
-  final bool isRed;
+  final Color allianceColor;
   final int alliancePos;
 }
 
