@@ -15,6 +15,8 @@ class ScheduleMatch {
     required this.id,
     required this.happened,
     required this.getTeamStation,
+    required this.redAlliance,
+    required this.blueAlliance,
   });
   final bool happened;
   final int id;
@@ -29,4 +31,6 @@ class ScheduleMatch {
   final LightTeam blue2;
   final LightTeam? blue3;
   final String Function(LightTeam) getTeamStation;
+  final List<LightTeam?> redAlliance;
+  final List<LightTeam?> blueAlliance;
 }
