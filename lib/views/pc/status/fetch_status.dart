@@ -1,4 +1,4 @@
-import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
@@ -92,9 +92,11 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                     (e["tele_lower"] as int) +
                     (e["climb"]["points"] as int),
             scheduleMatch.red0.id == e["team"]["id"] ||
-                scheduleMatch.red1.id == e["team"]["id"] ||
-                scheduleMatch.red2.id == e["team"]["id"] ||
-                scheduleMatch.red3?.id == e["team"]["id"],
+                    scheduleMatch.red1.id == e["team"]["id"] ||
+                    scheduleMatch.red2.id == e["team"]["id"] ||
+                    scheduleMatch.red3?.id == e["team"]["id"]
+                ? Colors.red
+                : Colors.blue,
             LightTeam(
               e["team"]["id"] as int,
               e["team"]["number"] as int,
@@ -149,8 +151,10 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                   .contains(element),
             )
             .map(
-              (final LightTeam e) =>
-                  Match(scouter: "?", team: StatusLightTeam(0, false, e, -1)),
+              (final LightTeam e) => Match(
+                scouter: "?",
+                team: StatusLightTeam(0, Colors.white, e, -1),
+              ),
             )
             .toList();
       },
