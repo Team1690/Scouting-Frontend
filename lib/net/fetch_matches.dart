@@ -51,6 +51,56 @@ List<ScheduleMatch> parserFn(final Map<String, dynamic> matches) =>
             red2: LightTeam.fromJson(e["red_2"]),
             red3: (e["red_3"] as Map<String, dynamic>?)
                 .mapNullable(LightTeam.fromJson),
+            getTeamStation: (final LightTeam p0) {
+              final int index = <int?>[
+                LightTeam.fromJson(e["blue_0"]).id,
+                LightTeam.fromJson(e["blue_1"]).id,
+                LightTeam.fromJson(e["blue_2"]).id,
+                (e["blue_3"] as Map<String, dynamic>?)
+                    .mapNullable(LightTeam.fromJson)
+                    ?.id,
+                LightTeam.fromJson(e["red_0"]).id,
+                LightTeam.fromJson(e["red_1"]).id,
+                LightTeam.fromJson(e["red_2"]).id,
+                (e["red_3"] as Map<String, dynamic>?)
+                    .mapNullable(LightTeam.fromJson)!
+                    .id
+              ].indexOf(p0.id);
+              switch (index) {
+                case 0:
+                  return "blue1";
+                case 1:
+                  return "blue2";
+                case 2:
+                  return "blue3";
+                case 3:
+                  return "blue4";
+                case 4:
+                  return "red1";
+                case 5:
+                  return "red2";
+                case 6:
+                  return "red3";
+                case 7:
+                  return "red4";
+                default:
+                  return "should not be here";
+              }
+            },
+            redAlliance: <LightTeam?>[
+              LightTeam.fromJson(e["red_0"]),
+              LightTeam.fromJson(e["red_1"]),
+              LightTeam.fromJson(e["red_2"]),
+              (e["red_3"] as Map<String, dynamic>?)
+                  .mapNullable(LightTeam.fromJson)
+            ],
+            blueAlliance: <LightTeam?>[
+              LightTeam.fromJson(e["blue_0"]),
+              LightTeam.fromJson(e["blue_1"]),
+              LightTeam.fromJson(e["blue_2"]),
+              (e["blue_3"] as Map<String, dynamic>?)
+                  .mapNullable(LightTeam.fromJson),
+            ],
           ),
         )
         .toList();
