@@ -21,7 +21,7 @@ class TeamSelectionMatches extends StatelessWidget {
     return TeamsSearchBox(
       buildSuggestion: (final LightTeam p0) {
         final ScheduleMatch? match = this.match;
-        return match == null ? "team not in match" : match.getTeamStation(p0);
+        return match == null ? "match not found" : match.getTeamStation(p0);
       },
       teams: match == null
           ? <LightTeam>[]
