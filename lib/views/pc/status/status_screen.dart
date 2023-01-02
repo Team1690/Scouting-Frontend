@@ -161,12 +161,12 @@ class RegularStatus extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         style: TextStyle(color: Colors.blue),
-                        "${e.values.where((final Match element) => !element.team.isRed).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
+                        "${e.values.where((final Match element) => element.team.allianceColor == Colors.blue).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
                       ),
                       Text(" - "),
                       Text(
                         style: TextStyle(color: Colors.red),
-                        "${e.values.where((final Match element) => element.team.isRed).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
+                        "${e.values.where((final Match element) => element.team.allianceColor == Colors.red).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
                       )
                     ],
                   )
@@ -206,9 +206,10 @@ class RegularStatus extends StatelessWidget {
             items: matches.reversed.toList()
               ..forEach(
                 (final StatusItem<MatchIdentifier, Match> e) => e.values.sort(
-                  (final Match a, final Match b) => a.team.isRed == b.team.isRed
-                      ? 0
-                      : (a.team.isRed ? 1 : -1),
+                  (final Match a, final Match b) =>
+                      a.team.allianceColor == b.team.allianceColor
+                          ? 0
+                          : (a.team.allianceColor == Colors.red ? 1 : -1),
                 ),
               ),
             validate: always2(true),
@@ -326,7 +327,7 @@ class TextByTeam extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Text(
-      style: TextStyle(color: match.team.isRed ? Colors.red : Colors.blue),
+      style: TextStyle(color: match.team.allianceColor),
       text,
     );
   }
@@ -359,7 +360,11 @@ class StatusBox extends StatelessWidget {
 
 class StatusLightTeam {
   const StatusLightTeam(
-      this.points, this.allianceColor, this.team, this.alliancePos);
+    this.points,
+    this.allianceColor,
+    this.team,
+    this.alliancePos,
+  );
   final LightTeam team;
   final int points;
   final Color allianceColor;
