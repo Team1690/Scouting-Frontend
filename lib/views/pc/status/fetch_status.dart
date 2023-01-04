@@ -91,10 +91,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                     (e["tele_upper"] as int) * 2 +
                     (e["tele_lower"] as int) +
                     (e["climb"]["points"] as int),
-            scheduleMatch.red0.id == e["team"]["id"] ||
-                    scheduleMatch.red1.id == e["team"]["id"] ||
-                    scheduleMatch.red2.id == e["team"]["id"] ||
-                    scheduleMatch.red3?.id == e["team"]["id"]
+            scheduleMatch.alliances[0].contains(e["team"] as LightTeam)
                 ? Colors.red
                 : Colors.blue,
             LightTeam(
@@ -103,19 +100,30 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
               e["team"]["name"] as String,
               e["team"]["colors_index"] as int,
             ),
-            e["team"]["id"] == scheduleMatch.red0.id ||
-                    e["team"]["id"] == scheduleMatch.blue0.id
-                ? 0
-                : e["team"]["id"] == scheduleMatch.red1.id ||
-                        e["team"]["id"] == scheduleMatch.blue1.id
-                    ? 1
-                    : e["team"]["id"] == scheduleMatch.red2.id ||
-                            e["team"]["id"] == scheduleMatch.blue2.id
-                        ? 2
-                        : e["team"]["id"] == scheduleMatch.red3?.id ||
-                                e["team"]["id"] == scheduleMatch.blue3?.id
-                            ? 3
-                            : -1,
+            scheduleMatch.alliances[0].contains(
+              LightTeam(
+                e["team"]["id"] as int,
+                e["team"]["number"] as int,
+                e["team"]["name"] as String,
+                e["team"]["colors_index"] as int,
+              ),
+            )
+                ? scheduleMatch.alliances[0].indexOf(
+                    LightTeam(
+                      e["team"]["id"] as int,
+                      e["team"]["number"] as int,
+                      e["team"]["name"] as String,
+                      e["team"]["colors_index"] as int,
+                    ),
+                  )
+                : scheduleMatch.alliances[1].indexOf(
+                    LightTeam(
+                      e["team"]["id"] as int,
+                      e["team"]["number"] as int,
+                      e["team"]["name"] as String,
+                      e["team"]["colors_index"] as int,
+                    ),
+                  ),
           ),
           scouter: e["scouter_name"] as String,
         );
@@ -135,14 +143,8 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
             .single;
 
         final List<LightTeam> teams = <LightTeam?>[
-          match.red0,
-          match.red1,
-          match.red2,
-          match.red3,
-          match.blue0,
-          match.blue1,
-          match.blue2,
-          match.blue3
+          ...match.alliances[0],
+          ...match.alliances[1],
         ].whereType<LightTeam>().toList();
         return teams
             .where(
