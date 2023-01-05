@@ -22,14 +22,16 @@ class TeamSelectionMatches extends StatelessWidget {
       buildSuggestion: (final LightTeam p0) {
         final ScheduleMatch? match = this.match;
         String getTeamStation(final LightTeam team) {
-          int? indexOf(final int allianceInd) {
-            final int? index = match?.alliances[allianceInd].indexOf(team);
+          int? indexOf(final bool isRed) {
+            final int? index = isRed
+                ? match?.redAlliance.indexOf(team)
+                : match?.blueAlliance.indexOf(team);
             return index == -1 ? null : index;
           }
 
-          return indexOf(0) == null
-              ? "${p0.name} blue${indexOf(1)}"
-              : "${p0.name} red${indexOf(0)}";
+          return indexOf(true) != null
+              ? "${p0.name} red ${indexOf(true)! + 1}"
+              : "${p0.name} blue ${indexOf(false)! + 1}";
         }
 
         return getTeamStation(p0);
@@ -39,9 +41,7 @@ class TeamSelectionMatches extends StatelessWidget {
           : match!.matchTypeId ==
                   IdProvider.of(context).matchType.nameToId["Practice"]!
               ? TeamProvider.of(context).teams
-              : <LightTeam?>[...match!.alliances[1], ...match!.alliances[0]]
-                  .whereType<LightTeam>()
-                  .toList(),
+              : <LightTeam>[...match!.blueAlliance, ...match!.redAlliance],
       typeAheadController: controller,
       dontValidate: dontValidate,
       onChange: onChange,
