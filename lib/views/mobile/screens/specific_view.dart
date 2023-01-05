@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
@@ -11,8 +10,8 @@ import "package:scouting_frontend/views/mobile/dropdown_line.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
-import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
+import "package:scouting_frontend/views/mobile/team_selection_matches.dart";
 
 class Specific extends StatefulWidget {
   @override
@@ -77,22 +76,8 @@ class _SpecificState extends State<Specific> {
                   SizedBox(
                     height: 15,
                   ),
-                  TeamSelectionFuture(
-                    teams: vars.matches?.matchTypeId ==
-                            IdProvider.of(context)
-                                .matchType
-                                .nameToId["Practice"]!
-                        ? TeamProvider.of(context).teams
-                        : <LightTeam?>[
-                            vars.matches?.blue0,
-                            vars.matches?.blue1,
-                            vars.matches?.blue2,
-                            vars.matches?.blue3,
-                            vars.matches?.red0,
-                            vars.matches?.red1,
-                            vars.matches?.red2,
-                            vars.matches?.red3,
-                          ].whereType<LightTeam>().toList(),
+                  TeamSelectionMatches(
+                    match: vars.matches,
                     controller: controllers[2], //index of teamController
                     onChange: (final LightTeam team) {
                       setState(() {
