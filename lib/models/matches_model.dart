@@ -17,14 +17,11 @@ class ScheduleMatch {
   final List<LightTeam> blueAlliance;
 
   String getTeamStation(final LightTeam team) {
-    int? indexOf(final bool isRed) {
-      final int index =
-          isRed ? redAlliance.indexOf(team) : blueAlliance.indexOf(team);
-      return index == -1 ? null : index;
-    }
+    int indexOf(final bool isRed) =>
+        isRed ? redAlliance.indexOf(team) : blueAlliance.indexOf(team);
 
-    return indexOf(true) != null
-        ? "${team.name} red ${indexOf(true)! + 1}"
-        : "${team.name} blue ${indexOf(false)! + 1}";
+    return indexOf(true) != -1
+        ? "${team.name} red ${indexOf(true) + 1}"
+        : "${team.name} blue ${indexOf(false) + 1}";
   }
 }
