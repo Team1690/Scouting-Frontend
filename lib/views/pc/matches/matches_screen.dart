@@ -65,7 +65,7 @@ class MatchesScreen extends StatelessWidget {
                                   "${IdProvider.of(context).matchType.idToName[e.matchTypeId]} ${e.matchNumber}",
                                 ),
                               ),
-                              ...<LightTeam>[...e.blueAlliance]
+                              ...e.blueAlliance
                                   .map(
                                     (final LightTeam e) => Expanded(
                                       child: ElevatedButton(
@@ -94,9 +94,7 @@ class MatchesScreen extends StatelessWidget {
                                     ),
                                   )
                                   .toList(),
-                              ...<LightTeam>[...e.redAlliance]
-                                  .whereType<LightTeam>()
-                                  .map(
+                              ...e.redAlliance.whereType<LightTeam>().map(
                                     (final LightTeam e) => Expanded(
                                       child: ElevatedButton(
                                         onPressed: () =>
