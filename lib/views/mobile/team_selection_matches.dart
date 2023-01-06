@@ -19,11 +19,7 @@ class TeamSelectionMatches extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return TeamsSearchBox(
-      buildSuggestion: (final LightTeam p0) {
-        final ScheduleMatch? match = this.match;
-
-        return match!.getTeamStation(p0) ?? "";
-      },
+      buildSuggestion: (final LightTeam p0) => match!.getTeamStation(p0)!,
       teams: match == null
           ? <LightTeam>[]
           : match!.matchTypeId ==
