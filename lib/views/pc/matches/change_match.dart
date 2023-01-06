@@ -50,8 +50,9 @@ class _ChangeMatchState extends State<ChangeMatch> {
       text: initialVars.blueAlliance[2].number.toString(),
     );
     teamControllers[3] = TextEditingController(
-      text: initialVars.blueAlliance[3].number
-          .mapNullable((final int p0) => p0.toString()),
+      text: initialVars.blueAlliance.length == 4
+          ? initialVars.blueAlliance[3].number.toString()
+          : null,
     );
     teamControllers[4] = TextEditingController(
       text: initialVars.redAlliance[0].number.toString(),
@@ -63,8 +64,9 @@ class _ChangeMatchState extends State<ChangeMatch> {
       text: initialVars.redAlliance[2].number.toString(),
     );
     teamControllers[7] = TextEditingController(
-      text: initialVars.redAlliance[3].number
-          .mapNullable((final int p0) => p0.toString()),
+      text: initialVars.redAlliance.length == 4
+          ? initialVars.redAlliance[3].number.toString()
+          : null,
     );
   }
 
