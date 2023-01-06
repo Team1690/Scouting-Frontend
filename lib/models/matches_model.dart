@@ -17,7 +17,7 @@ class ScheduleMatch {
   final List<LightTeam> redAlliance;
   final List<LightTeam> blueAlliance;
 
-  String getTeamStation(final LightTeam team) {
+  String? getTeamStation(final LightTeam team) {
     int? indexOf(final bool isRed) {
       final int index =
           isRed ? redAlliance.indexOf(team) : blueAlliance.indexOf(team);
@@ -25,6 +25,6 @@ class ScheduleMatch {
     }
 
     return (indexOf(true).mapNullable((final int i) => "red ${i + 1}")) ??
-        (indexOf(false).mapNullable((final int i) => "blue ${i + 1}"))!;
+        (indexOf(false).mapNullable((final int i) => "blue ${i + 1}"));
   }
 }
