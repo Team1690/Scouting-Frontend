@@ -24,7 +24,7 @@ class MatchesVars implements HasuraVars {
           blue0: match.blueAlliance[0],
           blue1: match.blueAlliance[1],
           blue2: match.blueAlliance[2],
-          blue3: match.blueAlliance[3],
+          blue3: match.blueAlliance.length == 4 ? match.blueAlliance[3] : null,
           happened: match.happened,
           matchNumber: match.matchNumber,
           matchTypeId: match.matchTypeId,
@@ -32,7 +32,7 @@ class MatchesVars implements HasuraVars {
           red0: match.redAlliance[0],
           red1: match.redAlliance[1],
           red2: match.redAlliance[2],
-          red3: match.redAlliance[3],
+          red3: match.redAlliance.length == 4 ? match.redAlliance[3] : null,
         );
   int? matchNumber;
   int? matchTypeId;
