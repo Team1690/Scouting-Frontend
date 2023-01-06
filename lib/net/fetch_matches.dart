@@ -33,7 +33,7 @@ ${isSubscription ? "subscription" : "query"} FetchMatches{
   """;
 
 List<LightTeam> fromJson(final dynamic json, final String color) {
-  final String optional = "${color}3";
+  final String optional = "$color 3";
   return <LightTeam>[
     ...(<int>[0, 1, 2]
         .map((final int index) => LightTeam.fromJson(json["${color}_$index"]))),
