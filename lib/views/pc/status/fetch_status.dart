@@ -92,44 +92,19 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                     (e["tele_lower"] as int) +
                     (e["climb"]["points"] as int),
             scheduleMatch.redAlliance.contains(
-              LightTeam(
-                e["team"]["id"] as int,
-                e["team"]["number"] as int,
-                e["team"]["name"] as String,
-                e["team"]["colors_index"] as int,
-              ),
+              LightTeam.fromJson(e),
             )
                 ? Colors.red
                 : Colors.blue,
-            LightTeam(
-              e["team"]["id"] as int,
-              e["team"]["number"] as int,
-              e["team"]["name"] as String,
-              e["team"]["colors_index"] as int,
-            ),
+            LightTeam.fromJson(e),
             scheduleMatch.redAlliance.contains(
-              LightTeam(
-                e["team"]["id"] as int,
-                e["team"]["number"] as int,
-                e["team"]["name"] as String,
-                e["team"]["colors_index"] as int,
-              ),
+              LightTeam.fromJson(e),
             )
                 ? scheduleMatch.redAlliance.indexOf(
-                    LightTeam(
-                      e["team"]["id"] as int,
-                      e["team"]["number"] as int,
-                      e["team"]["name"] as String,
-                      e["team"]["colors_index"] as int,
-                    ),
+                    LightTeam.fromJson(e),
                   )
                 : scheduleMatch.blueAlliance.indexOf(
-                    LightTeam(
-                      e["team"]["id"] as int,
-                      e["team"]["number"] as int,
-                      e["team"]["name"] as String,
-                      e["team"]["colors_index"] as int,
-                    ),
+                    LightTeam.fromJson(e),
                   ),
           ),
           scouter: e["scouter_name"] as String,
