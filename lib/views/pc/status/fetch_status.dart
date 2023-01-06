@@ -110,7 +110,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
           scouter: e["scouter_name"] as String,
         );
       },
-      (final MatchIdentifier identifier, final List<Match> currentValues) {
+      (final MatchIdentifier identifier, final List<Match> scoutedTeams) {
         final ScheduleMatch match = MatchesProvider.of(context)
             .matches
             .where(
@@ -130,7 +130,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
         ];
         return teams
             .where(
-              (final LightTeam element) => !currentValues
+              (final LightTeam element) => !scoutedTeams
                   .map((final Match e) => e.team.team)
                   .contains(element),
             )
