@@ -122,11 +122,10 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                               .nameToId[identifier.type],
                 );
 
-        final List<LightTeam> teams = <LightTeam>[
+        return <LightTeam>[
           ...match.redAlliance,
           ...match.blueAlliance,
-        ];
-        return teams
+        ]
             .where(
               (final LightTeam element) => !currentValues
                   .map((final Match e) => e.team.team)
