@@ -1,5 +1,4 @@
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 
 class ScheduleMatch {
   ScheduleMatch({
@@ -18,13 +17,15 @@ class ScheduleMatch {
   final List<LightTeam> blueAlliance;
 
   String? getTeamStation(final LightTeam team) {
-    int? indexOf(final bool isRed) {
-      final int index =
-          isRed ? redAlliance.indexOf(team) : blueAlliance.indexOf(team);
-      return index == -1 ? null : index;
+    String? fieldPositionOf(
+      final List<LightTeam> alliance,
+      final String color,
+    ) {
+      final int index = alliance.indexOf(team);
+      return (index == -1 ? null : "$color ${index + 1}");
     }
 
-    return (indexOf(true).mapNullable((final int i) => "red ${i + 1}")) ??
-        (indexOf(false).mapNullable((final int i) => "blue ${i + 1}"));
+    return fieldPositionOf(redAlliance, "red") ??
+        fieldPositionOf(blueAlliance, "blue");
   }
 }
