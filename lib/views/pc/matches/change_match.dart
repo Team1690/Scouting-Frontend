@@ -41,28 +41,32 @@ class _ChangeMatchState extends State<ChangeMatch> {
     }
 
     teamControllers[0] = TextEditingController(
-      text: initialVars.blue0.number.toString(),
+      text: initialVars.blueAlliance[0].number.toString(),
     );
     teamControllers[1] = TextEditingController(
-      text: initialVars.blue1.number.toString(),
+      text: initialVars.blueAlliance[1].number.toString(),
     );
     teamControllers[2] = TextEditingController(
-      text: initialVars.blue2.number.toString(),
+      text: initialVars.blueAlliance[2].number.toString(),
     );
     teamControllers[3] = TextEditingController(
-      text: initialVars.blue3?.number.toString(),
+      text: initialVars.blueAlliance.length == 4
+          ? initialVars.blueAlliance[3].number.toString()
+          : null,
     );
     teamControllers[4] = TextEditingController(
-      text: initialVars.red0.number.toString(),
+      text: initialVars.redAlliance[0].number.toString(),
     );
     teamControllers[5] = TextEditingController(
-      text: initialVars.red1.number.toString(),
+      text: initialVars.redAlliance[1].number.toString(),
     );
     teamControllers[6] = TextEditingController(
-      text: initialVars.red2.number.toString(),
+      text: initialVars.redAlliance[2].number.toString(),
     );
     teamControllers[7] = TextEditingController(
-      text: initialVars.red3?.number.toString(),
+      text: initialVars.redAlliance.length == 4
+          ? initialVars.redAlliance[3].number.toString()
+          : null,
     );
   }
 

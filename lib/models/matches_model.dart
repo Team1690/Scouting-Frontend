@@ -4,27 +4,28 @@ class ScheduleMatch {
   ScheduleMatch({
     required this.matchNumber,
     required this.matchTypeId,
-    required this.red0,
-    required this.red1,
-    required this.red2,
-    required this.red3,
-    required this.blue0,
-    required this.blue1,
-    required this.blue2,
-    required this.blue3,
     required this.id,
     required this.happened,
+    required this.redAlliance,
+    required this.blueAlliance,
   });
   final bool happened;
   final int id;
   final int matchNumber;
   final int matchTypeId;
-  final LightTeam red0;
-  final LightTeam red1;
-  final LightTeam red2;
-  final LightTeam? red3;
-  final LightTeam blue0;
-  final LightTeam blue1;
-  final LightTeam blue2;
-  final LightTeam? blue3;
+  final List<LightTeam> redAlliance;
+  final List<LightTeam> blueAlliance;
+
+  String? getTeamStation(final LightTeam team) {
+    String? fieldPositionOf(
+      final List<LightTeam> alliance,
+      final String color,
+    ) {
+      final int index = alliance.indexOf(team);
+      return (index == -1 ? null : "$color ${index + 1}");
+    }
+
+    return fieldPositionOf(redAlliance, "red") ??
+        fieldPositionOf(blueAlliance, "blue");
+  }
 }

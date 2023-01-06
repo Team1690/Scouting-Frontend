@@ -1,5 +1,4 @@
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -33,6 +32,15 @@ ${isSubscription ? "subscription" : "query"} FetchMatches{
 }
   """;
 
+List<LightTeam> fromJson(final dynamic json, final String color) {
+  final String optional = "${color}_3";
+  return <LightTeam>[
+    ...(<int>[0, 1, 2]
+        .map((final int index) => LightTeam.fromJson(json["${color}_$index"]))),
+    if (json[optional] != null) LightTeam.fromJson(json[optional])
+  ];
+}
+
 List<ScheduleMatch> parserFn(final Map<String, dynamic> matches) =>
     (matches["matches"] as List<dynamic>)
         .map(
@@ -41,16 +49,8 @@ List<ScheduleMatch> parserFn(final Map<String, dynamic> matches) =>
             id: e["id"] as int,
             matchTypeId: e["match_type_id"] as int,
             matchNumber: e["match_number"] as int,
-            blue0: LightTeam.fromJson(e["blue_0"]),
-            blue1: LightTeam.fromJson(e["blue_1"]),
-            blue2: LightTeam.fromJson(e["blue_2"]),
-            blue3: (e["blue_3"] as Map<String, dynamic>?)
-                .mapNullable(LightTeam.fromJson),
-            red0: LightTeam.fromJson(e["red_0"]),
-            red1: LightTeam.fromJson(e["red_1"]),
-            red2: LightTeam.fromJson(e["red_2"]),
-            red3: (e["red_3"] as Map<String, dynamic>?)
-                .mapNullable(LightTeam.fromJson),
+            redAlliance: <LightTeam>[...fromJson(e, "red")],
+            blueAlliance: <LightTeam>[...fromJson(e, "blue")],
           ),
         )
         .toList();

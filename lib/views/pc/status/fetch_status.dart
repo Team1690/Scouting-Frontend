@@ -1,4 +1,4 @@
-import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
@@ -91,16 +91,21 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                     (e["tele_upper"] as int) * 2 +
                     (e["tele_lower"] as int) +
                     (e["climb"]["points"] as int),
-            scheduleMatch.red0.id == e["team"]["id"] ||
-                scheduleMatch.red1.id == e["team"]["id"] ||
-                scheduleMatch.red2.id == e["team"]["id"] ||
-                scheduleMatch.red3?.id == e["team"]["id"],
-            LightTeam(
-              e["team"]["id"] as int,
-              e["team"]["number"] as int,
-              e["team"]["name"] as String,
-              e["team"]["colors_index"] as int,
-            ),
+            scheduleMatch.redAlliance.contains(
+              LightTeam.fromJson(e),
+            )
+                ? Colors.red
+                : Colors.blue,
+            LightTeam.fromJson(e),
+            scheduleMatch.redAlliance.contains(
+              LightTeam.fromJson(e),
+            )
+                ? scheduleMatch.redAlliance.indexOf(
+                    LightTeam.fromJson(e),
+                  )
+                : scheduleMatch.blueAlliance.indexOf(
+                    LightTeam.fromJson(e),
+                  ),
           ),
           scouter: e["scouter_name"] as String,
         );
@@ -119,16 +124,10 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
             .toList()
             .single;
 
-        final List<LightTeam> teams = <LightTeam?>[
-          match.red0,
-          match.red1,
-          match.red2,
-          match.red3,
-          match.blue0,
-          match.blue1,
-          match.blue2,
-          match.blue3
-        ].whereType<LightTeam>().toList();
+        final List<LightTeam> teams = <LightTeam>[
+          ...match.redAlliance,
+          ...match.blueAlliance,
+        ];
         return teams
             .where(
               (final LightTeam element) => !currentValues
@@ -136,8 +135,15 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                   .contains(element),
             )
             .map(
-              (final LightTeam e) =>
-                  Match(scouter: "?", team: StatusLightTeam(0, false, e)),
+              (final LightTeam e) => Match(
+                scouter: "?",
+                team: StatusLightTeam(
+                  0,
+                  match.redAlliance.contains(e) ? Colors.red : Colors.blue,
+                  e,
+                  -1,
+                ),
+              ),
             )
             .toList();
       },

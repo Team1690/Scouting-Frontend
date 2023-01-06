@@ -12,11 +12,11 @@ import "package:scouting_frontend/views/common/matches_search_box_future.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
-import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
+import "package:scouting_frontend/views/mobile/team_selection_matches.dart";
 
 class UserInput extends StatefulWidget {
   @override
@@ -119,28 +119,16 @@ class _UserInputState extends State<UserInput> {
                       onChange: (final ScheduleMatch selectedMatch) {
                         setState(() {
                           match.match = selectedMatch;
+                          match.team = null;
+                          teamNumberController.clear();
                         });
                       },
                     ),
                     SizedBox(
                       height: 15,
                     ),
-                    TeamSelectionFuture(
-                      teams: match.match?.matchTypeId ==
-                              IdProvider.of(context)
-                                  .matchType
-                                  .nameToId["Practice"]!
-                          ? TeamProvider.of(context).teams
-                          : <LightTeam?>[
-                              match.match?.blue0,
-                              match.match?.blue1,
-                              match.match?.blue2,
-                              match.match?.blue3,
-                              match.match?.red0,
-                              match.match?.red1,
-                              match.match?.red2,
-                              match.match?.red3
-                            ].whereType<LightTeam>().toList(),
+                    TeamSelectionMatches(
+                      match: match.match,
                       controller: teamNumberController,
                       onChange: (final LightTeam team) {
                         setState(() {

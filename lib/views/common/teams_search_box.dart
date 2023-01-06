@@ -5,11 +5,13 @@ import "package:scouting_frontend/models/team_model.dart";
 
 class TeamsSearchBox extends StatelessWidget {
   TeamsSearchBox({
+    required this.buildSuggestion,
     required this.teams,
     required this.onChange,
     required this.typeAheadController,
     this.dontValidate = false,
   });
+  final String Function(LightTeam) buildSuggestion;
   final bool dontValidate;
   final List<LightTeam> teams;
   final void Function(LightTeam) onChange;
@@ -33,7 +35,7 @@ class TeamsSearchBox extends StatelessWidget {
               (final LightTeam team) => team.number.toString() == number,
             );
             onChange(team);
-            typeAheadController.text = "${team.number} ${team.name}";
+            typeAheadController.text = buildSuggestion(team);
           } on StateError catch (_) {
             //ignoed
           }
@@ -59,8 +61,8 @@ class TeamsSearchBox extends StatelessWidget {
           (final LightTeam a, final LightTeam b) =>
               a.number.compareTo(b.number),
         ),
-      itemBuilder: (final BuildContext context, final LightTeam suggestion) =>
-          ListTile(title: Text("${suggestion.number} ${suggestion.name}")),
+      itemBuilder: (final BuildContext context, final LightTeam team) =>
+          ListTile(title: Text(buildSuggestion(team))),
       transitionBuilder: (
         final BuildContext context,
         final Widget suggestionsBox,
@@ -83,12 +85,10 @@ class TeamsSearchBox extends StatelessWidget {
           ),
         ),
       ),
-      onSuggestionSelected: (final LightTeam suggestion) {
-        typeAheadController.text = "${suggestion.number} ${suggestion.name}";
+      onSuggestionSelected: (final LightTeam team) {
+        typeAheadController.text = buildSuggestion(team);
         onChange(
-          teams[teams.indexWhere(
-            (final LightTeam team) => team.number == suggestion.number,
-          )],
+          team,
         );
       },
     );
