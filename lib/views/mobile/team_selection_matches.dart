@@ -22,7 +22,7 @@ class TeamSelectionMatches extends StatelessWidget {
       buildSuggestion: (final LightTeam p0) {
         final ScheduleMatch? match = this.match;
 
-        return match?.getTeamStation(p0) ?? "";
+        return match!.getTeamStation(p0) ?? "";
       },
       teams: match == null
           ? <LightTeam>[]
