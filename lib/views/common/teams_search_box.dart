@@ -88,9 +88,7 @@ class TeamsSearchBox extends StatelessWidget {
       onSuggestionSelected: (final LightTeam team) {
         typeAheadController.text = buildSuggestion(team);
         onChange(
-          teams[teams.indexWhere(
-            (final LightTeam team) => team.number == team.number,
-          )],
+          team,
         );
       },
     );
