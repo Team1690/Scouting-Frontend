@@ -111,18 +111,15 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
         );
       },
       (final MatchIdentifier identifier, final List<Match> currentValues) {
-        final ScheduleMatch match = MatchesProvider.of(context)
-            .matches
-            .where(
-              (final ScheduleMatch element) =>
-                  element.matchNumber == identifier.number &&
-                  element.matchTypeId ==
-                      IdProvider.of(context)
-                          .matchType
-                          .nameToId[identifier.type],
-            )
-            .toList()
-            .single;
+        final ScheduleMatch match =
+            MatchesProvider.of(context).matches.firstWhere(
+                  (final ScheduleMatch element) =>
+                      element.matchNumber == identifier.number &&
+                      element.matchTypeId ==
+                          IdProvider.of(context)
+                              .matchType
+                              .nameToId[identifier.type],
+                );
 
         final List<LightTeam> teams = <LightTeam>[
           ...match.redAlliance,
