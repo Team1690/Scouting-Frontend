@@ -20,8 +20,11 @@ class ScheduleMatch {
     String? fieldPositionOf(
       final List<LightTeam> alliance,
       final String color,
-    ) =>
-        alliance.contains(team) ? "$color ${alliance.indexOf(team) + 1}" : null;
+    ) {
+      final int index = alliance.indexOf(team);
+      return index == -1 ? null : "$color ${index + 1}";
+    }
+
     return fieldPositionOf(redAlliance, "red") ??
         fieldPositionOf(blueAlliance, "blue");
   }
