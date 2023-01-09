@@ -27,6 +27,11 @@ class TeamSelectionMatches extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final bool isNotOfficial = match == null ||
+        match!.matchTypeId ==
+            IdProvider.of(context).matchType.nameToId["Practice"]! ||
+        match!.matchTypeId ==
+            IdProvider.of(context).matchType.nameToId["Pre scouting"]!;
     return TeamsSearchBox(
       buildSuggestion: (final LightTeam p0) => match!.getTeamStation(p0)!,
       teams: match == null
