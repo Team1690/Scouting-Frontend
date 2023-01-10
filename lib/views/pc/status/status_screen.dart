@@ -148,9 +148,9 @@ class RegularStatus extends StatelessWidget {
               final Match match,
               final StatusItem<MatchIdentifier, Match> statusItem,
             ) =>
-                match.team.alliancePos != -1 ? null : Colors.red,
+                match.scoutedTeam.alliancePos != -1 ? null : Colors.red,
             missingBuilder: (final Match p0) =>
-                Text(p0.team.team.number.toString()),
+                Text(p0.scoutedTeam.team.number.toString()),
             getTitle: (final StatusItem<MatchIdentifier, Match> e) => Column(
               children: <Widget>[
                 Text(
@@ -161,12 +161,12 @@ class RegularStatus extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         style: TextStyle(color: Colors.blue),
-                        "${e.values.where((final Match element) => element.team.allianceColor == Colors.blue).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
+                        "${e.values.where((final Match element) => element.scoutedTeam.allianceColor == Colors.blue).map((final Match e) => e.scoutedTeam.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
                       ),
                       Text(" - "),
                       Text(
                         style: TextStyle(color: Colors.red),
-                        "${e.values.where((final Match element) => element.team.allianceColor == Colors.red).map((final Match e) => e.team.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
+                        "${e.values.where((final Match element) => element.scoutedTeam.allianceColor == Colors.red).map((final Match e) => e.scoutedTeam.points).fold<int>(0, (final int previousValue, final int element) => previousValue + element)}",
                       )
                     ],
                   )
@@ -181,7 +181,7 @@ class RegularStatus extends StatelessWidget {
                     context,
                     MaterialPageRoute<TeamInfoScreen>(
                       builder: (final BuildContext context) => TeamInfoScreen(
-                        initalTeam: match.team.team,
+                        initalTeam: match.scoutedTeam.team,
                       ),
                     ),
                   )),
@@ -189,7 +189,7 @@ class RegularStatus extends StatelessWidget {
                 children: <Widget>[
                   TextByTeam(
                     match: match,
-                    text: match.team.team.number.toString(),
+                    text: match.scoutedTeam.team.number.toString(),
                   ),
                   TextByTeam(
                     match: match,
@@ -198,7 +198,7 @@ class RegularStatus extends StatelessWidget {
                   if (!isSpecific)
                     TextByTeam(
                       match: match,
-                      text: match.team.points.toString(),
+                      text: match.scoutedTeam.points.toString(),
                     ),
                 ],
               ),
@@ -207,9 +207,11 @@ class RegularStatus extends StatelessWidget {
               ..forEach(
                 (final StatusItem<MatchIdentifier, Match> e) => e.values.sort(
                   (final Match a, final Match b) =>
-                      a.team.allianceColor == b.team.allianceColor
+                      a.scoutedTeam.allianceColor == b.scoutedTeam.allianceColor
                           ? 0
-                          : (a.team.allianceColor == Colors.red ? 1 : -1),
+                          : (a.scoutedTeam.allianceColor == Colors.red
+                              ? 1
+                              : -1),
                 ),
               ),
             validate: always2(true),
@@ -327,7 +329,7 @@ class TextByTeam extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Text(
-      style: TextStyle(color: match.team.allianceColor),
+      style: TextStyle(color: match.scoutedTeam.allianceColor),
       text,
     );
   }
@@ -372,7 +374,7 @@ class StatusLightTeam {
 }
 
 class Match {
-  const Match({required this.scouter, required this.team});
-  final StatusLightTeam team;
+  const Match({required this.scouter, required this.scoutedTeam});
+  final StatusLightTeam scoutedTeam;
   final String scouter;
 }
