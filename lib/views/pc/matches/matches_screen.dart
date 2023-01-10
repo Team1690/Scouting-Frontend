@@ -65,9 +65,9 @@ class MatchesScreen extends StatelessWidget {
                                   "${IdProvider.of(context).matchType.idToName[e.matchTypeId]} ${e.matchNumber}",
                                 ),
                               ),
-                              ...<LightTeam>[...e.blueAlliance]
+                              ...e.blueAlliance
                                   .map(
-                                    (final LightTeam e) => Expanded(
+                                    (final LightTeam currentTeam) => Expanded(
                                       child: ElevatedButton(
                                         onPressed: () =>
                                             Navigator.pushReplacement(
@@ -76,7 +76,7 @@ class MatchesScreen extends StatelessWidget {
                                             builder:
                                                 (final BuildContext context) =>
                                                     TeamInfoScreen(
-                                              initalTeam: e,
+                                              initalTeam: currentTeam,
                                             ),
                                           ),
                                         ),
@@ -87,42 +87,38 @@ class MatchesScreen extends StatelessWidget {
                                           ),
                                         ),
                                         child: Text(
-                                          e.number.toString(),
+                                          currentTeam.number.toString(),
                                           style: TextStyle(color: Colors.blue),
                                         ),
                                       ),
                                     ),
                                   )
                                   .toList(),
-                              ...<LightTeam>[...e.redAlliance]
-                                  .whereType<LightTeam>()
-                                  .map(
-                                    (final LightTeam e) => Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () =>
-                                            Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute<TeamInfoScreen>(
-                                            builder:
-                                                (final BuildContext context) =>
-                                                    TeamInfoScreen(
-                                              initalTeam: e,
-                                            ),
-                                          ),
-                                        ),
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            secondaryColor,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          e.number.toString(),
-                                          style: TextStyle(color: Colors.red),
+                              ...e.redAlliance.map(
+                                (final LightTeam currentTeam) => Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () => Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute<TeamInfoScreen>(
+                                        builder: (final BuildContext context) =>
+                                            TeamInfoScreen(
+                                          initalTeam: currentTeam,
                                         ),
                                       ),
                                     ),
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                        secondaryColor,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      currentTeam.number.toString(),
+                                      style: TextStyle(color: Colors.red),
+                                    ),
                                   ),
+                                ),
+                              ),
                               IconButton(
                                 onPressed: () async {
                                   (await showDialog<ScheduleMatch>(
