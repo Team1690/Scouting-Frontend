@@ -74,6 +74,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
         isRematch: element["is_rematch"] as bool,
       ),
       (final dynamic e) {
+        final LightTeam team = LightTeam.fromJson(e);
         final ScheduleMatch scheduleMatch = (MatchesProvider.of(context)
             .matches
             .where(
@@ -92,19 +93,19 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                     (e["tele_lower"] as int) +
                     (e["climb"]["points"] as int),
             scheduleMatch.redAlliance.contains(
-              LightTeam.fromJson(e),
+              team,
             )
                 ? Colors.red
                 : Colors.blue,
-            LightTeam.fromJson(e),
+            team,
             scheduleMatch.redAlliance.contains(
-              LightTeam.fromJson(e),
+              team,
             )
                 ? scheduleMatch.redAlliance.indexOf(
-                    LightTeam.fromJson(e),
+                    team,
                   )
                 : scheduleMatch.blueAlliance.indexOf(
-                    LightTeam.fromJson(e),
+                    team,
                   ),
           ),
           scouter: e["scouter_name"] as String,
