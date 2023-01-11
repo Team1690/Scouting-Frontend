@@ -65,7 +65,7 @@ class _UserInputState extends State<UserInput> {
       drawer: SideNavBar(),
       appBar: AppBar(
         actions: <Widget>[
-          RobotImageButton(teamId: () => match.team?.id),
+          RobotImageButton(teamId: () => match.scoutedTeam?.id),
           ToggleButtons(
             children: <Icon>[Icon(Icons.lightbulb)],
             isSelected: <bool>[toggleLightsState],
@@ -118,8 +118,8 @@ class _UserInputState extends State<UserInput> {
                       matches: MatchesProvider.of(context).matches,
                       onChange: (final ScheduleMatch selectedMatch) {
                         setState(() {
-                          match.match = selectedMatch;
-                          match.team = null;
+                          match.scheduleMatch = selectedMatch;
+                          match.scoutedTeam = null;
                           teamNumberController.clear();
                         });
                       },
@@ -128,11 +128,11 @@ class _UserInputState extends State<UserInput> {
                       height: 15,
                     ),
                     TeamSelectionMatches(
-                      match: match.match,
+                      match: match.scheduleMatch,
                       controller: teamNumberController,
                       onChange: (final LightTeam team) {
                         setState(() {
-                          match.team = team;
+                          match.scoutedTeam = team;
                         });
                       },
                     ),

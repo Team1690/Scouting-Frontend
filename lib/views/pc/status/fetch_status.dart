@@ -84,7 +84,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
             .toList()
             .single);
         return Match(
-          team: StatusLightTeam(
+          scoutedTeam: StatusLightTeam(
             specific
                 ? 0
                 : (e["auto_upper"] as int) * 4 +
@@ -128,13 +128,13 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
         ]
             .where(
               (final LightTeam element) => !currentValues
-                  .map((final Match e) => e.team.team)
+                  .map((final Match e) => e.scoutedTeam.team)
                   .contains(element),
             )
             .map(
               (final LightTeam e) => Match(
                 scouter: "?",
-                team: StatusLightTeam(
+                scoutedTeam: StatusLightTeam(
                   0,
                   match.redAlliance.contains(e) ? Colors.red : Colors.blue,
                   e,

@@ -6,7 +6,7 @@ import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class Match implements HasuraVars {
   Match({
-    this.team,
+    this.scoutedTeam,
     this.autoHigh = 0,
     this.autoLow = 0,
     this.autoMissed = 0,
@@ -18,8 +18,8 @@ class Match implements HasuraVars {
   });
 
   void clear(final BuildContext context) {
-    team = null;
-    match = null;
+    scoutedTeam = null;
+    scheduleMatch = null;
     autoHigh = 0;
     autoLow = 0;
     autoMissed = 0;
@@ -34,7 +34,7 @@ class Match implements HasuraVars {
 
   bool preScouting = false;
   bool isRematch;
-  ScheduleMatch? match;
+  ScheduleMatch? scheduleMatch;
   int autoHigh;
   int autoMissed;
   int autoLow;
@@ -45,7 +45,7 @@ class Match implements HasuraVars {
   int? climbStatus;
   int robotMatchStatusId;
 
-  LightTeam? team;
+  LightTeam? scoutedTeam;
   @override
   Map<String, dynamic> toHasuraVars() {
     return <String, dynamic>{
@@ -53,12 +53,12 @@ class Match implements HasuraVars {
       "auto_upper": autoHigh,
       "auto_missed": autoMissed,
       "climb_id": climbStatus,
-      "team_id": team?.id,
+      "team_id": scoutedTeam?.id,
       "tele_lower": teleLow,
       "tele_upper": teleHigh,
       "tele_missed": teleMissed,
       "scouter_name": name,
-      "matches_id": match?.id,
+      "matches_id": scheduleMatch?.id,
       "robot_match_status_id": robotMatchStatusId,
       "is_rematch": isRematch,
     };
