@@ -101,7 +101,7 @@ class Match implements HasuraVars {
       "tele_cubes_low": teleCubesLow,
       "tele_cubes_failed": teleCubesFailed,
       "scouter_name": name,
-      "matches_id": scheduleMatch?.id,
+      "schedule_match_id": scheduleMatch?.id,
       "robot_match_status_id": robotMatchStatusId,
       "is_rematch": isRematch,
     };
