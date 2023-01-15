@@ -7,12 +7,22 @@ import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 class Match implements HasuraVars {
   Match({
     this.team,
-    this.autoHigh = 0,
-    this.autoLow = 0,
-    this.autoMissed = 0,
-    this.teleHigh = 0,
-    this.teleMissed = 0,
-    this.teleLow = 0,
+    this.autoConesTop = 0,
+    this.autoConesMid = 0,
+    this.autoConesLow = 0,
+    this.autoConesFailed = 0,
+    this.autoCubesTop = 0,
+    this.autoCubesMid = 0,
+    this.autoCubesLow = 0,
+    this.autoCubesFailed = 0,
+    this.teleConesTop = 0,
+    this.teleConesMid = 0,
+    this.teleConesLow = 0,
+    this.teleConesFailed = 0,
+    this.teleCubesTop = 0,
+    this.teleCubesMid = 0,
+    this.teleCubesLow = 0,
+    this.teleCubesFailed = 0,
     required this.robotMatchStatusId,
     this.isRematch = false,
   });
@@ -20,13 +30,24 @@ class Match implements HasuraVars {
   void clear(final BuildContext context) {
     team = null;
     match = null;
-    autoHigh = 0;
-    autoLow = 0;
-    autoMissed = 0;
-    teleHigh = 0;
-    teleMissed = 0;
-    teleLow = 0;
-    climbStatus = null;
+    autoConesTop = 0;
+    autoConesMid = 0;
+    autoConesLow = 0;
+    autoConesFailed = 0;
+    autoCubesTop = 0;
+    autoCubesMid = 0;
+    autoCubesLow = 0;
+    autoCubesFailed = 0;
+    teleConesTop = 0;
+    teleConesMid = 0;
+    teleConesLow = 0;
+    teleConesFailed = 0;
+    teleCubesTop = 0;
+    teleCubesMid = 0;
+    teleCubesLow = 0;
+    teleCubesFailed = 0;
+    autoBalanceStatus = null;
+    endgameBalanceStatus = null;
     isRematch = false;
     robotMatchStatusId =
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
@@ -35,28 +56,50 @@ class Match implements HasuraVars {
   bool preScouting = false;
   bool isRematch;
   ScheduleMatch? match;
-  int autoHigh;
-  int autoMissed;
-  int autoLow;
-  int teleHigh;
-  int teleMissed;
-  int teleLow;
+  int autoConesTop;
+  int autoConesMid;
+  int autoConesLow;
+  int autoConesFailed;
+  int autoCubesTop;
+  int autoCubesMid;
+  int autoCubesLow;
+  int autoCubesFailed;
+  int teleConesTop;
+  int teleConesMid;
+  int teleConesLow;
+  int teleConesFailed;
+  int teleCubesTop;
+  int teleCubesMid;
+  int teleCubesLow;
+  int teleCubesFailed;
   String? name;
-  int? climbStatus;
+  int? autoBalanceStatus;
+  int? endgameBalanceStatus;
   int robotMatchStatusId;
 
   LightTeam? team;
   @override
   Map<String, dynamic> toHasuraVars() {
     return <String, dynamic>{
-      "auto_lower": autoLow,
-      "auto_upper": autoHigh,
-      "auto_missed": autoMissed,
-      "climb_id": climbStatus,
+      "auto_cones_mid": autoConesMid,
+      "auto_cones_top": autoConesTop,
+      "auto_cones_low": autoConesLow,
+      "auto_cones_failed": autoConesFailed,
+      "auto_cubes_mid": autoCubesMid,
+      "auto_cubes_top": autoCubesTop,
+      "auto_cubes_low": autoCubesLow,
+      "auto_cubes_failed": autoCubesFailed,
+      "auto_balance_id": autoBalanceStatus,
+      "endgame_balance_id": endgameBalanceStatus,
       "team_id": team?.id,
-      "tele_lower": teleLow,
-      "tele_upper": teleHigh,
-      "tele_missed": teleMissed,
+      "tele_cones_mid": teleConesMid,
+      "tele_cones_top": teleConesTop,
+      "tele_cones_low": teleConesLow,
+      "tele_cones_failed": teleConesFailed,
+      "tele_cubes_mid": teleCubesMid,
+      "tele_cubes_top": teleCubesTop,
+      "tele_cubes_low": teleCubesLow,
+      "tele_cubes_failed": teleCubesFailed,
       "scouter_name": name,
       "matches_id": match?.id,
       "robot_match_status_id": robotMatchStatusId,
