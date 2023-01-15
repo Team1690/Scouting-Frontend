@@ -163,44 +163,169 @@ class _UserInputState extends State<UserInput> {
                     SizedBox(
                       height: 20,
                     ),
-                    Counter(
-                      label: "Upper scored",
-                      icon: Icons.sports_baseball,
-                      count: match.autoHigh,
-                      onChange: (final int p0) {
-                        setState(() {
-                          flickerScreen(p0, match.autoHigh);
-                          match.autoHigh = p0;
-                        });
-                      },
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              SectionDivider(label: "Cones"),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Top Scored",
+                                icon: Icons.arrow_circle_up,
+                                count: match.autoConesTop,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.autoConesTop);
+                                    match.autoConesTop = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Mid Scored",
+                                icon: Icons.arrow_circle_left,
+                                count: match.autoConesMid,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.autoConesMid);
+                                    match.autoConesMid = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Low Scored",
+                                icon: Icons.arrow_circle_down,
+                                count: match.autoConesLow,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.autoConesMid);
+                                    match.autoConesMid = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                count: match.autoConesFailed,
+                                label: "      Failed      ",
+                                icon: Icons.error,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.autoConesFailed);
+                                    match.autoConesFailed = p0;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              SectionDivider(label: "Cubes"),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Top Scored",
+                                icon: Icons.arrow_circle_up,
+                                count: match.autoCubesTop,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.autoCubesTop);
+                                    match.autoCubesTop = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Mid Scored",
+                                icon: Icons.arrow_circle_left,
+                                count: match.autoCubesMid,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.autoConesMid);
+                                    match.autoConesMid = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Low Scored",
+                                icon: Icons.arrow_circle_down,
+                                count: match.autoCubesLow,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.autoCubesLow);
+                                    match.autoCubesLow = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                count: match.autoCubesFailed,
+                                label: "      Failed      ",
+                                icon: Icons.error,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.autoCubesFailed);
+                                    match.autoCubesFailed = p0;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    Counter(
-                      label: "Lower scored",
-                      icon: Icons.sports_baseball_outlined,
-                      count: match.autoLow,
-                      onChange: (final int p0) {
-                        setState(() {
-                          flickerScreen(p0, match.autoLow);
-                          match.autoLow = p0;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Counter(
-                      count: match.autoMissed,
-                      label: "      Missed      ",
-                      icon: Icons.error,
-                      onChange: (final int p0) {
-                        setState(() {
-                          flickerScreen(p0, match.autoMissed);
-                          match.autoMissed = p0;
-                        });
-                      },
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Selector<int>(
+                        validate: (final int? p0) =>
+                            p0.onNull("Please pick a balance result"),
+                        options: IdProvider.of(context)
+                            .balance
+                            .idToName
+                            .keys
+                            .toList(),
+                        placeholder: "Choose a balance result",
+                        makeItem: (final int p0) =>
+                            IdProvider.of(context).balance.idToName[p0]!,
+                        onChange: (final int p0) {
+                          setState(() {
+                            match.autoBalanceStatus = p0;
+                          });
+                        },
+                        value: match.autoBalanceStatus,
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -209,44 +334,145 @@ class _UserInputState extends State<UserInput> {
                     SizedBox(
                       height: 10,
                     ),
-                    Counter(
-                      count: match.teleHigh,
-                      label: "Upper scored",
-                      icon: Icons.sports_baseball,
-                      onChange: (final int p0) {
-                        setState(() {
-                          flickerScreen(p0, match.teleHigh);
-                          match.teleHigh = p0;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Counter(
-                      count: match.teleLow,
-                      label: "Lower scored",
-                      icon: Icons.sports_baseball_outlined,
-                      onChange: (final int p0) {
-                        setState(() {
-                          flickerScreen(p0, match.teleLow);
-                          match.teleLow = p0;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Counter(
-                      count: match.teleMissed,
-                      label: "      Missed      ",
-                      icon: Icons.error,
-                      onChange: (final int p0) {
-                        setState(() {
-                          flickerScreen(p0, match.teleMissed);
-                          match.teleMissed = p0;
-                        });
-                      },
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              SectionDivider(label: "Cones"),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Top Scored",
+                                icon: Icons.arrow_circle_up,
+                                count: match.teleConesTop,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.teleConesTop);
+                                    match.teleConesTop = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Mid Scored",
+                                icon: Icons.arrow_circle_left,
+                                count: match.teleConesMid,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.teleConesMid);
+                                    match.teleConesMid = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Low Scored",
+                                icon: Icons.arrow_circle_down,
+                                count: match.teleConesLow,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.teleConesMid);
+                                    match.teleConesMid = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                count: match.teleConesFailed,
+                                label: "      Failed      ",
+                                icon: Icons.error,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.teleConesFailed);
+                                    match.teleConesFailed = p0;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              SectionDivider(label: "Cubes"),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Top Scored",
+                                icon: Icons.arrow_circle_up,
+                                count: match.teleCubesTop,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.teleCubesTop);
+                                    match.teleCubesTop = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Mid Scored",
+                                icon: Icons.arrow_circle_left,
+                                count: match.teleCubesMid,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.teleConesMid);
+                                    match.teleConesMid = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                label: "Low Scored",
+                                icon: Icons.arrow_circle_down,
+                                count: match.teleCubesLow,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.teleCubesLow);
+                                    match.teleCubesLow = p0;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Counter(
+                                count: match.teleCubesFailed,
+                                label: "      Failed      ",
+                                icon: Icons.error,
+                                onChange: (final int p0) {
+                                  setState(() {
+                                    flickerScreen(p0, match.teleCubesFailed);
+                                    match.teleCubesFailed = p0;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 20,
@@ -273,7 +499,7 @@ class _UserInputState extends State<UserInput> {
                     SizedBox(
                       height: 20,
                     ),
-                    SectionDivider(label: "Climb"),
+                    SectionDivider(label: "Endgame Balance"),
                     SizedBox(
                       height: 20,
                     ),
@@ -281,18 +507,21 @@ class _UserInputState extends State<UserInput> {
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Selector<int>(
                         validate: (final int? p0) =>
-                            p0.onNull("Please pick a climb result"),
-                        options:
-                            IdProvider.of(context).climb.idToName.keys.toList(),
-                        placeholder: "Choose a climb result",
+                            p0.onNull("Please pick a balance result"),
+                        options: IdProvider.of(context)
+                            .balance
+                            .idToName
+                            .keys
+                            .toList(),
+                        placeholder: "Choose a balance result",
                         makeItem: (final int p0) =>
-                            IdProvider.of(context).climb.idToName[p0]!,
+                            IdProvider.of(context).balance.idToName[p0]!,
                         onChange: (final int p0) {
                           setState(() {
-                            match.climbStatus = p0;
+                            match.endgameBalanceStatus = p0;
                           });
                         },
-                        value: match.climbStatus,
+                        value: match.endgameBalanceStatus,
                       ),
                     ),
                     SizedBox(
@@ -328,8 +557,8 @@ class _UserInputState extends State<UserInput> {
 }
 
 const String mutation = r"""
-mutation InsertMatch($auto_lower: Int, $auto_upper: Int, $auto_missed: Int, $climb_id: Int, $matches_id: Int, $team_id: Int, $tele_lower: Int, $tele_upper: Int, $tele_missed: Int, $scouter_name: String, $robot_match_status_id: Int, $is_rematch: Boolean) {
-  insert_match(objects: {auto_lower: $auto_lower, auto_upper: $auto_upper, auto_missed: $auto_missed, climb_id: $climb_id, team_id: $team_id, tele_lower: $tele_lower, tele_upper: $tele_upper, tele_missed: $tele_missed, scouter_name: $scouter_name, robot_match_status_id: $robot_match_status_id, is_rematch: $is_rematch, matches_id: $matches_id}) {
+mutation InsertTechnicalMatch($auto_lower: Int, $auto_upper: Int, $auto_missed: Int, $climb_id: Int, $matches_id: Int, $team_id: Int, $tele_lower: Int, $tele_upper: Int, $tele_missed: Int, $scouter_name: String, $robot_match_status_id: Int, $is_rematch: Boolean) {
+  insert__2023_technical_match(objects: {auto_lower: $auto_lower, auto_upper: $auto_upper, auto_missed: $auto_missed, climb_id: $climb_id, team_id: $team_id, tele_lower: $tele_lower, tele_upper: $tele_upper, tele_missed: $tele_missed, scouter_name: $scouter_name, robot_match_status_id: $robot_match_status_id, is_rematch: $is_rematch, matches_id: $matches_id}) {
     returning {
       id
     }
