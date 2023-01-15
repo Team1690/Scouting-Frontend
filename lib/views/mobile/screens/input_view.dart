@@ -173,9 +173,6 @@ class _UserInputState extends State<UserInput> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               SectionDivider(label: "Cones"),
-                              SizedBox(
-                                height: 10,
-                              ),
                               Counter(
                                 label: "Top Scored",
                                 icon: Icons.arrow_circle_up,
@@ -186,9 +183,6 @@ class _UserInputState extends State<UserInput> {
                                     match.autoConesTop = p0;
                                   });
                                 },
-                              ),
-                              SizedBox(
-                                height: 10,
                               ),
                               Counter(
                                 label: "Mid Scored",
@@ -201,9 +195,6 @@ class _UserInputState extends State<UserInput> {
                                   });
                                 },
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
                               Counter(
                                 label: "Low Scored",
                                 icon: Icons.arrow_circle_down,
@@ -214,9 +205,6 @@ class _UserInputState extends State<UserInput> {
                                     match.autoConesMid = p0;
                                   });
                                 },
-                              ),
-                              SizedBox(
-                                height: 10,
                               ),
                               Counter(
                                 count: match.autoConesFailed,
@@ -229,7 +217,16 @@ class _UserInputState extends State<UserInput> {
                                   });
                                 },
                               ),
-                            ],
+                            ]
+                                .expand(
+                                  (final Widget element) => <Widget>[
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    element,
+                                  ],
+                                )
+                                .toList(),
                           ),
                         ),
                         SizedBox(
@@ -242,9 +239,6 @@ class _UserInputState extends State<UserInput> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               SectionDivider(label: "Cubes"),
-                              SizedBox(
-                                height: 10,
-                              ),
                               Counter(
                                 label: "Top Scored",
                                 icon: Icons.arrow_circle_up,
@@ -255,9 +249,6 @@ class _UserInputState extends State<UserInput> {
                                     match.autoCubesTop = p0;
                                   });
                                 },
-                              ),
-                              SizedBox(
-                                height: 10,
                               ),
                               Counter(
                                 label: "Mid Scored",
@@ -270,9 +261,6 @@ class _UserInputState extends State<UserInput> {
                                   });
                                 },
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
                               Counter(
                                 label: "Low Scored",
                                 icon: Icons.arrow_circle_down,
@@ -283,9 +271,6 @@ class _UserInputState extends State<UserInput> {
                                     match.autoCubesLow = p0;
                                   });
                                 },
-                              ),
-                              SizedBox(
-                                height: 10,
                               ),
                               Counter(
                                 count: match.autoCubesFailed,
@@ -298,7 +283,16 @@ class _UserInputState extends State<UserInput> {
                                   });
                                 },
                               ),
-                            ],
+                            ]
+                                .expand(
+                                  (final Widget element) => <Widget>[
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    element,
+                                  ],
+                                )
+                                .toList(),
                           ),
                         )
                       ],
@@ -344,9 +338,6 @@ class _UserInputState extends State<UserInput> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               SectionDivider(label: "Cones"),
-                              SizedBox(
-                                height: 10,
-                              ),
                               Counter(
                                 label: "Top Scored",
                                 icon: Icons.arrow_circle_up,
@@ -357,9 +348,6 @@ class _UserInputState extends State<UserInput> {
                                     match.teleConesTop = p0;
                                   });
                                 },
-                              ),
-                              SizedBox(
-                                height: 10,
                               ),
                               Counter(
                                 label: "Mid Scored",
@@ -372,9 +360,6 @@ class _UserInputState extends State<UserInput> {
                                   });
                                 },
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
                               Counter(
                                 label: "Low Scored",
                                 icon: Icons.arrow_circle_down,
@@ -385,9 +370,6 @@ class _UserInputState extends State<UserInput> {
                                     match.teleConesMid = p0;
                                   });
                                 },
-                              ),
-                              SizedBox(
-                                height: 10,
                               ),
                               Counter(
                                 count: match.teleConesFailed,
@@ -400,7 +382,16 @@ class _UserInputState extends State<UserInput> {
                                   });
                                 },
                               ),
-                            ],
+                            ]
+                                .expand(
+                                  (final Widget element) => <Widget>[
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    element,
+                                  ],
+                                )
+                                .toList(),
                           ),
                         ),
                         SizedBox(
@@ -413,9 +404,6 @@ class _UserInputState extends State<UserInput> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               SectionDivider(label: "Cubes"),
-                              SizedBox(
-                                height: 10,
-                              ),
                               Counter(
                                 label: "Top Scored",
                                 icon: Icons.arrow_circle_up,
@@ -426,9 +414,6 @@ class _UserInputState extends State<UserInput> {
                                     match.teleCubesTop = p0;
                                   });
                                 },
-                              ),
-                              SizedBox(
-                                height: 10,
                               ),
                               Counter(
                                 label: "Mid Scored",
@@ -441,9 +426,6 @@ class _UserInputState extends State<UserInput> {
                                   });
                                 },
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
                               Counter(
                                 label: "Low Scored",
                                 icon: Icons.arrow_circle_down,
@@ -454,9 +436,6 @@ class _UserInputState extends State<UserInput> {
                                     match.teleCubesLow = p0;
                                   });
                                 },
-                              ),
-                              SizedBox(
-                                height: 10,
                               ),
                               Counter(
                                 count: match.teleCubesFailed,
@@ -469,7 +448,16 @@ class _UserInputState extends State<UserInput> {
                                   });
                                 },
                               ),
-                            ],
+                            ]
+                                .expand(
+                                  (final Widget element) => <Widget>[
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    element,
+                                  ],
+                                )
+                                .toList(),
                           ),
                         )
                       ],
