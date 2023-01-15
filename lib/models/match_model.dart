@@ -23,13 +23,11 @@ class Match implements HasuraVars {
     this.teleCubesLow = 0,
     this.teleCubesFailed = 0,
     this.scoutedTeam,
-    
     required this.robotMatchStatusId,
     this.isRematch = false,
   });
 
   void clear(final BuildContext context) {
-
     autoConesTop = 0;
     autoConesMid = 0;
     autoConesLow = 0;
@@ -50,13 +48,6 @@ class Match implements HasuraVars {
     endgameBalanceStatus = null;
     scoutedTeam = null;
     scheduleMatch = null;
-    autoHigh = 0;
-    autoLow = 0;
-    autoMissed = 0;
-    teleHigh = 0;
-    teleMissed = 0;
-    teleLow = 0;
-    climbStatus = null;
     isRematch = false;
     robotMatchStatusId =
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
@@ -64,7 +55,7 @@ class Match implements HasuraVars {
 
   bool preScouting = false;
   bool isRematch;
-  ScheduleMatch? scoutedMatch;
+  ScheduleMatch? scheduleMatch;
   int autoConesTop;
   int autoConesMid;
   int autoConesLow;
@@ -81,7 +72,6 @@ class Match implements HasuraVars {
   int teleCubesMid;
   int teleCubesLow;
   int teleCubesFailed;
-
   String? name;
   int? autoBalanceStatus;
   int? endgameBalanceStatus;
@@ -101,7 +91,7 @@ class Match implements HasuraVars {
       "auto_cubes_failed": autoCubesFailed,
       "auto_balance_id": autoBalanceStatus,
       "endgame_balance_id": endgameBalanceStatus,
-      "team_id": team?.id,
+      "team_id": scoutedTeam?.id,
       "tele_cones_mid": teleConesMid,
       "tele_cones_top": teleConesTop,
       "tele_cones_low": teleConesLow,
@@ -110,7 +100,6 @@ class Match implements HasuraVars {
       "tele_cubes_top": teleCubesTop,
       "tele_cubes_low": teleCubesLow,
       "tele_cubes_failed": teleCubesFailed,
-
       "scouter_name": name,
       "matches_id": scheduleMatch?.id,
       "robot_match_status_id": robotMatchStatusId,
