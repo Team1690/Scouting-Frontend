@@ -20,7 +20,7 @@ void main() async {
     );
   }
   final Map<String, Map<String, int>> enums = await fetchEnums(<String>[
-    "climb",
+    "_2023_balance",
     "drivetrain",
     "drivemotor",
     "match_type",
@@ -30,7 +30,7 @@ void main() async {
     "match_type"
   ]);
 
-  final Map<String, int> climbs = enums["climb"]!;
+  final Map<String, int> balances = enums["_2023_balance"]!;
   final Map<String, int> driveTrains = enums["drivetrain"]!;
   final Map<String, int> driveMotors = enums["drivemotor"]!;
   final Map<String, int> matchTypes = enums["match_type"]!;
@@ -46,7 +46,7 @@ void main() async {
       matchTypeIds: matchTypes,
       teams: teams,
       drivetrainIds: driveTrains,
-      climdIds: climbs,
+      balanceIds: balances,
       driveMotorIds: driveMotors,
       robotMatchStatusIds: robotMatchStatuses,
     ),
