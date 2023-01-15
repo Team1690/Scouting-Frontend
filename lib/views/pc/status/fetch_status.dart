@@ -74,6 +74,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
         isRematch: element["is_rematch"] as bool,
       ),
       (final dynamic e) {
+        final LightTeam team = LightTeam.fromJson(e);
         final ScheduleMatch scheduleMatch = (MatchesProvider.of(context)
             .matches
             .where(
@@ -83,7 +84,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
             .toList()
             .single);
         return Match(
-          team: StatusLightTeam(
+          scoutedTeam: StatusLightTeam(
             specific
                 ? 0
                 : (e["auto_upper"] as int) * 4 +
@@ -92,19 +93,19 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                     (e["tele_lower"] as int) +
                     (e["climb"]["points"] as int),
             scheduleMatch.redAlliance.contains(
-              LightTeam.fromJson(e),
+              team,
             )
                 ? Colors.red
                 : Colors.blue,
-            LightTeam.fromJson(e),
+            team,
             scheduleMatch.redAlliance.contains(
-              LightTeam.fromJson(e),
+              team,
             )
                 ? scheduleMatch.redAlliance.indexOf(
-                    LightTeam.fromJson(e),
+                    team,
                   )
                 : scheduleMatch.blueAlliance.indexOf(
-                    LightTeam.fromJson(e),
+                    team,
                   ),
           ),
           scouter: e["scouter_name"] as String,
@@ -127,13 +128,13 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
         ]
             .where(
               (final LightTeam element) => !currentValues
-                  .map((final Match e) => e.team.team)
+                  .map((final Match e) => e.scoutedTeam.team)
                   .contains(element),
             )
             .map(
               (final LightTeam e) => Match(
                 scouter: "?",
-                team: StatusLightTeam(
+                scoutedTeam: StatusLightTeam(
                   0,
                   match.redAlliance.contains(e) ? Colors.red : Colors.blue,
                   e,

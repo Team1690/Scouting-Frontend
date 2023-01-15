@@ -6,7 +6,6 @@ import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class Match implements HasuraVars {
   Match({
-    this.team,
     this.autoConesTop = 0,
     this.autoConesMid = 0,
     this.autoConesLow = 0,
@@ -23,13 +22,14 @@ class Match implements HasuraVars {
     this.teleCubesMid = 0,
     this.teleCubesLow = 0,
     this.teleCubesFailed = 0,
+    this.scoutedTeam,
+    
     required this.robotMatchStatusId,
     this.isRematch = false,
   });
 
   void clear(final BuildContext context) {
-    team = null;
-    match = null;
+
     autoConesTop = 0;
     autoConesMid = 0;
     autoConesLow = 0;
@@ -48,6 +48,15 @@ class Match implements HasuraVars {
     teleCubesFailed = 0;
     autoBalanceStatus = null;
     endgameBalanceStatus = null;
+    scoutedTeam = null;
+    scheduleMatch = null;
+    autoHigh = 0;
+    autoLow = 0;
+    autoMissed = 0;
+    teleHigh = 0;
+    teleMissed = 0;
+    teleLow = 0;
+    climbStatus = null;
     isRematch = false;
     robotMatchStatusId =
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
@@ -55,7 +64,7 @@ class Match implements HasuraVars {
 
   bool preScouting = false;
   bool isRematch;
-  ScheduleMatch? match;
+  ScheduleMatch? scoutedMatch;
   int autoConesTop;
   int autoConesMid;
   int autoConesLow;
@@ -72,12 +81,13 @@ class Match implements HasuraVars {
   int teleCubesMid;
   int teleCubesLow;
   int teleCubesFailed;
+
   String? name;
   int? autoBalanceStatus;
   int? endgameBalanceStatus;
   int robotMatchStatusId;
 
-  LightTeam? team;
+  LightTeam? scoutedTeam;
   @override
   Map<String, dynamic> toHasuraVars() {
     return <String, dynamic>{
@@ -100,8 +110,9 @@ class Match implements HasuraVars {
       "tele_cubes_top": teleCubesTop,
       "tele_cubes_low": teleCubesLow,
       "tele_cubes_failed": teleCubesFailed,
+
       "scouter_name": name,
-      "matches_id": match?.id,
+      "matches_id": scheduleMatch?.id,
       "robot_match_status_id": robotMatchStatusId,
       "is_rematch": isRematch,
     };
