@@ -41,7 +41,7 @@ class App extends StatelessWidget {
           faultStatus: faultStatus,
           child: MaterialApp(
             title: "Orbit Scouting",
-            home: UserInput(),
+            home: isPC(context) ? TeamInfoScreen() : UserInput(),
             theme: darkModeTheme,
             debugShowCheckedModeBanner: false,
           ),
