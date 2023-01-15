@@ -1,31 +1,29 @@
 import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 
-String queryEnumTable(final String table) => """
-    $table(order_by: {"id"}: asc}) {
-      id
-      title
+String tablesToQuerys(
+  final List<String> tables,
+  final List<String> tablesToOrderByOrderColumn,
+) {
+  String querys = "";
+  for (final String table in tables) {
+    querys += """
+    $table(order_by: {${tablesToOrderByOrderColumn.contains(table) ? "order" : "id"}: asc}) {
+        id
+        title
     }
-  """;
-
-String queryOrderedEnumTable(final String table) => """
-    $table(order_by: "order"}: asc}) {
-      id
-      title
-    }
-  """;
+""";
+  }
+  return querys;
+}
 
 Future<Map<String, Map<String, int>>> fetchEnums(
-  final Iterable<String> enums,
-  final Iterable<String> orderedEnums,
+  final List<String> tables,
+  final List<String> tablesToOrderByOrderColumn,
 ) async {
-  final List<String> queries = <String>[
-    ...enums.map(queryEnumTable),
-    ...orderedEnums.map(queryOrderedEnumTable),
-  ];
   final String query = """
-query FetchEnums {
-    ${queries.join("\n")}
+query FetchEnums{
+   ${tablesToQuerys(tables, tablesToOrderByOrderColumn)}
 }
 """;
   return (await getClient().query(
@@ -33,7 +31,7 @@ query FetchEnums {
       document: gql(query),
       parserFn: (final Map<String, dynamic> result) =>
           <String, Map<String, int>>{
-        for (final String table in <String>[...enums, ...orderedEnums])
+        for (final String table in tables)
           table: <String, int>{
             for (final dynamic entry in (result[table] as List<dynamic>))
               entry["title"] as String: entry["id"] as int
