@@ -21,7 +21,7 @@ class IdTable {
 class IdProvider extends InheritedWidget {
   IdProvider({
     required final Widget child,
-    required final Map<String, int> climbIds,
+    required final Map<String, int> balanceIds,
     required final Map<String, int> drivetrainIds,
     required final Map<String, int> drivemotorIds,
     required final Map<String, int> matchTypeIds,
@@ -29,7 +29,7 @@ class IdProvider extends InheritedWidget {
     required final Map<String, int> faultStatus,
   }) : this._inner(
           child: child,
-          climb: IdTable(climbIds),
+          balance: IdTable(balanceIds),
           driveTrain: IdTable(drivetrainIds),
           drivemotor: IdTable(drivemotorIds),
           matchType: IdTable(matchTypeIds),
@@ -39,7 +39,7 @@ class IdProvider extends InheritedWidget {
 
   IdProvider._inner({
     required super.child,
-    required this.climb,
+    required this.balance,
     required this.driveTrain,
     required this.drivemotor,
     required this.matchType,
@@ -48,13 +48,13 @@ class IdProvider extends InheritedWidget {
   });
   final IdTable robotMatchStatus;
   final IdTable matchType;
-  final IdTable climb;
+  final IdTable balance;
   final IdTable driveTrain;
   final IdTable drivemotor;
   final IdTable faultStatus;
   @override
   bool updateShouldNotify(final IdProvider oldWidget) =>
-      climb != oldWidget.climb ||
+      balance != oldWidget.balance ||
       driveTrain != oldWidget.driveTrain ||
       drivemotor != oldWidget.drivemotor;
   static IdProvider of(final BuildContext context) {
