@@ -176,7 +176,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cones"),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "Top Scored",
+                                  label: "   Top Scored",
                                   icon: Icons.arrow_circle_up,
                                   count: match.autoConesTop,
                                   onChange: (final int p0) {
@@ -188,7 +188,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "Mid Scored",
+                                  label: "   Mid Scored",
                                   icon: Icons.arrow_circle_left,
                                   count: match.autoConesMid,
                                   onChange: (final int p0) {
@@ -200,7 +200,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "Low Scored",
+                                  label: "   Low Scored",
                                   icon: Icons.arrow_circle_down,
                                   count: match.autoConesLow,
                                   onChange: (final int p0) {
@@ -249,7 +249,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cubes"),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "Top Scored",
+                                  label: "   Top Scored",
                                   icon: Icons.arrow_circle_up,
                                   count: match.autoCubesTop,
                                   onChange: (final int p0) {
@@ -261,7 +261,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "Mid Scored",
+                                  label: "   Mid Scored",
                                   icon: Icons.arrow_circle_left,
                                   count: match.autoCubesMid,
                                   onChange: (final int p0) {
@@ -273,7 +273,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "Low Scored",
+                                  label: "   Low Scored",
                                   icon: Icons.arrow_circle_down,
                                   count: match.autoCubesLow,
                                   onChange: (final int p0) {
@@ -354,7 +354,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cones"),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "Top Scored",
+                                  label: "   Top Scored",
                                   icon: Icons.arrow_circle_up,
                                   count: match.teleConesTop,
                                   onChange: (final int p0) {
@@ -366,7 +366,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "Mid Scored",
+                                  label: "   Mid Scored",
                                   icon: Icons.arrow_circle_left,
                                   count: match.teleConesMid,
                                   onChange: (final int p0) {
@@ -378,7 +378,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "Low Scored",
+                                  label: "   Low Scored",
                                   icon: Icons.arrow_circle_down,
                                   count: match.teleConesLow,
                                   onChange: (final int p0) {
@@ -427,7 +427,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cubes"),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "Top Scored",
+                                  label: "   Top Scored",
                                   icon: Icons.arrow_circle_up,
                                   count: match.teleCubesTop,
                                   onChange: (final int p0) {
@@ -439,7 +439,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "Mid Scored",
+                                  label: "   Mid Scored",
                                   icon: Icons.arrow_circle_left,
                                   count: match.teleCubesMid,
                                   onChange: (final int p0) {
@@ -451,7 +451,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "Low Scored",
+                                  label: "   Low Scored",
                                   icon: Icons.arrow_circle_down,
                                   count: match.teleCubesLow,
                                   onChange: (final int p0) {
