@@ -44,7 +44,7 @@ class _UserInputState extends State<UserInput> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
-  bool toggleLightsState = true;
+  bool toggleLightsState = false;
   late final Match match = Match(
     robotMatchStatusId:
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
@@ -205,8 +205,8 @@ class _UserInputState extends State<UserInput> {
                                   count: match.autoConesLow,
                                   onChange: (final int p0) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoConesMid);
-                                      match.autoConesMid = p0;
+                                      flickerScreen(p0, match.autoConesLow);
+                                      match.autoConesLow = p0;
                                     });
                                   },
                                 ),
@@ -266,8 +266,8 @@ class _UserInputState extends State<UserInput> {
                                   count: match.autoCubesMid,
                                   onChange: (final int p0) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoConesMid);
-                                      match.autoConesMid = p0;
+                                      flickerScreen(p0, match.autoCubesMid);
+                                      match.autoCubesMid = p0;
                                     });
                                   },
                                 ),
@@ -383,8 +383,8 @@ class _UserInputState extends State<UserInput> {
                                   count: match.teleConesLow,
                                   onChange: (final int p0) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleConesMid);
-                                      match.teleConesMid = p0;
+                                      flickerScreen(p0, match.teleConesLow);
+                                      match.teleConesLow = p0;
                                     });
                                   },
                                 ),
@@ -444,8 +444,8 @@ class _UserInputState extends State<UserInput> {
                                   count: match.teleCubesMid,
                                   onChange: (final int p0) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleConesMid);
-                                      match.teleConesMid = p0;
+                                      flickerScreen(p0, match.teleCubesMid);
+                                      match.teleCubesMid = p0;
                                     });
                                   },
                                 ),
