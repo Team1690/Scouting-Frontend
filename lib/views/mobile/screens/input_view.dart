@@ -163,147 +163,152 @@ class _UserInputState extends State<UserInput> {
                     SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              SectionDivider(label: "Cones"),
-                              Counter(
-                                color: Colors.yellow,
-                                label: "Top Scored",
-                                icon: Icons.arrow_circle_up,
-                                count: match.autoConesTop,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.autoConesTop);
-                                    match.autoConesTop = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.yellow,
-                                label: "Mid Scored",
-                                icon: Icons.arrow_circle_left,
-                                count: match.autoConesMid,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.autoConesMid);
-                                    match.autoConesMid = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.yellow,
-                                label: "Low Scored",
-                                icon: Icons.arrow_circle_down,
-                                count: match.autoConesLow,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.autoConesMid);
-                                    match.autoConesMid = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.yellow,
-                                count: match.autoConesFailed,
-                                label: "      Failed      ",
-                                icon: Icons.error,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.autoConesFailed);
-                                    match.autoConesFailed = p0;
-                                  });
-                                },
-                              ),
-                            ]
-                                .expand(
-                                  (final Widget element) => <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    element,
-                                  ],
-                                )
-                                .toList(),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                SectionDivider(label: "Cones"),
+                                Counter(
+                                  color: Colors.amber,
+                                  label: "Top Scored",
+                                  icon: Icons.arrow_circle_up,
+                                  count: match.autoConesTop,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.autoConesTop);
+                                      match.autoConesTop = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.amber,
+                                  label: "Mid Scored",
+                                  icon: Icons.arrow_circle_left,
+                                  count: match.autoConesMid,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.autoConesMid);
+                                      match.autoConesMid = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.amber,
+                                  label: "Low Scored",
+                                  icon: Icons.arrow_circle_down,
+                                  count: match.autoConesLow,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.autoConesMid);
+                                      match.autoConesMid = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.amber,
+                                  count: match.autoConesFailed,
+                                  label: "      Failed      ",
+                                  icon: Icons.error,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.autoConesFailed);
+                                      match.autoConesFailed = p0;
+                                    });
+                                  },
+                                ),
+                              ]
+                                  .expand(
+                                    (final Widget element) => <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      element,
+                                    ],
+                                  )
+                                  .toList(),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              SectionDivider(label: "Cubes"),
-                              Counter(
-                                color: Colors.deepPurple,
-                                label: "Top Scored",
-                                icon: Icons.arrow_circle_up,
-                                count: match.autoCubesTop,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.autoCubesTop);
-                                    match.autoCubesTop = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.deepPurple,
-                                label: "Mid Scored",
-                                icon: Icons.arrow_circle_left,
-                                count: match.autoCubesMid,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.autoConesMid);
-                                    match.autoConesMid = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.deepPurple,
-                                label: "Low Scored",
-                                icon: Icons.arrow_circle_down,
-                                count: match.autoCubesLow,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.autoCubesLow);
-                                    match.autoCubesLow = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.deepPurple,
-                                count: match.autoCubesFailed,
-                                label: "      Failed      ",
-                                icon: Icons.error,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.autoCubesFailed);
-                                    match.autoCubesFailed = p0;
-                                  });
-                                },
-                              ),
-                            ]
-                                .expand(
-                                  (final Widget element) => <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    element,
-                                  ],
-                                )
-                                .toList(),
+                          VerticalDivider(
+                            color: Colors.black.withOpacity(0.4),
+                            thickness: 2,
+                            width: 30,
+                            indent: 75,
                           ),
-                        )
-                      ],
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                SectionDivider(label: "Cubes"),
+                                Counter(
+                                  color: Colors.deepPurple,
+                                  label: "Top Scored",
+                                  icon: Icons.arrow_circle_up,
+                                  count: match.autoCubesTop,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.autoCubesTop);
+                                      match.autoCubesTop = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.deepPurple,
+                                  label: "Mid Scored",
+                                  icon: Icons.arrow_circle_left,
+                                  count: match.autoCubesMid,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.autoConesMid);
+                                      match.autoConesMid = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.deepPurple,
+                                  label: "Low Scored",
+                                  icon: Icons.arrow_circle_down,
+                                  count: match.autoCubesLow,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.autoCubesLow);
+                                      match.autoCubesLow = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.deepPurple,
+                                  count: match.autoCubesFailed,
+                                  label: "      Failed      ",
+                                  icon: Icons.error,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.autoCubesFailed);
+                                      match.autoCubesFailed = p0;
+                                    });
+                                  },
+                                ),
+                              ]
+                                  .expand(
+                                    (final Widget element) => <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      element,
+                                    ],
+                                  )
+                                  .toList(),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -336,147 +341,152 @@ class _UserInputState extends State<UserInput> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              SectionDivider(label: "Cones"),
-                              Counter(
-                                color: Colors.yellow,
-                                label: "Top Scored",
-                                icon: Icons.arrow_circle_up,
-                                count: match.teleConesTop,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.teleConesTop);
-                                    match.teleConesTop = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.yellow,
-                                label: "Mid Scored",
-                                icon: Icons.arrow_circle_left,
-                                count: match.teleConesMid,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.teleConesMid);
-                                    match.teleConesMid = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.yellow,
-                                label: "Low Scored",
-                                icon: Icons.arrow_circle_down,
-                                count: match.teleConesLow,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.teleConesMid);
-                                    match.teleConesMid = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.yellow,
-                                count: match.teleConesFailed,
-                                label: "      Failed      ",
-                                icon: Icons.error,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.teleConesFailed);
-                                    match.teleConesFailed = p0;
-                                  });
-                                },
-                              ),
-                            ]
-                                .expand(
-                                  (final Widget element) => <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    element,
-                                  ],
-                                )
-                                .toList(),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                SectionDivider(label: "Cones"),
+                                Counter(
+                                  color: Colors.amber,
+                                  label: "Top Scored",
+                                  icon: Icons.arrow_circle_up,
+                                  count: match.teleConesTop,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.teleConesTop);
+                                      match.teleConesTop = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.amber,
+                                  label: "Mid Scored",
+                                  icon: Icons.arrow_circle_left,
+                                  count: match.teleConesMid,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.teleConesMid);
+                                      match.teleConesMid = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.amber,
+                                  label: "Low Scored",
+                                  icon: Icons.arrow_circle_down,
+                                  count: match.teleConesLow,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.teleConesMid);
+                                      match.teleConesMid = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.amber,
+                                  count: match.teleConesFailed,
+                                  label: "      Failed      ",
+                                  icon: Icons.error,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.teleConesFailed);
+                                      match.teleConesFailed = p0;
+                                    });
+                                  },
+                                ),
+                              ]
+                                  .expand(
+                                    (final Widget element) => <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      element,
+                                    ],
+                                  )
+                                  .toList(),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              SectionDivider(label: "Cubes"),
-                              Counter(
-                                color: Colors.deepPurple,
-                                label: "Top Scored",
-                                icon: Icons.arrow_circle_up,
-                                count: match.teleCubesTop,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.teleCubesTop);
-                                    match.teleCubesTop = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.deepPurple,
-                                label: "Mid Scored",
-                                icon: Icons.arrow_circle_left,
-                                count: match.teleCubesMid,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.teleConesMid);
-                                    match.teleConesMid = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.deepPurple,
-                                label: "Low Scored",
-                                icon: Icons.arrow_circle_down,
-                                count: match.teleCubesLow,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.teleCubesLow);
-                                    match.teleCubesLow = p0;
-                                  });
-                                },
-                              ),
-                              Counter(
-                                color: Colors.deepPurple,
-                                count: match.teleCubesFailed,
-                                label: "      Failed      ",
-                                icon: Icons.error,
-                                onChange: (final int p0) {
-                                  setState(() {
-                                    flickerScreen(p0, match.teleCubesFailed);
-                                    match.teleCubesFailed = p0;
-                                  });
-                                },
-                              ),
-                            ]
-                                .expand(
-                                  (final Widget element) => <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    element,
-                                  ],
-                                )
-                                .toList(),
+                          VerticalDivider(
+                            color: Colors.black.withOpacity(0.4),
+                            thickness: 2,
+                            width: 30,
+                            indent: 75,
                           ),
-                        )
-                      ],
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                SectionDivider(label: "Cubes"),
+                                Counter(
+                                  color: Colors.deepPurple,
+                                  label: "Top Scored",
+                                  icon: Icons.arrow_circle_up,
+                                  count: match.teleCubesTop,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.teleCubesTop);
+                                      match.teleCubesTop = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.deepPurple,
+                                  label: "Mid Scored",
+                                  icon: Icons.arrow_circle_left,
+                                  count: match.teleCubesMid,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.teleConesMid);
+                                      match.teleConesMid = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.deepPurple,
+                                  label: "Low Scored",
+                                  icon: Icons.arrow_circle_down,
+                                  count: match.teleCubesLow,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.teleCubesLow);
+                                      match.teleCubesLow = p0;
+                                    });
+                                  },
+                                ),
+                                Counter(
+                                  color: Colors.deepPurple,
+                                  count: match.teleCubesFailed,
+                                  label: "      Failed      ",
+                                  icon: Icons.error,
+                                  onChange: (final int p0) {
+                                    setState(() {
+                                      flickerScreen(p0, match.teleCubesFailed);
+                                      match.teleCubesFailed = p0;
+                                    });
+                                  },
+                                ),
+                              ]
+                                  .expand(
+                                    (final Widget element) => <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      element,
+                                    ],
+                                  )
+                                  .toList(),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 20,
