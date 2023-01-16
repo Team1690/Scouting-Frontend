@@ -195,25 +195,6 @@ class _PitViewState extends State<PitView> {
                   SizedBox(
                     height: 20,
                   ),
-                  Switcher(
-                    selected: vars.canPassLowRung
-                            .mapNullable((final bool p0) => p0 ? 0 : 1) ??
-                        -1,
-                    labels: <String>[
-                      "Can pass\nlow rung",
-                      "Can't pass\nlow rung",
-                    ],
-                    colors: <Color>[
-                      Colors.green,
-                      Colors.red,
-                    ],
-                    onChange: (final int selection) {
-                      setState(() {
-                        vars.canPassLowRung =
-                            <int, bool>{1: false, 0: true}[selection];
-                      });
-                    },
-                  ),
                   SizedBox(
                     height: 20,
                   ),

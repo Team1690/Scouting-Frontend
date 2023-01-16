@@ -9,7 +9,8 @@ class PitVars implements HasuraVars {
   String notes = "";
   String driveWheelType = "";
   int? teamId;
-  bool? canPassLowRung;
+  int length = 0;
+  int width = 0;
   int weight = 0;
   @override
   Map<String, dynamic> toHasuraVars() {
@@ -22,7 +23,8 @@ class PitVars implements HasuraVars {
       "notes": notes,
       "drive_wheel_type": driveWheelType,
       "team_id": teamId,
-      "can_pass_low_rung": canPassLowRung,
+      "width": width,
+      "length": length,
       "weight": weight
     };
   }
@@ -37,5 +39,7 @@ class PitVars implements HasuraVars {
     driveWheelType = "";
     teamId = null;
     weight = 0;
+    width = 0;
+    length = 0;
   }
 }
