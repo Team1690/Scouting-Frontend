@@ -153,6 +153,19 @@ class _SpecificState extends State<Specific> {
                     label: "Placement",
                   ),
                   SizedBox(height: 15.0),
+                  DropdownLine<String>(
+                    onTap: () {
+                      setState(() {
+                        vars.defense = vars.defense.onNull(
+                          controllers[8].text,
+                        ); //index of defenseController
+                      });
+                    },
+                    value: vars.defense,
+                    onChange: (final String p0) => vars.defense = p0,
+                    controller: controllers[8], //index of defenseController
+                    label: "Defense",
+                  ),
                   SizedBox(height: 15.0),
                   DropdownLine<String>(
                     onTap: () {
@@ -166,20 +179,6 @@ class _SpecificState extends State<Specific> {
                     onChange: (final String p0) => vars.generalNotes = p0,
                     controller: controllers[7], //index of notesController
                     label: "General Notes",
-                  ),
-                  SizedBox(height: 15.0),
-                  DropdownLine<String>(
-                    onTap: () {
-                      setState(() {
-                        vars.defense = vars.defense.onNull(
-                          controllers[8].text,
-                        ); //index of defenseController
-                      });
-                    },
-                    value: vars.defense,
-                    onChange: (final String p0) => vars.defense = p0,
-                    controller: controllers[8], //index of defenseController
-                    label: "Defense",
                   ),
                   SizedBox(
                     height: 15,
