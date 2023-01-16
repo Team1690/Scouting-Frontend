@@ -69,7 +69,7 @@ class _SpecificState extends State<Specific> {
                     matches: MatchesProvider.of(context).matches,
                     onChange: (final ScheduleMatch selectedMatch) {
                       setState(() {
-                        vars.matches = selectedMatch;
+                        vars.scheduleMatch = selectedMatch;
                       });
                     },
                   ),
@@ -77,7 +77,7 @@ class _SpecificState extends State<Specific> {
                     height: 15,
                   ),
                   TeamSelectionMatches(
-                    match: vars.matches,
+                    match: vars.scheduleMatch,
                     controller: controllers[2], //index of teamController
                     onChange: (final LightTeam team) {
                       setState(() {
@@ -128,44 +128,31 @@ class _SpecificState extends State<Specific> {
                   DropdownLine<String>(
                     onTap: () {
                       setState(() {
-                        vars.intakeAndConveyor = vars.intakeAndConveyor.onNull(
+                        vars.intake = vars.intake.onNull(
                           controllers[4].text,
                         ); //index of intakeController
                       });
                     },
-                    value: vars.intakeAndConveyor,
-                    onChange: (final String p0) => vars.intakeAndConveyor = p0,
+                    value: vars.intake,
+                    onChange: (final String p0) => vars.intake = p0,
                     controller: controllers[4], //index of intakeController
                     label: "Intake & Conveyor",
                   ),
                   SizedBox(height: 15.0),
                   DropdownLine<String>(
-                    value: vars.shooter,
+                    value: vars.placement,
                     onTap: () {
                       setState(() {
-                        vars.shooter = vars.shooter.onNull(
+                        vars.placement = vars.placement.onNull(
                           controllers[5].text,
                         ); //index of shooterController
                       });
                     },
-                    onChange: (final String p0) => vars.shooter = p0,
+                    onChange: (final String p0) => vars.placement = p0,
                     controller: controllers[5], //index of shooterController
                     label: "Shooter",
                   ),
                   SizedBox(height: 15.0),
-                  DropdownLine<String>(
-                    onTap: () {
-                      setState(() {
-                        vars.climb = vars.climb.onNull(
-                          controllers[6].text,
-                        ); //index of climbController
-                      });
-                    },
-                    value: vars.climb,
-                    onChange: (final String p0) => vars.climb = p0,
-                    controller: controllers[6], //index of climbController
-                    label: "Climb",
-                  ),
                   SizedBox(height: 15.0),
                   DropdownLine<String>(
                     onTap: () {
