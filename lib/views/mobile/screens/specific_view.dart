@@ -22,7 +22,7 @@ class _SpecificState extends State<Specific> {
   final GlobalKey<FormState> formKey = GlobalKey();
   List<TextEditingController> controllers =
       List<TextEditingController>.generate(
-    11,
+    9,
     (final int i) => TextEditingController(),
   );
   final SpecificVars vars = SpecificVars();
@@ -157,13 +157,13 @@ class _SpecificState extends State<Specific> {
                     onTap: () {
                       setState(() {
                         vars.defense = vars.defense.onNull(
-                          controllers[8].text,
+                          controllers[6].text,
                         ); //index of defenseController
                       });
                     },
                     value: vars.defense,
                     onChange: (final String p0) => vars.defense = p0,
-                    controller: controllers[8], //index of defenseController
+                    controller: controllers[6], //index of defenseController
                     label: "Defense",
                   ),
                   SizedBox(height: 15.0),
@@ -231,7 +231,7 @@ class _SpecificState extends State<Specific> {
                         : CrossFadeState.showSecond,
                     firstChild: Container(),
                     secondChild: TextField(
-                      controller: controllers[9], //index of faultController
+                      controller: controllers[8], //index of faultController
                       textDirection: TextDirection.rtl,
                       onChanged: (final String value) {
                         vars.faultMessage = value;
