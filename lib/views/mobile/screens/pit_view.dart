@@ -315,9 +315,10 @@ class _PitViewState extends State<PitView> {
               \$has_shifter:Boolean,
               \$team_id:Int,
               \$weight:Int!,
-              \$can_pass_low_rung:Boolean
+              \$width:Int!,
+              \$length:Int!,
               ) {
-          insert_pit(objects: {
+          insert__2023_pit(objects: {
           url: \$url,
           drive_motor_amount: \$drive_motor_amount,
           drivemotor_id: \$drivemotor_id,
@@ -328,7 +329,8 @@ class _PitViewState extends State<PitView> {
           has_shifter: \$has_shifter,
           team_id: \$team_id,
           weight:  \$weight,
-          can_pass_low_rung: \$can_pass_low_rung,
+          width:  \$width,
+          length:  \$length,
           }) {
               returning {
                 url
