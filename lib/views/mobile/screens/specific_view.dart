@@ -136,7 +136,7 @@ class _SpecificState extends State<Specific> {
                     value: vars.intake,
                     onChange: (final String p0) => vars.intake = p0,
                     controller: controllers[4], //index of intakeController
-                    label: "Intake & Conveyor",
+                    label: "Intake",
                   ),
                   SizedBox(height: 15.0),
                   DropdownLine<String>(
@@ -150,7 +150,7 @@ class _SpecificState extends State<Specific> {
                     },
                     onChange: (final String p0) => vars.placement = p0,
                     controller: controllers[5], //index of shooterController
-                    label: "Shooter",
+                    label: "Placement",
                   ),
                   SizedBox(height: 15.0),
                   SizedBox(height: 15.0),
