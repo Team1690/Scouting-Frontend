@@ -39,10 +39,14 @@ class _PitViewState extends State<PitView> {
   final ValueNotifier<bool> advancedSwitchController =
       ValueNotifier<bool>(false);
   final TextEditingController weightContoller = TextEditingController();
+  final TextEditingController widthContoller = TextEditingController();
+  final TextEditingController lengthContoller = TextEditingController();
 
   void resetFrame() {
     setState(() {
       vars.reset();
+      widthContoller.text = vars.width.toString();
+      lengthContoller.text = vars.length.toString();
       weightContoller.text = vars.weight.toString();
       notesController.clear();
       wheelTypeController.clear();
@@ -194,6 +198,45 @@ class _PitViewState extends State<PitView> {
                   ),
                   SizedBox(
                     height: 20,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          controller: widthContoller,
+                          onChanged: (final String value) {
+                            vars.width = value.isEmpty ? 0 : int.parse(value);
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            labelText: "Width",
+                            prefixIcon: Icon(Icons.compare_arrows),
+                          ),
+                        ),
+                      ),
+                      Text(" x "),
+                      Expanded(
+                        child: TextField(
+                          controller: lengthContoller,
+                          onChanged: (final String value) {
+                            vars.length = value.isEmpty ? 0 : int.parse(value);
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            labelText: "Length",
+                            prefixIcon: Icon(Icons.compare_arrows),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 20,
