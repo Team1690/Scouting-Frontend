@@ -174,6 +174,7 @@ class _UserInputState extends State<UserInput> {
                             children: <Widget>[
                               SectionDivider(label: "Cones"),
                               Counter(
+                                color: Colors.yellow,
                                 label: "Top Scored",
                                 icon: Icons.arrow_circle_up,
                                 count: match.autoConesTop,
@@ -185,6 +186,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.yellow,
                                 label: "Mid Scored",
                                 icon: Icons.arrow_circle_left,
                                 count: match.autoConesMid,
@@ -196,6 +198,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.yellow,
                                 label: "Low Scored",
                                 icon: Icons.arrow_circle_down,
                                 count: match.autoConesLow,
@@ -207,6 +210,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.yellow,
                                 count: match.autoConesFailed,
                                 label: "      Failed      ",
                                 icon: Icons.error,
@@ -240,6 +244,7 @@ class _UserInputState extends State<UserInput> {
                             children: <Widget>[
                               SectionDivider(label: "Cubes"),
                               Counter(
+                                color: Colors.deepPurple,
                                 label: "Top Scored",
                                 icon: Icons.arrow_circle_up,
                                 count: match.autoCubesTop,
@@ -251,6 +256,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.deepPurple,
                                 label: "Mid Scored",
                                 icon: Icons.arrow_circle_left,
                                 count: match.autoCubesMid,
@@ -262,6 +268,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.deepPurple,
                                 label: "Low Scored",
                                 icon: Icons.arrow_circle_down,
                                 count: match.autoCubesLow,
@@ -273,6 +280,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.deepPurple,
                                 count: match.autoCubesFailed,
                                 label: "      Failed      ",
                                 icon: Icons.error,
@@ -339,6 +347,7 @@ class _UserInputState extends State<UserInput> {
                             children: <Widget>[
                               SectionDivider(label: "Cones"),
                               Counter(
+                                color: Colors.yellow,
                                 label: "Top Scored",
                                 icon: Icons.arrow_circle_up,
                                 count: match.teleConesTop,
@@ -350,6 +359,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.yellow,
                                 label: "Mid Scored",
                                 icon: Icons.arrow_circle_left,
                                 count: match.teleConesMid,
@@ -361,6 +371,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.yellow,
                                 label: "Low Scored",
                                 icon: Icons.arrow_circle_down,
                                 count: match.teleConesLow,
@@ -372,6 +383,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.yellow,
                                 count: match.teleConesFailed,
                                 label: "      Failed      ",
                                 icon: Icons.error,
@@ -405,6 +417,7 @@ class _UserInputState extends State<UserInput> {
                             children: <Widget>[
                               SectionDivider(label: "Cubes"),
                               Counter(
+                                color: Colors.deepPurple,
                                 label: "Top Scored",
                                 icon: Icons.arrow_circle_up,
                                 count: match.teleCubesTop,
@@ -416,6 +429,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.deepPurple,
                                 label: "Mid Scored",
                                 icon: Icons.arrow_circle_left,
                                 count: match.teleCubesMid,
@@ -427,6 +441,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.deepPurple,
                                 label: "Low Scored",
                                 icon: Icons.arrow_circle_down,
                                 count: match.teleCubesLow,
@@ -438,6 +453,7 @@ class _UserInputState extends State<UserInput> {
                                 },
                               ),
                               Counter(
+                                color: Colors.deepPurple,
                                 count: match.teleCubesFailed,
                                 label: "      Failed      ",
                                 icon: Icons.error,
