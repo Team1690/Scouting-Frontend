@@ -218,7 +218,9 @@ class _UserInputState extends State<UserInput> {
                                   onChange: (final int count) {
                                     setState(() {
                                       flickerScreen(
-                                          count, match.autoConesFailed);
+                                        count,
+                                        match.autoConesFailed,
+                                      );
                                       match.autoConesFailed = count;
                                     });
                                   },
@@ -292,7 +294,9 @@ class _UserInputState extends State<UserInput> {
                                   onChange: (final int count) {
                                     setState(() {
                                       flickerScreen(
-                                          count, match.autoCubesFailed);
+                                        count,
+                                        match.autoCubesFailed,
+                                      );
                                       match.autoCubesFailed = count;
                                     });
                                   },
@@ -398,7 +402,9 @@ class _UserInputState extends State<UserInput> {
                                   onChange: (final int count) {
                                     setState(() {
                                       flickerScreen(
-                                          count, match.teleConesFailed);
+                                        count,
+                                        match.teleConesFailed,
+                                      );
                                       match.teleConesFailed = count;
                                     });
                                   },
@@ -472,7 +478,9 @@ class _UserInputState extends State<UserInput> {
                                   onChange: (final int count) {
                                     setState(() {
                                       flickerScreen(
-                                          count, match.teleCubesFailed);
+                                        count,
+                                        match.teleCubesFailed,
+                                      );
                                       match.teleCubesFailed = count;
                                     });
                                   },
