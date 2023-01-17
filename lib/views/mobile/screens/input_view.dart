@@ -192,7 +192,7 @@ class _UserInputState extends State<UserInput> {
                                   colorPlus: Colors.amber,
                                   colorMinus: Colors.amber,
                                   label: "Mid Scored".padLeft(12),
-                                  icon: Icons.arrow_circle_left,
+                                  icon: Icons.adjust,
                                   count: match.autoConesMid,
                                   onChange: (final int count) {
                                     setState(() {
@@ -272,7 +272,7 @@ class _UserInputState extends State<UserInput> {
                                   colorPlus: Colors.deepPurple,
                                   colorMinus: Colors.deepPurple,
                                   label: "Mid Scored".padLeft(12),
-                                  icon: Icons.arrow_circle_left,
+                                  icon: Icons.adjust,
                                   count: match.autoCubesMid,
                                   onChange: (final int count) {
                                     setState(() {
@@ -379,7 +379,7 @@ class _UserInputState extends State<UserInput> {
                                   colorPlus: Colors.amber,
                                   colorMinus: Colors.amber,
                                   label: "Mid Scored".padLeft(12),
-                                  icon: Icons.arrow_circle_left,
+                                  icon: Icons.adjust,
                                   count: match.teleConesMid,
                                   onChange: (final int count) {
                                     setState(() {
@@ -459,7 +459,7 @@ class _UserInputState extends State<UserInput> {
                                   colorPlus: Colors.deepPurple,
                                   colorMinus: Colors.deepPurple,
                                   label: "Mid Scored".padLeft(12),
-                                  icon: Icons.arrow_circle_left,
+                                  icon: Icons.adjust,
                                   count: match.teleCubesMid,
                                   onChange: (final int count) {
                                     setState(() {
