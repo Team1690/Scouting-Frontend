@@ -22,7 +22,9 @@ class ScheduleMatch {
       final String color,
     ) {
       final int index = alliance.indexOf(team);
-      return (index == -1 ? null : "$color ${index + 1}");
+      return index == -1
+          ? null
+          : "${team.number} ${team.name} - $color ${index + 1}";
     }
 
     return fieldPositionOf(redAlliance, "red") ??

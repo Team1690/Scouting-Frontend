@@ -22,7 +22,7 @@ class _SpecificState extends State<Specific> {
   final GlobalKey<FormState> formKey = GlobalKey();
   List<TextEditingController> controllers =
       List<TextEditingController>.generate(
-    11,
+    9,
     (final int i) => TextEditingController(),
   );
   final SpecificVars vars = SpecificVars();
@@ -69,7 +69,7 @@ class _SpecificState extends State<Specific> {
                     matches: MatchesProvider.of(context).matches,
                     onChange: (final ScheduleMatch selectedMatch) {
                       setState(() {
-                        vars.matches = selectedMatch;
+                        vars.scheduleMatch = selectedMatch;
                       });
                     },
                   ),
@@ -77,7 +77,7 @@ class _SpecificState extends State<Specific> {
                     height: 15,
                   ),
                   TeamSelectionMatches(
-                    match: vars.matches,
+                    match: vars.scheduleMatch,
                     controller: controllers[2], //index of teamController
                     onChange: (final LightTeam team) {
                       setState(() {
@@ -128,43 +128,43 @@ class _SpecificState extends State<Specific> {
                   DropdownLine<String>(
                     onTap: () {
                       setState(() {
-                        vars.intakeAndConveyor = vars.intakeAndConveyor.onNull(
+                        vars.intake = vars.intake.onNull(
                           controllers[4].text,
                         ); //index of intakeController
                       });
                     },
-                    value: vars.intakeAndConveyor,
-                    onChange: (final String p0) => vars.intakeAndConveyor = p0,
+                    value: vars.intake,
+                    onChange: (final String p0) => vars.intake = p0,
                     controller: controllers[4], //index of intakeController
-                    label: "Intake & Conveyor",
+                    label: "Intake",
                   ),
                   SizedBox(height: 15.0),
                   DropdownLine<String>(
-                    value: vars.shooter,
+                    value: vars.placement,
                     onTap: () {
                       setState(() {
-                        vars.shooter = vars.shooter.onNull(
+                        vars.placement = vars.placement.onNull(
                           controllers[5].text,
                         ); //index of shooterController
                       });
                     },
-                    onChange: (final String p0) => vars.shooter = p0,
+                    onChange: (final String p0) => vars.placement = p0,
                     controller: controllers[5], //index of shooterController
-                    label: "Shooter",
+                    label: "Placement",
                   ),
                   SizedBox(height: 15.0),
                   DropdownLine<String>(
                     onTap: () {
                       setState(() {
-                        vars.climb = vars.climb.onNull(
+                        vars.defense = vars.defense.onNull(
                           controllers[6].text,
-                        ); //index of climbController
+                        ); //index of defenseController
                       });
                     },
-                    value: vars.climb,
-                    onChange: (final String p0) => vars.climb = p0,
-                    controller: controllers[6], //index of climbController
-                    label: "Climb",
+                    value: vars.defense,
+                    onChange: (final String p0) => vars.defense = p0,
+                    controller: controllers[6], //index of defenseController
+                    label: "Defense",
                   ),
                   SizedBox(height: 15.0),
                   DropdownLine<String>(
@@ -179,20 +179,6 @@ class _SpecificState extends State<Specific> {
                     onChange: (final String p0) => vars.generalNotes = p0,
                     controller: controllers[7], //index of notesController
                     label: "General Notes",
-                  ),
-                  SizedBox(height: 15.0),
-                  DropdownLine<String>(
-                    onTap: () {
-                      setState(() {
-                        vars.defense = vars.defense.onNull(
-                          controllers[8].text,
-                        ); //index of defenseController
-                      });
-                    },
-                    value: vars.defense,
-                    onChange: (final String p0) => vars.defense = p0,
-                    controller: controllers[8], //index of defenseController
-                    label: "Defense",
                   ),
                   SizedBox(
                     height: 15,
@@ -245,7 +231,7 @@ class _SpecificState extends State<Specific> {
                         : CrossFadeState.showSecond,
                     firstChild: Container(),
                     secondChild: TextField(
-                      controller: controllers[9], //index of faultController
+                      controller: controllers[8], //index of faultController
                       textDirection: TextDirection.rtl,
                       onChanged: (final String value) {
                         vars.faultMessage = value;
@@ -270,9 +256,9 @@ class _SpecificState extends State<Specific> {
                         });
                       },
                       mutation: """
-mutation A(\$team_id: Int, \$is_rematch: Boolean, \$scouter_name: String, \$matches_id: Int, \$drivetrain_and_driving: String, \$intake_and_conveyor: String, \$shooter: String, \$climb: String, \$general_notes: String, \$defense: String, \$fault_message:String){
-  insert_specific(objects: { team_id: \$team_id, is_rematch: \$is_rematch, scouter_name: \$scouter_name, matches_id: \$matches_id, drivetrain_and_driving: \$drivetrain_and_driving, intake_and_conveyor: \$intake_and_conveyor, shooter: \$shooter, climb: \$climb, general_notes: \$general_notes, defense: \$defense}){
-  	affected_rows
+mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int, \$fault_message:String){
+  insert__2023_specific(objects: {defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id}) {
+    affected_rows
   }
                   ${vars.faultMessage == null ? "" : """
   insert_faults(objects: {team_id: \$team_id, message: \$fault_message}) {

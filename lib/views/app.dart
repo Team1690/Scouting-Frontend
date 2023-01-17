@@ -10,7 +10,7 @@ import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 class App extends StatelessWidget {
   App({
     required this.teams,
-    required this.climdIds,
+    required this.balanceIds,
     required this.driveMotorIds,
     required this.drivetrainIds,
     required this.matchTypeIds,
@@ -21,7 +21,7 @@ class App extends StatelessWidget {
   final List<ScheduleMatch> matches;
   final Map<String, int> robotMatchStatusIds;
   final List<LightTeam> teams;
-  final Map<String, int> climdIds;
+  final Map<String, int> balanceIds;
   final Map<String, int> drivetrainIds;
   final Map<String, int> driveMotorIds;
   final Map<String, int> matchTypeIds;
@@ -34,7 +34,7 @@ class App extends StatelessWidget {
         matches: matches,
         child: IdProvider(
           matchTypeIds: matchTypeIds,
-          climbIds: climdIds,
+          balanceIds: balanceIds,
           drivemotorIds: driveMotorIds,
           drivetrainIds: drivetrainIds,
           robotMatchStatusIds: robotMatchStatusIds,
