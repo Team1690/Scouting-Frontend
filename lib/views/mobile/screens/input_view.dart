@@ -176,7 +176,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cones"),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "   Top Scored",
+                                  label: "Top Scored".padLeft(12),
                                   icon: Icons.arrow_circle_up,
                                   count: match.autoConesTop,
                                   onChange: (final int count) {
@@ -188,7 +188,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "   Mid Scored",
+                                  label: "Mid Scored".padLeft(12),
                                   icon: Icons.arrow_circle_left,
                                   count: match.autoConesMid,
                                   onChange: (final int count) {
@@ -200,7 +200,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "   Low Scored",
+                                  label: "Low Scored".padLeft(12),
                                   icon: Icons.arrow_circle_down,
                                   count: match.autoConesLow,
                                   onChange: (final int count) {
@@ -213,7 +213,7 @@ class _UserInputState extends State<UserInput> {
                                 Counter(
                                   color: Colors.amber,
                                   count: match.autoConesFailed,
-                                  label: "      Failed      ",
+                                  label: "Failed".padLeft(7),
                                   icon: Icons.error,
                                   onChange: (final int count) {
                                     setState(() {
@@ -252,7 +252,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cubes"),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "   Top Scored",
+                                  label: "Top Scored".padLeft(12),
                                   icon: Icons.arrow_circle_up,
                                   count: match.autoCubesTop,
                                   onChange: (final int count) {
@@ -264,7 +264,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "   Mid Scored",
+                                  label: "Mid Scored".padLeft(12),
                                   icon: Icons.arrow_circle_left,
                                   count: match.autoCubesMid,
                                   onChange: (final int count) {
@@ -276,7 +276,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "   Low Scored",
+                                  label: "Low Scored".padLeft(12),
                                   icon: Icons.arrow_circle_down,
                                   count: match.autoCubesLow,
                                   onChange: (final int count) {
@@ -289,7 +289,7 @@ class _UserInputState extends State<UserInput> {
                                 Counter(
                                   color: Colors.deepPurple,
                                   count: match.autoCubesFailed,
-                                  label: "      Failed      ",
+                                  label: "Failed".padLeft(7),
                                   icon: Icons.error,
                                   onChange: (final int count) {
                                     setState(() {
@@ -360,7 +360,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cones"),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "   Top Scored",
+                                  label: "Top Scored".padLeft(12),
                                   icon: Icons.arrow_circle_up,
                                   count: match.teleConesTop,
                                   onChange: (final int count) {
@@ -372,7 +372,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "   Mid Scored",
+                                  label: "Mid Scored".padLeft(12),
                                   icon: Icons.arrow_circle_left,
                                   count: match.teleConesMid,
                                   onChange: (final int count) {
@@ -384,7 +384,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.amber,
-                                  label: "   Low Scored",
+                                  label: "Low Scored".padLeft(12),
                                   icon: Icons.arrow_circle_down,
                                   count: match.teleConesLow,
                                   onChange: (final int count) {
@@ -397,7 +397,7 @@ class _UserInputState extends State<UserInput> {
                                 Counter(
                                   color: Colors.amber,
                                   count: match.teleConesFailed,
-                                  label: "      Failed      ",
+                                  label: "Failed".padLeft(7),
                                   icon: Icons.error,
                                   onChange: (final int count) {
                                     setState(() {
@@ -436,7 +436,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cubes"),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "   Top Scored",
+                                  label: "Top Scored".padLeft(12),
                                   icon: Icons.arrow_circle_up,
                                   count: match.teleCubesTop,
                                   onChange: (final int count) {
@@ -448,7 +448,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "   Mid Scored",
+                                  label: "Mid Scored".padLeft(12),
                                   icon: Icons.arrow_circle_left,
                                   count: match.teleCubesMid,
                                   onChange: (final int count) {
@@ -460,7 +460,7 @@ class _UserInputState extends State<UserInput> {
                                 ),
                                 Counter(
                                   color: Colors.deepPurple,
-                                  label: "   Low Scored",
+                                  label: "Low Scored".padLeft(12),
                                   icon: Icons.arrow_circle_down,
                                   count: match.teleCubesLow,
                                   onChange: (final int count) {
@@ -473,7 +473,7 @@ class _UserInputState extends State<UserInput> {
                                 Counter(
                                   color: Colors.deepPurple,
                                   count: match.teleCubesFailed,
-                                  label: "      Failed      ",
+                                  label: "Failed".padLeft(7),
                                   icon: Icons.error,
                                   onChange: (final int count) {
                                     setState(() {
