@@ -101,8 +101,8 @@ class _UserInputState extends State<UserInput> {
                           value != null && value.isNotEmpty
                               ? null
                               : "Please enter your name",
-                      onChanged: (final String p0) {
-                        match.name = p0;
+                      onChanged: (final String text) {
+                        match.name = text;
                       },
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person),
@@ -179,10 +179,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Top Scored",
                                   icon: Icons.arrow_circle_up,
                                   count: match.autoConesTop,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoConesTop);
-                                      match.autoConesTop = p0;
+                                      flickerScreen(count, match.autoConesTop);
+                                      match.autoConesTop = count;
                                     });
                                   },
                                 ),
@@ -191,10 +191,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Mid Scored",
                                   icon: Icons.arrow_circle_left,
                                   count: match.autoConesMid,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoConesMid);
-                                      match.autoConesMid = p0;
+                                      flickerScreen(count, match.autoConesMid);
+                                      match.autoConesMid = count;
                                     });
                                   },
                                 ),
@@ -203,10 +203,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Low Scored",
                                   icon: Icons.arrow_circle_down,
                                   count: match.autoConesLow,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoConesLow);
-                                      match.autoConesLow = p0;
+                                      flickerScreen(count, match.autoConesLow);
+                                      match.autoConesLow = count;
                                     });
                                   },
                                 ),
@@ -215,10 +215,11 @@ class _UserInputState extends State<UserInput> {
                                   count: match.autoConesFailed,
                                   label: "      Failed      ",
                                   icon: Icons.error,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoConesFailed);
-                                      match.autoConesFailed = p0;
+                                      flickerScreen(
+                                          count, match.autoConesFailed);
+                                      match.autoConesFailed = count;
                                     });
                                   },
                                 ),
@@ -252,10 +253,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Top Scored",
                                   icon: Icons.arrow_circle_up,
                                   count: match.autoCubesTop,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoCubesTop);
-                                      match.autoCubesTop = p0;
+                                      flickerScreen(count, match.autoCubesTop);
+                                      match.autoCubesTop = count;
                                     });
                                   },
                                 ),
@@ -264,10 +265,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Mid Scored",
                                   icon: Icons.arrow_circle_left,
                                   count: match.autoCubesMid,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoCubesMid);
-                                      match.autoCubesMid = p0;
+                                      flickerScreen(count, match.autoCubesMid);
+                                      match.autoCubesMid = count;
                                     });
                                   },
                                 ),
@@ -276,10 +277,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Low Scored",
                                   icon: Icons.arrow_circle_down,
                                   count: match.autoCubesLow,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoCubesLow);
-                                      match.autoCubesLow = p0;
+                                      flickerScreen(count, match.autoCubesLow);
+                                      match.autoCubesLow = count;
                                     });
                                   },
                                 ),
@@ -288,10 +289,11 @@ class _UserInputState extends State<UserInput> {
                                   count: match.autoCubesFailed,
                                   label: "      Failed      ",
                                   icon: Icons.error,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.autoCubesFailed);
-                                      match.autoCubesFailed = p0;
+                                      flickerScreen(
+                                          count, match.autoCubesFailed);
+                                      match.autoCubesFailed = count;
                                     });
                                   },
                                 ),
@@ -316,19 +318,19 @@ class _UserInputState extends State<UserInput> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Selector<int>(
-                        validate: (final int? p0) =>
-                            p0.onNull("Please pick a balance result"),
+                        validate: (final int? result) =>
+                            result.onNull("Please pick a balance result"),
                         options: IdProvider.of(context)
                             .balance
                             .idToName
                             .keys
                             .toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int p0) =>
-                            IdProvider.of(context).balance.idToName[p0]!,
-                        onChange: (final int p0) {
+                        makeItem: (final int index) =>
+                            IdProvider.of(context).balance.idToName[index]!,
+                        onChange: (final int result) {
                           setState(() {
-                            match.autoBalanceStatus = p0;
+                            match.autoBalanceStatus = result;
                           });
                         },
                         value: match.autoBalanceStatus,
@@ -357,10 +359,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Top Scored",
                                   icon: Icons.arrow_circle_up,
                                   count: match.teleConesTop,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleConesTop);
-                                      match.teleConesTop = p0;
+                                      flickerScreen(count, match.teleConesTop);
+                                      match.teleConesTop = count;
                                     });
                                   },
                                 ),
@@ -369,10 +371,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Mid Scored",
                                   icon: Icons.arrow_circle_left,
                                   count: match.teleConesMid,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleConesMid);
-                                      match.teleConesMid = p0;
+                                      flickerScreen(count, match.teleConesMid);
+                                      match.teleConesMid = count;
                                     });
                                   },
                                 ),
@@ -381,10 +383,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Low Scored",
                                   icon: Icons.arrow_circle_down,
                                   count: match.teleConesLow,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleConesLow);
-                                      match.teleConesLow = p0;
+                                      flickerScreen(count, match.teleConesLow);
+                                      match.teleConesLow = count;
                                     });
                                   },
                                 ),
@@ -393,10 +395,11 @@ class _UserInputState extends State<UserInput> {
                                   count: match.teleConesFailed,
                                   label: "      Failed      ",
                                   icon: Icons.error,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleConesFailed);
-                                      match.teleConesFailed = p0;
+                                      flickerScreen(
+                                          count, match.teleConesFailed);
+                                      match.teleConesFailed = count;
                                     });
                                   },
                                 ),
@@ -430,10 +433,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Top Scored",
                                   icon: Icons.arrow_circle_up,
                                   count: match.teleCubesTop,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleCubesTop);
-                                      match.teleCubesTop = p0;
+                                      flickerScreen(count, match.teleCubesTop);
+                                      match.teleCubesTop = count;
                                     });
                                   },
                                 ),
@@ -442,10 +445,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Mid Scored",
                                   icon: Icons.arrow_circle_left,
                                   count: match.teleCubesMid,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleCubesMid);
-                                      match.teleCubesMid = p0;
+                                      flickerScreen(count, match.teleCubesMid);
+                                      match.teleCubesMid = count;
                                     });
                                   },
                                 ),
@@ -454,10 +457,10 @@ class _UserInputState extends State<UserInput> {
                                   label: "   Low Scored",
                                   icon: Icons.arrow_circle_down,
                                   count: match.teleCubesLow,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleCubesLow);
-                                      match.teleCubesLow = p0;
+                                      flickerScreen(count, match.teleCubesLow);
+                                      match.teleCubesLow = count;
                                     });
                                   },
                                 ),
@@ -466,10 +469,11 @@ class _UserInputState extends State<UserInput> {
                                   count: match.teleCubesFailed,
                                   label: "      Failed      ",
                                   icon: Icons.error,
-                                  onChange: (final int p0) {
+                                  onChange: (final int count) {
                                     setState(() {
-                                      flickerScreen(p0, match.teleCubesFailed);
-                                      match.teleCubesFailed = p0;
+                                      flickerScreen(
+                                          count, match.teleCubesFailed);
+                                      match.teleCubesFailed = count;
                                     });
                                   },
                                 ),
@@ -520,19 +524,19 @@ class _UserInputState extends State<UserInput> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Selector<int>(
-                        validate: (final int? p0) =>
-                            p0.onNull("Please pick a balance result"),
+                        validate: (final int? result) =>
+                            result.onNull("Please pick a balance result"),
                         options: IdProvider.of(context)
                             .balance
                             .idToName
                             .keys
                             .toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int p0) =>
-                            IdProvider.of(context).balance.idToName[p0]!,
-                        onChange: (final int p0) {
+                        makeItem: (final int index) =>
+                            IdProvider.of(context).balance.idToName[index]!,
+                        onChange: (final int result) {
                           setState(() {
-                            match.endgameBalanceStatus = p0;
+                            match.endgameBalanceStatus = result;
                           });
                         },
                         value: match.endgameBalanceStatus,
