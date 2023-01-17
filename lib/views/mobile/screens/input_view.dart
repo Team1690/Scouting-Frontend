@@ -60,6 +60,7 @@ class _UserInputState extends State<UserInput> {
   };
   @override
   Widget build(final BuildContext context) {
+    final Map<int, String> provider = IdProvider.of(context).balance.idToName;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: SideNavBar(),
@@ -324,14 +325,9 @@ class _UserInputState extends State<UserInput> {
                       child: Selector<int>(
                         validate: (final int? result) =>
                             result.onNull("Please pick a balance result"),
-                        options: IdProvider.of(context)
-                            .balance
-                            .idToName
-                            .keys
-                            .toList(),
+                        options: provider.keys.toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int index) =>
-                            IdProvider.of(context).balance.idToName[index]!,
+                        makeItem: (final int index) => provider[index]!,
                         onChange: (final int result) {
                           setState(() {
                             match.autoBalanceStatus = result;
@@ -534,14 +530,9 @@ class _UserInputState extends State<UserInput> {
                       child: Selector<int>(
                         validate: (final int? result) =>
                             result.onNull("Please pick a balance result"),
-                        options: IdProvider.of(context)
-                            .balance
-                            .idToName
-                            .keys
-                            .toList(),
+                        options: provider.keys.toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int index) =>
-                            IdProvider.of(context).balance.idToName[index]!,
+                        makeItem: (final int index) => provider[index]!,
                         onChange: (final int result) {
                           setState(() {
                             match.endgameBalanceStatus = result;
