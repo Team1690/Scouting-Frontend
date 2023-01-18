@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
-set -Eeuxo pipefail
+set -Eeux
 flutter build web --web-renderer html "$@"
