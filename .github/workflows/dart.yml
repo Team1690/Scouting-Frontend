@@ -34,3 +34,6 @@ jobs:
       # want to change this to 'flutter test'.
       - name: Run tests
         run: flutter test
+
+      - name: Build web
+        run: flutter build web --web-renderer html
