@@ -45,8 +45,8 @@ class _PitViewState extends State<PitView> {
   void resetFrame() {
     setState(() {
       vars.reset();
-      widthContoller.text = vars.width.toString();
-      lengthContoller.text = vars.length.toString();
+      widthContoller.clear();
+      lengthContoller.clear();
       weightContoller.text = vars.weight.toString();
       notesController.clear();
       wheelTypeController.clear();
@@ -207,7 +207,7 @@ class _PitViewState extends State<PitView> {
                         child: TextField(
                           controller: widthContoller,
                           onChanged: (final String value) {
-                            vars.width = value.isEmpty ? 0 : int.parse(value);
+                            vars.width = int.tryParse(value);
                           },
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
@@ -224,7 +224,7 @@ class _PitViewState extends State<PitView> {
                         child: TextField(
                           controller: lengthContoller,
                           onChanged: (final String value) {
-                            vars.length = value.isEmpty ? 0 : int.parse(value);
+                            vars.length = int.tryParse(value);
                           },
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
@@ -315,8 +315,8 @@ class _PitViewState extends State<PitView> {
               \$has_shifter:Boolean,
               \$team_id:Int,
               \$weight:Int!,
-              \$width:Int!,
-              \$length:Int!,
+              \$width:Int,
+              \$length:Int,
               ) {
           insert__2023_pit(objects: {
           url: \$url,
