@@ -5,16 +5,16 @@ String tablesToQuerys(
   final List<String> tables,
   final List<String> tablesToOrderByOrderColumn,
 ) {
-  String querys = "";
+  String queries = "";
   for (final String table in tables) {
-    querys += """
+    queries += """
     $table(order_by: {${tablesToOrderByOrderColumn.contains(table) ? "order" : "id"}: asc}) {
         id
         title
     }
 """;
   }
-  return querys;
+  return queries;
 }
 
 Future<Map<String, Map<String, int>>> fetchEnums(
