@@ -45,10 +45,14 @@ class Counter extends StatelessWidget {
               flex: 2,
               child: FittedBox(
                 fit: BoxFit.fitWidth,
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  textScaleFactor: 1.5,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    textScaleFactor: 1.5,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
