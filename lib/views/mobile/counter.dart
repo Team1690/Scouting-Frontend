@@ -7,8 +7,8 @@ class Counter extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.onChange,
-    this.colorPlus = Colors.green,
-    this.colorMinus = Colors.red,
+    this.plus = Colors.green,
+    this.minus = Colors.red,
     this.stepValue = 1,
     this.upperLimit = 100,
     this.lowerLimit = 0,
@@ -17,8 +17,8 @@ class Counter extends StatelessWidget {
   });
   final String label;
   final IconData icon;
-  final Color? colorPlus;
-  final Color? colorMinus;
+  final Color plus;
+  final Color minus;
   final void Function(int) onChange;
   final int stepValue;
   final int upperLimit;
@@ -66,7 +66,7 @@ class Counter extends StatelessWidget {
               Expanded(
                 flex: 6,
                 child: RoundedIconButton(
-                  color: colorMinus,
+                  color: minus,
                   icon: Icons.remove,
                   onPress: () => onChange(max(lowerLimit, count - stepValue)),
                   onLongPress: () =>
@@ -84,7 +84,7 @@ class Counter extends StatelessWidget {
               Expanded(
                 flex: 6,
                 child: RoundedIconButton(
-                  color: colorPlus,
+                  color: plus,
                   icon: Icons.add,
                   onPress: () {
                     onChange(min(upperLimit, count + stepValue));
