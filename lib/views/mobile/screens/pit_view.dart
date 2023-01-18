@@ -38,16 +38,16 @@ class _PitViewState extends State<PitView> {
   final FocusNode node = FocusNode();
   final ValueNotifier<bool> advancedSwitchController =
       ValueNotifier<bool>(false);
-  final TextEditingController weightContoller = TextEditingController();
-  final TextEditingController widthContoller = TextEditingController();
-  final TextEditingController lengthContoller = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController widthController = TextEditingController();
+  final TextEditingController lengthController = TextEditingController();
 
   void resetFrame() {
     setState(() {
       vars.reset();
-      widthContoller.clear();
-      lengthContoller.clear();
-      weightContoller.text = vars.weight.toString();
+      widthController.clear();
+      lengthController.clear();
+      weightController.text = vars.weight.toString();
       notesController.clear();
       wheelTypeController.clear();
       teamSelectionController.clear();
@@ -205,7 +205,7 @@ class _PitViewState extends State<PitView> {
                     children: <Widget>[
                       Expanded(
                         child: TextField(
-                          controller: widthContoller,
+                          controller: widthController,
                           onChanged: (final String value) {
                             vars.width = int.tryParse(value);
                           },
@@ -222,7 +222,7 @@ class _PitViewState extends State<PitView> {
                       Text(" x "),
                       Expanded(
                         child: TextField(
-                          controller: lengthContoller,
+                          controller: lengthController,
                           onChanged: (final String value) {
                             vars.length = int.tryParse(value);
                           },
@@ -242,7 +242,7 @@ class _PitViewState extends State<PitView> {
                     height: 20,
                   ),
                   TextField(
-                    controller: weightContoller,
+                    controller: weightController,
                     onChanged: (final String value) {
                       vars.weight = value.isEmpty ? 0 : int.parse(value);
                     },
