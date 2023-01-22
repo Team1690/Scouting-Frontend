@@ -38,6 +38,51 @@ class _UserInputState extends State<UserInput> {
     });
   }
 
+  Widget gamePieceCounters(
+    final Color plus,
+    final Color minus,
+    final List<void Function(int)> updateValues,
+    final List<int Function()> getValues,
+  ) {
+    final List<String> labels = <String>[
+      "Top Scored",
+      "Mid Scored",
+      "Low Scored",
+      "Failed"
+    ];
+    final List<IconData> icons = <IconData>[
+      Icons.arrow_circle_up,
+      Icons.adjust,
+      Icons.arrow_circle_down,
+      Icons.error_outline
+    ];
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ...(<int>[0, 1, 2, 3].map((final int index) {
+          return Counter(
+            plus: plus,
+            minus: minus,
+            label: labels[index],
+            icon: icons[index],
+            onChange: (final int count) {
+              setState(() {
+                flickerScreen(
+                  count,
+                  getValues[index](),
+                );
+                updateValues[index](count);
+              });
+            },
+            count: getValues[index](),
+          );
+        })),
+      ],
+    );
+  }
+
   Color? screenColor;
 
   final TextEditingController matchController = TextEditingController();
@@ -50,7 +95,6 @@ class _UserInputState extends State<UserInput> {
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
   );
   // -1 means nothing
-
   late final Map<int, int> robotMatchStatusIndexToId = <int, int>{
     -1: IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!,
     0: IdProvider.of(context)
@@ -161,9 +205,6 @@ class _UserInputState extends State<UserInput> {
                       height: 20,
                     ),
                     SectionDivider(label: "Autonomous"),
-                    SizedBox(
-                      height: 20,
-                    ),
                     IntrinsicHeight(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -175,60 +216,25 @@ class _UserInputState extends State<UserInput> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 SectionDivider(label: "Cones"),
-                                Counter(
-                                  plus: Colors.amber,
-                                  minus: Colors.amber,
-                                  label: "Top Scored",
-                                  icon: Icons.arrow_circle_up,
-                                  count: match.autoConesTop,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.autoConesTop);
-                                      match.autoConesTop = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.amber,
-                                  minus: Colors.amber,
-                                  label: "Mid Scored",
-                                  icon: Icons.adjust,
-                                  count: match.autoConesMid,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.autoConesMid);
-                                      match.autoConesMid = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.amber,
-                                  minus: Colors.amber,
-                                  label: "Low Scored",
-                                  icon: Icons.arrow_circle_down,
-                                  count: match.autoConesLow,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.autoConesLow);
-                                      match.autoConesLow = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.amber,
-                                  minus: Colors.amber,
-                                  count: match.autoConesFailed,
-                                  label: "Failed",
-                                  icon: Icons.error,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(
-                                        count,
-                                        match.autoConesFailed,
-                                      );
-                                      match.autoConesFailed = count;
-                                    });
-                                  },
+                                gamePieceCounters(
+                                  Colors.amber,
+                                  Colors.amber,
+                                  <void Function(int)>[
+                                    (final int value) =>
+                                        match.autoConesTop = value,
+                                    (final int value) =>
+                                        match.autoConesMid = value,
+                                    (final int value) =>
+                                        match.autoConesLow = value,
+                                    (final int value) =>
+                                        match.autoConesFailed = value
+                                  ],
+                                  <int Function()>[
+                                    () => match.autoConesTop,
+                                    () => match.autoConesMid,
+                                    () => match.autoConesLow,
+                                    () => match.autoConesFailed
+                                  ],
                                 ),
                               ]
                                   .expand(
@@ -255,60 +261,25 @@ class _UserInputState extends State<UserInput> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 SectionDivider(label: "Cubes"),
-                                Counter(
-                                  plus: Colors.deepPurple,
-                                  minus: Colors.deepPurple,
-                                  label: "Top Scored",
-                                  icon: Icons.arrow_circle_up,
-                                  count: match.autoCubesTop,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.autoCubesTop);
-                                      match.autoCubesTop = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.deepPurple,
-                                  minus: Colors.deepPurple,
-                                  label: "Mid Scored",
-                                  icon: Icons.adjust,
-                                  count: match.autoCubesMid,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.autoCubesMid);
-                                      match.autoCubesMid = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.deepPurple,
-                                  minus: Colors.deepPurple,
-                                  label: "Low Scored",
-                                  icon: Icons.arrow_circle_down,
-                                  count: match.autoCubesLow,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.autoCubesLow);
-                                      match.autoCubesLow = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.deepPurple,
-                                  minus: Colors.deepPurple,
-                                  count: match.autoCubesFailed,
-                                  label: "Failed",
-                                  icon: Icons.error,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(
-                                        count,
-                                        match.autoCubesFailed,
-                                      );
-                                      match.autoCubesFailed = count;
-                                    });
-                                  },
+                                gamePieceCounters(
+                                  Colors.deepPurple,
+                                  Colors.deepPurple,
+                                  <void Function(int)>[
+                                    (final int value) =>
+                                        match.autoCubesTop = value,
+                                    (final int value) =>
+                                        match.autoCubesMid = value,
+                                    (final int value) =>
+                                        match.autoCubesLow = value,
+                                    (final int value) =>
+                                        match.autoCubesFailed = value
+                                  ],
+                                  <int Function()>[
+                                    () => match.autoCubesTop,
+                                    () => match.autoCubesMid,
+                                    () => match.autoCubesLow,
+                                    () => match.autoCubesFailed
+                                  ],
                                 ),
                               ]
                                   .expand(
@@ -348,9 +319,6 @@ class _UserInputState extends State<UserInput> {
                       height: 20,
                     ),
                     SectionDivider(label: "Teleoperated"),
-                    SizedBox(
-                      height: 10,
-                    ),
                     IntrinsicHeight(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -362,60 +330,25 @@ class _UserInputState extends State<UserInput> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 SectionDivider(label: "Cones"),
-                                Counter(
-                                  plus: Colors.amber,
-                                  minus: Colors.amber,
-                                  label: "Top Scored",
-                                  icon: Icons.arrow_circle_up,
-                                  count: match.teleConesTop,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.teleConesTop);
-                                      match.teleConesTop = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.amber,
-                                  minus: Colors.amber,
-                                  label: "Mid Scored",
-                                  icon: Icons.adjust,
-                                  count: match.teleConesMid,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.teleConesMid);
-                                      match.teleConesMid = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.amber,
-                                  minus: Colors.amber,
-                                  label: "Low Scored",
-                                  icon: Icons.arrow_circle_down,
-                                  count: match.teleConesLow,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.teleConesLow);
-                                      match.teleConesLow = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.amber,
-                                  minus: Colors.amber,
-                                  count: match.teleConesFailed,
-                                  label: "Failed",
-                                  icon: Icons.error,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(
-                                        count,
-                                        match.teleConesFailed,
-                                      );
-                                      match.teleConesFailed = count;
-                                    });
-                                  },
+                                gamePieceCounters(
+                                  Colors.amber,
+                                  Colors.amber,
+                                  <void Function(int)>[
+                                    (final int value) =>
+                                        match.teleConesTop = value,
+                                    (final int value) =>
+                                        match.teleConesMid = value,
+                                    (final int value) =>
+                                        match.teleConesLow = value,
+                                    (final int value) =>
+                                        match.teleConesFailed = value
+                                  ],
+                                  <int Function()>[
+                                    () => match.teleConesTop,
+                                    () => match.teleConesMid,
+                                    () => match.teleConesLow,
+                                    () => match.teleConesFailed
+                                  ],
                                 ),
                               ]
                                   .expand(
@@ -442,60 +375,25 @@ class _UserInputState extends State<UserInput> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 SectionDivider(label: "Cubes"),
-                                Counter(
-                                  plus: Colors.deepPurple,
-                                  minus: Colors.deepPurple,
-                                  label: "Top Scored",
-                                  icon: Icons.arrow_circle_up,
-                                  count: match.teleCubesTop,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.teleCubesTop);
-                                      match.teleCubesTop = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.deepPurple,
-                                  minus: Colors.deepPurple,
-                                  label: "Mid Scored",
-                                  icon: Icons.adjust,
-                                  count: match.teleCubesMid,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.teleCubesMid);
-                                      match.teleCubesMid = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.deepPurple,
-                                  minus: Colors.deepPurple,
-                                  label: "Low Scored",
-                                  icon: Icons.arrow_circle_down,
-                                  count: match.teleCubesLow,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(count, match.teleCubesLow);
-                                      match.teleCubesLow = count;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  plus: Colors.deepPurple,
-                                  minus: Colors.deepPurple,
-                                  count: match.teleCubesFailed,
-                                  label: "Failed",
-                                  icon: Icons.error,
-                                  onChange: (final int count) {
-                                    setState(() {
-                                      flickerScreen(
-                                        count,
-                                        match.teleCubesFailed,
-                                      );
-                                      match.teleCubesFailed = count;
-                                    });
-                                  },
+                                gamePieceCounters(
+                                  Colors.deepPurple,
+                                  Colors.deepPurple,
+                                  <void Function(int)>[
+                                    (final int value) =>
+                                        match.teleCubesTop = value,
+                                    (final int value) =>
+                                        match.teleCubesMid = value,
+                                    (final int value) =>
+                                        match.teleCubesLow = value,
+                                    (final int value) =>
+                                        match.teleCubesFailed = value
+                                  ],
+                                  <int Function()>[
+                                    () => match.teleCubesTop,
+                                    () => match.teleCubesMid,
+                                    () => match.teleCubesLow,
+                                    () => match.teleCubesFailed
+                                  ],
                                 ),
                               ]
                                   .expand(
