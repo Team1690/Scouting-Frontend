@@ -146,8 +146,8 @@ class _UserInputState extends State<UserInput> {
                           value != null && value.isNotEmpty
                               ? null
                               : "Please enter your name",
-                      onChanged: (final String text) {
-                        match.name = text;
+                      onChanged: (final String name) {
+                        match.name = name;
                       },
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person),
