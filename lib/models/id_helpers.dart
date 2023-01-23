@@ -24,17 +24,29 @@ query FetchEnums {
     ${queries.join("\n")}
 }
 """;
+
+  Map<String, int> parseTable(final dynamic result, final String tableName) =>
+      Map<String, int>.fromEntries(
+        (result[tableName] as List<dynamic>).map(
+          (final dynamic tableResponse) => MapEntry<String, int>(
+            tableResponse["title"] as String,
+            tableResponse["id"] as int,
+          ),
+        ),
+      );
+
   return (await getClient().query(
     QueryOptions<Map<String, Map<String, int>>>(
       document: gql(query),
       parserFn: (final Map<String, dynamic> result) =>
-          <String, Map<String, int>>{
-        for (final String table in <String>[...enums, ...orderedEnums])
-          table: <String, int>{
-            for (final dynamic entry in (result[table] as List<dynamic>))
-              entry["title"] as String: entry["id"] as int
-          }
-      },
+          Map<String, Map<String, int>>.fromEntries(
+        <String>[...enums, ...orderedEnums].map(
+          (final String tableName) => MapEntry<String, Map<String, int>>(
+            tableName,
+            parseTable(result, tableName),
+          ),
+        ),
+      ),
     ),
   ))
       .mapQueryResult();
