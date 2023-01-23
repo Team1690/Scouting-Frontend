@@ -7,6 +7,16 @@ final String tableFragment = """{
   }
   """;
 
+Map<String, int> parseTable(final dynamic result, final String tableName) =>
+    Map<String, int>.fromEntries(
+      (result[tableName] as List<dynamic>).map(
+        (final dynamic tableResponse) => MapEntry<String, int>(
+          tableResponse["title"] as String,
+          tableResponse["id"] as int,
+        ),
+      ),
+    );
+
 String queryEnumTable(final String table) => """$table $tableFragment""";
 String queryOrderedEnumTable(final String table) =>
     """$table(order_by: {order: asc}) $tableFragment""";
@@ -24,16 +34,6 @@ query FetchEnums {
     ${queries.join("\n")}
 }
 """;
-
-  Map<String, int> parseTable(final dynamic result, final String tableName) =>
-      Map<String, int>.fromEntries(
-        (result[tableName] as List<dynamic>).map(
-          (final dynamic tableResponse) => MapEntry<String, int>(
-            tableResponse["title"] as String,
-            tableResponse["id"] as int,
-          ),
-        ),
-      );
 
   return (await getClient().query(
     QueryOptions<Map<String, Map<String, int>>>(
