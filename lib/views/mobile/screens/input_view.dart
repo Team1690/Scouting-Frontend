@@ -38,50 +38,50 @@ class _UserInputState extends State<UserInput> {
     });
   }
 
+  final List<String> counterLabels = <String>[
+    "Top Scored",
+    "Mid Scored",
+    "Low Scored",
+    "Failed"
+  ];
+  final List<IconData> counterIcons = <IconData>[
+    Icons.arrow_circle_up,
+    Icons.adjust,
+    Icons.arrow_circle_down,
+    Icons.error_outline
+  ];
+
   Widget gamePieceCounters(
     final Color plus,
     final Color minus,
     final List<void Function(int)> updateValues,
     final List<int Function()> getValues,
-  ) {
-    final List<String> labels = <String>[
-      "Top Scored",
-      "Mid Scored",
-      "Low Scored",
-      "Failed"
-    ];
-    final List<IconData> icons = <IconData>[
-      Icons.arrow_circle_up,
-      Icons.adjust,
-      Icons.arrow_circle_down,
-      Icons.error_outline
-    ];
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        ...(<int>[0, 1, 2, 3].map((final int index) {
-          return Counter(
-            plus: plus,
-            minus: minus,
-            label: labels[index],
-            icon: icons[index],
-            onChange: (final int count) {
-              setState(() {
-                flickerScreen(
-                  count,
-                  getValues[index](),
-                );
-                updateValues[index](count);
-              });
-            },
-            count: getValues[index](),
-          );
-        })),
-      ],
-    );
-  }
+  ) =>
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ...(<int>[0, 1, 2, 3].map((final int index) {
+            return Counter(
+              plus: plus,
+              minus: minus,
+              label: counterLabels[index],
+              icon: counterIcons[index],
+              onChange: (final int count) {
+                setState(() {
+                  flickerScreen(
+                    count,
+                    getValues[index](),
+                  );
+                  updateValues[index](count);
+                });
+              },
+              count: getValues[index](),
+            );
+          })),
+        ],
+      );
 
   Color? screenColor;
 
