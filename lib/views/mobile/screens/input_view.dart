@@ -9,7 +9,7 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/matches_search_box_future.dart";
-import 'package:scouting_frontend/views/mobile/counter_vars.dart';
+import "package:scouting_frontend/views/mobile/counter_vars.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
