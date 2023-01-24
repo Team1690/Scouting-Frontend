@@ -23,7 +23,6 @@ void main() async {
     "_2023_balance",
     "drivetrain",
     "drivemotor",
-    "match_type",
     "robot_match_status",
     "fault_status",
   ], <String>[
