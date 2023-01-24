@@ -5,7 +5,6 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/common/no_team_selected.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/lineChart/compare_climb_line_chart.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/lineChart/compare_line_chart.dart";
@@ -14,6 +13,20 @@ class CompareGamechartCard extends StatelessWidget {
   const CompareGamechartCard(this.data, this.teams);
   final SplayTreeSet<CompareTeam> data;
   final SplayTreeSet<LightTeam> teams;
+  bool isPC(final BuildContext context) {
+    switch (Theme.of(context).platform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+        return false;
+
+      case TargetPlatform.windows:
+      case TargetPlatform.macOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.fuchsia:
+        return true;
+    }
+  }
+
   @override
   Widget build(final BuildContext context) {
     final Iterable<CompareTeam> emptyTeams = data.where(

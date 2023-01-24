@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/pc/picklist/fetch_picklist.dart";
@@ -9,6 +8,20 @@ import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
 import "package:scouting_frontend/views/pc/picklist/picklist_card.dart";
 
 class PickListScreen extends StatelessWidget {
+  bool isPC(final BuildContext context) {
+    switch (Theme.of(context).platform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+        return false;
+
+      case TargetPlatform.windows:
+      case TargetPlatform.macOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.fuchsia:
+        return true;
+    }
+  }
+
   @override
   Widget build(final BuildContext context) {
     return isPC(context)
@@ -27,7 +40,7 @@ class PickListScreen extends StatelessWidget {
 
   Padding pickList(final BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(defaultPadding),
+      padding: EdgeInsets.all(20),
       child: StreamBuilder<List<PickListTeam>>(
         stream: fetchPicklist(),
         builder: (
