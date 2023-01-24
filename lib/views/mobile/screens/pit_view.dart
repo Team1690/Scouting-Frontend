@@ -204,10 +204,10 @@ class _PitViewState extends State<PitView> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Expanded(
-                        child: TextField(
+                        child: TextFormField(
                           controller: widthController,
                           onChanged: (final String value) {
-                            vars.width = int.tryParse(value);
+                            vars.width = value;
                           },
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
@@ -221,10 +221,10 @@ class _PitViewState extends State<PitView> {
                       ),
                       Text(" x "),
                       Expanded(
-                        child: TextField(
+                        child: TextFormField(
                           controller: lengthController,
                           onChanged: (final String value) {
-                            vars.length = int.tryParse(value);
+                            vars.length = value;
                           },
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
