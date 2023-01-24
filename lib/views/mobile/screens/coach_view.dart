@@ -4,7 +4,6 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
@@ -345,12 +344,14 @@ Widget teamData(
   final bool isBlue,
 ) {
   return Padding(
-    padding: const EdgeInsets.all(defaultPadding / 4),
+    padding: const EdgeInsets.all(5),
     child: ElevatedButton(
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(Size.infinite),
         shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(borderRadius: defaultBorderRadius),
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
         ),
         backgroundColor: MaterialStateProperty.all<Color>(
           isBlue ? Colors.blue : Colors.red,

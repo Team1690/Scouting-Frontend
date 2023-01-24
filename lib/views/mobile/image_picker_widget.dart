@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:image_picker/image_picker.dart";
 
@@ -15,7 +14,7 @@ class ImagePickerWidget extends FormField<XFile> {
           builder: (final FormFieldState<XFile> state) => Column(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.symmetric(vertical: defaultPadding),
+                padding: EdgeInsets.symmetric(vertical: 20),
                 child: ElevatedButton(
                   onPressed: () async {
                     final ImagePicker picker = ImagePicker();

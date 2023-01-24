@@ -5,7 +5,6 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
@@ -15,11 +14,27 @@ import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/spider_ch
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
+const double padding = 20;
+
 class CompareScreen extends StatefulWidget {
   CompareScreen([this.initialTeams = const <LightTeam>[]]);
   final List<LightTeam> initialTeams;
   @override
   State<CompareScreen> createState() => _CompareScreenState();
+}
+
+bool isPC(final BuildContext context) {
+  switch (Theme.of(context).platform) {
+    case TargetPlatform.android:
+    case TargetPlatform.iOS:
+      return false;
+
+    case TargetPlatform.windows:
+    case TargetPlatform.macOS:
+    case TargetPlatform.linux:
+    case TargetPlatform.fuchsia:
+      return true;
+  }
 }
 
 class _CompareScreenState extends State<CompareScreen> {
@@ -52,7 +67,7 @@ class _CompareScreenState extends State<CompareScreen> {
   }
 
   Padding compareScreen(final BuildContext context) => Padding(
-        padding: const EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(padding),
         child: Column(
           children: <Widget>[
             Container(
@@ -74,7 +89,7 @@ class _CompareScreenState extends State<CompareScreen> {
                       controller: controller,
                     ),
                   ),
-                  SizedBox(width: defaultPadding),
+                  SizedBox(width: padding),
                   Expanded(
                     flex: 2,
                     child: SingleChildScrollView(
@@ -85,7 +100,7 @@ class _CompareScreenState extends State<CompareScreen> {
                           teams.length,
                           (final int index) => Padding(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: defaultPadding / 2,
+                              horizontal: padding / 2,
                             ),
                             child: Chip(
                               label: Text(
@@ -106,7 +121,7 @@ class _CompareScreenState extends State<CompareScreen> {
                 ],
               ),
             ),
-            SizedBox(height: defaultPadding),
+            SizedBox(height: padding),
             Expanded(
               flex: 5,
               child: FutureBuilder<SplayTreeSet<CompareTeam>>(
@@ -139,7 +154,7 @@ class _CompareScreenState extends State<CompareScreen> {
                               ),
                             ),
                             SizedBox(
-                              width: defaultPadding,
+                              width: padding,
                             ),
                             Expanded(
                               flex: 3,
@@ -167,7 +182,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                 flex: 4,
                                 child: CompareGamechartCard(data, teams),
                               ),
-                              SizedBox(width: defaultPadding),
+                              SizedBox(width: padding),
                               Expanded(
                                 flex: 3,
                                 child: SpiderChartCard(teams, data),

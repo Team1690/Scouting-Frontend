@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/common/no_team_selected.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
@@ -23,6 +22,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
     });
   }
   LightTeam? chosenTeam;
+  static const double padding = 20;
   @override
   void initState() {
     super.initState();
@@ -35,7 +35,7 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
   Widget build(final BuildContext context) {
     return DashboardScaffold(
       body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(padding),
         child: Column(
           children: <Widget>[
             Row(
@@ -49,14 +49,14 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
                         setState(() => chosenTeam = newTeam),
                   ),
                 ),
-                SizedBox(width: defaultPadding),
+                SizedBox(width: padding),
                 Expanded(
                   flex: 2,
                   child: Container(),
                 ),
               ],
             ),
-            SizedBox(height: defaultPadding),
+            SizedBox(height: padding),
             Expanded(
               flex: 10,
               child: chosenTeam.mapNullable(

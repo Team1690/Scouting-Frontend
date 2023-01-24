@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
-import "package:scouting_frontend/views/constants.dart";
 
 class Selector<T> extends StatelessWidget {
   Selector({
@@ -44,7 +43,7 @@ class Selector<T> extends StatelessWidget {
       elevation: 24,
       decoration: InputDecoration(
         border: OutlineInputBorder(
-          borderRadius: defaultBorderRadius,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
       ),
       style: TextStyle(

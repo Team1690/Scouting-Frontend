@@ -6,7 +6,6 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 class TeamList extends StatelessWidget {
@@ -15,7 +14,7 @@ class TeamList extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => DashboardScaffold(
         body: Padding(
-          padding: const EdgeInsets.all(defaultPadding),
+          padding: const EdgeInsets.all(20),
           child: StreamBuilder<List<_Team>>(
             stream: _fetchTeamList(),
             builder: (

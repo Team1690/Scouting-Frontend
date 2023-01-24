@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/pc/scatter/scatter.dart";
@@ -11,7 +10,7 @@ class ScattersScreen extends StatelessWidget {
   Widget build(final BuildContext context) {
     return DashboardScaffold(
       body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(20),
         child: Row(
           children: <Widget>[
             Expanded(

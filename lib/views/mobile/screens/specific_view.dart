@@ -4,7 +4,6 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/matches_search_box_future.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/dropdown_line.dart";
 
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
@@ -27,7 +26,6 @@ class _SpecificState extends State<Specific> {
   );
   final SpecificVars vars = SpecificVars();
   final FocusNode node = FocusNode();
-
   @override
   Widget build(final BuildContext context) {
     return GestureDetector(
@@ -40,7 +38,7 @@ class _SpecificState extends State<Specific> {
           title: Text("Specific"),
         ),
         body: Padding(
-          padding: EdgeInsets.all(defaultPadding),
+          padding: EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: Form(
               key: formKey,

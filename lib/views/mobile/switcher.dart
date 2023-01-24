@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 
 class Switcher extends StatelessWidget {
   Switcher({
@@ -34,7 +33,7 @@ class Switcher extends StatelessWidget {
   Widget build(final BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: defaultBorderRadius,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
         border: Border.all(color: Colors.grey, width: 1),
       ),
       width: MediaQuery.of(context).size.width,
