@@ -18,8 +18,10 @@ Map<String, int> parseTable(final dynamic result, final String tableName) =>
     );
 
 String queryEnumTable(final String table) => """$table $tableFragment""";
-/* 
-in lib/views/pc/matches/change_match.dart in line 104 we use the fact that it is ordered in the selector to order them in the UI
+/*
+in   
+* IdProvider.of(context).matchType.idToName.keys.toList()
+we use the fact that it is ordered in the selector to order them in the UI
 BTW dart maps are ordered
 */
 String queryOrderedEnumTable(final String table) =>
