@@ -43,7 +43,7 @@ class SpiderChart extends StatelessWidget {
         outlineColor: secondaryWhite,
         featuresTextStyle: Theme.of(context)
             .textTheme
-            .bodyText2!
+            .bodyMedium!
             .copyWith(fontSize: isPC(context) ? null : 10),
         ticksTextStyle: TextStyle(fontSize: 0),
       ),

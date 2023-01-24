@@ -48,7 +48,7 @@ class Selector<T> extends StatelessWidget {
         ),
       ),
       style: TextStyle(
-        fontFamily: Theme.of(context).textTheme.bodyText2?.fontFamily,
+        fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
         color: Colors.white,
         fontSize: 20,
       ),
