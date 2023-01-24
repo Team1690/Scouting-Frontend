@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter_radar_chart/flutter_radar_chart.dart";
-import "package:scouting_frontend/views/constants.dart";
 
 class SpiderChart extends StatelessWidget {
   SpiderChart({
@@ -24,6 +23,19 @@ class SpiderChart extends StatelessWidget {
     required this.features,
     required this.ticks,
   });
+  bool isPC(final BuildContext context) {
+    switch (Theme.of(context).platform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+        return false;
+
+      case TargetPlatform.windows:
+      case TargetPlatform.macOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.fuchsia:
+        return true;
+    }
+  }
 
   final List<Color> colors;
   final List<List<int>> data;
@@ -39,8 +51,8 @@ class SpiderChart extends StatelessWidget {
         data: data,
         features: features,
         ticks: ticks,
-        axisColor: primaryWhite,
-        outlineColor: secondaryWhite,
+        axisColor: Colors.white,
+        outlineColor: Colors.white54,
         featuresTextStyle: Theme.of(context)
             .textTheme
             .bodyText2!

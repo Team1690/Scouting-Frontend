@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 class ScoutingSpecific extends StatefulWidget {
@@ -13,6 +12,8 @@ class ScoutingSpecific extends StatefulWidget {
 }
 
 class _ScoutingSpecificState extends State<ScoutingSpecific> {
+  static const double padding = 20;
+  static const Color white = Colors.white;
   @override
   Widget build(final BuildContext context) {
     return Column(
@@ -28,10 +29,10 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                       : Card(
                           // shape: ,
                           elevation: 10,
-                          color: bgColor,
-                          margin: EdgeInsets.fromLTRB(5, 0, 5, defaultPadding),
+                          color: Color(0xFF212332),
+                          margin: EdgeInsets.fromLTRB(5, 0, 5, padding),
                           child: Padding(
-                            padding: const EdgeInsets.all(defaultPadding),
+                            padding: const EdgeInsets.all(padding),
                             child: Column(
                               children: <Widget>[
                                 Align(
@@ -69,7 +70,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                     decoration: TextDecoration
                                                         .underline,
@@ -80,7 +81,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                   ),
                                                 ),
@@ -100,7 +101,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                     decoration: TextDecoration
                                                         .underline,
@@ -111,7 +112,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                   ),
                                                 ),
@@ -131,7 +132,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                     decoration: TextDecoration
                                                         .underline,
@@ -142,7 +143,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                   ),
                                                 ),
@@ -162,7 +163,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                     decoration: TextDecoration
                                                         .underline,
@@ -173,7 +174,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                   ),
                                                 ),
@@ -193,7 +194,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                     decoration: TextDecoration
                                                         .underline,
@@ -204,7 +205,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                   ),
                                                 ),
@@ -224,7 +225,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                     decoration: TextDecoration
                                                         .underline,
@@ -235,7 +236,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
-                                                    color: primaryWhite,
+                                                    color: white,
                                                     fontSize: 15,
                                                   ),
                                                 ),

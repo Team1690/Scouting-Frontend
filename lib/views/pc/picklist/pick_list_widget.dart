@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
@@ -35,6 +34,21 @@ class PickList extends StatelessWidget {
     onReorder(uiList);
   }
 
+  bool isPC(final BuildContext context) {
+    switch (Theme.of(context).platform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+        return false;
+
+      case TargetPlatform.windows:
+      case TargetPlatform.macOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.fuchsia:
+        return true;
+    }
+  }
+
+  static const double padding = 5;
   @override
   Widget build(final BuildContext context) {
     return Container(
@@ -43,15 +57,15 @@ class PickList extends StatelessWidget {
         primary: false,
         children: uiList.map<Widget>((final PickListTeam e) {
           return Card(
-            color: bgColor,
+            color: Color(0xFF212332),
             key: ValueKey<String>(e.toString()),
             elevation: 2,
             child: Container(
               padding: const EdgeInsets.fromLTRB(
                 0,
-                defaultPadding / 4,
+                padding,
                 0,
-                defaultPadding / 4,
+                padding,
               ),
               child: isPC(context)
                   ? ExpansionTile(
@@ -222,7 +236,7 @@ class PickList extends StatelessWidget {
                           FlutterSwitch(
                             value: e.taken,
                             activeColor: Colors.red,
-                            inactiveColor: primaryColor,
+                            inactiveColor: Color(0xFF2697FF),
                             height: 25,
                             width: 100,
                             onToggle: (final bool val) {
@@ -268,7 +282,7 @@ class PickList extends StatelessWidget {
                             FlutterSwitch(
                               value: e.taken,
                               activeColor: Colors.red,
-                              inactiveColor: primaryColor,
+                              inactiveColor: Color(0xFF2697FF),
                               height: 25,
                               width: 100,
                               onToggle: (final bool val) {

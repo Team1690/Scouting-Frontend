@@ -7,18 +7,18 @@ import "package:scouting_frontend/net/fetch_matches.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/matches/change_match.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 
 class MatchesScreen extends StatelessWidget {
   const MatchesScreen();
+  static const Color bgColor = Color(0xFF2A2D3E);
 
   @override
   Widget build(final BuildContext context) {
     return DashboardScaffold(
       body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(20),
         child: DashboardCard(
           title: "Matches",
           titleWidgets: <Widget>[
@@ -51,7 +51,7 @@ class MatchesScreen extends StatelessWidget {
                 children: data
                     .map(
                       (final ScheduleMatch e) => Card(
-                        color: bgColor,
+                        color: Color(0xFF212332),
                         child: ListTile(
                           title: Row(
                             children: <Widget>[
@@ -83,7 +83,7 @@ class MatchesScreen extends StatelessWidget {
                                         style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all(
-                                            secondaryColor,
+                                            bgColor,
                                           ),
                                         ),
                                         child: Text(
@@ -109,7 +109,7 @@ class MatchesScreen extends StatelessWidget {
                                     style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all(
-                                        secondaryColor,
+                                        bgColor,
                                       ),
                                     ),
                                     child: Text(

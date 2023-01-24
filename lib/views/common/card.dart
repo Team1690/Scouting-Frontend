@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 
 class DashboardCard extends StatelessWidget {
   const DashboardCard({
@@ -7,7 +6,7 @@ class DashboardCard extends StatelessWidget {
     required this.body,
     this.titleWidgets = const <Widget>[],
   });
-
+  static const double padding = 20.0;
   final String title;
   final Widget body;
   final List<Widget> titleWidgets;
@@ -16,11 +15,11 @@ class DashboardCard extends StatelessWidget {
   Widget build(final BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: secondaryColor,
+        color: Color(0xFF2A2D3E),
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(padding),
         child: Column(
           children: <Widget>[
             Row(
@@ -34,7 +33,7 @@ class DashboardCard extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: defaultPadding,
+              height: padding,
             ),
             Expanded(child: body),
           ],

@@ -4,7 +4,6 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/pc/status/fetch_status.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
@@ -15,6 +14,8 @@ class StatusScreen extends StatefulWidget {
   State<StatusScreen> createState() => _StatusScreenState();
 }
 
+const double padding = 20;
+
 class _StatusScreenState extends State<StatusScreen> {
   bool isSpecific = false;
   bool isPreScouting = false;
@@ -22,7 +23,7 @@ class _StatusScreenState extends State<StatusScreen> {
   Widget build(final BuildContext context) {
     return DashboardScaffold(
       body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(padding),
         child: DashboardCard(
           titleWidgets: <Widget>[
             Padding(
@@ -258,7 +259,6 @@ class StatusList<T, V> extends StatelessWidget {
   final Widget Function(V, StatusItem<T, V>) getValueBox;
   final MaterialColor? Function(V, StatusItem<T, V>) validateSpecificValue;
   final bool pushUnvalidatedToTheTop;
-
   @override
   Widget build(final BuildContext context) {
     return SingleChildScrollView(
@@ -268,24 +268,24 @@ class StatusList<T, V> extends StatelessWidget {
         children: items
             .map(
               (final StatusItem<T, V> e) => Card(
-                color: validate(e) ? bgColor : Colors.red,
+                color: validate(e) ? Color(0xFF212332) : Colors.red,
                 elevation: 2,
                 margin: EdgeInsets.fromLTRB(
                   5,
                   0,
                   5,
-                  defaultPadding,
+                  padding,
                 ),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(
-                    defaultPadding,
-                    defaultPadding / 4,
-                    defaultPadding,
-                    defaultPadding / 4,
+                    padding,
+                    padding / 4,
+                    padding,
+                    padding / 4,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(
-                      defaultPadding / 2,
+                      padding / 2,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -345,15 +345,15 @@ class StatusBox extends StatelessWidget {
       width: 80,
       alignment: Alignment.center,
       padding: const EdgeInsets.all(
-        defaultPadding / 3,
+        padding / 3,
       ),
       decoration: BoxDecoration(
         color: backgroundColor,
         border: Border.all(
-          color: primaryWhite,
+          color: Colors.white,
           width: 1,
         ),
-        borderRadius: defaultBorderRadius / 2,
+        borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
       child: child,
     );

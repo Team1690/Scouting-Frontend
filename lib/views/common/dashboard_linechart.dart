@@ -2,7 +2,6 @@ import "dart:math";
 
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart"
     show MatchIdentifier, RobotMatchStatus;
 
@@ -29,6 +28,20 @@ class _BaseLineChart extends StatelessWidget {
   final List<MatchIdentifier> gameNumbers;
   final SideTitles rightTitles;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
+  bool isPC(final BuildContext context) {
+    switch (Theme.of(context).platform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+        return false;
+
+      case TargetPlatform.windows:
+      case TargetPlatform.macOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.fuchsia:
+        return true;
+    }
+  }
+
   @override
   Widget build(final BuildContext context) {
     return LineChart(
@@ -58,7 +71,7 @@ class _BaseLineChart extends StatelessWidget {
                   FlDotCirclePainter(
                 strokeWidth: 4,
                 radius: 6,
-                color: secondaryColor,
+                color: Color(0xFF2A2D3E),
                 strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
                         RobotMatchStatus.didntComeToField
                     ? Colors.red
