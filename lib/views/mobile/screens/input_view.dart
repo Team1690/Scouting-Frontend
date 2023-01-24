@@ -9,6 +9,7 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/matches_search_box_future.dart";
+import 'package:scouting_frontend/views/mobile/counter_vars.dart';
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
@@ -51,33 +52,27 @@ class _UserInputState extends State<UserInput> {
     Icons.error_outline
   ];
 
-  Widget gamePieceCounters(
-    final Color plus,
-    final Color minus,
-    final List<void Function(int)> updateValues,
-    final List<int Function()> getValues,
-  ) =>
-      Column(
+  Widget gamePieceCounters(final CounterVars vars) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ...(<int>[0, 1, 2, 3].map((final int index) {
             return Counter(
-              plus: plus,
-              minus: minus,
+              plus: vars.plus,
+              minus: vars.minus,
               label: counterLabels[index],
               icon: counterIcons[index],
               onChange: (final int count) {
                 setState(() {
                   flickerScreen(
                     count,
-                    getValues[index](),
+                    vars.getValues[index](),
                   );
-                  updateValues[index](count);
+                  vars.updateValues[index](count);
                 });
               },
-              count: getValues[index](),
+              count: vars.getValues[index](),
             );
           })),
         ],
@@ -217,24 +212,26 @@ class _UserInputState extends State<UserInput> {
                               children: <Widget>[
                                 SectionDivider(label: "Cones"),
                                 gamePieceCounters(
-                                  Colors.amber,
-                                  Colors.amber,
-                                  <void Function(int)>[
-                                    (final int value) =>
-                                        match.autoConesTop = value,
-                                    (final int value) =>
-                                        match.autoConesMid = value,
-                                    (final int value) =>
-                                        match.autoConesLow = value,
-                                    (final int value) =>
-                                        match.autoConesFailed = value
-                                  ],
-                                  <int Function()>[
-                                    () => match.autoConesTop,
-                                    () => match.autoConesMid,
-                                    () => match.autoConesLow,
-                                    () => match.autoConesFailed
-                                  ],
+                                  CounterVars(
+                                    plus: Colors.amber,
+                                    minus: Colors.amber,
+                                    updateValues: <void Function(int)>[
+                                      (final int value) =>
+                                          match.autoConesTop = value,
+                                      (final int value) =>
+                                          match.autoConesMid = value,
+                                      (final int value) =>
+                                          match.autoConesLow = value,
+                                      (final int value) =>
+                                          match.autoConesFailed = value
+                                    ],
+                                    getValues: <int Function()>[
+                                      () => match.autoConesTop,
+                                      () => match.autoConesMid,
+                                      () => match.autoConesLow,
+                                      () => match.autoConesFailed
+                                    ],
+                                  ),
                                 ),
                               ]
                                   .expand(
@@ -262,24 +259,26 @@ class _UserInputState extends State<UserInput> {
                               children: <Widget>[
                                 SectionDivider(label: "Cubes"),
                                 gamePieceCounters(
-                                  Colors.deepPurple,
-                                  Colors.deepPurple,
-                                  <void Function(int)>[
-                                    (final int value) =>
-                                        match.autoCubesTop = value,
-                                    (final int value) =>
-                                        match.autoCubesMid = value,
-                                    (final int value) =>
-                                        match.autoCubesLow = value,
-                                    (final int value) =>
-                                        match.autoCubesFailed = value
-                                  ],
-                                  <int Function()>[
-                                    () => match.autoCubesTop,
-                                    () => match.autoCubesMid,
-                                    () => match.autoCubesLow,
-                                    () => match.autoCubesFailed
-                                  ],
+                                  CounterVars(
+                                    plus: Colors.deepPurple,
+                                    minus: Colors.deepPurple,
+                                    updateValues: <void Function(int)>[
+                                      (final int value) =>
+                                          match.autoCubesTop = value,
+                                      (final int value) =>
+                                          match.autoCubesMid = value,
+                                      (final int value) =>
+                                          match.autoCubesLow = value,
+                                      (final int value) =>
+                                          match.autoCubesFailed = value
+                                    ],
+                                    getValues: <int Function()>[
+                                      () => match.autoCubesTop,
+                                      () => match.autoCubesMid,
+                                      () => match.autoCubesLow,
+                                      () => match.autoCubesFailed
+                                    ],
+                                  ),
                                 ),
                               ]
                                   .expand(
@@ -302,14 +301,14 @@ class _UserInputState extends State<UserInput> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Selector<int>(
-                        validate: (final int? result) =>
-                            result.onNull("Please pick a balance result"),
+                        validate: (final int? submission) =>
+                            submission.onNull("Please pick a balance result"),
                         options: provider.keys.toList(),
                         placeholder: "Choose a balance result",
                         makeItem: (final int index) => provider[index]!,
-                        onChange: (final int result) {
+                        onChange: (final int balance) {
                           setState(() {
-                            match.autoBalanceStatus = result;
+                            match.autoBalanceStatus = balance;
                           });
                         },
                         value: match.autoBalanceStatus,
@@ -331,24 +330,26 @@ class _UserInputState extends State<UserInput> {
                               children: <Widget>[
                                 SectionDivider(label: "Cones"),
                                 gamePieceCounters(
-                                  Colors.amber,
-                                  Colors.amber,
-                                  <void Function(int)>[
-                                    (final int value) =>
-                                        match.teleConesTop = value,
-                                    (final int value) =>
-                                        match.teleConesMid = value,
-                                    (final int value) =>
-                                        match.teleConesLow = value,
-                                    (final int value) =>
-                                        match.teleConesFailed = value
-                                  ],
-                                  <int Function()>[
-                                    () => match.teleConesTop,
-                                    () => match.teleConesMid,
-                                    () => match.teleConesLow,
-                                    () => match.teleConesFailed
-                                  ],
+                                  CounterVars(
+                                    plus: Colors.amber,
+                                    minus: Colors.amber,
+                                    updateValues: <void Function(int)>[
+                                      (final int value) =>
+                                          match.teleConesTop = value,
+                                      (final int value) =>
+                                          match.teleConesMid = value,
+                                      (final int value) =>
+                                          match.teleConesLow = value,
+                                      (final int value) =>
+                                          match.teleConesFailed = value
+                                    ],
+                                    getValues: <int Function()>[
+                                      () => match.teleConesTop,
+                                      () => match.teleConesMid,
+                                      () => match.teleConesLow,
+                                      () => match.teleConesFailed
+                                    ],
+                                  ),
                                 ),
                               ]
                                   .expand(
@@ -376,24 +377,26 @@ class _UserInputState extends State<UserInput> {
                               children: <Widget>[
                                 SectionDivider(label: "Cubes"),
                                 gamePieceCounters(
-                                  Colors.deepPurple,
-                                  Colors.deepPurple,
-                                  <void Function(int)>[
-                                    (final int value) =>
-                                        match.teleCubesTop = value,
-                                    (final int value) =>
-                                        match.teleCubesMid = value,
-                                    (final int value) =>
-                                        match.teleCubesLow = value,
-                                    (final int value) =>
-                                        match.teleCubesFailed = value
-                                  ],
-                                  <int Function()>[
-                                    () => match.teleCubesTop,
-                                    () => match.teleCubesMid,
-                                    () => match.teleCubesLow,
-                                    () => match.teleCubesFailed
-                                  ],
+                                  CounterVars(
+                                    plus: Colors.deepPurple,
+                                    minus: Colors.deepPurple,
+                                    updateValues: <void Function(int)>[
+                                      (final int value) =>
+                                          match.teleCubesTop = value,
+                                      (final int value) =>
+                                          match.teleCubesMid = value,
+                                      (final int value) =>
+                                          match.teleCubesLow = value,
+                                      (final int value) =>
+                                          match.teleCubesFailed = value
+                                    ],
+                                    getValues: <int Function()>[
+                                      () => match.teleCubesTop,
+                                      () => match.teleCubesMid,
+                                      () => match.teleCubesLow,
+                                      () => match.teleCubesFailed
+                                    ],
+                                  ),
                                 ),
                               ]
                                   .expand(
@@ -442,14 +445,14 @@ class _UserInputState extends State<UserInput> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Selector<int>(
-                        validate: (final int? result) =>
-                            result.onNull("Please pick a balance result"),
+                        validate: (final int? submission) =>
+                            submission.onNull("Please pick a balance result"),
                         options: provider.keys.toList(),
                         placeholder: "Choose a balance result",
                         makeItem: (final int index) => provider[index]!,
-                        onChange: (final int result) {
+                        onChange: (final int balance) {
                           setState(() {
-                            match.endgameBalanceStatus = result;
+                            match.endgameBalanceStatus = balance;
                           });
                         },
                         value: match.endgameBalanceStatus,
