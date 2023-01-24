@@ -3,7 +3,6 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/fetch_team_info.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
@@ -149,7 +148,7 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
           CoachTeamInfoLineChart(
             DashboardClimbLineChart(
               showShadow: true,
-              inputedColors: <Color>[primaryColor],
+              inputedColors: <Color>[Color(0xFF2697FF)],
               gameNumbers: data.climbData.gameNumbers,
               dataSet: data.climbData.points,
               robotMatchStatuses: data.climbData.robotMatchStatuses,

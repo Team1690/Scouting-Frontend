@@ -3,7 +3,6 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/fault_view/add_fault.dart";
 import "package:scouting_frontend/views/mobile/screens/fault_view/fault_tile.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
@@ -43,10 +42,10 @@ class FaultView extends StatelessWidget {
                           .map(
                             (final FaultEntry e) => Card(
                               elevation: 2,
-                              color: bgColor,
+                              color: Color(0xFF212332),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: defaultPadding / 4,
+                                  horizontal: 5,
                                 ),
                                 child: FaultTile(e),
                               ),

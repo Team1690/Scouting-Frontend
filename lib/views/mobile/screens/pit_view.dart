@@ -6,7 +6,6 @@ import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/image_picker_widget.dart";
 import "package:scouting_frontend/views/mobile/firebase_submit_button.dart";
 import "package:scouting_frontend/views/mobile/pit_vars.dart";
@@ -268,7 +267,7 @@ class _PitViewState extends State<PitView> {
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey, width: 4.0),
                       ),
-                      fillColor: secondaryColor,
+                      fillColor: Color(0xFF2A2D3E),
                       filled: true,
                     ),
                     maxLines: 18,

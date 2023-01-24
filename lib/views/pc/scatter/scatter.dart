@@ -3,7 +3,6 @@ import "dart:math";
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/pc/scatter/fetch_scatter.dart";
 
@@ -12,7 +11,7 @@ class Scatter extends StatelessWidget {
   Widget build(final BuildContext context) {
     String? tooltip;
     return Container(
-      color: secondaryColor,
+      color: Color(0xFF2A2D3E),
       child: Column(
         children: <Widget>[
           Expanded(
@@ -69,7 +68,7 @@ class Scatter extends StatelessWidget {
                               enabled: true,
                               handleBuiltInTouches: true,
                               touchTooltipData: ScatterTouchTooltipData(
-                                tooltipBgColor: bgColor,
+                                tooltipBgColor: Color(0xFF212332),
                                 getTooltipItems:
                                     (final ScatterSpot touchedBarSpot) {
                                   return ScatterTooltipItem(

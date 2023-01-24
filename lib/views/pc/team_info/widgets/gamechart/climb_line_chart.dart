@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
@@ -23,7 +22,7 @@ class ClimbLineChart extends StatelessWidget {
             ),
             child: DashboardClimbLineChart(
               showShadow: true,
-              inputedColors: <Color>[primaryColor],
+              inputedColors: <Color>[Color(0xFF2697FF)],
               gameNumbers: data.gameNumbers,
               dataSet: data.points,
               robotMatchStatuses: data.robotMatchStatuses,
