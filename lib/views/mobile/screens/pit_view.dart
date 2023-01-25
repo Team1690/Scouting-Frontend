@@ -217,6 +217,9 @@ class _PitViewState extends State<PitView> {
                             labelText: "Width",
                             prefixIcon: Icon(Icons.compare_arrows),
                           ),
+                          validator: (final String? width) => width!.isEmpty
+                              ? "please enter the robot's width"
+                              : null,
                         ),
                       ),
                       Text(" x "),
@@ -234,6 +237,9 @@ class _PitViewState extends State<PitView> {
                             labelText: "Length",
                             prefixIcon: Icon(Icons.compare_arrows),
                           ),
+                          validator: (final String? length) => length!.isEmpty
+                              ? "please enter the robot's length"
+                              : null,
                         ),
                       ),
                     ],
@@ -254,6 +260,9 @@ class _PitViewState extends State<PitView> {
                       labelText: "Weight",
                       prefixIcon: Icon(Icons.fitness_center),
                     ),
+                    validator: (final String? weight) => weight!.isEmpty
+                        ? "please enter the robot's weight"
+                        : null,
                   ),
                   SizedBox(
                     height: 20,
