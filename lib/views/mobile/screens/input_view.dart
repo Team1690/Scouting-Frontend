@@ -9,7 +9,6 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/matches_search_box_future.dart";
-import "package:scouting_frontend/views/mobile/counter_vars.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
@@ -52,30 +51,21 @@ class _UserInputState extends State<UserInput> {
     Icons.error_outline
   ];
 
-  Widget gamePieceCounters(final CounterVars vars) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ...(<int>[0, 1, 2, 3].map((final int index) {
-            return Counter(
-              plus: vars.plus,
-              minus: vars.minus,
-              label: counterLabels[index],
-              icon: counterIcons[index],
-              onChange: (final int count) {
-                setState(() {
-                  flickerScreen(
-                    count,
-                    vars.getValues[index](),
-                  );
-                  vars.updateValues[index](count);
-                });
-              },
-              count: vars.getValues[index](),
+  Widget _gamePieceCounters(final CounterSpec spec) => Counter(
+        plus: spec.plus,
+        minus: spec.minus,
+        label: spec.label,
+        icon: spec.icon,
+        onChange: (final int count) {
+          setState(() {
+            flickerScreen(
+              count,
+              spec.getValues(),
             );
-          })),
-        ],
+            spec.updateValues(count);
+          });
+        },
+        count: spec.getValues(),
       );
 
   Color? screenColor;
@@ -211,26 +201,40 @@ class _UserInputState extends State<UserInput> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 SectionDivider(label: "Cones"),
-                                gamePieceCounters(
-                                  CounterVars(
-                                    plus: Colors.amber,
-                                    minus: Colors.amber,
-                                    updateValues: <void Function(int)>[
-                                      (final int value) =>
-                                          match.autoConesTop = value,
-                                      (final int value) =>
-                                          match.autoConesMid = value,
-                                      (final int value) =>
-                                          match.autoConesLow = value,
-                                      (final int value) =>
-                                          match.autoConesFailed = value
-                                    ],
-                                    getValues: <int Function()>[
-                                      () => match.autoConesTop,
-                                      () => match.autoConesMid,
-                                      () => match.autoConesLow,
-                                      () => match.autoConesFailed
-                                    ],
+                                _gamePieceCounters(
+                                  amberColors(
+                                    "Top Scored",
+                                    Icons.arrow_circle_up_outlined,
+                                    () => match.autoConesTop,
+                                    (final int score) =>
+                                        match.autoConesTop = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  amberColors(
+                                    "Mid Scored",
+                                    Icons.adjust,
+                                    () => match.autoConesMid,
+                                    (final int score) =>
+                                        match.autoConesMid = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  amberColors(
+                                    "Low Scored",
+                                    Icons.arrow_circle_down,
+                                    () => match.autoConesLow,
+                                    (final int score) =>
+                                        match.autoConesLow = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  amberColors(
+                                    "Failed",
+                                    Icons.error_outline,
+                                    () => match.autoConesFailed,
+                                    (final int score) =>
+                                        match.autoConesFailed = score,
                                   ),
                                 ),
                               ]
@@ -258,26 +262,40 @@ class _UserInputState extends State<UserInput> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 SectionDivider(label: "Cubes"),
-                                gamePieceCounters(
-                                  CounterVars(
-                                    plus: Colors.deepPurple,
-                                    minus: Colors.deepPurple,
-                                    updateValues: <void Function(int)>[
-                                      (final int value) =>
-                                          match.autoCubesTop = value,
-                                      (final int value) =>
-                                          match.autoCubesMid = value,
-                                      (final int value) =>
-                                          match.autoCubesLow = value,
-                                      (final int value) =>
-                                          match.autoCubesFailed = value
-                                    ],
-                                    getValues: <int Function()>[
-                                      () => match.autoCubesTop,
-                                      () => match.autoCubesMid,
-                                      () => match.autoCubesLow,
-                                      () => match.autoCubesFailed
-                                    ],
+                                _gamePieceCounters(
+                                  purpleColors(
+                                    "Top Scored",
+                                    Icons.arrow_circle_up_outlined,
+                                    () => match.autoCubesTop,
+                                    (final int score) =>
+                                        match.autoCubesTop = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  purpleColors(
+                                    "Mid Scored",
+                                    Icons.adjust,
+                                    () => match.autoCubesMid,
+                                    (final int score) =>
+                                        match.autoCubesMid = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  purpleColors(
+                                    "Low Scored",
+                                    Icons.arrow_circle_down,
+                                    () => match.autoCubesLow,
+                                    (final int score) =>
+                                        match.autoCubesLow = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  purpleColors(
+                                    "Failed",
+                                    Icons.error_outline,
+                                    () => match.autoCubesFailed,
+                                    (final int score) =>
+                                        match.autoCubesFailed = score,
                                   ),
                                 ),
                               ]
@@ -329,26 +347,40 @@ class _UserInputState extends State<UserInput> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 SectionDivider(label: "Cones"),
-                                gamePieceCounters(
-                                  CounterVars(
-                                    plus: Colors.amber,
-                                    minus: Colors.amber,
-                                    updateValues: <void Function(int)>[
-                                      (final int value) =>
-                                          match.teleConesTop = value,
-                                      (final int value) =>
-                                          match.teleConesMid = value,
-                                      (final int value) =>
-                                          match.teleConesLow = value,
-                                      (final int value) =>
-                                          match.teleConesFailed = value
-                                    ],
-                                    getValues: <int Function()>[
-                                      () => match.teleConesTop,
-                                      () => match.teleConesMid,
-                                      () => match.teleConesLow,
-                                      () => match.teleConesFailed
-                                    ],
+                                _gamePieceCounters(
+                                  amberColors(
+                                    "Top Scored",
+                                    Icons.arrow_circle_up_outlined,
+                                    () => match.teleConesTop,
+                                    (final int score) =>
+                                        match.teleConesTop = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  amberColors(
+                                    "Mid Scored",
+                                    Icons.adjust,
+                                    () => match.teleConesMid,
+                                    (final int score) =>
+                                        match.teleConesMid = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  amberColors(
+                                    "Low Scored",
+                                    Icons.arrow_circle_down,
+                                    () => match.teleConesLow,
+                                    (final int score) =>
+                                        match.teleConesLow = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  amberColors(
+                                    "Failed",
+                                    Icons.error_outline,
+                                    () => match.teleConesFailed,
+                                    (final int score) =>
+                                        match.teleConesFailed = score,
                                   ),
                                 ),
                               ]
@@ -376,26 +408,40 @@ class _UserInputState extends State<UserInput> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 SectionDivider(label: "Cubes"),
-                                gamePieceCounters(
-                                  CounterVars(
-                                    plus: Colors.deepPurple,
-                                    minus: Colors.deepPurple,
-                                    updateValues: <void Function(int)>[
-                                      (final int value) =>
-                                          match.teleCubesTop = value,
-                                      (final int value) =>
-                                          match.teleCubesMid = value,
-                                      (final int value) =>
-                                          match.teleCubesLow = value,
-                                      (final int value) =>
-                                          match.teleCubesFailed = value
-                                    ],
-                                    getValues: <int Function()>[
-                                      () => match.teleCubesTop,
-                                      () => match.teleCubesMid,
-                                      () => match.teleCubesLow,
-                                      () => match.teleCubesFailed
-                                    ],
+                                _gamePieceCounters(
+                                  purpleColors(
+                                    "Top Scored",
+                                    Icons.arrow_circle_up_outlined,
+                                    () => match.teleCubesTop,
+                                    (final int score) =>
+                                        match.teleCubesTop = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  purpleColors(
+                                    "Mid Scored",
+                                    Icons.adjust,
+                                    () => match.teleCubesMid,
+                                    (final int score) =>
+                                        match.teleCubesMid = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  purpleColors(
+                                    "Low Scored",
+                                    Icons.arrow_circle_down,
+                                    () => match.teleCubesLow,
+                                    (final int score) =>
+                                        match.teleCubesLow = score,
+                                  ),
+                                ),
+                                _gamePieceCounters(
+                                  purpleColors(
+                                    "Failed",
+                                    Icons.error_outline,
+                                    () => match.teleCubesFailed,
+                                    (final int score) =>
+                                        match.teleCubesFailed = score,
                                   ),
                                 ),
                               ]

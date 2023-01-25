@@ -138,3 +138,51 @@ class RoundedIconButton extends StatelessWidget {
     );
   }
 }
+
+class CounterSpec {
+  const CounterSpec(
+    this.label,
+    this.icon,
+    this.plus,
+    this.minus,
+    this.getValues,
+    this.updateValues,
+  );
+
+  final String label;
+  final IconData icon;
+  final Color plus;
+  final Color minus;
+  final int Function() getValues;
+  final void Function(int) updateValues;
+}
+
+CounterSpec amberColors(
+  final String label,
+  final IconData icon,
+  final int Function() getValues,
+  final void Function(int) updateValues,
+) =>
+    CounterSpec(
+      label,
+      icon,
+      Colors.amber,
+      Colors.amber,
+      getValues,
+      updateValues,
+    );
+
+CounterSpec purpleColors(
+  final String label,
+  final IconData icon,
+  final int Function() getValues,
+  final void Function(int) updateValues,
+) =>
+    CounterSpec(
+      label,
+      icon,
+      Colors.deepPurple,
+      Colors.deepPurple,
+      getValues,
+      updateValues,
+    );
