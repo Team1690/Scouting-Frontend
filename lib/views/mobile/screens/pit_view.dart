@@ -47,7 +47,7 @@ class _PitViewState extends State<PitView> {
       vars.reset();
       widthController.clear();
       lengthController.clear();
-      weightController.text = vars.weight.toString();
+      weightController.clear();
       notesController.clear();
       wheelTypeController.clear();
       teamSelectionController.clear();
@@ -241,10 +241,10 @@ class _PitViewState extends State<PitView> {
                   SizedBox(
                     height: 20,
                   ),
-                  TextField(
+                  TextFormField(
                     controller: weightController,
                     onChanged: (final String value) {
-                      vars.weight = value.isEmpty ? 0 : int.parse(value);
+                      vars.weight = value;
                     },
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
@@ -314,7 +314,7 @@ class _PitViewState extends State<PitView> {
               \$notes:String, 
               \$has_shifter:Boolean,
               \$team_id:Int,
-              \$weight:Int!,
+              \$weight:Int,
               \$width:Int,
               \$length:Int,
               ) {
