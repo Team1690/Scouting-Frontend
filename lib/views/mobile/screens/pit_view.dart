@@ -267,7 +267,7 @@ class _PitViewState extends State<PitView> {
                   SizedBox(
                     height: 20,
                   ),
-                  TextField(
+                  TextFormField(
                     controller: wheelTypeController,
                     onChanged: (final String value) {
                       vars.driveWheelType = value;
@@ -275,6 +275,9 @@ class _PitViewState extends State<PitView> {
                     decoration: InputDecoration(
                       labelText: "Drive Wheel type",
                     ),
+                    validator: (final String? wheelType) => wheelType!.isEmpty
+                        ? "please enter the robot's wheel type"
+                        : null,
                   ),
                   SectionDivider(label: "Robot Image"),
                   ImagePickerWidget(
