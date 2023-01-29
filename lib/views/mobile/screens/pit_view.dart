@@ -42,6 +42,9 @@ class _PitViewState extends State<PitView> {
   final TextEditingController widthController = TextEditingController();
   final TextEditingController lengthController = TextEditingController();
 
+  FormFieldValidator<String> _numericValidator(final String error) =>
+      (final String? text) => int.tryParse(text ?? "").onNull(error);
+
   void resetFrame() {
     setState(() {
       vars.reset();
@@ -217,10 +220,9 @@ class _PitViewState extends State<PitView> {
                             labelText: "Width",
                             prefixIcon: Icon(Icons.compare_arrows),
                           ),
-                          validator: (final String? width) =>
-                              int.tryParse(width ?? "") == null
-                                  ? "please enter the robot's width"
-                                  : null,
+                          validator: _numericValidator(
+                            "please enter the robot's width",
+                          ),
                         ),
                       ),
                       Text(" x "),
@@ -238,10 +240,9 @@ class _PitViewState extends State<PitView> {
                             labelText: "Length",
                             prefixIcon: Icon(Icons.compare_arrows),
                           ),
-                          validator: (final String? length) =>
-                              int.tryParse(length ?? "") == null
-                                  ? "please enter the robot's length"
-                                  : null,
+                          validator: _numericValidator(
+                            "please enter the robot's length",
+                          ),
                         ),
                       ),
                     ],
@@ -262,10 +263,9 @@ class _PitViewState extends State<PitView> {
                       labelText: "Weight",
                       prefixIcon: Icon(Icons.fitness_center),
                     ),
-                    validator: (final String? weight) =>
-                        int.tryParse(weight ?? "") == null
-                            ? "please enter the robot's weight"
-                            : null,
+                    validator: _numericValidator(
+                      "please enter the robot's weight",
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -278,10 +278,9 @@ class _PitViewState extends State<PitView> {
                     decoration: InputDecoration(
                       labelText: "Drive Wheel type",
                     ),
-                    validator: (final String? wheelType) =>
-                        int.tryParse(wheelType ?? "") == null
-                            ? "please enter the robot's wheel type"
-                            : null,
+                    validator: _numericValidator(
+                      "please enter the robot's wheel type",
+                    ),
                   ),
                   SectionDivider(label: "Robot Image"),
                   ImagePickerWidget(
