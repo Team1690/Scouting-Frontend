@@ -189,7 +189,7 @@ class _UserInputState extends State<UserInput> {
                               children: <Widget>[
                                 SectionDivider(label: "Cones"),
                                 _gamePieceCounters(
-                                  amberColors(
+                                  CounterSpec.amberColors(
                                     "Top Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.autoConesTop,
@@ -198,7 +198,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  amberColors(
+                                  CounterSpec.amberColors(
                                     "Mid Scored",
                                     Icons.adjust,
                                     () => match.autoConesMid,
@@ -207,7 +207,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  amberColors(
+                                  CounterSpec.amberColors(
                                     "Low Scored",
                                     Icons.arrow_circle_down,
                                     () => match.autoConesLow,
@@ -216,7 +216,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  amberColors(
+                                  CounterSpec.amberColors(
                                     "Failed",
                                     Icons.error_outline,
                                     () => match.autoConesFailed,
@@ -250,7 +250,7 @@ class _UserInputState extends State<UserInput> {
                               children: <Widget>[
                                 SectionDivider(label: "Cubes"),
                                 _gamePieceCounters(
-                                  purpleColors(
+                                  CounterSpec.purpleColors(
                                     "Top Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.autoCubesTop,
@@ -259,7 +259,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  purpleColors(
+                                  CounterSpec.purpleColors(
                                     "Mid Scored",
                                     Icons.adjust,
                                     () => match.autoCubesMid,
@@ -268,7 +268,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  purpleColors(
+                                  CounterSpec.purpleColors(
                                     "Low Scored",
                                     Icons.arrow_circle_down,
                                     () => match.autoCubesLow,
@@ -277,7 +277,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  purpleColors(
+                                  CounterSpec.purpleColors(
                                     "Failed",
                                     Icons.error_outline,
                                     () => match.autoCubesFailed,
@@ -335,7 +335,7 @@ class _UserInputState extends State<UserInput> {
                               children: <Widget>[
                                 SectionDivider(label: "Cones"),
                                 _gamePieceCounters(
-                                  amberColors(
+                                  CounterSpec.amberColors(
                                     "Top Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.teleConesTop,
@@ -344,7 +344,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  amberColors(
+                                  CounterSpec.amberColors(
                                     "Mid Scored",
                                     Icons.adjust,
                                     () => match.teleConesMid,
@@ -353,7 +353,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  amberColors(
+                                  CounterSpec.amberColors(
                                     "Low Scored",
                                     Icons.arrow_circle_down,
                                     () => match.teleConesLow,
@@ -362,7 +362,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  amberColors(
+                                  CounterSpec.amberColors(
                                     "Failed",
                                     Icons.error_outline,
                                     () => match.teleConesFailed,
@@ -396,7 +396,7 @@ class _UserInputState extends State<UserInput> {
                               children: <Widget>[
                                 SectionDivider(label: "Cubes"),
                                 _gamePieceCounters(
-                                  purpleColors(
+                                  CounterSpec.purpleColors(
                                     "Top Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.teleCubesTop,
@@ -405,7 +405,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  purpleColors(
+                                  CounterSpec.purpleColors(
                                     "Mid Scored",
                                     Icons.adjust,
                                     () => match.teleCubesMid,
@@ -414,7 +414,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  purpleColors(
+                                  CounterSpec.purpleColors(
                                     "Low Scored",
                                     Icons.arrow_circle_down,
                                     () => match.teleCubesLow,
@@ -423,7 +423,7 @@ class _UserInputState extends State<UserInput> {
                                   ),
                                 ),
                                 _gamePieceCounters(
-                                  purpleColors(
+                                  CounterSpec.purpleColors(
                                     "Failed",
                                     Icons.error_outline,
                                     () => match.teleCubesFailed,

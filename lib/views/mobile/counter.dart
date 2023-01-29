@@ -149,6 +149,33 @@ class CounterSpec {
     this.updateValues,
   );
 
+  const CounterSpec.amberColors(
+    final String label,
+    final IconData icon,
+    final int Function() getValues,
+    final void Function(int) updateValues,
+  ) : this(
+          label,
+          icon,
+          Colors.amber,
+          Colors.amber,
+          getValues,
+          updateValues,
+        );
+
+  const CounterSpec.purpleColors(
+    final String label,
+    final IconData icon,
+    final int Function() getValues,
+    final void Function(int) updateValues,
+  ) : this(
+          label,
+          icon,
+          Colors.deepPurple,
+          Colors.deepPurple,
+          getValues,
+          updateValues,
+        );
   final String label;
   final IconData icon;
   final Color plus;
@@ -156,33 +183,3 @@ class CounterSpec {
   final int Function() getValues;
   final void Function(int) updateValues;
 }
-
-CounterSpec amberColors(
-  final String label,
-  final IconData icon,
-  final int Function() getValues,
-  final void Function(int) updateValues,
-) =>
-    CounterSpec(
-      label,
-      icon,
-      Colors.amber,
-      Colors.amber,
-      getValues,
-      updateValues,
-    );
-
-CounterSpec purpleColors(
-  final String label,
-  final IconData icon,
-  final int Function() getValues,
-  final void Function(int) updateValues,
-) =>
-    CounterSpec(
-      label,
-      icon,
-      Colors.deepPurple,
-      Colors.deepPurple,
-      getValues,
-      updateValues,
-    );
