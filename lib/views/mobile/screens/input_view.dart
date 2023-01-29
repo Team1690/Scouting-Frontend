@@ -38,19 +38,6 @@ class _UserInputState extends State<UserInput> {
     });
   }
 
-  final List<String> counterLabels = <String>[
-    "Top Scored",
-    "Mid Scored",
-    "Low Scored",
-    "Failed"
-  ];
-  final List<IconData> counterIcons = <IconData>[
-    Icons.arrow_circle_up,
-    Icons.adjust,
-    Icons.arrow_circle_down,
-    Icons.error_outline
-  ];
-
   Widget _gamePieceCounters(final CounterSpec spec) => Counter(
         plus: spec.plus,
         minus: spec.minus,
