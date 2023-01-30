@@ -18,79 +18,83 @@ class TeamsSearchBox extends StatelessWidget {
   final TextEditingController typeAheadController;
   @override
   Widget build(final BuildContext context) {
-    return TypeAheadFormField<LightTeam>(
-      validator: (final String? value) {
-        if (dontValidate) {
-          return null;
-        }
-        if (value == "") {
-          return "Please pick a team";
-        }
-        return null;
-      },
-      textFieldConfiguration: TextFieldConfiguration(
-        onSubmitted: (final String number) {
-          try {
-            final LightTeam team = teams.firstWhere(
-              (final LightTeam team) => team.number.toString() == number,
-            );
-            onChange(team);
-            typeAheadController.text = buildSuggestion(team);
-          } on StateError catch (_) {
-            //ignoed
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: TypeAheadFormField<LightTeam>(
+        validator: (final String? value) {
+          if (dontValidate) {
+            return null;
           }
+          if (value == "") {
+            return "Please pick a team";
+          }
+          return null;
         },
-        onTap: typeAheadController.clear,
-        controller: typeAheadController,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly
-        ],
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.search),
-          border: const OutlineInputBorder(),
-          hintText: "Search Team",
-        ),
-      ),
-      suggestionsCallback: (final String pattern) => teams.where(
-        (final LightTeam element) {
-          return element.number.toString().startsWith(pattern);
-        },
-      ).toList()
-        ..sort(
-          (final LightTeam a, final LightTeam b) =>
-              a.number.compareTo(b.number),
-        ),
-      itemBuilder: (final BuildContext context, final LightTeam team) =>
-          ListTile(title: Text(buildSuggestion(team))),
-      transitionBuilder: (
-        final BuildContext context,
-        final Widget suggestionsBox,
-        final AnimationController? controller,
-      ) {
-        return FadeTransition(
-          child: suggestionsBox,
-          opacity: CurvedAnimation(
-            parent: controller!,
-            curve: Curves.fastOutSlowIn,
-          ),
-        );
-      },
-      noItemsFoundBuilder: (final BuildContext context) => Container(
-        height: 60,
-        child: Center(
-          child: Text(
-            "No Teams Found",
-            style: TextStyle(fontSize: 16),
+        textFieldConfiguration: TextFieldConfiguration(
+          onSubmitted: (final String number) {
+            try {
+              final LightTeam team = teams.firstWhere(
+                (final LightTeam team) => team.number.toString() == number,
+              );
+              onChange(team);
+              typeAheadController.text = buildSuggestion(team);
+            } on StateError catch (_) {
+              //ignored
+            }
+          },
+          onTap: typeAheadController.clear,
+          controller: typeAheadController,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.search),
+            border: const OutlineInputBorder(),
+            hintText: "Search Team",
           ),
         ),
+        suggestionsCallback: (final String pattern) => teams.where(
+          (final LightTeam element) {
+            return element.number.toString().startsWith(pattern);
+          },
+        ).toList()
+          ..sort(
+            (final LightTeam a, final LightTeam b) =>
+                a.number.compareTo(b.number),
+          ),
+        itemBuilder: (final BuildContext context, final LightTeam team) =>
+            ListTile(title: Text(buildSuggestion(team))),
+        transitionBuilder: (
+          final BuildContext context,
+          final Widget suggestionsBox,
+          final AnimationController? controller,
+        ) {
+          return FadeTransition(
+            child: suggestionsBox,
+            opacity: CurvedAnimation(
+              parent: controller!,
+              curve: Curves.fastOutSlowIn,
+            ),
+          );
+        },
+        noItemsFoundBuilder: (final BuildContext context) => Container(
+          height: 60,
+          child: Center(
+            child: Text(
+              "No Teams Found",
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        ),
+        hideSuggestionsOnKeyboardHide: false,
+        onSuggestionSelected: (final LightTeam team) {
+          typeAheadController.text = buildSuggestion(team);
+          onChange(
+            team,
+          );
+        },
       ),
-      onSuggestionSelected: (final LightTeam team) {
-        typeAheadController.text = buildSuggestion(team);
-        onChange(
-          team,
-        );
-      },
     );
   }
 }
