@@ -62,7 +62,7 @@ class MatchesScreen extends StatelessWidget {
                                         ? Colors.green
                                         : Colors.white,
                                   ),
-                                  "${IdProvider.of(context).matchType.idToEnum[e.matchTypeId]} ${e.matchNumber}",
+                                  "${IdProvider.of(context).matchType.idToEnum[e.matchTypeId]!.title} ${e.matchNumber}",
                                 ),
                               ),
                               ...e.blueAlliance

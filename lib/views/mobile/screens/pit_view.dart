@@ -104,8 +104,8 @@ class _PitViewState extends State<PitView> {
                         result.onNull("Please pick a drivetrain"),
                     makeItem: (final int driveTrainId) => IdProvider.of(context)
                         .driveTrain
-                        .idToEnum[driveTrainId]
-                        .toString(),
+                        .idToEnum[driveTrainId]!
+                        .title,
                     placeholder: "Choose a drivetrain",
                     value: vars.driveTrainType,
                     options: IdProvider.of(context)
@@ -128,8 +128,8 @@ class _PitViewState extends State<PitView> {
                     placeholder: "Choose a drivemotor",
                     makeItem: (final int driveMotorId) => IdProvider.of(context)
                         .drivemotor
-                        .idToEnum[driveMotorId]
-                        .toString(),
+                        .idToEnum[driveMotorId]!
+                        .title,
                     value: vars.driveMotorType,
                     options: IdProvider.of(context)
                         .drivemotor

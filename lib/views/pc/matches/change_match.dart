@@ -106,8 +106,8 @@ class _ChangeMatchState extends State<ChangeMatch> {
                   value: vars.matchTypeId,
                   makeItem: (final int matchTypeId) => IdProvider.of(context)
                       .matchType
-                      .idToEnum[matchTypeId]
-                      .toString(),
+                      .idToEnum[matchTypeId]!
+                      .title,
                   onChange: (final int matchTypeId) {
                     vars.matchTypeId = matchTypeId;
                   },

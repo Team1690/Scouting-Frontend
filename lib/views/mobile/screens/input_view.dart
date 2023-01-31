@@ -331,10 +331,8 @@ class _UserInputState extends State<UserInput> {
                             .keys
                             .toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int p0) => IdProvider.of(context)
-                            .balance
-                            .idToEnum[p0]
-                            .toString(),
+                        makeItem: (final int p0) =>
+                            IdProvider.of(context).balance.idToEnum[p0]!.title,
                         onChange: (final int p0) {
                           setState(() {
                             match.autoBalanceStatus = p0;
@@ -537,10 +535,8 @@ class _UserInputState extends State<UserInput> {
                             .keys
                             .toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int p0) => IdProvider.of(context)
-                            .balance
-                            .idToEnum[p0]
-                            .toString(),
+                        makeItem: (final int p0) =>
+                            IdProvider.of(context).balance.idToEnum[p0]!.title,
                         onChange: (final int p0) {
                           setState(() {
                             match.endgameBalanceStatus = p0;
