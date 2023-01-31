@@ -55,7 +55,7 @@ class MatchSearchBox extends StatelessWidget {
               (final BuildContext context, final ScheduleMatch suggestion) =>
                   ListTile(
             title: Text(
-              "${IdProvider.of(context).matchType.idToEnum[suggestion.matchTypeId]} ${suggestion.matchNumber}",
+              "${IdProvider.of(context).matchType.idToEnum[suggestion.matchTypeId]!.title} ${suggestion.matchNumber}",
             ),
           ),
           transitionBuilder: (
@@ -82,7 +82,7 @@ class MatchSearchBox extends StatelessWidget {
           hideSuggestionsOnKeyboardHide: false,
           onSuggestionSelected: (final ScheduleMatch suggestion) {
             typeAheadController.text =
-                "${IdProvider.of(context).matchType.idToEnum[suggestion.matchTypeId]} ${suggestion.matchNumber}";
+                "${IdProvider.of(context).matchType.idToEnum[suggestion.matchTypeId]!.title} ${suggestion.matchNumber}";
 
             onChange(
               matches[matches.indexWhere(
