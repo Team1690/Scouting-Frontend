@@ -21,11 +21,11 @@ class TeamsSearchBox extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: TypeAheadFormField<LightTeam>(
-        validator: (final String? value) {
+        validator: (final String? selectedTeam) {
           if (dontValidate) {
             return null;
           }
-          if (value == "") {
+          if (selectedTeam == "") {
             return "Please pick a team";
           }
           return null;
@@ -55,13 +55,13 @@ class TeamsSearchBox extends StatelessWidget {
           ),
         ),
         suggestionsCallback: (final String pattern) => teams.where(
-          (final LightTeam element) {
-            return element.number.toString().startsWith(pattern);
+          (final LightTeam team) {
+            return team.number.toString().startsWith(pattern);
           },
         ).toList()
           ..sort(
-            (final LightTeam a, final LightTeam b) =>
-                a.number.compareTo(b.number),
+            (final LightTeam firstTeam, final LightTeam secondTeam) =>
+                firstTeam.number.compareTo(secondTeam.number),
           ),
         itemBuilder: (final BuildContext context, final LightTeam team) =>
             ListTile(title: Text(buildSuggestion(team))),

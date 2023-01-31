@@ -16,8 +16,8 @@ class MatchSearchBox extends StatelessWidget {
   Widget build(final BuildContext context) => SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: TypeAheadFormField<ScheduleMatch>(
-          validator: (final String? value) {
-            if (value == "") {
+          validator: (final String? selectedMatch) {
+            if (selectedMatch == "") {
               return "Please pick a match";
             }
             return null;
@@ -47,8 +47,8 @@ class MatchSearchBox extends StatelessWidget {
           ),
           suggestionsCallback: (final String pattern) => matches
               .where(
-                (final ScheduleMatch element) =>
-                    element.matchNumber.toString().startsWith(pattern),
+                (final ScheduleMatch match) =>
+                    match.matchNumber.toString().startsWith(pattern),
               )
               .toList(),
           itemBuilder:
