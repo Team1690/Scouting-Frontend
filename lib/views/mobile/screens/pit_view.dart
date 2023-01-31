@@ -162,7 +162,8 @@ class _PitViewState extends State<PitView> {
                   ),
                   Switcher(
                     selected: vars.hasShifter.mapNullable(
-                            (final bool hasShifter) => hasShifter ? 0 : 1) ??
+                          (final bool hasShifter) => hasShifter ? 0 : 1,
+                        ) ??
                         -1,
                     labels: <String>[
                       "Shifter",
@@ -184,8 +185,9 @@ class _PitViewState extends State<PitView> {
                   ),
                   Switcher(
                     selected: vars.gearboxPurchased.mapNullable(
-                            (final bool gearboxPurchased) =>
-                                gearboxPurchased ? 0 : 1) ??
+                          (final bool gearboxPurchased) =>
+                              gearboxPurchased ? 0 : 1,
+                        ) ??
                         -1,
                     labels: <String>[
                       "Purchased GearBox",
