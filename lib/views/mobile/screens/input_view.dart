@@ -18,6 +18,8 @@ import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
 import "package:scouting_frontend/views/mobile/team_selection_matches.dart";
 
+import "../../../models/id_enums.dart";
+
 class UserInput extends StatefulWidget {
   @override
   State<UserInput> createState() => _UserInputState();
@@ -46,17 +48,22 @@ class _UserInputState extends State<UserInput> {
   final TextEditingController scouterNameController = TextEditingController();
   bool toggleLightsState = false;
   late final Match match = Match(
-    robotMatchStatusId:
-        IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
+    robotMatchStatusId: IdProvider.of(context)
+        .robotMatchStatus
+        .enumToId[RobotMatchStatus.worked] as int,
   );
   // -1 means nothing
 
   late final Map<int, int> robotMatchStatusIndexToId = <int, int>{
-    -1: IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!,
+    -1: IdProvider.of(context)
+        .robotMatchStatus
+        .enumToId[RobotMatchStatus.worked]!,
     0: IdProvider.of(context)
         .robotMatchStatus
-        .nameToId["Didn't come to field"]!,
-    1: IdProvider.of(context).robotMatchStatus.nameToId["Didn't work on field"]!
+        .enumToId[RobotMatchStatus.didntComeToField]!,
+    1: IdProvider.of(context)
+        .robotMatchStatus
+        .enumToId[RobotMatchStatus.didntWorkOnField]!
   };
   @override
   Widget build(final BuildContext context) {
@@ -320,12 +327,14 @@ class _UserInputState extends State<UserInput> {
                             p0.onNull("Please pick a balance result"),
                         options: IdProvider.of(context)
                             .balance
-                            .idToName
+                            .idToEnum
                             .keys
                             .toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int p0) =>
-                            IdProvider.of(context).balance.idToName[p0]!,
+                        makeItem: (final int p0) => IdProvider.of(context)
+                            .balance
+                            .idToEnum[p0]
+                            .toString(),
                         onChange: (final int p0) {
                           setState(() {
                             match.autoBalanceStatus = p0;
@@ -524,12 +533,14 @@ class _UserInputState extends State<UserInput> {
                             p0.onNull("Please pick a balance result"),
                         options: IdProvider.of(context)
                             .balance
-                            .idToName
+                            .idToEnum
                             .keys
                             .toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int p0) =>
-                            IdProvider.of(context).balance.idToName[p0]!,
+                        makeItem: (final int p0) => IdProvider.of(context)
+                            .balance
+                            .idToEnum[p0]
+                            .toString(),
                         onChange: (final int p0) {
                           setState(() {
                             match.endgameBalanceStatus = p0;

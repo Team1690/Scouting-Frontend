@@ -1,23 +1,20 @@
 import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 
-final String tableFragment = """{
-    id
-    title
-  }
-  """;
-
-Map<String, int> parseTable(final dynamic result, final String tableName) =>
-    Map<String, int>.fromEntries(
+Map<T, int> parseTable<T extends Enum>(
+  final Map<String, dynamic> result,
+  final String tableName,
+  final T Function(String) titleToEnum,
+) =>
+    Map<T, int>.fromEntries(
       (result[tableName] as List<dynamic>).map(
-        (final dynamic tableResponse) => MapEntry<String, int>(
-          tableResponse["title"] as String,
+        (final dynamic tableResponse) => MapEntry<T, int>(
+          titleToEnum(tableResponse["title"] as String),
           tableResponse["id"] as int,
         ),
       ),
     );
 
-String queryEnumTable(final String table) => """$table $tableFragment""";
 /*
 in   
 * IdProvider.of(context).matchType.idToName.keys.toList()
@@ -25,16 +22,15 @@ we use the fact that it is ordered in the selector to order them in the UI
 BTW dart maps are ordered
 */
 String queryOrderedEnumTable(final String table) =>
-    """$table(order_by: {order: asc}) $tableFragment""";
+    """$table(order_by: {order: asc}) {
+    id
+    title
+  }""";
 
-Future<Map<String, Map<String, int>>> fetchEnums(
+Future<Map<String, Map<String, dynamic>>> fetchEnums(
   final List<String> enums,
-  final List<String> orderedEnums,
 ) async {
-  final List<String> queries = <String>[
-    ...enums.map(queryEnumTable),
-    ...orderedEnums.map(queryOrderedEnumTable),
-  ];
+  final List<String> queries = enums.map(queryOrderedEnumTable).toList();
   final String query = """
 query FetchEnums {
     ${queries.join("\n")}
@@ -42,14 +38,14 @@ query FetchEnums {
 """;
 
   return (await getClient().query(
-    QueryOptions<Map<String, Map<String, int>>>(
+    QueryOptions<Map<String, Map<String, dynamic>>>(
       document: gql(query),
       parserFn: (final Map<String, dynamic> result) =>
-          Map<String, Map<String, int>>.fromEntries(
-        <String>[...enums, ...orderedEnums].map(
-          (final String tableName) => MapEntry<String, Map<String, int>>(
+          Map<String, Map<String, dynamic>>.fromEntries(
+        enums.map(
+          (final String tableName) => MapEntry<String, Map<String, dynamic>>(
             tableName,
-            parseTable(result, tableName),
+            result,
           ),
         ),
       ),

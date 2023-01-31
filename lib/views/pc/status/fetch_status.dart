@@ -119,7 +119,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                       element.matchTypeId ==
                           IdProvider.of(context)
                               .matchType
-                              .nameToId[identifier.type],
+                              .enumToId[identifier.type],
                 );
 
         return <LightTeam>[

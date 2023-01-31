@@ -1,4 +1,5 @@
 import "package:flutter/cupertino.dart";
+import "package:scouting_frontend/models/id_enums.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -49,8 +50,9 @@ class Match implements HasuraVars {
     scoutedTeam = null;
     scheduleMatch = null;
     isRematch = false;
-    robotMatchStatusId =
-        IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
+    robotMatchStatusId = IdProvider.of(context)
+        .robotMatchStatus
+        .enumToId[RobotMatchStatus.worked]!;
   }
 
   bool preScouting = false;

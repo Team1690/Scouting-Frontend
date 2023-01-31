@@ -102,14 +102,15 @@ class _PitViewState extends State<PitView> {
                   Selector<int>(
                     validate: (final int? result) =>
                         result.onNull("Please pick a drivetrain"),
-                    makeItem: (final int drivetrainId) => IdProvider.of(context)
+                    makeItem: (final int driveTrainId) => IdProvider.of(context)
                         .driveTrain
-                        .idToName[drivetrainId]!,
+                        .idToEnum[driveTrainId]
+                        .toString(),
                     placeholder: "Choose a drivetrain",
                     value: vars.driveTrainType,
                     options: IdProvider.of(context)
                         .driveTrain
-                        .idToName
+                        .idToEnum
                         .keys
                         .toList(),
                     onChange: (final int newValue) {
@@ -125,13 +126,14 @@ class _PitViewState extends State<PitView> {
                     validate: (final int? result) =>
                         result.onNull("Please pick a drivemotor"),
                     placeholder: "Choose a drivemotor",
-                    makeItem: (final int drivemotorId) => IdProvider.of(context)
+                    makeItem: (final int driveMotorId) => IdProvider.of(context)
                         .drivemotor
-                        .idToName[drivemotorId]!,
+                        .idToEnum[driveMotorId]
+                        .toString(),
                     value: vars.driveMotorType,
                     options: IdProvider.of(context)
                         .drivemotor
-                        .idToName
+                        .idToEnum
                         .keys
                         .toList(),
                     onChange: (final int newValue) {

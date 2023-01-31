@@ -1,3 +1,4 @@
+import "package:scouting_frontend/models/id_enums.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
@@ -19,13 +20,13 @@ class App extends StatelessWidget {
     required this.matches,
   });
   final List<ScheduleMatch> matches;
-  final Map<String, int> robotMatchStatusIds;
+  final Map<RobotMatchStatus, int> robotMatchStatusIds;
   final List<LightTeam> teams;
-  final Map<String, int> balanceIds;
-  final Map<String, int> drivetrainIds;
-  final Map<String, int> driveMotorIds;
-  final Map<String, int> matchTypeIds;
-  final Map<String, int> faultStatus;
+  final Map<Balance, int> balanceIds;
+  final Map<DriveTrain, int> drivetrainIds;
+  final Map<DriveMotor, int> driveMotorIds;
+  final Map<MatchType, int> matchTypeIds;
+  final Map<FaultStatus, int> faultStatus;
   @override
   Widget build(final BuildContext context) {
     return TeamProvider(
