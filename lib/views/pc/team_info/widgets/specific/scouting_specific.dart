@@ -39,7 +39,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                   child: Column(
                                     children: <Widget>[
                                       Text(
-                                        "${e.isRematch ? "Re " : ""}${IdProvider.of(context).matchType.idToName[e.matchTypeId].toString()} ${e.matchNumber}",
+                                        "${e.isRematch ? "Re " : ""}${IdProvider.of(context).matchType.idToEnum[e.matchTypeId].toString()} ${e.matchNumber}",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),

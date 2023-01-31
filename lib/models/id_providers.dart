@@ -1,40 +1,40 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_enums.dart";
 import "package:scouting_frontend/models/team_model.dart";
 
-class IdTable {
-  IdTable(final Map<String, int> nameToId)
+class IdTable<T extends Enum> {
+  IdTable(final Map<T, int> enumToId)
       : this._inner(
-          nameToId: Map<String, int>.unmodifiable(nameToId),
-          idToName: Map<int, String>.unmodifiable(
-            <int, String>{
-              for (final MapEntry<String, int> e in nameToId.entries)
-                e.value: e.key
+          enumToId: Map<T, int>.unmodifiable(enumToId),
+          idToEnum: Map<int, T>.unmodifiable(
+            <int, T>{
+              for (final MapEntry<T, int> e in enumToId.entries) e.value: e.key
             },
           ),
         );
 
-  const IdTable._inner({required this.idToName, required this.nameToId});
-  final Map<String, int> nameToId;
-  final Map<int, String> idToName;
+  const IdTable._inner({required this.idToEnum, required this.enumToId});
+  final Map<T, int> enumToId;
+  final Map<int, T> idToEnum;
 }
 
 class IdProvider extends InheritedWidget {
   IdProvider({
     required final Widget child,
-    required final Map<String, int> balanceIds,
-    required final Map<String, int> drivetrainIds,
-    required final Map<String, int> drivemotorIds,
-    required final Map<String, int> matchTypeIds,
-    required final Map<String, int> robotMatchStatusIds,
-    required final Map<String, int> faultStatus,
+    required final Map<Balance, int> balanceIds,
+    required final Map<DriveTrain, int> drivetrainIds,
+    required final Map<DriveMotor, int> drivemotorIds,
+    required final Map<MatchType, int> matchTypeIds,
+    required final Map<RobotMatchStatus, int> robotMatchStatusIds,
+    required final Map<FaultStatus, int> faultStatus,
   }) : this._inner(
           child: child,
-          balance: IdTable(balanceIds),
-          driveTrain: IdTable(drivetrainIds),
-          drivemotor: IdTable(drivemotorIds),
-          matchType: IdTable(matchTypeIds),
-          robotMatchStatus: IdTable(robotMatchStatusIds),
-          faultStatus: IdTable(faultStatus),
+          balance: IdTable<Balance>(balanceIds),
+          driveTrain: IdTable<DriveTrain>(drivetrainIds),
+          drivemotor: IdTable<DriveMotor>(drivemotorIds),
+          matchType: IdTable<MatchType>(matchTypeIds),
+          robotMatchStatus: IdTable<RobotMatchStatus>(robotMatchStatusIds),
+          faultStatus: IdTable<FaultStatus>(faultStatus),
         );
 
   IdProvider._inner({
@@ -46,12 +46,12 @@ class IdProvider extends InheritedWidget {
     required this.robotMatchStatus,
     required this.faultStatus,
   });
-  final IdTable robotMatchStatus;
-  final IdTable matchType;
-  final IdTable balance;
-  final IdTable driveTrain;
-  final IdTable drivemotor;
-  final IdTable faultStatus;
+  final IdTable<RobotMatchStatus> robotMatchStatus;
+  final IdTable<MatchType> matchType;
+  final IdTable<Balance> balance;
+  final IdTable<DriveTrain> driveTrain;
+  final IdTable<DriveMotor> drivemotor;
+  final IdTable<FaultStatus> faultStatus;
   @override
   bool updateShouldNotify(final IdProvider oldWidget) =>
       balance != oldWidget.balance ||
@@ -72,7 +72,9 @@ class TeamProvider extends InheritedWidget {
   }) : this._inner(
           child: child,
           numberToTeam: Map<int, LightTeam>.unmodifiable(
-            <int, LightTeam>{for (final LightTeam e in teams) e.number: e},
+            <int, LightTeam>{
+              for (final LightTeam team in teams) team.number: team
+            },
           ),
         );
   const TeamProvider._inner({

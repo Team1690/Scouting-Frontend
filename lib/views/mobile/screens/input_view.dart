@@ -18,6 +18,8 @@ import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
 import "package:scouting_frontend/views/mobile/team_selection_matches.dart";
 
+import "../../../models/id_enums.dart";
+
 class UserInput extends StatefulWidget {
   @override
   State<UserInput> createState() => _UserInputState();
@@ -63,20 +65,25 @@ class _UserInputState extends State<UserInput> {
   final TextEditingController scouterNameController = TextEditingController();
   bool toggleLightsState = false;
   late final Match match = Match(
-    robotMatchStatusId:
-        IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
+    robotMatchStatusId: IdProvider.of(context)
+        .robotMatchStatus
+        .enumToId[RobotMatchStatus.worked] as int,
   );
   // -1 means nothing
   late final Map<int, int> robotMatchStatusIndexToId = <int, int>{
-    -1: IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!,
+    -1: IdProvider.of(context)
+        .robotMatchStatus
+        .enumToId[RobotMatchStatus.worked]!,
     0: IdProvider.of(context)
         .robotMatchStatus
-        .nameToId["Didn't come to field"]!,
-    1: IdProvider.of(context).robotMatchStatus.nameToId["Didn't work on field"]!
+        .enumToId[RobotMatchStatus.didntComeToField]!,
+    1: IdProvider.of(context)
+        .robotMatchStatus
+        .enumToId[RobotMatchStatus.didntWorkOnField]!
   };
   @override
   Widget build(final BuildContext context) {
-    final Map<int, String> provider = IdProvider.of(context).balance.idToName;
+    final Map<int, Enum> provider = IdProvider.of(context).balance.idToEnum;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: SideNavBar(),
@@ -298,7 +305,8 @@ class _UserInputState extends State<UserInput> {
                             submission.onNull("Please pick a balance result"),
                         options: provider.keys.toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int index) => provider[index]!,
+                        makeItem: (final int index) =>
+                            provider[index]!.toString(),
                         onChange: (final int balance) {
                           setState(() {
                             match.autoBalanceStatus = balance;
@@ -454,11 +462,12 @@ class _UserInputState extends State<UserInput> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Selector<int>(
-                        validate: (final int? submission) =>
-                            submission.onNull("Please pick a balance result"),
+                        validate: (final int? p0) =>
+                            p0.onNull("Please pick a balance result"),
                         options: provider.keys.toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int index) => provider[index]!,
+                        makeItem: (final int index) =>
+                            provider[index].toString(),
                         onChange: (final int balance) {
                           setState(() {
                             match.endgameBalanceStatus = balance;

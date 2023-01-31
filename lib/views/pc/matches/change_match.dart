@@ -101,15 +101,17 @@ class _ChangeMatchState extends State<ChangeMatch> {
                 ),
                 Selector<int>(
                   options:
-                      IdProvider.of(context).matchType.idToName.keys.toList(),
+                      IdProvider.of(context).matchType.idToEnum.keys.toList(),
                   placeholder: "Enter match type",
                   value: vars.matchTypeId,
-                  makeItem: (final int p0) =>
-                      IdProvider.of(context).matchType.idToName[p0]!,
-                  onChange: (final int p0) {
-                    vars.matchTypeId = p0;
+                  makeItem: (final int matchTypeId) => IdProvider.of(context)
+                      .matchType
+                      .idToEnum[matchTypeId]
+                      .toString(),
+                  onChange: (final int matchTypeId) {
+                    vars.matchTypeId = matchTypeId;
                   },
-                  validate: (final int p0) => null,
+                  validate: (final int matchTypeId) => null,
                 ),
                 SizedBox(
                   height: 20,

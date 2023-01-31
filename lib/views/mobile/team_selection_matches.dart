@@ -4,6 +4,8 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/teams_search_box.dart";
 
+import "../../models/id_enums.dart";
+
 class TeamSelectionMatches extends StatelessWidget {
   TeamSelectionMatches({
     required this.match,
@@ -23,7 +25,7 @@ class TeamSelectionMatches extends StatelessWidget {
       teams: match == null
           ? <LightTeam>[]
           : match!.matchTypeId ==
-                  IdProvider.of(context).matchType.nameToId["Practice"]!
+                  IdProvider.of(context).matchType.enumToId[MatchType.practice]
               ? TeamProvider.of(context).teams
               : <LightTeam>[...match!.blueAlliance, ...match!.redAlliance],
       typeAheadController: controller,

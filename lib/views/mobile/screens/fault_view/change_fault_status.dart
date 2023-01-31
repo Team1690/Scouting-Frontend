@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/id_enums.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -22,13 +23,13 @@ class ChangeFaultStatus extends StatelessWidget {
               -1: null,
               0: IdProvider.of(
                 context,
-              ).faultStatus.nameToId["Fixed"],
+              ).faultStatus.enumToId[FaultStatus.fixed],
               1: IdProvider.of(
                 context,
-              ).faultStatus.nameToId["In progress"],
+              ).faultStatus.enumToId[FaultStatus.inProgress],
               2: IdProvider.of(
                 context,
-              ).faultStatus.nameToId["No progress"],
+              ).faultStatus.enumToId[FaultStatus.noProgress],
             };
             return StatefulBuilder(
               builder: (
