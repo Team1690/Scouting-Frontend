@@ -38,12 +38,19 @@ class _PitViewState extends State<PitView> {
   final FocusNode node = FocusNode();
   final ValueNotifier<bool> advancedSwitchController =
       ValueNotifier<bool>(false);
-  final TextEditingController weightContoller = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController widthController = TextEditingController();
+  final TextEditingController lengthController = TextEditingController();
+
+  FormFieldValidator<String> _numericValidator(final String error) =>
+      (final String? text) => int.tryParse(text ?? "").onNull(error);
 
   void resetFrame() {
     setState(() {
       vars.reset();
-      weightContoller.text = vars.weight.toString();
+      widthController.clear();
+      lengthController.clear();
+      weightController.clear();
       notesController.clear();
       wheelTypeController.clear();
       teamSelectionController.clear();
@@ -195,32 +202,58 @@ class _PitViewState extends State<PitView> {
                   SizedBox(
                     height: 20,
                   ),
-                  Switcher(
-                    selected: vars.canPassLowRung
-                            .mapNullable((final bool p0) => p0 ? 0 : 1) ??
-                        -1,
-                    labels: <String>[
-                      "Can pass\nlow rung",
-                      "Can't pass\nlow rung",
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Expanded(
+                        child: TextFormField(
+                          controller: widthController,
+                          onChanged: (final String value) {
+                            vars.width = value;
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            labelText: "Width",
+                            prefixIcon: Icon(Icons.compare_arrows),
+                          ),
+                          validator: _numericValidator(
+                            "please enter the robot's width",
+                          ),
+                        ),
+                      ),
+                      Text(" x "),
+                      Expanded(
+                        child: TextFormField(
+                          controller: lengthController,
+                          onChanged: (final String value) {
+                            vars.length = value;
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            labelText: "Length",
+                            prefixIcon: Icon(Icons.compare_arrows),
+                          ),
+                          validator: _numericValidator(
+                            "please enter the robot's length",
+                          ),
+                        ),
+                      ),
                     ],
-                    colors: <Color>[
-                      Colors.green,
-                      Colors.red,
-                    ],
-                    onChange: (final int selection) {
-                      setState(() {
-                        vars.canPassLowRung =
-                            <int, bool>{1: false, 0: true}[selection];
-                      });
-                    },
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  TextField(
-                    controller: weightContoller,
+                  TextFormField(
+                    controller: weightController,
                     onChanged: (final String value) {
-                      vars.weight = value.isEmpty ? 0 : int.parse(value);
+                      vars.weight = value;
                     },
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
@@ -230,17 +263,23 @@ class _PitViewState extends State<PitView> {
                       labelText: "Weight",
                       prefixIcon: Icon(Icons.fitness_center),
                     ),
+                    validator: _numericValidator(
+                      "please enter the robot's weight",
+                    ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  TextField(
+                  TextFormField(
                     controller: wheelTypeController,
                     onChanged: (final String value) {
                       vars.driveWheelType = value;
                     },
                     decoration: InputDecoration(
                       labelText: "Drive Wheel type",
+                    ),
+                    validator: _numericValidator(
+                      "please enter the robot's wheel type",
                     ),
                   ),
                   SectionDivider(label: "Robot Image"),
@@ -290,10 +329,11 @@ class _PitViewState extends State<PitView> {
               \$notes:String, 
               \$has_shifter:Boolean,
               \$team_id:Int,
-              \$weight:Int!,
-              \$can_pass_low_rung:Boolean
+              \$weight:Int,
+              \$width:Int,
+              \$length:Int,
               ) {
-          insert_pit(objects: {
+          insert__2023_pit(objects: {
           url: \$url,
           drive_motor_amount: \$drive_motor_amount,
           drivemotor_id: \$drivemotor_id,
@@ -304,7 +344,8 @@ class _PitViewState extends State<PitView> {
           has_shifter: \$has_shifter,
           team_id: \$team_id,
           weight:  \$weight,
-          can_pass_low_rung: \$can_pass_low_rung,
+          width:  \$width,
+          length:  \$length,
           }) {
               returning {
                 url
