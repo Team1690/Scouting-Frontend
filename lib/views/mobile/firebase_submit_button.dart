@@ -84,9 +84,6 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           return;
         }
 
-        final int? teamid = widget.vars.toHasuraVars()["team_id"] as int?;
-        final XFile? file = widget.getResult();
-
         if (!widget.validate()) {
           setState(() {
             errorMessage = "Input Error";
@@ -99,6 +96,8 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           );
           return;
         } else {
+          final int? teamid = widget.vars.toHasuraVars()["team_id"] as int?;
+          final XFile? file = widget.getResult();
           uploadResult(
             teamid!,
             file!,

@@ -23,9 +23,9 @@ class PitVars implements HasuraVars {
       "notes": notes,
       "drive_wheel_type": driveWheelType,
       "team_id": teamId,
-      "width": width,
-      "length": length,
-      "weight": weight,
+      "width": int.parse(width),
+      "length": int.parse(length),
+      "weight": int.parse(weight),
     };
   }
 

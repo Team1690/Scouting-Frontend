@@ -100,10 +100,11 @@ class _PitViewState extends State<PitView> {
                   ),
                   SectionDivider(label: "Drive Train"),
                   Selector<int>(
-                    validate: (final int? p0) =>
-                        p0.onNull("Please pick a drivetrain"),
-                    makeItem: (final int p0) =>
-                        IdProvider.of(context).driveTrain.idToName[p0]!,
+                    validate: (final int? result) =>
+                        result.onNull("Please pick a drivetrain"),
+                    makeItem: (final int drivetrainId) => IdProvider.of(context)
+                        .driveTrain
+                        .idToName[drivetrainId]!,
                     placeholder: "Choose a drivetrain",
                     value: vars.driveTrainType,
                     options: IdProvider.of(context)
@@ -121,11 +122,12 @@ class _PitViewState extends State<PitView> {
                     height: 20,
                   ),
                   Selector<int>(
-                    validate: (final int? p0) =>
-                        p0.onNull("Please pick a drivemotor"),
+                    validate: (final int? result) =>
+                        result.onNull("Please pick a drivemotor"),
                     placeholder: "Choose a drivemotor",
-                    makeItem: (final int p0) =>
-                        IdProvider.of(context).drivemotor.idToName[p0]!,
+                    makeItem: (final int drivemotorId) => IdProvider.of(context)
+                        .drivemotor
+                        .idToName[drivemotorId]!,
                     value: vars.driveMotorType,
                     options: IdProvider.of(context)
                         .drivemotor
@@ -159,8 +161,9 @@ class _PitViewState extends State<PitView> {
                     height: 20,
                   ),
                   Switcher(
-                    selected: vars.hasShifter
-                            .mapNullable((final bool p0) => p0 ? 0 : 1) ??
+                    selected: vars.hasShifter.mapNullable(
+                          (final bool hasShifter) => hasShifter ? 0 : 1,
+                        ) ??
                         -1,
                     labels: <String>[
                       "Shifter",
@@ -181,8 +184,10 @@ class _PitViewState extends State<PitView> {
                     height: 20,
                   ),
                   Switcher(
-                    selected: vars.gearboxPurchased
-                            .mapNullable((final bool p0) => p0 ? 0 : 1) ??
+                    selected: vars.gearboxPurchased.mapNullable(
+                          (final bool gearboxPurchased) =>
+                              gearboxPurchased ? 0 : 1,
+                        ) ??
                         -1,
                     labels: <String>[
                       "Purchased GearBox",
@@ -209,8 +214,8 @@ class _PitViewState extends State<PitView> {
                       Expanded(
                         child: TextFormField(
                           controller: widthController,
-                          onChanged: (final String value) {
-                            vars.width = value;
+                          onChanged: (final String width) {
+                            vars.width = width;
                           },
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
@@ -229,8 +234,8 @@ class _PitViewState extends State<PitView> {
                       Expanded(
                         child: TextFormField(
                           controller: lengthController,
-                          onChanged: (final String value) {
-                            vars.length = value;
+                          onChanged: (final String length) {
+                            vars.length = length;
                           },
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
@@ -252,8 +257,8 @@ class _PitViewState extends State<PitView> {
                   ),
                   TextFormField(
                     controller: weightController,
-                    onChanged: (final String value) {
-                      vars.weight = value;
+                    onChanged: (final String weight) {
+                      vars.weight = weight;
                     },
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
@@ -272,8 +277,8 @@ class _PitViewState extends State<PitView> {
                   ),
                   TextFormField(
                     controller: wheelTypeController,
-                    onChanged: (final String value) {
-                      vars.driveWheelType = value;
+                    onChanged: (final String wheelType) {
+                      vars.driveWheelType = wheelType;
                     },
                     decoration: InputDecoration(
                       labelText: "Drive Wheel type",
@@ -284,8 +289,8 @@ class _PitViewState extends State<PitView> {
                   ),
                   SectionDivider(label: "Robot Image"),
                   ImagePickerWidget(
-                    validate: (final XFile? p0) =>
-                        p0.onNull("Please pick an Image"),
+                    validate: (final XFile? image) =>
+                        image.onNull("Please pick an Image"),
                     controller: advancedSwitchController,
                     onImagePicked: (final XFile newResult) =>
                         result = newResult,
@@ -295,8 +300,8 @@ class _PitViewState extends State<PitView> {
                     focusNode: node,
                     textDirection: TextDirection.rtl,
                     controller: notesController,
-                    onChanged: (final String text) {
-                      vars.notes = text;
+                    onChanged: (final String notes) {
+                      vars.notes = notes;
                     },
                     style: TextStyle(color: Colors.white),
                     cursorColor: Colors.white,
@@ -393,10 +398,10 @@ class TeamsWithoutPit extends StatelessWidget {
             }
             return ListView(
               children: snapshot.data.mapNullable(
-                    (final List<LightTeam> p0) => p0
+                    (final List<LightTeam> teams) => teams
                         .map(
-                          (final LightTeam e) => ListTile(
-                            title: Text("${e.number} ${e.name}"),
+                          (final LightTeam team) => ListTile(
+                            title: Text("${team.number} ${team.name}"),
                           ),
                         )
                         .toList(),
@@ -411,8 +416,8 @@ class TeamsWithoutPit extends StatelessWidget {
 Stream<List<LightTeam>> fetchTeamsWithoutPit() => getClient()
     .subscribe(
       SubscriptionOptions<List<LightTeam>>(
-        parserFn: (final Map<String, dynamic> p0) =>
-            (p0["team"] as List<dynamic>).map(LightTeam.fromJson).toList(),
+        parserFn: (final Map<String, dynamic> data) =>
+            (data["team"] as List<dynamic>).map(LightTeam.fromJson).toList(),
         document: gql(
           r"""
 query NoPit {
