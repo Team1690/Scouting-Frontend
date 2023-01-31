@@ -2,12 +2,11 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 
 Map<T, int> parseTable<T extends Enum>(
-  final Map<String, dynamic> result,
-  final String tableName,
+  final List<dynamic> result,
   final T Function(String) titleToEnum,
 ) =>
     Map<T, int>.fromEntries(
-      (result[tableName] as List<dynamic>).map(
+      (result).map(
         (final dynamic tableResponse) => MapEntry<T, int>(
           titleToEnum(tableResponse["title"] as String),
           tableResponse["id"] as int,
@@ -27,7 +26,7 @@ String queryOrderedEnumTable(final String table) =>
     title
   }""";
 
-Future<Map<String, Map<String, dynamic>>> fetchEnums(
+Future<Map<String, List<dynamic>>> fetchEnums(
   final List<String> enums,
 ) async {
   final List<String> queries = enums.map(queryOrderedEnumTable).toList();
@@ -38,14 +37,14 @@ query FetchEnums {
 """;
 
   return (await getClient().query(
-    QueryOptions<Map<String, Map<String, dynamic>>>(
+    QueryOptions<Map<String, List<dynamic>>>(
       document: gql(query),
       parserFn: (final Map<String, dynamic> result) =>
-          Map<String, Map<String, dynamic>>.fromEntries(
+          Map<String, List<dynamic>>.fromEntries(
         enums.map(
-          (final String tableName) => MapEntry<String, Map<String, dynamic>>(
+          (final String tableName) => MapEntry<String, List<dynamic>>(
             tableName,
-            result,
+            result[tableName] as List<dynamic>,
           ),
         ),
       ),
