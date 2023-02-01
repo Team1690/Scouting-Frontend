@@ -94,8 +94,12 @@ class _PitViewState extends State<PitView> {
                   TeamSelectionFuture(
                     teams: TeamProvider.of(context).teams,
                     controller: teamSelectionController,
-                    onChange: (final LightTeam lightTeam) {
+                    buildWithTeam: (
+                      final BuildContext context,
+                      final LightTeam lightTeam,
+                    ) {
                       vars.teamId = lightTeam.id;
+                      return Container();
                     },
                   ),
                   SectionDivider(label: "Drive Train"),

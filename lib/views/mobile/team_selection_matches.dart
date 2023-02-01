@@ -9,11 +9,11 @@ class TeamSelectionMatches extends StatelessWidget {
     required this.match,
     this.dontValidate = false,
     required this.controller,
-    required this.onChange,
+    required this.buildWithTeam,
   });
   final ScheduleMatch? match;
   final bool dontValidate;
-  final void Function(LightTeam) onChange;
+  final Widget Function(BuildContext, LightTeam) buildWithTeam;
   final TextEditingController controller;
 
   @override
@@ -28,7 +28,7 @@ class TeamSelectionMatches extends StatelessWidget {
               : <LightTeam>[...match!.blueAlliance, ...match!.redAlliance],
       typeAheadController: controller,
       dontValidate: dontValidate,
-      onChange: onChange,
+      buildWithTeam: buildWithTeam,
     );
   }
 }

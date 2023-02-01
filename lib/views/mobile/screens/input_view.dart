@@ -130,10 +130,12 @@ class _UserInputState extends State<UserInput> {
                     TeamSelectionMatches(
                       match: match.scheduleMatch,
                       controller: teamNumberController,
-                      onChange: (final LightTeam team) {
+                      buildWithTeam:
+                          (final BuildContext context, final LightTeam team) {
                         setState(() {
                           match.scoutedTeam = team;
                         });
+                        return Container();
                       },
                     ),
                     SizedBox(

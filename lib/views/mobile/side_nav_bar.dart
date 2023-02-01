@@ -39,13 +39,17 @@ class SideNavBar extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: TeamSelectionFuture(
               teams: TeamProvider.of(context).teams,
-              onChange: (final LightTeam team) {
+              buildWithTeam: (
+                final BuildContext context,
+                final LightTeam team,
+              ) {
                 teamSelectionController.clear();
                 Navigator.of(context).push(
                   MaterialPageRoute<CoachTeamData>(
                     builder: (final BuildContext contxt) => CoachTeamData(team),
                   ),
                 );
+                return Container();
               },
               controller: teamSelectionController,
             ),

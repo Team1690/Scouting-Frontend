@@ -6,14 +6,14 @@ import "package:scouting_frontend/views/common/teams_search_box.dart";
 class TeamSelectionFuture extends StatelessWidget {
   TeamSelectionFuture({
     this.teams,
-    required this.onChange,
+    required this.buildWithTeam,
     required this.controller,
     this.dontValidate = false,
   });
   final bool dontValidate;
   final List<LightTeam>? teams;
   final TextEditingController controller;
-  final void Function(LightTeam) onChange;
+  final Widget Function(BuildContext, LightTeam) buildWithTeam;
 
   @override
   Widget build(final BuildContext context) {
@@ -25,7 +25,7 @@ class TeamSelectionFuture extends StatelessWidget {
         dontValidate: dontValidate,
         typeAheadController: controller,
         teams: teams ?? TeamProvider.of(context).teams,
-        onChange: onChange,
+        buildWithTeam: buildWithTeam,
       );
     }
   }

@@ -27,8 +27,10 @@ class AddFault extends StatelessWidget {
                 children: <Widget>[
                   TeamSelectionFuture(
                     teams: TeamProvider.of(context).teams,
-                    onChange: (final LightTeam newTeam) {
+                    buildWithTeam:
+                        (final BuildContext context, final LightTeam newTeam) {
                       team = newTeam;
+                      return Container();
                     },
                     controller: TextEditingController(),
                   ),

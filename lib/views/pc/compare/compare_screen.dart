@@ -63,13 +63,17 @@ class _CompareScreenState extends State<CompareScreen> {
                     child: TeamSelectionFuture(
                       teams: TeamProvider.of(context).teams
                         ..removeWhere(teams.contains),
-                      onChange: (final LightTeam team) {
-                        if (teams.contains(team)) return;
-                        setState(() {
-                          teams.add(
-                            team,
-                          );
-                        });
+                      buildWithTeam:
+                          (final BuildContext context, final LightTeam team) {
+                        if (!teams.contains(team)) {
+                          setState(() {
+                            teams.add(
+                              team,
+                            );
+                          });
+                        }
+
+                        return Container();
                       },
                       controller: controller,
                     ),

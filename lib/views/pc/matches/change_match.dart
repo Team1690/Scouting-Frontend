@@ -124,25 +124,45 @@ class _ChangeMatchState extends State<ChangeMatch> {
                           children: <Widget>[
                             SectionDivider(label: "Blue Teams"),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.blue0 = team,
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                              ) {
+                                vars.blue0 = team;
+                                return Container();
+                              },
                               controller: teamControllers[0],
                             ),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.blue1 = team,
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                              ) {
+                                vars.blue1 = team;
+                                return Container();
+                              },
                               controller: teamControllers[1],
                             ),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.blue2 = team,
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                              ) {
+                                vars.blue2 = team;
+                                return Container();
+                              },
                               controller: teamControllers[2],
                             ),
                             SectionDivider(label: "Blue Sub Team"),
                             TeamSelectionFuture(
                               dontValidate: true,
-                              onChange: (final LightTeam team) =>
-                                  vars.blue3 = team,
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                              ) {
+                                vars.blue3 = team;
+                                return Container();
+                              },
                               controller: teamControllers[3],
                             ),
                           ],
@@ -155,25 +175,45 @@ class _ChangeMatchState extends State<ChangeMatch> {
                           children: <Widget>[
                             SectionDivider(label: "Red Teams"),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.red0 = team,
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                              ) {
+                                vars.red0 = team;
+                                return Container();
+                              },
                               controller: teamControllers[4],
                             ),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.red1 = team,
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                              ) {
+                                vars.red1 = team;
+                                return Container();
+                              },
                               controller: teamControllers[5],
                             ),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.red2 = team,
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                              ) {
+                                vars.red2 = team;
+                                return Container();
+                              },
                               controller: teamControllers[6],
                             ),
                             SectionDivider(label: "Red Sub Team"),
                             TeamSelectionFuture(
                               dontValidate: true,
-                              onChange: (final LightTeam team) =>
-                                  vars.red3 = team,
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                              ) {
+                                vars.red3 = team;
+                                return Container();
+                              },
                               controller: teamControllers[7],
                             ),
                           ],

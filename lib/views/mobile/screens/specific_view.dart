@@ -79,10 +79,12 @@ class _SpecificState extends State<Specific> {
                   TeamSelectionMatches(
                     match: vars.scheduleMatch,
                     controller: controllers[2], //index of teamController
-                    onChange: (final LightTeam team) {
+                    buildWithTeam:
+                        (final BuildContext context, final LightTeam team) {
                       setState(() {
                         vars.team = team;
                       });
+                      return Container();
                     },
                   ),
                   SizedBox(
