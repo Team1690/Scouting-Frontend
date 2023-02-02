@@ -5,22 +5,20 @@ import "package:image_picker/image_picker.dart";
 import "package:progress_state_button/iconed_button.dart";
 import "package:progress_state_button/progress_button.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class FireBaseSubmitButton extends StatefulWidget {
   FireBaseSubmitButton({
-    required this.vars,
+    required this.toHasuraVars,
     required this.mutation,
     required this.getResult,
     required this.resetForm,
     required this.validate,
   });
-  final HasuraVars vars;
   final String mutation;
   final bool Function() validate;
   final void Function() resetForm;
   final XFile? Function() getResult;
-
+  final Map<String, dynamic> Function() toHasuraVars;
   @override
   State<FireBaseSubmitButton> createState() => _FireBaseSubmitButtonState();
 }
@@ -96,7 +94,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           );
           return;
         } else {
-          final int? teamid = widget.vars.toHasuraVars()["team_id"] as int?;
+          final int? teamid = widget.toHasuraVars()["team_id"] as int?;
           final XFile? file = widget.getResult();
           uploadResult(
             teamid!,
@@ -124,7 +122,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
         running = false;
       } else if (event.state == TaskState.success) {
         final Map<String, dynamic> vars =
-            Map<String, dynamic>.from(widget.vars.toHasuraVars());
+            Map<String, dynamic>.from(widget.toHasuraVars());
         final String url = await ref.getDownloadURL();
         vars["url"] = url;
 
