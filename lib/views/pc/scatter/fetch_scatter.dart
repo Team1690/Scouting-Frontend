@@ -11,22 +11,38 @@ query Scatter {
     number
     id
     name
-    matches_aggregate(where: {ignored: {_eq: false}}) {
-      aggregate {
-        avg {
-          auto_lower
-          auto_upper
-          tele_lower
-          tele_upper
-        }
+    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+    aggregate {
+      avg {
+        auto_cones_low
+        auto_cones_mid
+        auto_cones_top
+        auto_cubes_low
+        auto_cubes_mid
+        auto_cubes_top
+        tele_cones_low
+        tele_cones_mid
+        tele_cones_top
+        tele_cubes_low
+        tele_cubes_mid
+        tele_cubes_top
       }
     }
-    matches(where: {ignored: {_eq: false}}) {
-      auto_lower
-      auto_upper
-      tele_lower
-      tele_upper
-    }
+  }
+    technical_matches(where: {ignored: {_eq: false}}) {
+    auto_cones_low
+    auto_cones_mid
+    auto_cones_top
+    auto_cubes_low
+    auto_cubes_mid
+    auto_cubes_top
+    tele_cones_low
+    tele_cones_mid
+    tele_cones_top
+    tele_cubes_low
+    tele_cubes_mid
+    tele_cubes_top
+  }
   }
 }
 
