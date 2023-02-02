@@ -13,7 +13,6 @@ import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 
 class SideNavBar extends StatelessWidget {
   SideNavBar();
-  final TextEditingController teamSelectionController = TextEditingController();
   @override
   Widget build(final BuildContext context) {
     return Drawer(
@@ -42,16 +41,17 @@ class SideNavBar extends StatelessWidget {
               buildWithTeam: (
                 final BuildContext context,
                 final LightTeam team,
+                final Widget searchBox,
+                final void Function() reset,
               ) {
-                teamSelectionController.clear();
+                reset();
                 Navigator.of(context).push(
                   MaterialPageRoute<CoachTeamData>(
                     builder: (final BuildContext contxt) => CoachTeamData(team),
                   ),
                 );
-                return Container();
+                return searchBox;
               },
-              controller: teamSelectionController,
             ),
           ),
           NavbarTile(
