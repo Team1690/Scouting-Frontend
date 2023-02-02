@@ -94,6 +94,11 @@ class Scatter extends StatelessWidget {
                                   "Average gamepiece points",
                                 ),
                                 sideTitles: SideTitles(
+                                  getTitlesWidget: (
+                                    final double title,
+                                    final TitleMeta meta,
+                                  ) =>
+                                      Container(child: Text(title.toString())),
                                   showTitles: true,
                                   interval: 5,
                                 ),
@@ -104,6 +109,11 @@ class Scatter extends StatelessWidget {
                                   "Gamepiece points standard deviation",
                                 ),
                                 sideTitles: SideTitles(
+                                  getTitlesWidget: (
+                                    final double title,
+                                    final TitleMeta meta,
+                                  ) =>
+                                      Container(child: Text(title.toString())),
                                   reservedSize: 22,
                                   showTitles: true,
                                   interval: 5,
