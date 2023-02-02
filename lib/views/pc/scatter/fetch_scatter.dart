@@ -62,42 +62,68 @@ Future<List<ScatterData>> fetchScatterData() async {
                 e["name"] as String,
                 e["colors_index"] as int,
               );
-              final double? avgAutoUpper = (e["matches_aggregate"]["aggregate"]
-                      ["avg"]["auto_upper"] as double?)
-                  .mapNullable((final double p0) => p0 * 4);
-              final double? avgTeleUpper = (e["matches_aggregate"]["aggregate"]
-                      ["avg"]["tele_upper"] as double?)
-                  .mapNullable((final double p0) => p0 * 2);
-              final double? avgAutoLower = (e["matches_aggregate"]["aggregate"]
-                      ["avg"]["auto_lower"] as double?)
-                  .mapNullable((final double p0) => p0 * 2);
-              final double? avgTeleLower = (e["matches_aggregate"]["aggregate"]
-                  ["avg"]["tele_lower"] as double?);
-              if (avgTeleUpper == null ||
-                  avgTeleLower == null ||
-                  avgAutoLower == null ||
-                  avgAutoUpper == null) return null;
-              final double xBallPointsAvg =
-                  avgTeleLower + avgAutoLower + avgTeleUpper + avgAutoUpper;
-              final List<dynamic> matches = e["matches"] as List<dynamic>;
-              final Iterable<int> matchBallPoints = matches.map(
-                (final dynamic e) => ((e["auto_lower"] as int) * 2 +
-                    (e["tele_lower"] as int) * 1 +
-                    (e["auto_upper"] as int) * 4 +
-                    (e["tele_upper"] as int) * 2),
+              final double? avgCones = getPoints(
+                true,
+                e["technical_matches_aggregate"]["aggregate"]["avg"],
               );
-              double yStddevBallPoints = 0;
-              for (final int element in matchBallPoints) {
-                yStddevBallPoints += (element - xBallPointsAvg).abs();
+              final double? avgCubes = getPoints(
+                false,
+                e["technical_matches_aggregate"]["aggregate"]["avg"],
+              );
+              if (avgCubes == null || avgCones == null) return null;
+              final double gamepiecePointsAvg = avgCubes + avgCones;
+              final List<dynamic> matches =
+                  e["technical_matches"] as List<dynamic>;
+              final Iterable<int> matchesGamepiecePoints = matches.map(
+                (final dynamic match) => getPoints(true, match)! +
+                        getPoints(false, match)!
+                    as int, //these values being null was already delt with in the above 'if' statement
+              );
+              double yStddevGamepiecePoints = 0;
+              for (final int match in matchesGamepiecePoints) {
+                yStddevGamepiecePoints += (match - gamepiecePointsAvg).abs();
               }
-              yStddevBallPoints /= matchBallPoints.length;
-              return ScatterData(xBallPointsAvg, yStddevBallPoints, team);
+              yStddevGamepiecePoints /= matchesGamepiecePoints.length;
+              return ScatterData(
+                gamepiecePointsAvg,
+                yStddevGamepiecePoints,
+                team,
+              );
             })
-            .where((final ScatterData? element) => element != null)
+            .where((final ScatterData? data) => data != null)
             .cast<ScatterData>()
             .toList();
       },
     ),
   );
   return result.mapQueryResult();
+}
+
+double? getPoints(final bool isCone, final dynamic data) {
+  double? calculatePoints(final bool isTele) {
+    final double? top =
+        data["${isTele ? "tele" : "auto"}_${isCone ? "cones" : "cubes"}_top"]
+            as double?;
+    final double? mid =
+        data["${isTele ? "tele" : "auto"}_${isCone ? "cones" : "cubes"}_mid"]
+            as double?;
+    final double? low =
+        data["${isTele ? "tele" : "auto"}_${isCone ? "cones" : "cubes"}_low"]
+            as double?;
+
+    return top.mapNullable(
+      (final double top) =>
+          top * (isTele ? 5 : 6) +
+          mid! * (isTele ? 3 : 4) +
+          low! * (isTele ? 2 : 3),
+    ); //these values can only be null if all of them is null. aka the data does not exist
+  }
+
+  return calculatePoints(true).mapNullable(
+    (final double telePoints) =>
+        telePoints +
+        calculatePoints(
+          false,
+        )!,
+  ); //same principle as stated above
 }
