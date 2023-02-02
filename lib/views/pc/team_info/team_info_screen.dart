@@ -3,65 +3,69 @@ import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
+import "package:scouting_frontend/views/common/no_team_selected.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_data.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 
-class TeamInfoScreen extends StatefulWidget {
-  TeamInfoScreen({final LightTeam? initalTeam});
-  @override
-  State<TeamInfoScreen> createState() => _TeamInfoScreenState();
-}
+class TeamInfoScreen extends StatelessWidget {
+  TeamInfoScreen({this.initalTeam});
 
-class _TeamInfoScreenState extends State<TeamInfoScreen> {
-  final TextEditingController team = TextEditingController();
+  final LightTeam? initalTeam;
+
   @override
-  Widget build(final BuildContext context) => DashboardScaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+  Widget build(final BuildContext context) {
+    return DashboardScaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(defaultPadding),
+        child: TeamSelectionFuture(
+          teams: TeamProvider.of(context).teams,
+          buildWithoutTeam: (final Widget searchBox, final _) => Align(
+            alignment: Alignment.topCenter,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: searchBox,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(),
+                )
+              ],
+            ),
+          ),
+          buildWithTeam: (
+            final BuildContext context,
+            final LightTeam team,
+            final Widget searchBox,
+            final _,
+          ) =>
+              Column(
             children: <Widget>[
               Row(
-                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  Expanded(flex: 1, child: searchBox),
+                  SizedBox(width: defaultPadding),
                   Expanded(
-                    flex: 1,
-                    child: TeamSelectionFuture(
-                      teams: TeamProvider.of(context).teams,
-                      controller: team,
-                      buildWithTeam:
-                          (final BuildContext context, final LightTeam team) =>
-                              Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text("hi"),
-                          SizedBox(height: defaultPadding),
-                          TeamInfoData(team),
-                        ],
-                      )
-                      //       Column(
-                      // children: <Widget>[
-                      //   SizedBox(width: defaultPadding),
-                      //   Expanded(
-                      //     flex: 2,
-                      //     child: Container(),
-                      //   ),
-                      //   SizedBox(height: defaultPadding),
-                      //   Expanded(
-                      //     flex: 10,
-                      //     child: TeamInfoData(team),
-                      //   ),
-                      // ],
-                      // ),
-                      ,
-                    ),
+                    flex: 2,
+                    child: Container(),
                   ),
                 ],
+              ),
+              SizedBox(height: defaultPadding),
+              Expanded(
+                flex: 10,
+                child: team.mapNullable(
+                      TeamInfoData.new,
+                    ) ??
+                    NoTeamSelected(),
               ),
             ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }
