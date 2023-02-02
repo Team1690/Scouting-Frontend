@@ -55,25 +55,25 @@ Future<List<ScatterData>> fetchScatterData() async {
       document: gql(query),
       parserFn: (final Map<String, dynamic> data) {
         return (data["team"] as List<dynamic>)
-            .map<ScatterData?>((final dynamic e) {
+            .map<ScatterData?>((final dynamic scatterTeam) {
               final LightTeam team = LightTeam(
-                e["id"] as int,
-                e["number"] as int,
-                e["name"] as String,
-                e["colors_index"] as int,
+                scatterTeam["id"] as int,
+                scatterTeam["number"] as int,
+                scatterTeam["name"] as String,
+                scatterTeam["colors_index"] as int,
               );
               final double? avgCones = getPoints(
                 true,
-                e["technical_matches_aggregate"]["aggregate"]["avg"],
+                scatterTeam["technical_matches_aggregate"]["aggregate"]["avg"],
               );
               final double? avgCubes = getPoints(
                 false,
-                e["technical_matches_aggregate"]["aggregate"]["avg"],
+                scatterTeam["technical_matches_aggregate"]["aggregate"]["avg"],
               );
               if (avgCubes == null || avgCones == null) return null;
               final double gamepiecePointsAvg = avgCubes + avgCones;
               final List<dynamic> matches =
-                  e["technical_matches"] as List<dynamic>;
+                  scatterTeam["technical_matches"] as List<dynamic>;
               final Iterable<int> matchesGamepiecePoints = matches.map(
                 (final dynamic match) => getPoints(true, match)! +
                         getPoints(false, match)!
