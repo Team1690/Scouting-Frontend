@@ -1,8 +1,7 @@
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
-class MatchesVars implements HasuraVars {
+class MatchesVars {
   MatchesVars({
     this.matchesIdToUpdate,
     this.matchNumber,
@@ -46,25 +45,6 @@ class MatchesVars implements HasuraVars {
   LightTeam? red2;
   LightTeam? red3;
   bool happened;
-  @override
-  Map<String, dynamic> toHasuraVars() {
-    return <String, dynamic>{
-      if (matchesIdToUpdate != null) "id": matchesIdToUpdate,
-      "match": <String, dynamic>{
-        "match_number": matchNumber,
-        "match_type_id": matchTypeId,
-        "blue_0_id": blue0?.id,
-        "blue_1_id": blue1?.id,
-        "blue_2_id": blue2?.id,
-        "blue_3_id": blue3?.id,
-        "red_0_id": red0?.id,
-        "red_1_id": red1?.id,
-        "red_2_id": red2?.id,
-        "red_3_id": red3?.id,
-        "happened": happened,
-      }
-    };
-  }
 
   void reset() {
     matchNumber = null;
