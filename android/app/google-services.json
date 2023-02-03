@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "670441461388",
-    "project_id": "orbitscouting-85eb1",
-    "storage_bucket": "orbitscouting-85eb1.appspot.com"
+    "project_number": "345150904741",
+    "project_id": "orbit-scouting-2023",
+    "storage_bucket": "orbit-scouting-2023.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:670441461388:android:0cebfef6732be95a634da9",
+        "mobilesdk_app_id": "1:345150904741:android:764800d67528fc2088f04c",
         "android_client_info": {
           "package_name": "com.example.scouting_frontend"
         }
       },
       "oauth_client": [
         {
-          "client_id": "670441461388-843v6cg6gh7l47igjuqt50gnr2t9rv89.apps.googleusercontent.com",
+          "client_id": "345150904741-cu0vrqcjgscm4h0kq56qtj9ua7b966ku.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCHQk9OYS9_pxOnXxPsArPwLIoJzZUgKuc"
+          "current_key": "AIzaSyAElPcuVitcB7bjANgpJN9dPFU1bxFsws0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "670441461388-843v6cg6gh7l47igjuqt50gnr2t9rv89.apps.googleusercontent.com",
+              "client_id": "345150904741-cu0vrqcjgscm4h0kq56qtj9ua7b966ku.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "670441461388-aps6v3nm3geel0id2ldp7oa3un452u02.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.scoutingFrontend"
-              }
             }
           ]
         }
