@@ -26,6 +26,16 @@ class DefaultFirebaseOptions {
         return ios;
       case TargetPlatform.macOS:
         return macos;
+      case TargetPlatform.windows:
+        throw UnsupportedError(
+          "DefaultFirebaseOptions have not been configured for windows - "
+          "you can reconfigure this by running the FlutterFire CLI again.",
+        );
+      case TargetPlatform.linux:
+        throw UnsupportedError(
+          "DefaultFirebaseOptions have not been configured for linux - "
+          "you can reconfigure this by running the FlutterFire CLI again.",
+        );
       default:
         throw UnsupportedError(
           "DefaultFirebaseOptions are not supported for this platform.",
@@ -34,41 +44,41 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: "AIzaSyCknAC_BlwUJQpX8c8_RTwKj4G1W3Y7QoI",
-    appId: "1:670441461388:web:d06a4260ddb0351b634da9",
-    messagingSenderId: "670441461388",
-    projectId: "orbitscouting-85eb1",
-    authDomain: "orbitscouting-85eb1.firebaseapp.com",
-    storageBucket: "orbitscouting-85eb1.appspot.com",
+    apiKey: "AIzaSyBM6Q77T4XiEfq7EkbKAqauD-UFXPs_OLg",
+    appId: "1:345150904741:web:d13852b2577fcdeb88f04c",
+    messagingSenderId: "345150904741",
+    projectId: "orbit-scouting-2023",
+    authDomain: "orbit-scouting-2023.firebaseapp.com",
+    storageBucket: "orbit-scouting-2023.appspot.com",
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: "AIzaSyCHQk9OYS9_pxOnXxPsArPwLIoJzZUgKuc",
-    appId: "1:670441461388:android:0cebfef6732be95a634da9",
-    messagingSenderId: "670441461388",
-    projectId: "orbitscouting-85eb1",
-    storageBucket: "orbitscouting-85eb1.appspot.com",
+    apiKey: "AIzaSyAElPcuVitcB7bjANgpJN9dPFU1bxFsws0",
+    appId: "1:345150904741:android:764800d67528fc2088f04c",
+    messagingSenderId: "345150904741",
+    projectId: "orbit-scouting-2023",
+    storageBucket: "orbit-scouting-2023.appspot.com",
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: "AIzaSyBT0C7tnEgySd24rwtEhIn6J0vrj5axlXk",
-    appId: "1:670441461388:ios:d9ec418424dd8958634da9",
-    messagingSenderId: "670441461388",
-    projectId: "orbitscouting-85eb1",
-    storageBucket: "orbitscouting-85eb1.appspot.com",
+    apiKey: "AIzaSyBPWfM80ANS-gHJi5uf1od-j4DTF4FUbV8",
+    appId: "1:345150904741:ios:39d4f6253f0f039f88f04c",
+    messagingSenderId: "345150904741",
+    projectId: "orbit-scouting-2023",
+    storageBucket: "orbit-scouting-2023.appspot.com",
     iosClientId:
-        "670441461388-gocua51juul6uk92k9rdtjlf0l82bv68.apps.googleusercontent.com",
+        "345150904741-l2m72bss5a4bnvqlqv8rivj7n9qa33gk.apps.googleusercontent.com",
     iosBundleId: "com.example.ScoutingFrontend",
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: "AIzaSyBT0C7tnEgySd24rwtEhIn6J0vrj5axlXk",
-    appId: "1:670441461388:ios:2968d10991d89adf634da9",
-    messagingSenderId: "670441461388",
-    projectId: "orbitscouting-85eb1",
-    storageBucket: "orbitscouting-85eb1.appspot.com",
+    apiKey: "AIzaSyBPWfM80ANS-gHJi5uf1od-j4DTF4FUbV8",
+    appId: "1:345150904741:ios:bd22c9c9dfc35e3e88f04c",
+    messagingSenderId: "345150904741",
+    projectId: "orbit-scouting-2023",
+    storageBucket: "orbit-scouting-2023.appspot.com",
     iosClientId:
-        "670441461388-aps6v3nm3geel0id2ldp7oa3un452u02.apps.googleusercontent.com",
+        "345150904741-uig7mjhpgh9ntbnarcfrl9grslt6dihu.apps.googleusercontent.com",
     iosBundleId: "com.example.scoutingFrontend",
   );
 }
