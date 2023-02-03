@@ -7,13 +7,23 @@ class TeamSelectionFuture extends StatelessWidget {
   TeamSelectionFuture({
     this.teams,
     required this.buildWithTeam,
-    required this.controller,
     this.dontValidate = false,
+    this.buildWithoutTeam,
+    this.onSelected,
   });
+  final void Function(LightTeam)? onSelected;
   final bool dontValidate;
   final List<LightTeam>? teams;
-  final TextEditingController controller;
-  final Widget Function(BuildContext, LightTeam) buildWithTeam;
+  final Widget Function(
+    BuildContext,
+    LightTeam,
+    Widget searchBox,
+    void Function() resetSearchBox,
+  ) buildWithTeam;
+  final Widget Function(
+    Widget searchBox,
+    void Function() resetSearchBox,
+  )? buildWithoutTeam;
 
   @override
   Widget build(final BuildContext context) {
@@ -23,9 +33,10 @@ class TeamSelectionFuture extends StatelessWidget {
       return TeamsSearchBox(
         buildSuggestion: (final LightTeam p0) => "${p0.number} ${p0.name}",
         dontValidate: dontValidate,
-        typeAheadController: controller,
         teams: teams ?? TeamProvider.of(context).teams,
         buildWithTeam: buildWithTeam,
+        buildWithoutTeam: buildWithoutTeam,
+        onSelected: onSelected,
       );
     }
   }
