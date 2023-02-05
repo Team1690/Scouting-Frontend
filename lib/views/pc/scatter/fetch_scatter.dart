@@ -1,3 +1,4 @@
+import "package:collection/collection.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -74,24 +75,26 @@ Future<List<ScatterData>> fetchScatterData() async {
               final double gamepiecePointsAvg = avgCubes + avgCones;
               final List<dynamic> matches =
                   scatterTeam["technical_matches"] as List<dynamic>;
-              final Iterable<int> matchesGamepiecePoints = matches.map(
-                (final dynamic match) => getPoints(true, match)! +
-                        getPoints(false, match)!
-                    as int, //these values being null was already delt with in the above 'if' statement
+              final Iterable<double> matchesGamepiecePoints = matches.map(
+                (final dynamic match) =>
+                    getPoints(true, match)! +
+                    getPoints(
+                      false,
+                      match,
+                    )!, //these values being null was already delt with in the above 'if' statement
               );
-              double yStddevGamepiecePoints = 0;
-              for (final int match in matchesGamepiecePoints) {
-                yStddevGamepiecePoints += (match - gamepiecePointsAvg).abs();
-              }
-              yStddevGamepiecePoints /= matchesGamepiecePoints.length;
+              final double yStddevGamepiecePoints = matchesGamepiecePoints
+                  .map(
+                    (final double e) => (e - gamepiecePointsAvg).abs(),
+                  )
+                  .average;
               return ScatterData(
                 gamepiecePointsAvg,
                 yStddevGamepiecePoints,
                 team,
               );
             })
-            .where((final ScatterData? data) => data != null)
-            .cast<ScatterData>()
+            .whereType<ScatterData>()
             .toList();
       },
     ),
