@@ -358,7 +358,19 @@ class _PitViewState extends State<PitView> {
           }
           }
           """,
-                    vars: vars,
+                    toHasuraVars: () => <String, dynamic>{
+                      "drivetrain_id": vars.driveTrainType,
+                      "drivemotor_id": vars.driveMotorType,
+                      "drive_motor_amount": vars.driveMotorAmount,
+                      "has_shifter": vars.hasShifter,
+                      "gearbox_purchased": vars.gearboxPurchased,
+                      "notes": vars.notes,
+                      "drive_wheel_type": vars.driveWheelType,
+                      "team_id": vars.teamId,
+                      "width": int.parse(vars.width),
+                      "length": int.parse(vars.length),
+                      "weight": int.parse(vars.weight),
+                    },
                     resetForm: resetFrame,
                   )
                 ],
