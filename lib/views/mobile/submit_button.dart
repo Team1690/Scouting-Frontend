@@ -3,17 +3,16 @@ import "package:graphql/client.dart";
 import "package:progress_state_button/iconed_button.dart";
 import "package:progress_state_button/progress_button.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class SubmitButton extends StatefulWidget {
   SubmitButton({
-    required this.vars,
+    required this.toHasuraVars,
     required this.mutation,
     required this.resetForm,
     required this.validate,
   });
   final bool Function() validate;
-  final HasuraVars vars;
+  final Map<String, dynamic> Function() toHasuraVars;
   final String mutation;
   final void Function() resetForm;
 
@@ -91,7 +90,7 @@ class _SubmitButtonState extends State<SubmitButton> {
         final QueryResult<void> queryResult = await client.mutate(
           MutationOptions<void>(
             document: gql(widget.mutation),
-            variables: widget.vars.toHasuraVars(),
+            variables: widget.toHasuraVars(),
           ),
         );
         final OperationException? exception = queryResult.exception;
