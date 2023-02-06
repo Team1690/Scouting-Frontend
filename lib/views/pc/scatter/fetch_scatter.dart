@@ -46,7 +46,6 @@ query Scatter {
   }
   }
 }
-
 """;
 Future<List<ScatterData>> fetchScatterData() async {
   final GraphQLClient client = getClient();
@@ -63,33 +62,24 @@ Future<List<ScatterData>> fetchScatterData() async {
                 scatterTeam["name"] as String,
                 scatterTeam["colors_index"] as int,
               );
-              final double? avgCones = getPoints(
-                true,
+              final double? avgPoints = getPoints(
                 scatterTeam["technical_matches_aggregate"]["aggregate"]["avg"],
               );
-              final double? avgCubes = getPoints(
-                false,
-                scatterTeam["technical_matches_aggregate"]["aggregate"]["avg"],
-              );
-              if (avgCubes == null || avgCones == null) return null;
-              final double gamepiecePointsAvg = avgCubes + avgCones;
+              if (avgPoints == null) return null;
               final List<dynamic> matches =
                   scatterTeam["technical_matches"] as List<dynamic>;
               final Iterable<double> matchesGamepiecePoints = matches.map(
-                (final dynamic match) =>
-                    getPoints(true, match)! +
-                    getPoints(
-                      false,
-                      match,
-                    )!, //these values being null was already delt with in the above 'if' statement
+                (final dynamic match) => getPoints(
+                  match,
+                )!, //these values being null was already delt with in the above 'if' statement
               );
               final double yStddevGamepiecePoints = matchesGamepiecePoints
                   .map(
-                    (final double e) => (e - gamepiecePointsAvg).abs(),
+                    (final double e) => (e - avgPoints).abs(),
                   )
                   .average;
               return ScatterData(
-                gamepiecePointsAvg,
+                avgPoints,
                 yStddevGamepiecePoints,
                 team,
               );
@@ -102,31 +92,27 @@ Future<List<ScatterData>> fetchScatterData() async {
   return result.mapQueryResult();
 }
 
-double? getPoints(final bool isCone, final dynamic data) {
-  double? calculatePoints(final bool isTele) {
-    final double? top =
-        data["${isTele ? "tele" : "auto"}_${isCone ? "cones" : "cubes"}_top"]
-            as double?;
-    final double? mid =
-        data["${isTele ? "tele" : "auto"}_${isCone ? "cones" : "cubes"}_mid"]
-            as double?;
-    final double? low =
-        data["${isTele ? "tele" : "auto"}_${isCone ? "cones" : "cubes"}_low"]
-            as double?;
-
-    return top.mapNullable(
-      (final double top) =>
-          top * (isTele ? 5 : 6) +
-          mid! * (isTele ? 3 : 4) +
-          low! * (isTele ? 2 : 3),
-    ); //these values can only be null if all of them is null. aka the data does not exist
+double? getPoints(final dynamic data) {
+  final Map<String, int> pointValues = <String, int>{
+    "top": 5,
+    "mid": 3,
+    "low": 2,
+  };
+  if (data["tele_cones_top"] == null) {
+    //the only case in which one of the values are null is when the team match data doesnt exist in which case we return null.
+    return null;
+  } else {
+    double auto = 0;
+    double tele = 0;
+    for (final MapEntry<String, int> pointValue in pointValues.entries) {
+      auto += (data["auto_cubes_${pointValue.key}"] as double) *
+              (pointValue.value + 1) +
+          (data["auto_cones_${pointValue.key}"] as double) *
+              (pointValue.value + 1);
+      tele += (data["tele_cubes_${pointValue.key}"] as double) *
+              pointValue.value +
+          (data["tele_cones_${pointValue.key}"] as double) * pointValue.value;
+    }
+    return auto + tele;
   }
-
-  return calculatePoints(true).mapNullable(
-    (final double telePoints) =>
-        telePoints +
-        calculatePoints(
-          false,
-        )!,
-  ); //same principle as stated above
 }
