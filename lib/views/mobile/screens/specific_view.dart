@@ -267,7 +267,19 @@ mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes:
                   }
 
                       """,
-                      vars: vars,
+                      toHasuraVars: () => <String, dynamic>{
+                        "team_id": vars.team?.id,
+                        "drivetrain_and_driving": vars.drivetrainAndDriving,
+                        "intake": vars.intake,
+                        "placement": vars.placement,
+                        "defense": vars.defense,
+                        "general_notes": vars.generalNotes,
+                        "is_rematch": vars.isRematch,
+                        "schedule_match_id": vars.scheduleMatch?.id,
+                        "scouter_name": vars.name,
+                        if (vars.faultMessage != null)
+                          "fault_message": vars.faultMessage
+                      },
                     ),
                   ),
                 ],
