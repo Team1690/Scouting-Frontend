@@ -203,7 +203,23 @@ class _ChangeMatchState extends State<ChangeMatch> {
                   height: 15,
                 ),
                 SubmitButton(
-                  vars: vars,
+                  toHasuraVars: () => <String, dynamic>{
+                    if (vars.matchesIdToUpdate != null)
+                      "id": vars.matchesIdToUpdate,
+                    "match": <String, dynamic>{
+                      "match_number": vars.matchNumber,
+                      "match_type_id": vars.matchTypeId,
+                      "blue_0_id": vars.blue0?.id,
+                      "blue_1_id": vars.blue1?.id,
+                      "blue_2_id": vars.blue2?.id,
+                      "blue_3_id": vars.blue3?.id,
+                      "red_0_id": vars.red0?.id,
+                      "red_1_id": vars.red1?.id,
+                      "red_2_id": vars.red2?.id,
+                      "red_3_id": vars.red3?.id,
+                      "happened": vars.happened,
+                    }
+                  },
                   mutation: widget.initialVars == null ? mutation : update,
                   resetForm: () {},
                   validate: () => formKey.currentState!.validate(),
