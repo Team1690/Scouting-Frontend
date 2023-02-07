@@ -26,13 +26,6 @@ class _CompareScreenState extends State<CompareScreen> {
   late final SplayTreeSet<LightTeam> teams = SplayTreeSet<LightTeam>(
     (final LightTeam p0, final LightTeam p1) => p0.id.compareTo(p1.id),
   )..addAll(widget.initialTeams);
-  final TextEditingController controller = TextEditingController();
-  void removeTeam(final MapEntry<int, LightTeam> index) {
-    teams.removeWhere(
-      (final LightTeam entry) => entry.number == index.value.number,
-    );
-    controller.value = TextEditingValue.empty;
-  }
 
   @override
   Widget build(final BuildContext context) {
@@ -63,15 +56,23 @@ class _CompareScreenState extends State<CompareScreen> {
                     child: TeamSelectionFuture(
                       teams: TeamProvider.of(context).teams
                         ..removeWhere(teams.contains),
-                      onChange: (final LightTeam team) {
-                        if (teams.contains(team)) return;
+                      onSelected: (final LightTeam team) {
                         setState(() {
-                          teams.add(
-                            team,
-                          );
+                          if (!teams.contains(team)) {
+                            teams.add(
+                              team,
+                            );
+                          }
                         });
                       },
-                      controller: controller,
+                      buildWithTeam: (
+                        final BuildContext context,
+                        final LightTeam team,
+                        final Widget searchBox,
+                        final _,
+                      ) {
+                        return searchBox;
+                      },
                     ),
                   ),
                   SizedBox(width: defaultPadding),
