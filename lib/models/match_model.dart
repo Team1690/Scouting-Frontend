@@ -107,3 +107,20 @@ class Match implements HasuraVars {
     };
   }
 }
+
+enum MatchMode { auto, tele }
+
+enum Gamepiece { cone, cube }
+
+enum GridLevel { top, mid, low }
+
+class EffectiveScore {
+  EffectiveScore({
+    required this.mode,
+    required this.piece,
+    required this.level,
+  });
+  final MatchMode mode;
+  final Gamepiece piece;
+  final GridLevel? level;
+}
