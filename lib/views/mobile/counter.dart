@@ -7,7 +7,8 @@ class Counter extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.onChange,
-    this.color,
+    this.plus = Colors.green,
+    this.minus = Colors.red,
     this.stepValue = 1,
     this.upperLimit = 100,
     this.lowerLimit = 0,
@@ -16,7 +17,8 @@ class Counter extends StatelessWidget {
   });
   final String label;
   final IconData icon;
-  final Color? color;
+  final Color plus;
+  final Color minus;
   final void Function(int) onChange;
   final int stepValue;
   final int upperLimit;
@@ -43,10 +45,14 @@ class Counter extends StatelessWidget {
               flex: 2,
               child: FittedBox(
                 fit: BoxFit.fitWidth,
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  textScaleFactor: 1.5,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    textScaleFactor: 1.5,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
@@ -64,7 +70,7 @@ class Counter extends StatelessWidget {
               Expanded(
                 flex: 6,
                 child: RoundedIconButton(
-                  color: color ?? Colors.red,
+                  color: minus,
                   icon: Icons.remove,
                   onPress: () => onChange(max(lowerLimit, count - stepValue)),
                   onLongPress: () =>
@@ -82,7 +88,7 @@ class Counter extends StatelessWidget {
               Expanded(
                 flex: 6,
                 child: RoundedIconButton(
-                  color: color ?? Colors.green,
+                  color: plus,
                   icon: Icons.add,
                   onPress: () {
                     onChange(min(upperLimit, count + stepValue));
@@ -131,4 +137,49 @@ class RoundedIconButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class CounterSpec {
+  const CounterSpec(
+    this.label,
+    this.icon,
+    this.plus,
+    this.minus,
+    this.getValues,
+    this.updateValues,
+  );
+
+  const CounterSpec.amberColors(
+    final String label,
+    final IconData icon,
+    final int Function() getValues,
+    final void Function(int) updateValues,
+  ) : this(
+          label,
+          icon,
+          Colors.amber,
+          Colors.amber,
+          getValues,
+          updateValues,
+        );
+
+  const CounterSpec.purpleColors(
+    final String label,
+    final IconData icon,
+    final int Function() getValues,
+    final void Function(int) updateValues,
+  ) : this(
+          label,
+          icon,
+          Colors.deepPurple,
+          Colors.deepPurple,
+          getValues,
+          updateValues,
+        );
+  final String label;
+  final IconData icon;
+  final Color plus;
+  final Color minus;
+  final int Function() getValues;
+  final void Function(int) updateValues;
 }
