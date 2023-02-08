@@ -42,7 +42,6 @@ class _UserInputState extends State<UserInput> {
 
   final TextEditingController matchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
-  final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
   bool toggleLightsState = false;
   late final Match match = Match(
@@ -60,29 +59,485 @@ class _UserInputState extends State<UserInput> {
   };
   @override
   Widget build(final BuildContext context) {
+    return TeamSelectionMatches(
+      onSelected: (final LightTeam team) {
+        match.scoutedTeam = team;
+      },
+      match: match.scheduleMatch,
+      buildWithoutTeam:
+          (final Widget searchBox, final void Function() resetSearchbox) =>
+              outerBody(
+        context,
+        Column(
+          children: <Widget>[
+            matchSelection(
+              context,
+              resetSearchbox,
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            searchBox,
+          ],
+        ),
+        appBar(),
+      ),
+      buildWithTeam: (
+        final BuildContext context,
+        final LightTeam team,
+        final Widget searchBox,
+        final void Function() resetSearchBox,
+      ) =>
+          outerBody(
+        context,
+        Column(
+          children: <Widget>[
+            matchSelection(context, resetSearchBox),
+            SizedBox(
+              height: 15,
+            ),
+            searchBox,
+            SizedBox(
+              height: 15,
+            ),
+            TextFormField(
+              controller: scouterNameController,
+              validator: (final String? value) =>
+                  value != null && value.isNotEmpty
+                      ? null
+                      : "Please enter your name",
+              onChanged: (final String p0) {
+                match.name = p0;
+              },
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.person),
+                border: OutlineInputBorder(),
+                hintText: "Scouter name",
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            ToggleButtons(
+              fillColor: Color.fromARGB(10, 244, 67, 54),
+              selectedColor: Colors.red,
+              selectedBorderColor: Colors.red,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text("Rematch"),
+                )
+              ],
+              isSelected: <bool>[match.isRematch],
+              onPressed: (final int i) {
+                setState(() {
+                  match.isRematch = !match.isRematch;
+                });
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            SectionDivider(label: "Autonomous"),
+            SizedBox(
+              height: 20,
+            ),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SectionDivider(label: "Cones"),
+                        Counter(
+                          color: Colors.amber,
+                          label: "   Top Scored",
+                          icon: Icons.arrow_circle_up,
+                          count: match.autoConesTop,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.autoConesTop);
+                              match.autoConesTop = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.amber,
+                          label: "   Mid Scored",
+                          icon: Icons.arrow_circle_left,
+                          count: match.autoConesMid,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.autoConesMid);
+                              match.autoConesMid = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.amber,
+                          label: "   Low Scored",
+                          icon: Icons.arrow_circle_down,
+                          count: match.autoConesLow,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.autoConesLow);
+                              match.autoConesLow = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.amber,
+                          count: match.autoConesFailed,
+                          label: "      Failed      ",
+                          icon: Icons.error,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.autoConesFailed);
+                              match.autoConesFailed = p0;
+                            });
+                          },
+                        ),
+                      ]
+                          .expand(
+                            (final Widget element) => <Widget>[
+                              SizedBox(
+                                height: 10,
+                              ),
+                              element,
+                            ],
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  VerticalDivider(
+                    color: Colors.black.withOpacity(0.4),
+                    thickness: 2,
+                    width: 30,
+                    indent: 75,
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SectionDivider(label: "Cubes"),
+                        Counter(
+                          color: Colors.deepPurple,
+                          label: "   Top Scored",
+                          icon: Icons.arrow_circle_up,
+                          count: match.autoCubesTop,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.autoCubesTop);
+                              match.autoCubesTop = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.deepPurple,
+                          label: "   Mid Scored",
+                          icon: Icons.arrow_circle_left,
+                          count: match.autoCubesMid,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.autoCubesMid);
+                              match.autoCubesMid = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.deepPurple,
+                          label: "   Low Scored",
+                          icon: Icons.arrow_circle_down,
+                          count: match.autoCubesLow,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.autoCubesLow);
+                              match.autoCubesLow = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.deepPurple,
+                          count: match.autoCubesFailed,
+                          label: "      Failed      ",
+                          icon: Icons.error,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.autoCubesFailed);
+                              match.autoCubesFailed = p0;
+                            });
+                          },
+                        ),
+                      ]
+                          .expand(
+                            (final Widget element) => <Widget>[
+                              SizedBox(
+                                height: 10,
+                              ),
+                              element,
+                            ],
+                          )
+                          .toList(),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Selector<int>(
+                validate: (final int? p0) =>
+                    p0.onNull("Please pick a balance result"),
+                options: IdProvider.of(context).balance.idToName.keys.toList(),
+                placeholder: "Choose a balance result",
+                makeItem: (final int p0) =>
+                    IdProvider.of(context).balance.idToName[p0]!,
+                onChange: (final int p0) {
+                  setState(() {
+                    match.autoBalanceStatus = p0;
+                  });
+                },
+                value: match.autoBalanceStatus,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            SectionDivider(label: "Teleoperated"),
+            SizedBox(
+              height: 10,
+            ),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SectionDivider(label: "Cones"),
+                        Counter(
+                          color: Colors.amber,
+                          label: "   Top Scored",
+                          icon: Icons.arrow_circle_up,
+                          count: match.teleConesTop,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.teleConesTop);
+                              match.teleConesTop = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.amber,
+                          label: "   Mid Scored",
+                          icon: Icons.arrow_circle_left,
+                          count: match.teleConesMid,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.teleConesMid);
+                              match.teleConesMid = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.amber,
+                          label: "   Low Scored",
+                          icon: Icons.arrow_circle_down,
+                          count: match.teleConesLow,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.teleConesLow);
+                              match.teleConesLow = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.amber,
+                          count: match.teleConesFailed,
+                          label: "      Failed      ",
+                          icon: Icons.error,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.teleConesFailed);
+                              match.teleConesFailed = p0;
+                            });
+                          },
+                        ),
+                      ]
+                          .expand(
+                            (final Widget element) => <Widget>[
+                              SizedBox(
+                                height: 10,
+                              ),
+                              element,
+                            ],
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  VerticalDivider(
+                    color: Colors.black.withOpacity(0.4),
+                    thickness: 2,
+                    width: 30,
+                    indent: 75,
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SectionDivider(label: "Cubes"),
+                        Counter(
+                          color: Colors.deepPurple,
+                          label: "   Top Scored",
+                          icon: Icons.arrow_circle_up,
+                          count: match.teleCubesTop,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.teleCubesTop);
+                              match.teleCubesTop = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.deepPurple,
+                          label: "   Mid Scored",
+                          icon: Icons.arrow_circle_left,
+                          count: match.teleCubesMid,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.teleCubesMid);
+                              match.teleCubesMid = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.deepPurple,
+                          label: "   Low Scored",
+                          icon: Icons.arrow_circle_down,
+                          count: match.teleCubesLow,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.teleCubesLow);
+                              match.teleCubesLow = p0;
+                            });
+                          },
+                        ),
+                        Counter(
+                          color: Colors.deepPurple,
+                          count: match.teleCubesFailed,
+                          label: "      Failed      ",
+                          icon: Icons.error,
+                          onChange: (final int p0) {
+                            setState(() {
+                              flickerScreen(p0, match.teleCubesFailed);
+                              match.teleCubesFailed = p0;
+                            });
+                          },
+                        ),
+                      ]
+                          .expand(
+                            (final Widget element) => <Widget>[
+                              SizedBox(
+                                height: 10,
+                              ),
+                              element,
+                            ],
+                          )
+                          .toList(),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            SectionDivider(label: "Endgame Balance"),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Selector<int>(
+                validate: (final int? p0) =>
+                    p0.onNull("Please pick a balance result"),
+                options: IdProvider.of(context).balance.idToName.keys.toList(),
+                placeholder: "Choose a balance result",
+                makeItem: (final int p0) =>
+                    IdProvider.of(context).balance.idToName[p0]!,
+                onChange: (final int p0) {
+                  setState(() {
+                    match.endgameBalanceStatus = p0;
+                  });
+                },
+                value: match.endgameBalanceStatus,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            SectionDivider(label: "Robot fault"),
+            Switcher(
+              labels: <String>["Didn't work on field", "Not on field"],
+              colors: <Color>[Colors.red, Color.fromARGB(255, 198, 29, 228)],
+              onChange: (final int i) {
+                setState(() {
+                  match.robotMatchStatusId = robotMatchStatusIndexToId[i]!;
+                });
+              },
+              selected: <int, int>{
+                for (final MapEntry<int, int> i
+                    in robotMatchStatusIndexToId.entries)
+                  i.value: i.key
+              }[match.robotMatchStatusId]!,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            SubmitButton(
+              resetForm: () {
+                setState(() {
+                  match.clear(context);
+                  resetSearchBox();
+                  matchController.clear();
+                });
+              },
+              validate: () {
+                return formKey.currentState!.validate();
+              },
+              vars: match,
+              mutation: mutation,
+            ),
+          ],
+        ),
+        appBar(team),
+      ),
+    );
+  }
+
+  Scaffold outerBody(
+    final BuildContext context,
+    final Widget body,
+    final AppBar appBar,
+  ) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: SideNavBar(),
-      appBar: AppBar(
-        actions: <Widget>[
-          RobotImageButton(teamId: () => match.scoutedTeam?.id),
-          ToggleButtons(
-            children: <Icon>[Icon(Icons.lightbulb)],
-            isSelected: <bool>[toggleLightsState],
-            onPressed: (final int i) {
-              setState(() {
-                toggleLightsState = !toggleLightsState;
-              });
-            },
-            renderBorder: false,
-          )
-        ],
-        centerTitle: true,
-        elevation: 5,
-        title: const Text(
-          "Orbit Scouting",
-        ),
-      ),
+      appBar: appBar,
       body: Stack(
         children: <Widget>[
           SingleChildScrollView(
@@ -93,470 +548,7 @@ class _UserInputState extends State<UserInput> {
                   horizontal: 20,
                   vertical: 10,
                 ),
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      controller: scouterNameController,
-                      validator: (final String? value) =>
-                          value != null && value.isNotEmpty
-                              ? null
-                              : "Please enter your name",
-                      onChanged: (final String p0) {
-                        match.name = p0;
-                      },
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(),
-                        hintText: "Scouter name",
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    MatchSelectionFuture(
-                      controller: matchController,
-                      matches: MatchesProvider.of(context).matches,
-                      onChange: (final ScheduleMatch selectedMatch) {
-                        setState(() {
-                          match.scheduleMatch = selectedMatch;
-                          match.scoutedTeam = null;
-                          teamNumberController.clear();
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    TeamSelectionMatches(
-                      match: match.scheduleMatch,
-                      controller: teamNumberController,
-                      onChange: (final LightTeam team) {
-                        setState(() {
-                          match.scoutedTeam = team;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    ToggleButtons(
-                      fillColor: Color.fromARGB(10, 244, 67, 54),
-                      selectedColor: Colors.red,
-                      selectedBorderColor: Colors.red,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text("Rematch"),
-                        )
-                      ],
-                      isSelected: <bool>[match.isRematch],
-                      onPressed: (final int i) {
-                        setState(() {
-                          match.isRematch = !match.isRematch;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SectionDivider(label: "Autonomous"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                SectionDivider(label: "Cones"),
-                                Counter(
-                                  color: Colors.amber,
-                                  label: "   Top Scored",
-                                  icon: Icons.arrow_circle_up,
-                                  count: match.autoConesTop,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.autoConesTop);
-                                      match.autoConesTop = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.amber,
-                                  label: "   Mid Scored",
-                                  icon: Icons.arrow_circle_left,
-                                  count: match.autoConesMid,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.autoConesMid);
-                                      match.autoConesMid = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.amber,
-                                  label: "   Low Scored",
-                                  icon: Icons.arrow_circle_down,
-                                  count: match.autoConesLow,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.autoConesLow);
-                                      match.autoConesLow = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.amber,
-                                  count: match.autoConesFailed,
-                                  label: "      Failed      ",
-                                  icon: Icons.error,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.autoConesFailed);
-                                      match.autoConesFailed = p0;
-                                    });
-                                  },
-                                ),
-                              ]
-                                  .expand(
-                                    (final Widget element) => <Widget>[
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      element,
-                                    ],
-                                  )
-                                  .toList(),
-                            ),
-                          ),
-                          VerticalDivider(
-                            color: Colors.black.withOpacity(0.4),
-                            thickness: 2,
-                            width: 30,
-                            indent: 75,
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                SectionDivider(label: "Cubes"),
-                                Counter(
-                                  color: Colors.deepPurple,
-                                  label: "   Top Scored",
-                                  icon: Icons.arrow_circle_up,
-                                  count: match.autoCubesTop,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.autoCubesTop);
-                                      match.autoCubesTop = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.deepPurple,
-                                  label: "   Mid Scored",
-                                  icon: Icons.arrow_circle_left,
-                                  count: match.autoCubesMid,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.autoCubesMid);
-                                      match.autoCubesMid = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.deepPurple,
-                                  label: "   Low Scored",
-                                  icon: Icons.arrow_circle_down,
-                                  count: match.autoCubesLow,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.autoCubesLow);
-                                      match.autoCubesLow = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.deepPurple,
-                                  count: match.autoCubesFailed,
-                                  label: "      Failed      ",
-                                  icon: Icons.error,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.autoCubesFailed);
-                                      match.autoCubesFailed = p0;
-                                    });
-                                  },
-                                ),
-                              ]
-                                  .expand(
-                                    (final Widget element) => <Widget>[
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      element,
-                                    ],
-                                  )
-                                  .toList(),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Selector<int>(
-                        validate: (final int? p0) =>
-                            p0.onNull("Please pick a balance result"),
-                        options: IdProvider.of(context)
-                            .balance
-                            .idToName
-                            .keys
-                            .toList(),
-                        placeholder: "Choose a balance result",
-                        makeItem: (final int p0) =>
-                            IdProvider.of(context).balance.idToName[p0]!,
-                        onChange: (final int p0) {
-                          setState(() {
-                            match.autoBalanceStatus = p0;
-                          });
-                        },
-                        value: match.autoBalanceStatus,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SectionDivider(label: "Teleoperated"),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                SectionDivider(label: "Cones"),
-                                Counter(
-                                  color: Colors.amber,
-                                  label: "   Top Scored",
-                                  icon: Icons.arrow_circle_up,
-                                  count: match.teleConesTop,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.teleConesTop);
-                                      match.teleConesTop = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.amber,
-                                  label: "   Mid Scored",
-                                  icon: Icons.arrow_circle_left,
-                                  count: match.teleConesMid,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.teleConesMid);
-                                      match.teleConesMid = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.amber,
-                                  label: "   Low Scored",
-                                  icon: Icons.arrow_circle_down,
-                                  count: match.teleConesLow,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.teleConesLow);
-                                      match.teleConesLow = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.amber,
-                                  count: match.teleConesFailed,
-                                  label: "      Failed      ",
-                                  icon: Icons.error,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.teleConesFailed);
-                                      match.teleConesFailed = p0;
-                                    });
-                                  },
-                                ),
-                              ]
-                                  .expand(
-                                    (final Widget element) => <Widget>[
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      element,
-                                    ],
-                                  )
-                                  .toList(),
-                            ),
-                          ),
-                          VerticalDivider(
-                            color: Colors.black.withOpacity(0.4),
-                            thickness: 2,
-                            width: 30,
-                            indent: 75,
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                SectionDivider(label: "Cubes"),
-                                Counter(
-                                  color: Colors.deepPurple,
-                                  label: "   Top Scored",
-                                  icon: Icons.arrow_circle_up,
-                                  count: match.teleCubesTop,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.teleCubesTop);
-                                      match.teleCubesTop = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.deepPurple,
-                                  label: "   Mid Scored",
-                                  icon: Icons.arrow_circle_left,
-                                  count: match.teleCubesMid,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.teleCubesMid);
-                                      match.teleCubesMid = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.deepPurple,
-                                  label: "   Low Scored",
-                                  icon: Icons.arrow_circle_down,
-                                  count: match.teleCubesLow,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.teleCubesLow);
-                                      match.teleCubesLow = p0;
-                                    });
-                                  },
-                                ),
-                                Counter(
-                                  color: Colors.deepPurple,
-                                  count: match.teleCubesFailed,
-                                  label: "      Failed      ",
-                                  icon: Icons.error,
-                                  onChange: (final int p0) {
-                                    setState(() {
-                                      flickerScreen(p0, match.teleCubesFailed);
-                                      match.teleCubesFailed = p0;
-                                    });
-                                  },
-                                ),
-                              ]
-                                  .expand(
-                                    (final Widget element) => <Widget>[
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      element,
-                                    ],
-                                  )
-                                  .toList(),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SectionDivider(label: "Robot fault"),
-                    Switcher(
-                      labels: <String>["Not on field", "Didn't work on field"],
-                      colors: <Color>[
-                        Colors.red,
-                        Color.fromARGB(255, 198, 29, 228)
-                      ],
-                      onChange: (final int i) {
-                        setState(() {
-                          match.robotMatchStatusId =
-                              robotMatchStatusIndexToId[i]!;
-                        });
-                      },
-                      selected: <int, int>{
-                        for (final MapEntry<int, int> i
-                            in robotMatchStatusIndexToId.entries)
-                          i.value: i.key
-                      }[match.robotMatchStatusId]!,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SectionDivider(label: "Endgame Balance"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Selector<int>(
-                        validate: (final int? p0) =>
-                            p0.onNull("Please pick a balance result"),
-                        options: IdProvider.of(context)
-                            .balance
-                            .idToName
-                            .keys
-                            .toList(),
-                        placeholder: "Choose a balance result",
-                        makeItem: (final int p0) =>
-                            IdProvider.of(context).balance.idToName[p0]!,
-                        onChange: (final int p0) {
-                          setState(() {
-                            match.endgameBalanceStatus = p0;
-                          });
-                        },
-                        value: match.endgameBalanceStatus,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SubmitButton(
-                      resetForm: () {
-                        setState(() {
-                          match.clear(context);
-                          teamNumberController.clear();
-                          matchController.clear();
-                        });
-                      },
-                      validate: () {
-                        return formKey.currentState!.validate();
-                      },
-                      vars: match,
-                      mutation: mutation,
-                    )
-                  ],
-                ),
+                child: body,
               ),
             ),
           ),
@@ -566,6 +558,45 @@ class _UserInputState extends State<UserInput> {
             )
         ],
       ),
+    );
+  }
+
+  AppBar appBar([final LightTeam? team]) {
+    return AppBar(
+      actions: <Widget>[
+        if (team != null) RobotImageButton(teamId: () => team.id),
+        ToggleButtons(
+          children: <Icon>[Icon(Icons.lightbulb)],
+          isSelected: <bool>[toggleLightsState],
+          onPressed: (final int i) {
+            setState(() {
+              toggleLightsState = !toggleLightsState;
+            });
+          },
+          renderBorder: false,
+        )
+      ],
+      centerTitle: true,
+      elevation: 5,
+      title: const Text(
+        "Orbit Scouting",
+      ),
+    );
+  }
+
+  MatchSelectionFuture matchSelection(
+    final BuildContext context,
+    final void Function() resetSearchbox,
+  ) {
+    return MatchSelectionFuture(
+      controller: matchController,
+      matches: MatchesProvider.of(context).matches,
+      onChange: (final ScheduleMatch selectedMatch) {
+        setState(() {
+          match.scheduleMatch = selectedMatch;
+        });
+        resetSearchbox();
+      },
     );
   }
 }
