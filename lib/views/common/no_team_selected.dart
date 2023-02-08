@@ -8,19 +8,15 @@ class NoTeamSelected extends StatelessWidget {
         title: "",
         body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Expanded(
-                child: Container(),
-              ),
               Icon(
                 Icons.search,
                 size: 100,
               ),
               SizedBox(height: defaultPadding),
               Text("Please choose a team in order to display data"),
-              Expanded(
-                child: Container(),
-              ),
             ],
           ),
         ),
