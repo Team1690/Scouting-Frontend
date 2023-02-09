@@ -11,7 +11,9 @@ class TeamSelectionMatches extends StatelessWidget {
     required this.buildWithTeam,
     this.onSelected,
     this.buildWithoutTeam,
+    this.initialTeam,
   });
+  final LightTeam? initialTeam;
   final ScheduleMatch? match;
   final bool dontValidate;
   final void Function(LightTeam)? onSelected;
@@ -37,6 +39,7 @@ class TeamSelectionMatches extends StatelessWidget {
       buildWithTeam: buildWithTeam,
       onSelected: onSelected,
       buildWithoutTeam: buildWithoutTeam,
+      initalTeam: initialTeam,
     );
   }
 }
