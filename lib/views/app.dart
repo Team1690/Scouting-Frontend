@@ -1,3 +1,4 @@
+import "package:scouting_frontend/drive_motor/drive_motor.dart";
 import "package:scouting_frontend/models/id_enums.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";

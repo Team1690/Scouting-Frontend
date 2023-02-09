@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:graphql/client.dart";
 import "package:image_picker/image_picker.dart";
+import "package:scouting_frontend/drive_motor/drive_motor.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -122,25 +123,8 @@ class _PitViewState extends State<PitView> {
                   SizedBox(
                     height: 20,
                   ),
-                  Selector<int>(
-                    validate: (final int? result) =>
-                        result.onNull("Please pick a drivemotor"),
-                    placeholder: "Choose a drivemotor",
-                    makeItem: (final int driveMotorId) => IdProvider.of(context)
-                        .drivemotor
-                        .idToEnum[driveMotorId]!
-                        .title,
-                    value: vars.driveMotorType,
-                    options: IdProvider.of(context)
-                        .drivemotor
-                        .idToEnum
-                        .keys
-                        .toList(),
-                    onChange: (final int newValue) {
-                      setState(() {
-                        vars.driveMotorType = newValue;
-                      });
-                    },
+                  DriveMotorInput(
+                    vars: vars,
                   ),
                   SizedBox(
                     height: 20,

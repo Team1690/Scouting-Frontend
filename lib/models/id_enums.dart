@@ -7,17 +7,6 @@ enum RobotMatchStatus {
   final String title;
 }
 
-enum DriveMotor {
-  falcon("Falcon"),
-  neo("NEO"),
-  cim("CIM"),
-  miniCim("Mini CIM"),
-  other("Other");
-
-  const DriveMotor(this.title);
-  final String title;
-}
-
 enum DriveTrain {
   swerve("Swerve"),
   westCoast("West Coast"),
