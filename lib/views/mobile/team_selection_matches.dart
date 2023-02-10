@@ -31,13 +31,12 @@ class TeamSelectionMatches extends StatelessWidget {
     final bool isUnofficial = <int>[
       provider["Practice"]!,
       provider["Pre scouting"]!
-    ].contains(match.matchTypeId);
+    ].contains(match?.matchTypeId);
     return TeamsSearchBox(
       buildSuggestion: (final LightTeam p0) => match!.getTeamStation(p0)!,
       teams: match == null
           ? <LightTeam>[]
-          : match!.matchTypeId ==
-                  IdProvider.of(context).matchType.nameToId["Practice"]!
+          : isUnofficial
               ? TeamProvider.of(context).teams
               : <LightTeam>[...match!.blueAlliance, ...match!.redAlliance],
       dontValidate: dontValidate,
