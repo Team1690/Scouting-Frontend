@@ -92,21 +92,13 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                     (e["tele_upper"] as int) * 2 +
                     (e["tele_lower"] as int) +
                     (e["climb"]["points"] as int),
-            scheduleMatch.redAlliance.contains(
-              team,
-            )
-                ? Colors.red
-                : Colors.blue,
+            scheduleMatch.isOfficial()
+                ? scheduleMatch.getTeamStation(team).getColor()
+                : Colors.white,
             team,
-            scheduleMatch.redAlliance.contains(
-              team,
-            )
-                ? scheduleMatch.redAlliance.indexOf(
-                    team,
-                  )
-                : scheduleMatch.blueAlliance.indexOf(
-                    team,
-                  ),
+            scheduleMatch.isOfficial()
+                ? scheduleMatch.getTeamStation(team).alliancePos
+                : -1,
           ),
           scouter: e["scouter_name"] as String,
         );
@@ -122,10 +114,8 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                               .nameToId[identifier.type],
                 );
 
-        return <LightTeam>[
-          ...match.redAlliance,
-          ...match.blueAlliance,
-        ]
+        return match
+            .getTeams(context)
             .where(
               (final LightTeam element) => !scoutedMatches
                   .map((final Match e) => e.scoutedTeam.team)
@@ -136,7 +126,7 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                 scouter: "?",
                 scoutedTeam: StatusLightTeam(
                   0,
-                  match.redAlliance.contains(e) ? Colors.red : Colors.blue,
+                  match.getTeamStation(e).getColor(),
                   e,
                   -1,
                 ),
