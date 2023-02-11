@@ -1,4 +1,5 @@
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -32,26 +33,45 @@ ${isSubscription ? "subscription" : "query"} FetchMatches{
 }
   """;
 
-List<LightTeam> fromJson(final dynamic json, final String color) {
+List<TeamStation> returnTeamStation(final dynamic json, final String color) {
   final String optional = "${color}_3";
-  return <LightTeam>[
-    ...(<int>[0, 1, 2]
-        .map((final int index) => LightTeam.fromJson(json["${color}_$index"]))),
-    if (json[optional] != null) LightTeam.fromJson(json[optional])
+  return <TeamStation>[
+    ...(<int>[0, 1, 2].map(
+      (final int index) => TeamStation(
+        alliancePos: index,
+        allianceColor: color,
+        team: LightTeam.fromJson(json["${color}_$index"]),
+      ),
+    )),
+    if (json[optional] != null)
+      TeamStation(
+        team: LightTeam.fromJson(json[optional]),
+        allianceColor: color,
+        alliancePos: 3,
+      )
   ];
 }
 
 List<ScheduleMatch> parserFn(final Map<String, dynamic> matches) =>
     (matches["matches"] as List<dynamic>)
         .map(
-          (final dynamic e) => ScheduleMatch(
-            happened: e["happened"] as bool,
-            id: e["id"] as int,
-            matchTypeId: e["match_type_id"] as int,
-            matchNumber: e["match_number"] as int,
-            redAlliance: <LightTeam>[...fromJson(e, "red")],
-            blueAlliance: <LightTeam>[...fromJson(e, "blue")],
-          ),
+          (final dynamic e) => IdProvider.isOfficial(e["match_type_id"] as int)
+              ? OfficialMatch(
+                  happened: e["happened"] as bool,
+                  id: e["id"] as int,
+                  matchTypeId: e["match_type_id"] as int,
+                  matchNumber: e["match_number"] as int,
+                  teams: <TeamStation>[
+                    ...returnTeamStation(e, "blue"),
+                    ...returnTeamStation(e, "red")
+                  ],
+                )
+              : UnofficialMatch(
+                  happened: e["happened"] as bool,
+                  id: e["id"] as int,
+                  matchTypeId: e["match_type_id"] as int,
+                  matchNumber: e["match_number"] as int,
+                ),
         )
         .toList();
 
