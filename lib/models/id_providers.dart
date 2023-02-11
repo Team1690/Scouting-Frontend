@@ -52,6 +52,10 @@ class IdProvider extends InheritedWidget {
   final IdTable driveTrain;
   final IdTable drivemotor;
   final IdTable faultStatus;
+  static bool isOfficial(final int matchType) =>
+      matchType != 6 && matchType != 7;
+  // ignore: todo
+  //TODO need to make a proper table for this...
   @override
   bool updateShouldNotify(final IdProvider oldWidget) =>
       balance != oldWidget.balance ||
