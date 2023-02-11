@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
-import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/fetch_matches.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
@@ -65,9 +64,11 @@ class MatchesScreen extends StatelessWidget {
                                   "${IdProvider.of(context).matchType.idToName[e.matchTypeId]} ${e.matchNumber}",
                                 ),
                               ),
-                              ...e.blueAlliance
+                              ...e
+                                  .getStations()
                                   .map(
-                                    (final LightTeam currentTeam) => Expanded(
+                                    (final TeamStation currentStation) =>
+                                        Expanded(
                                       child: ElevatedButton(
                                         onPressed: () =>
                                             Navigator.pushReplacement(
@@ -76,7 +77,7 @@ class MatchesScreen extends StatelessWidget {
                                             builder:
                                                 (final BuildContext context) =>
                                                     TeamInfoScreen(
-                                              initalTeam: currentTeam,
+                                              initalTeam: currentStation.team,
                                             ),
                                           ),
                                         ),
@@ -87,38 +88,15 @@ class MatchesScreen extends StatelessWidget {
                                           ),
                                         ),
                                         child: Text(
-                                          currentTeam.number.toString(),
-                                          style: TextStyle(color: Colors.blue),
+                                          currentStation.team.number.toString(),
+                                          style: TextStyle(
+                                            color: currentStation.getColor(),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   )
                                   .toList(),
-                              ...e.redAlliance.map(
-                                (final LightTeam currentTeam) => Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute<TeamInfoScreen>(
-                                        builder: (final BuildContext context) =>
-                                            TeamInfoScreen(
-                                          initalTeam: currentTeam,
-                                        ),
-                                      ),
-                                    ),
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                        secondaryColor,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      currentTeam.number.toString(),
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-                                ),
-                              ),
                               IconButton(
                                 onPressed: () async {
                                   (await showDialog<ScheduleMatch>(
