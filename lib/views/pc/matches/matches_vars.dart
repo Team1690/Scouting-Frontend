@@ -21,18 +21,18 @@ class MatchesVars implements HasuraVars {
   MatchesVars.fromScheduleMatch(
     final ScheduleMatch match,
   ) : this(
-          blue0: match.blueAlliance[0],
-          blue1: match.blueAlliance[1],
-          blue2: match.blueAlliance[2],
-          blue3: match.blueAlliance.length == 4 ? match.blueAlliance[3] : null,
+          blue0: match.getTeamByStation("blue", 0),
+          blue1: match.getTeamByStation("blue", 1),
+          blue2: match.getTeamByStation("blue", 2),
+          blue3: match.getTeamByStation("blue", 3),
           happened: match.happened,
           matchNumber: match.matchNumber,
           matchTypeId: match.matchTypeId,
           matchesIdToUpdate: match.id,
-          red0: match.redAlliance[0],
-          red1: match.redAlliance[1],
-          red2: match.redAlliance[2],
-          red3: match.redAlliance.length == 4 ? match.redAlliance[3] : null,
+          red0: match.getTeamByStation("red", 0),
+          red1: match.getTeamByStation("red", 1),
+          red2: match.getTeamByStation("red", 2),
+          red3: match.getTeamByStation("red", 3),
         );
   int? matchNumber;
   int? matchTypeId;
