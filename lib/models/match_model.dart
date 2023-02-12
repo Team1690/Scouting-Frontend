@@ -198,3 +198,11 @@ double getPoints(final Map<EffectiveScore, double> countedValues) {
   }
   return points;
 }
+
+double getPieces(final Map<EffectiveScore, double> countedValues) {
+  double pieces = 0;
+  for (final EffectiveScore effectiveScore in score.keys) {
+    pieces += countedValues[effectiveScore]!;
+  }
+  return pieces;
+}
