@@ -111,22 +111,30 @@ class Match implements HasuraVars {
 }
 
 enum MatchMode {
-  auto(1),
-  tele(0);
+  auto(1, "auto"),
+  tele(0, "tele");
 
-  const MatchMode(this.pointAddition);
+  const MatchMode(this.pointAddition, this.title);
   final int pointAddition;
+  final String title;
 }
 
-enum Gamepiece { cone, cube }
+enum Gamepiece {
+  cone("cones"),
+  cube("cubes");
+
+  const Gamepiece(this.title);
+  final String title;
+}
 
 enum GridLevel {
-  top(5),
-  mid(3),
-  low(2);
+  top(5, "top"),
+  mid(3, "mid"),
+  low(2, "low");
 
-  const GridLevel(this.points);
+  const GridLevel(this.points, this.title);
   final int points;
+  final String title;
 }
 
 class EffectiveScore {
@@ -204,4 +212,26 @@ double getPieces(final Map<EffectiveScore, double> countedValues) {
     (final double gamepieces, final EffectiveScore effectiveScore) =>
         countedValues[effectiveScore]! + gamepieces,
   );
+}
+
+Map<EffectiveScore, double> sortByMode(
+  final MatchMode mode,
+  final dynamic data,
+) =>
+    Map<EffectiveScore, double>.fromEntries(
+      allLevel(mode).map(
+        (final EffectiveScore e) => MapEntry<EffectiveScore, double>(
+          e,
+          data["${e.mode.title}_${e.piece.title}_${e.level!.title}"] as double,
+        ),
+      ),
+    ); //we define these values, therefore they are not null (see 'allLevel()')
+
+Map<EffectiveScore, double> sortMatch(
+  final dynamic data,
+) {
+  return <EffectiveScore, double>{
+    ...sortByMode(MatchMode.auto, data),
+    ...sortByMode(MatchMode.tele, data)
+  };
 }
