@@ -1,6 +1,5 @@
 import "package:collection/collection.dart";
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/scatter/scatter.dart";
