@@ -191,18 +191,17 @@ final Map<EffectiveScore, int> score = <EffectiveScore, int>{
 };
 
 double getPoints(final Map<EffectiveScore, double> countedValues) {
-  double points = 0;
-  for (final EffectiveScore effectiveScore in score.keys) {
-    //all of score's EffectiveScore values are aasigned a value when initialized, therefore the '!'.
-    points += countedValues[effectiveScore]! * score[effectiveScore]!;
-  }
-  return points;
+  return countedValues.keys.fold(
+    0,
+    (final double points, final EffectiveScore effectiveScore) =>
+        countedValues[effectiveScore]! * score[effectiveScore]! + points,
+  );
 }
 
 double getPieces(final Map<EffectiveScore, double> countedValues) {
-  double pieces = 0;
-  for (final EffectiveScore effectiveScore in score.keys) {
-    pieces += countedValues[effectiveScore]!;
-  }
-  return pieces;
+  return countedValues.keys.fold(
+    0,
+    (final double gamepieces, final EffectiveScore effectiveScore) =>
+        countedValues[effectiveScore]! + gamepieces,
+  );
 }
