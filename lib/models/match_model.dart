@@ -4,6 +4,8 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
+import "map_nullable.dart";
+
 class Match implements HasuraVars {
   Match({
     this.autoConesTop = 0,
@@ -108,14 +110,27 @@ class Match implements HasuraVars {
   }
 }
 
-enum MatchMode { auto, tele }
+enum MatchMode {
+  auto(1),
+  tele(0);
+
+  const MatchMode(this.pointAddition);
+  final int pointAddition;
+}
 
 enum Gamepiece { cone, cube }
 
-enum GridLevel { top, mid, low }
+enum GridLevel {
+  top(5),
+  mid(3),
+  low(2);
+
+  const GridLevel(this.points);
+  final int points;
+}
 
 class EffectiveScore {
-  EffectiveScore({
+  const EffectiveScore({
     required this.mode,
     required this.piece,
     required this.level,
@@ -142,67 +157,37 @@ class EffectiveScore {
   }
 }
 
+List<EffectiveScore> coneAndCube(final GridLevel level, final MatchMode mode) =>
+    <EffectiveScore>[
+      EffectiveScore(
+        mode: mode,
+        piece: Gamepiece.cone,
+        level: level,
+      ),
+      EffectiveScore(
+        mode: mode,
+        piece: Gamepiece.cube,
+        level: level,
+      ),
+    ];
+
+List<EffectiveScore> allLevel(final MatchMode mode) => <EffectiveScore>[
+      ...GridLevel.values
+          .map((final GridLevel level) => coneAndCube(level, mode))
+          .expand(identity)
+          .toList()
+    ];
+
 final Map<EffectiveScore, int> score = <EffectiveScore, int>{
-  EffectiveScore(
-    mode: MatchMode.auto,
-    piece: Gamepiece.cone,
-    level: GridLevel.top,
-  ): 6,
-  EffectiveScore(
-    mode: MatchMode.auto,
-    piece: Gamepiece.cube,
-    level: GridLevel.top,
-  ): 6,
-  EffectiveScore(
-    mode: MatchMode.auto,
-    piece: Gamepiece.cone,
-    level: GridLevel.mid,
-  ): 4,
-  EffectiveScore(
-    mode: MatchMode.auto,
-    piece: Gamepiece.cube,
-    level: GridLevel.mid,
-  ): 4,
-  EffectiveScore(
-    mode: MatchMode.auto,
-    piece: Gamepiece.cone,
-    level: GridLevel.low,
-  ): 3,
-  EffectiveScore(
-    mode: MatchMode.auto,
-    piece: Gamepiece.cube,
-    level: GridLevel.low,
-  ): 3,
-  EffectiveScore(
-    mode: MatchMode.tele,
-    piece: Gamepiece.cone,
-    level: GridLevel.top,
-  ): 5,
-  EffectiveScore(
-    mode: MatchMode.tele,
-    piece: Gamepiece.cube,
-    level: GridLevel.top,
-  ): 5,
-  EffectiveScore(
-    mode: MatchMode.tele,
-    piece: Gamepiece.cone,
-    level: GridLevel.mid,
-  ): 3,
-  EffectiveScore(
-    mode: MatchMode.tele,
-    piece: Gamepiece.cube,
-    level: GridLevel.mid,
-  ): 3,
-  EffectiveScore(
-    mode: MatchMode.tele,
-    piece: Gamepiece.cone,
-    level: GridLevel.low,
-  ): 2,
-  EffectiveScore(
-    mode: MatchMode.tele,
-    piece: Gamepiece.cube,
-    level: GridLevel.low,
-  ): 2
+  ...MatchMode.values.map(allLevel).expand(identity).toList().asMap().map(
+        (final _, final EffectiveScore effectiveScore) =>
+            MapEntry<EffectiveScore, int>(
+          effectiveScore,
+          effectiveScore.level!.points +
+              effectiveScore.mode
+                  .pointAddition, //this can be null since we define each EffectiveScore here to have a level (aka not missed)
+        ),
+      )
 };
 
 double getPoints(final Map<EffectiveScore, double> countedValues) {
