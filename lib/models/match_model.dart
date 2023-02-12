@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:flutter/cupertino.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
@@ -123,4 +125,21 @@ class EffectiveScore {
   final MatchMode mode;
   final Gamepiece piece;
   final GridLevel? level;
+
+  @override
+  int get hashCode {
+    return Object.hashAll(<Object?>[
+      mode,
+      piece,
+      level,
+    ]);
+  }
+
+  @override
+  bool operator ==(final Object other) {
+    return other is EffectiveScore &&
+        other.level == level &&
+        other.mode == mode &&
+        other.piece == piece;
+  }
 }
