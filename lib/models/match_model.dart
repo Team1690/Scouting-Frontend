@@ -143,3 +143,190 @@ class EffectiveScore {
         other.piece == piece;
   }
 }
+
+final Map<EffectiveScore, int> score = <EffectiveScore, int>{
+  EffectiveScore(
+    mode: MatchMode.auto,
+    piece: Gamepiece.cone,
+    level: GridLevel.top,
+  ): 6,
+  EffectiveScore(
+    mode: MatchMode.auto,
+    piece: Gamepiece.cube,
+    level: GridLevel.top,
+  ): 6,
+  EffectiveScore(
+    mode: MatchMode.auto,
+    piece: Gamepiece.cone,
+    level: GridLevel.mid,
+  ): 4,
+  EffectiveScore(
+    mode: MatchMode.auto,
+    piece: Gamepiece.cube,
+    level: GridLevel.mid,
+  ): 4,
+  EffectiveScore(
+    mode: MatchMode.auto,
+    piece: Gamepiece.cone,
+    level: GridLevel.low,
+  ): 3,
+  EffectiveScore(
+    mode: MatchMode.auto,
+    piece: Gamepiece.cube,
+    level: GridLevel.low,
+  ): 3,
+  EffectiveScore(
+    mode: MatchMode.tele,
+    piece: Gamepiece.cone,
+    level: GridLevel.top,
+  ): 5,
+  EffectiveScore(
+    mode: MatchMode.tele,
+    piece: Gamepiece.cube,
+    level: GridLevel.top,
+  ): 5,
+  EffectiveScore(
+    mode: MatchMode.tele,
+    piece: Gamepiece.cone,
+    level: GridLevel.mid,
+  ): 3,
+  EffectiveScore(
+    mode: MatchMode.tele,
+    piece: Gamepiece.cube,
+    level: GridLevel.mid,
+  ): 3,
+  EffectiveScore(
+    mode: MatchMode.tele,
+    piece: Gamepiece.cone,
+    level: GridLevel.low,
+  ): 2,
+  EffectiveScore(
+    mode: MatchMode.tele,
+    piece: Gamepiece.cube,
+    level: GridLevel.low,
+  ): 2
+};
+
+double getPoints(final Map<EffectiveScore, double> countedValues) {
+  //all of score's EffectiveScore values are aasigned a value when initialized, therefore the '!'.
+  return (countedValues[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cone,
+            level: GridLevel.top,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cone,
+            level: GridLevel.top,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cone,
+            level: GridLevel.mid,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cone,
+            level: GridLevel.mid,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cone,
+            level: GridLevel.low,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cone,
+            level: GridLevel.low,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cube,
+            level: GridLevel.top,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cube,
+            level: GridLevel.top,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cube,
+            level: GridLevel.mid,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cube,
+            level: GridLevel.mid,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cube,
+            level: GridLevel.low,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.auto,
+            piece: Gamepiece.cube,
+            level: GridLevel.low,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cone,
+            level: GridLevel.top,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cone,
+            level: GridLevel.top,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cone,
+            level: GridLevel.mid,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cone,
+            level: GridLevel.mid,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cone,
+            level: GridLevel.low,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cone,
+            level: GridLevel.low,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cube,
+            level: GridLevel.top,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cube,
+            level: GridLevel.top,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cube,
+            level: GridLevel.mid,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cube,
+            level: GridLevel.mid,
+          )]!) +
+      (countedValues[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cube,
+            level: GridLevel.low,
+          )]! *
+          score[EffectiveScore(
+            mode: MatchMode.tele,
+            piece: Gamepiece.cube,
+            level: GridLevel.low,
+          )]!);
+}
