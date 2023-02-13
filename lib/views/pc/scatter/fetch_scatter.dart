@@ -75,7 +75,8 @@ Future<List<ScatterData>> fetchScatterData() async {
                   .map((final dynamic match) => getPoints(parseMatch(match)));
               final double yStddevGamepiecePoints = matchesGamepiecePoints
                   .map(
-                    (final double e) => (e - avgPoints).abs(),
+                    (final double matchPoints) =>
+                        (matchPoints - avgPoints).abs(),
                   )
                   .average;
               return ScatterData(
