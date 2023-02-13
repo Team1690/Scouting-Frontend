@@ -227,7 +227,7 @@ Map<EffectiveScore, double> parseByMode(
       ),
     ); //we define these values, therefore they are not null (see 'allLevel()')
 
-Map<EffectiveScore, double> sortMatch(
+Map<EffectiveScore, double> parseMatch(
   final dynamic data,
 ) {
   return <EffectiveScore, double>{
