@@ -6,9 +6,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
-import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/common/matches_search_box_future.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
@@ -16,7 +14,7 @@ import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
-import "package:scouting_frontend/views/mobile/team_selection_matches.dart";
+import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
 class UserInput extends StatefulWidget {
   @override
@@ -130,26 +128,17 @@ class _UserInputState extends State<UserInput> {
                     SizedBox(
                       height: 15,
                     ),
-                    MatchSelectionFuture(
-                      controller: matchController,
-                      matches: MatchesProvider.of(context).matches,
-                      onChange: (final ScheduleMatch selectedMatch) {
+                    TeamAndMatchSelection(
+                      onTeamChange: (final LightTeam team) {
+                        setState(() {
+                          match.scoutedTeam = team;
+                        });
+                      },
+                      onMatchChange: (final ScheduleMatch selectedMatch) {
                         setState(() {
                           match.scheduleMatch = selectedMatch;
                           match.scoutedTeam = null;
                           teamNumberController.clear();
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    TeamSelectionMatches(
-                      match: match.scheduleMatch,
-                      controller: teamNumberController,
-                      onChange: (final LightTeam team) {
-                        setState(() {
-                          match.scoutedTeam = team;
                         });
                       },
                     ),

@@ -1,9 +1,7 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
-import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/common/matches_search_box_future.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/dropdown_line.dart";
 
@@ -11,7 +9,7 @@ import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
-import "package:scouting_frontend/views/mobile/team_selection_matches.dart";
+import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
 class Specific extends StatefulWidget {
   @override
@@ -64,29 +62,17 @@ class _SpecificState extends State<Specific> {
                   SizedBox(
                     height: 15,
                   ),
-                  MatchSelectionFuture(
-                    controller: controllers[1], //index of matchController
-                    matches: MatchesProvider.of(context).matches,
-                    onChange: (final ScheduleMatch selectedMatch) {
-                      setState(() {
-                        vars.scheduleMatch = selectedMatch;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  TeamSelectionMatches(
-                    match: vars.scheduleMatch,
-                    controller: controllers[2], //index of teamController
-                    onChange: (final LightTeam team) {
+                  TeamAndMatchSelection(
+                    onTeamChange: (final LightTeam team) {
                       setState(() {
                         vars.team = team;
                       });
                     },
-                  ),
-                  SizedBox(
-                    height: 15,
+                    onMatchChange: (final ScheduleMatch selectedMatch) {
+                      setState(() {
+                        vars.scheduleMatch = selectedMatch;
+                      });
+                    },
                   ),
                   SizedBox(
                     height: 15,
