@@ -4,6 +4,8 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
+import "map_nullable.dart";
+
 class Match implements HasuraVars {
   Match({
     this.autoConesTop = 0,
@@ -106,4 +108,130 @@ class Match implements HasuraVars {
       "is_rematch": isRematch,
     };
   }
+}
+
+enum MatchMode {
+  auto(1, "auto"),
+  tele(0, "tele");
+
+  const MatchMode(this.pointAddition, this.title);
+  final int pointAddition;
+  final String title;
+}
+
+enum Gamepiece {
+  cone("cones"),
+  cube("cubes");
+
+  const Gamepiece(this.title);
+  final String title;
+}
+
+enum GridLevel {
+  top(5, "top"),
+  mid(3, "mid"),
+  low(2, "low");
+
+  const GridLevel(this.points, this.title);
+  final int points;
+  final String title;
+}
+
+class EffectiveScore {
+  const EffectiveScore({
+    required this.mode,
+    required this.piece,
+    required this.level,
+  });
+  final MatchMode mode;
+  final Gamepiece piece;
+  final GridLevel? level;
+
+  @override
+  int get hashCode {
+    return Object.hashAll(<Object?>[
+      mode,
+      piece,
+      level,
+    ]);
+  }
+
+  @override
+  bool operator ==(final Object other) {
+    return other is EffectiveScore &&
+        other.level == level &&
+        other.mode == mode &&
+        other.piece == piece;
+  }
+}
+
+List<EffectiveScore> coneAndCube(final GridLevel level, final MatchMode mode) =>
+    <EffectiveScore>[
+      EffectiveScore(
+        mode: mode,
+        piece: Gamepiece.cone,
+        level: level,
+      ),
+      EffectiveScore(
+        mode: mode,
+        piece: Gamepiece.cube,
+        level: level,
+      ),
+    ];
+
+List<EffectiveScore> allLevel(final MatchMode mode) => <EffectiveScore>[
+      ...GridLevel.values
+          .map((final GridLevel level) => coneAndCube(level, mode))
+          .expand(identity)
+          .toList()
+    ];
+
+final Map<EffectiveScore, int> score = <EffectiveScore, int>{
+  ...MatchMode.values.map(allLevel).expand(identity).toList().asMap().map(
+        (final _, final EffectiveScore effectiveScore) =>
+            MapEntry<EffectiveScore, int>(
+          effectiveScore,
+          effectiveScore.level!.points +
+              effectiveScore.mode
+                  .pointAddition, //this can be null since we define each EffectiveScore here to have a level (aka not missed)
+        ),
+      )
+};
+
+double getPoints(final Map<EffectiveScore, double> countedValues) {
+  return countedValues.keys.fold(
+    0,
+    (final double points, final EffectiveScore effectiveScore) =>
+        countedValues[effectiveScore]! * score[effectiveScore]! + points,
+  );
+}
+
+double getPieces(final Map<EffectiveScore, double> countedValues) {
+  return countedValues.keys.fold(
+    0,
+    (final double gamepieces, final EffectiveScore effectiveScore) =>
+        countedValues[effectiveScore]! + gamepieces,
+  );
+}
+
+Map<EffectiveScore, double> parseByMode(
+  final MatchMode mode,
+  final dynamic data,
+) =>
+    Map<EffectiveScore, double>.fromEntries(
+      allLevel(mode).map(
+        (final EffectiveScore e) => MapEntry<EffectiveScore, double>(
+          e,
+          data["${e.mode.title}_${e.piece.title}_${e.level!.title}"] as double,
+        ),
+      ),
+    ); //we define these values, therefore they are not null (see 'allLevel()')
+
+Map<EffectiveScore, double> parseMatch(
+  final dynamic data,
+) {
+  return <EffectiveScore, double>{
+    ...parseByMode(MatchMode.auto, data),
+    ...parseByMode(MatchMode.tele, data)
+  };
 }
