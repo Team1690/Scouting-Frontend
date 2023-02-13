@@ -214,7 +214,7 @@ double getPieces(final Map<EffectiveScore, double> countedValues) {
   );
 }
 
-Map<EffectiveScore, double> sortByMode(
+Map<EffectiveScore, double> parseByMode(
   final MatchMode mode,
   final dynamic data,
 ) =>
@@ -231,7 +231,7 @@ Map<EffectiveScore, double> sortMatch(
   final dynamic data,
 ) {
   return <EffectiveScore, double>{
-    ...sortByMode(MatchMode.auto, data),
-    ...sortByMode(MatchMode.tele, data)
+    ...parseByMode(MatchMode.auto, data),
+    ...parseByMode(MatchMode.tele, data)
   };
 }
