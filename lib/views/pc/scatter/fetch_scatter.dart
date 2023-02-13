@@ -1,5 +1,6 @@
 import "package:collection/collection.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/scatter/scatter.dart";
@@ -61,17 +62,17 @@ Future<List<ScatterData>> fetchScatterData() async {
                 scatterTeam["name"] as String,
                 scatterTeam["colors_index"] as int,
               );
-              final double? avgPoints = getPoints(
-                scatterTeam["technical_matches_aggregate"]["aggregate"]["avg"],
-              );
-              if (avgPoints == null) return null;
+              final dynamic avg = scatterTeam["technical_matches_aggregate"]
+                  ["aggregate"]["avg"];
               final List<dynamic> matches =
                   scatterTeam["technical_matches"] as List<dynamic>;
-              final Iterable<double> matchesGamepiecePoints = matches.map(
-                (final dynamic match) => getPoints(
-                  match,
-                )!, //these values being null was already delt with in the above 'if' statement
-              );
+              if (avg["auto_cones_top"] == null) {
+                //if one of these is null, the team's match data doesnt exist so we return null
+                return null;
+              }
+              final double avgPoints = getPoints(parseMatch(avg));
+              final Iterable<double> matchesGamepiecePoints = matches
+                  .map((final dynamic match) => getPoints(parseMatch(match)));
               final double yStddevGamepiecePoints = matchesGamepiecePoints
                   .map(
                     (final double e) => (e - avgPoints).abs(),
@@ -89,29 +90,4 @@ Future<List<ScatterData>> fetchScatterData() async {
     ),
   );
   return result.mapQueryResult();
-}
-
-double? getPoints(final dynamic data) {
-  final Map<String, int> pointValues = <String, int>{
-    "top": 5,
-    "mid": 3,
-    "low": 2,
-  };
-  if (data["tele_cones_top"] == null) {
-    //the only case in which one of the values are null is when the team match data doesnt exist in which case we return null.
-    return null;
-  } else {
-    double auto = 0;
-    double tele = 0;
-    for (final MapEntry<String, int> pointValue in pointValues.entries) {
-      auto += (data["auto_cubes_${pointValue.key}"] as double) *
-              (pointValue.value + 1) +
-          (data["auto_cones_${pointValue.key}"] as double) *
-              (pointValue.value + 1);
-      tele += (data["tele_cubes_${pointValue.key}"] as double) *
-              pointValue.value +
-          (data["tele_cones_${pointValue.key}"] as double) * pointValue.value;
-    }
-    return auto + tele;
-  }
 }
