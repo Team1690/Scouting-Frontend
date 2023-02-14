@@ -93,7 +93,8 @@ class PickList extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              if (pickListTeam.amountOfMatches != 0) ...<Expanded>[
+                              if (pickListTeam.amountOfMatches !=
+                                  0) ...<Expanded>[
                                 Expanded(
                                   flex: 2,
                                   child: Text(
@@ -133,8 +134,9 @@ class PickList extends StatelessWidget {
                             children: <Widget>[
                               Spacer(),
                               Expanded(
-                                child:
-                                    Text("Best Balance: ${pickListTeam.maxBalanceTitle}"),
+                                child: Text(
+                                  "Best Balance: ${pickListTeam.maxBalanceTitle}",
+                                ),
                               ),
                               Expanded(
                                 child: Text(
@@ -168,7 +170,8 @@ class PickList extends StatelessWidget {
                           if (pickListTeam.amountOfMatches != 0) ...<Widget>[
                             Spacer(),
                             Expanded(
-                              child: Text(pickListTeam.drivetrain ?? "No pit :("),
+                              child:
+                                  Text(pickListTeam.drivetrain ?? "No pit :("),
                             ),
                             Expanded(
                               child: Text(
@@ -257,7 +260,8 @@ class PickList extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: Text(
-                                  (screen.getIndex(pickListTeam) + 1).toString(),
+                                  (screen.getIndex(pickListTeam) + 1)
+                                      .toString(),
                                 ),
                               ),
                             FlutterSwitch(
