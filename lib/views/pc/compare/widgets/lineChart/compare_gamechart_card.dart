@@ -30,7 +30,7 @@ class CompareGamechartCard extends StatelessWidget {
           ? NoTeamSelected()
           : emptyTeams.isNotEmpty
               ? Text(
-                  "teams: ${emptyTeams.map((final CompareTeam e) => e.team.number).toString()} have insufficient data please remove them",
+                  "teams: ${emptyTeams.map((final CompareTeam compareTeam) => compareTeam.team.number).toString()} have insufficient data, please remove them",
                 )
               : Builder(
                   builder: (

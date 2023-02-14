@@ -38,7 +38,7 @@ class _BaseLineChart extends StatelessWidget {
             fitInsideVertically: true,
             fitInsideHorizontally: true,
             getTooltipItems: getToolipItems,
-            tooltipPadding: EdgeInsets.all(1),
+            tooltipPadding: EdgeInsets.all(8),
           ),
         ),
         lineBarsData: List<LineChartBarData>.generate(

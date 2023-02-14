@@ -149,7 +149,7 @@ const Map<int, Color> _teamNumberToColor = <int, Color>{
   1580: Color.fromARGB(255, 4, 178, 241),
   1592: Color.fromARGB(255, 235, 106, 41),
   1595: Color.fromARGB(255, 255, 0, 0),
-  1619: Color.fromARGB(255, 101, 101, 101),
+  1619: Color.fromARGB(255, 29, 188, 186),
   1640: Color.fromARGB(255, 0, 0, 255),
   1646: Color.fromARGB(255, 158, 0, 1),
   1648: Color.fromARGB(255, 255, 0, 0),
