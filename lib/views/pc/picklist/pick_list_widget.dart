@@ -41,10 +41,10 @@ class PickList extends StatelessWidget {
       child: ReorderableListView(
         buildDefaultDragHandles: true,
         primary: false,
-        children: uiList.map<Widget>((final PickListTeam e) {
+        children: uiList.map<Widget>((final PickListTeam pickListTeam) {
           return Card(
             color: bgColor,
-            key: ValueKey<String>(e.toString()),
+            key: ValueKey<String>(pickListTeam.toString()),
             elevation: 2,
             child: Container(
               padding: const EdgeInsets.fromLTRB(
@@ -66,12 +66,12 @@ class PickList extends StatelessWidget {
                                     Spacer(),
                                     Expanded(
                                       child: Icon(
-                                        e.faultMessages.fold(
+                                        pickListTeam.faultMessages.fold(
                                           () => Icons.check,
                                           (final List<String> _) =>
                                               Icons.warning,
                                         ),
-                                        color: e.faultMessages.fold(
+                                        color: pickListTeam.faultMessages.fold(
                                           () => Colors.green,
                                           (final List<String> _) =>
                                               Colors.yellow[700],
@@ -81,7 +81,7 @@ class PickList extends StatelessWidget {
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                        e.faultMessages.mapNullable(
+                                        pickListTeam.faultMessages.mapNullable(
                                               (
                                                 final List<String> p0,
                                               ) =>
@@ -93,11 +93,11 @@ class PickList extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              if (e.amountOfMatches != 0) ...<Expanded>[
+                              if (pickListTeam.amountOfMatches != 0) ...<Expanded>[
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    "Gamepiece points avg: ${e.avgGamepiecePoints.toStringAsFixed(1)}",
+                                    "Gamepiece points avg: ${pickListTeam.avgGamepiecePoints.toStringAsFixed(1)}",
                                   ),
                                 ),
                               ] else
@@ -115,7 +115,7 @@ class PickList extends StatelessWidget {
                                     MaterialPageRoute<TeamInfoScreen>(
                                       builder: (final BuildContext context) =>
                                           TeamInfoScreen(
-                                        initalTeam: e.team,
+                                        initalTeam: pickListTeam.team,
                                       ),
                                     ),
                                   ),
@@ -134,11 +134,11 @@ class PickList extends StatelessWidget {
                               Spacer(),
                               Expanded(
                                 child:
-                                    Text("Best Balance: ${e.maxBalanceTitle}"),
+                                    Text("Best Balance: ${pickListTeam.maxBalanceTitle}"),
                               ),
                               Expanded(
                                 child: Text(
-                                  "Didn't work on field: ${e.robotMatchStatusToAmount[RobotMatchStatus.didntWorkOnField]}",
+                                  "Didn't work on field: ${pickListTeam.robotMatchStatusToAmount[RobotMatchStatus.didntWorkOnField]}",
                                   style: TextStyle(
                                     color: Colors.purple,
                                   ),
@@ -146,7 +146,7 @@ class PickList extends StatelessWidget {
                               ),
                               Expanded(
                                 child: Text(
-                                  "Didn't come to field: ${e.robotMatchStatusToAmount[RobotMatchStatus.didntComeToField]}",
+                                  "Didn't come to field: ${pickListTeam.robotMatchStatusToAmount[RobotMatchStatus.didntComeToField]}",
                                   style: TextStyle(
                                     color: Colors.red,
                                   ),
@@ -162,32 +162,32 @@ class PickList extends StatelessWidget {
                           Expanded(
                             flex: 1,
                             child: Text(
-                              e.toString(),
+                              pickListTeam.toString(),
                             ),
                           ),
-                          if (e.amountOfMatches != 0) ...<Widget>[
+                          if (pickListTeam.amountOfMatches != 0) ...<Widget>[
                             Spacer(),
                             Expanded(
-                              child: Text(e.drivetrain ?? "No pit :("),
+                              child: Text(pickListTeam.drivetrain ?? "No pit :("),
                             ),
                             Expanded(
                               child: Text(
-                                "Worked: ${e.robotMatchStatusToAmount[RobotMatchStatus.worked]}",
+                                "Worked: ${pickListTeam.robotMatchStatusToAmount[RobotMatchStatus.worked]}",
                               ),
                             ),
                             Expanded(
                               child: Text(
-                                "Gamepiece avg: ${e.avgGamepieces.toStringAsFixed(1)}",
+                                "Gamepiece avg: ${pickListTeam.avgGamepieces.toStringAsFixed(1)}",
                               ),
                             ),
                             Expanded(
                               child: Text(
-                                "Balance points: ${e.avgAutoBalancePoints.toStringAsFixed(1)}/${e.matchesBalanced}/${e.amountOfMatches}",
+                                "Auto Gamepieces: ${pickListTeam.autoGamepieceAvg.toStringAsFixed(1)}",
                               ),
                             ),
                             Expanded(
                               child: Text(
-                                "Auto Gamepieces: ${e.autoGamepieceAvg.toStringAsFixed(1)}",
+                                "Balance points: ${pickListTeam.avgAutoBalancePoints.toStringAsFixed(1)}/${pickListTeam.matchesBalanced}/${pickListTeam.amountOfMatches}",
                               ),
                             ),
                           ]
@@ -206,22 +206,22 @@ class PickList extends StatelessWidget {
                       leading: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          if (screen.getIndex(e) + 1 <= 24)
+                          if (screen.getIndex(pickListTeam) + 1 <= 24)
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8),
                               child: Text(
-                                (screen.getIndex(e) + 1).toString(),
+                                (screen.getIndex(pickListTeam) + 1).toString(),
                               ),
                             ),
                           FlutterSwitch(
-                            value: e.taken,
+                            value: pickListTeam.taken,
                             activeColor: Colors.red,
                             inactiveColor: primaryColor,
                             height: 25,
                             width: 100,
                             onToggle: (final bool val) {
-                              e.taken = val;
+                              pickListTeam.taken = val;
                               onReorder(uiList);
                             },
                           ),
@@ -233,7 +233,7 @@ class PickList extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute<CoachTeamData>(
                             builder: (final BuildContext context) =>
-                                CoachTeamData(e.team),
+                                CoachTeamData(pickListTeam.team),
                           ),
                         );
                       },
@@ -243,7 +243,7 @@ class PickList extends StatelessWidget {
                             Expanded(
                               flex: 3,
                               child: Text(
-                                e.toString(),
+                                pickListTeam.toString(),
                               ),
                             ),
                           ],
@@ -252,22 +252,22 @@ class PickList extends StatelessWidget {
                         leading: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            if (screen.getIndex(e) + 1 <= 24)
+                            if (screen.getIndex(pickListTeam) + 1 <= 24)
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: Text(
-                                  (screen.getIndex(e) + 1).toString(),
+                                  (screen.getIndex(pickListTeam) + 1).toString(),
                                 ),
                               ),
                             FlutterSwitch(
-                              value: e.taken,
+                              value: pickListTeam.taken,
                               activeColor: Colors.red,
                               inactiveColor: primaryColor,
                               height: 25,
                               width: 100,
                               onToggle: (final bool val) {
-                                e.taken = val;
+                                pickListTeam.taken = val;
                                 onReorder(uiList);
                               },
                             ),
