@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
+import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
@@ -85,42 +86,47 @@ class TeamList extends StatelessWidget {
                                     numeric: true,
                                   ),
                                   column(
-                                    "Tele upper",
-                                    (final _Team a) => a.teleUpperAvg,
+                                    "Auto Gamepieces",
+                                    (final _Team team) => team.autoGamepieceAvg,
                                   ),
                                   column(
-                                    "Auto upper",
-                                    (final _Team a) => a.autoUpperAvg,
+                                    "Tele Gamepieces",
+                                    (final _Team team) => team.teleGamepieceAvg,
                                   ),
                                   column(
-                                    "Ball sum",
-                                    (final _Team a) => a.ballAvg,
+                                    "Gamepiece sum",
+                                    (final _Team team) => team.gamepieceAvg,
                                   ),
                                   column(
-                                    "Ball points",
-                                    (final _Team a) => a.ballPointAvg,
+                                    "Gamepiece points",
+                                    (final _Team team) =>
+                                        team.gamepiecePointAvg,
                                   ),
                                   column(
-                                    "Climb points",
-                                    (final _Team a) => a.climbPointAvg,
-                                    "Avg points / Matches Climbed / Matches played",
+                                    "Auto balance points",
+                                    (final _Team team) =>
+                                        team.autoBalancePointsAvg,
+                                    "Avg points / Matches Balanced / Matches played",
                                   ),
                                   column(
-                                    "Max climb",
-                                    (final _Team a) => a.maxClimb.order,
+                                    "Endgame balance points",
+                                    (final _Team team) =>
+                                        team.endgameBalancePointsAvg,
+                                    "Avg points / Matches Balanced / Matches played",
                                   ),
                                   column(
-                                    "Climb percent",
-                                    (final _Team a) => a.climbPercent,
+                                    "Auto balance percentage",
+                                    (final _Team team) =>
+                                        team.autoBalancePercentage,
                                   ),
                                   column(
                                     "Broken matches",
-                                    (final _Team a) => a.brokenMatches,
+                                    (final _Team team) => team.brokenMatches,
                                   ),
                                 ],
                                 rows: <DataRow>[
                                   ...data.map(
-                                    (final _Team e) => DataRow(
+                                    (final _Team team) => DataRow(
                                       cells: <DataCell>[
                                         DataCell(
                                           Row(
@@ -132,7 +138,7 @@ class TeamList extends StatelessWidget {
                                                   ),
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                      color: e.team.color,
+                                                      color: team.team.color,
                                                       shape: BoxShape.circle,
                                                     ),
                                                   ),
@@ -140,7 +146,7 @@ class TeamList extends StatelessWidget {
                                               ),
                                               Expanded(
                                                 child: Text(
-                                                  e.team.number.toString(),
+                                                  team.team.number.toString(),
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                   ),
@@ -150,21 +156,25 @@ class TeamList extends StatelessWidget {
                                           ),
                                         ),
                                         ...<double>[
-                                          e.teleUpperAvg,
-                                          e.autoUpperAvg,
-                                          e.ballAvg,
-                                          e.ballPointAvg,
+                                          team.autoGamepieceAvg,
+                                          team.teleGamepieceAvg,
+                                          team.gamepieceAvg,
+                                          team.gamepiecePointAvg,
                                         ].map(show),
                                         DataCell(
                                           Text(
-                                            "${e.climbPointAvg.toStringAsFixed(1)} / ${e.matchesClimbed} / ${e.amountOfMatches}",
+                                            "${team.autoBalancePointsAvg.toStringAsFixed(1)} / ${team.matchesBalanced} / ${team.amountOfMatches}",
                                           ),
                                         ),
-                                        DataCell(Text(e.maxClimb.title)),
-                                        show(e.climbPercent, true),
                                         DataCell(
                                           Text(
-                                            e.brokenMatches.toString(),
+                                            "${team.endgameBalancePointsAvg.toStringAsFixed(1)} / ${team.matchesBalanced} / ${team.amountOfMatches}",
+                                          ),
+                                        ),
+                                        show(team.autoBalancePercentage, true),
+                                        DataCell(
+                                          Text(
+                                            team.brokenMatches.toString(),
                                           ),
                                         ),
                                       ],
@@ -195,29 +205,29 @@ DataCell show(final double value, [final bool isPercent = false]) => DataCell(
 
 class _Team {
   const _Team({
-    required this.climbPercent,
-    required this.autoUpperAvg,
-    required this.ballAvg,
-    required this.teleUpperAvg,
+    required this.autoBalancePercentage,
+    required this.autoGamepieceAvg,
+    required this.teleGamepieceAvg,
+    required this.gamepieceAvg,
     required this.team,
-    required this.climbPointAvg,
-    required this.ballPointAvg,
+    required this.autoBalancePointsAvg,
+    required this.endgameBalancePointsAvg,
+    required this.gamepiecePointAvg,
     required this.brokenMatches,
     required this.amountOfMatches,
-    required this.matchesClimbed,
-    required this.maxClimb,
+    required this.matchesBalanced,
   });
-  final MaxClimb maxClimb;
-  final double teleUpperAvg;
-  final double autoUpperAvg;
-  final double ballAvg;
+  final double autoGamepieceAvg;
+  final double teleGamepieceAvg;
+  final double gamepieceAvg;
   final LightTeam team;
-  final double ballPointAvg;
-  final double climbPointAvg;
-  final double climbPercent;
+  final double gamepiecePointAvg;
+  final double autoBalancePointsAvg;
+  final double endgameBalancePointsAvg;
+  final double autoBalancePercentage;
   final int brokenMatches;
   final int amountOfMatches;
-  final int matchesClimbed;
+  final int matchesBalanced;
 }
 
 Stream<List<_Team>> _fetchTeamList() {
@@ -227,97 +237,136 @@ Stream<List<_Team>> _fetchTeamList() {
           document: gql(query),
           parserFn: (final Map<String, dynamic> data) {
             final List<dynamic> teams = data["team"] as List<dynamic>;
-            return teams.map<_Team>((final dynamic e) {
-              final dynamic avg = e["matches_aggregate"]["aggregate"]["avg"];
-              final List<int> climbPoints =
-                  (e["matches_aggregate"]["nodes"] as List<dynamic>)
+            return teams.map<_Team>((final dynamic team) {
+              final List<int> autoBalancePoints =
+                  (team["technical_matches_aggregate"]["nodes"]
+                          as List<dynamic>)
                       .where(
-                        (final dynamic element) =>
-                            element["climb"]["title"] != "No attempt",
+                        (final dynamic node) =>
+                            node["auto_balance"]["title"] != "No attempt",
                       )
-                      .map((final dynamic e) => e["climb"]["points"] as int)
+                      .map(
+                        (final dynamic node) =>
+                            node["auto_balance"]["auto_points"] as int,
+                      )
+                      .toList();
+              final List<int> endgameBalancePoints =
+                  (team["technical_matches_aggregate"]["nodes"]
+                          as List<dynamic>)
+                      .where(
+                        (final dynamic node) =>
+                            node["endgame_balance"]["title"] != "No attempt",
+                      )
+                      .map(
+                        (final dynamic node) =>
+                            node["endgame_balance"]["endgame_points"] as int,
+                      )
                       .toList();
               final List<RobotMatchStatus> robotMatchStatuses =
-                  (e["matches_aggregate"]["nodes"] as List<dynamic>)
+                  (team["technical_matches_aggregate"]["nodes"]
+                          as List<dynamic>)
                       .map(
-                        (final dynamic e) => titleToEnum(
-                          e["robot_match_status"]["title"] as String,
+                        (final dynamic node) => titleToEnum(
+                          node["robot_match_status"]["title"] as String,
                         ),
                       )
                       .toList();
-              final double teleUpper =
-                  (avg["tele_upper"] as double?) ?? double.nan;
-              final double autoLower =
-                  (avg["auto_lower"] as double?) ?? double.nan;
-              final double autoUpper =
-                  (avg["auto_upper"] as double?) ?? double.nan;
-              final double teleLower =
-                  (avg["tele_lower"] as double?) ?? double.nan;
-              final List<String> climb =
-                  (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                      .map((final dynamic e) => e["climb"]["title"] as String)
-                      .where((final String element) => element != "No attempt")
+              final List<String> autoBalance =
+                  (team["technical_matches_aggregate"]["nodes"]
+                          as List<dynamic>)
+                      .map(
+                        (final dynamic node) =>
+                            node["auto_balance"]["title"] as String,
+                      )
+                      .where((final String title) => title != "No attempt")
                       .toList();
-              final double climbPercent = (climb
+              final double autoBalancePercentage = (autoBalance
                           .where(
-                            (final String element) => element != "Failed",
+                            (final String title) => title != "Failed",
                           )
                           .length /
-                      climb.length) *
+                      autoBalance.length) *
                   100;
-              final double ballPointAvg =
-                  autoUpper * 4 + teleUpper * 2 + autoLower * 2 + teleLower;
-              final double ballSum =
-                  autoUpper + teleUpper + autoLower + teleLower;
-              final double climbPointAvg = climbPoints.isEmpty
+              final dynamic avg =
+                  team["technical_matches_aggregate"]["aggregate"]["avg"];
+              final double gamepiecePointsAvg = avg["auto_cones_top"] == null
+                  ? -1
+                  : getPoints(parseMatch(avg));
+              final double autoGamepieceAvg = avg["auto_cones_top"] == null
+                  ? -1
+                  : getPieces(
+                      parseByMode(
+                        MatchMode.auto,
+                        avg,
+                      ),
+                    );
+              final double teleGamepieceAvg = avg["auto_cones_top"] == null
+                  ? -1
+                  : getPieces(
+                      parseByMode(
+                        MatchMode.tele,
+                        avg,
+                      ),
+                    );
+              final double gamepieceSum = avg["auto_cones_top"] == null
+                  ? -1
+                  : getPieces(parseMatch(avg));
+              final double autoBalancePointAvg = autoBalancePoints.isEmpty
                   ? 0
-                  : climbPoints.length == 1
-                      ? climbPoints.single.toDouble()
-                      : climbPoints.reduce(
-                            (final int value, final int element) =>
-                                value + element,
+                  : autoBalancePoints.length == 1
+                      ? autoBalancePoints.single.toDouble()
+                      : autoBalancePoints.reduce(
+                            (
+                              final int autoPointsTotal,
+                              final int autoPointsSingle,
+                            ) =>
+                                autoPointsTotal + autoPointsSingle,
                           ) /
-                          climbPoints.length;
-              final List<dynamic> climbs =
-                  (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                      .map<dynamic>((final dynamic e) => e["climb"])
-                      .toList();
-              final dynamic maxClimb = climbs.reduceSafe(
-                (final dynamic value, final dynamic element) =>
-                    (value["points"] as int) > (element["points"] as int)
-                        ? value
-                        : element,
-              );
+                          autoBalancePoints.length;
+              final double endgameBalancePointAvg = endgameBalancePoints.isEmpty
+                  ? 0
+                  : endgameBalancePoints.length == 1
+                      ? endgameBalancePoints.single.toDouble()
+                      : endgameBalancePoints.reduce(
+                            (
+                              final int endgamePointsTotal,
+                              final int endgamePointsSingle,
+                            ) =>
+                                endgamePointsTotal + endgamePointsSingle,
+                          ) /
+                          endgameBalancePoints.length;
               return _Team(
-                amountOfMatches:
-                    (e["matches_aggregate"]["nodes"] as List<dynamic>).length,
-                matchesClimbed:
-                    (e["matches_aggregate"]["nodes"] as List<dynamic>)
-                        .map((final dynamic e) => e["climb"]["title"] as String)
-                        .where(
-                          (final String element) =>
-                              element != "No attempt" && element != "Failed",
-                        )
-                        .length,
-                maxClimb: MaxClimb(
-                  order: maxClimb == null ? -1 : maxClimb["order"] as int,
-                  title: maxClimb == null
-                      ? "Never climbed"
-                      : maxClimb["title"] as String,
-                ),
-                climbPercent: climbPercent.isNaN ? -1 : climbPercent,
-                brokenMatches: robotMatchStatuses
+                amountOfMatches: (team["technical_matches_aggregate"]["nodes"]
+                        as List<dynamic>)
+                    .length,
+                matchesBalanced: (team["technical_matches_aggregate"]["nodes"]
+                        as List<dynamic>)
+                    .map(
+                      (final dynamic node) =>
+                          node["auto_balance"]["title"] as String,
+                    )
                     .where(
-                      (final RobotMatchStatus element) =>
-                          element != RobotMatchStatus.worked,
+                      (final String title) =>
+                          title != "No attempt" && title != "Failed",
                     )
                     .length,
-                autoUpperAvg: avg["auto_upper"] as double? ?? -1,
-                ballAvg: ballSum.isNaN ? -1 : ballSum,
-                ballPointAvg: ballPointAvg.isNaN ? -1 : ballPointAvg,
-                teleUpperAvg: avg["tele_upper"] as double? ?? -1,
-                team: LightTeam.fromJson(e),
-                climbPointAvg: climbPointAvg.isNaN ? -1 : climbPointAvg,
+                autoBalancePercentage:
+                    autoBalancePercentage.isNaN ? -1 : autoBalancePercentage,
+                brokenMatches: robotMatchStatuses
+                    .where(
+                      (final RobotMatchStatus robotMatchStatus) =>
+                          robotMatchStatus != RobotMatchStatus.worked,
+                    )
+                    .length,
+                autoGamepieceAvg: autoGamepieceAvg,
+                teleGamepieceAvg: teleGamepieceAvg,
+                gamepieceAvg: gamepieceSum,
+                gamepiecePointAvg: gamepiecePointsAvg,
+                team: LightTeam.fromJson(team),
+                autoBalancePointsAvg:
+                    autoBalancePointAvg.isNaN ? -1 : autoBalancePointAvg,
+                endgameBalancePointsAvg:
+                    endgameBalancePointAvg.isNaN ? -1 : endgameBalancePointAvg,
               );
             }).toList();
           },
@@ -328,42 +377,46 @@ Stream<List<_Team>> _fetchTeamList() {
       );
 }
 
-class MaxClimb {
-  const MaxClimb({required this.order, required this.title});
-  final int order;
-  final String title;
-}
-
 const String query = """
-
-
 subscription MySubscription {
   team {
     id
     name
     number
     colors_index
-    matches_aggregate(where: {ignored: {_eq: false}}) {
+    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
-          auto_lower
-          auto_upper
-          tele_upper
-          tele_lower
+          auto_cones_low
+          auto_cones_mid
+          auto_cones_top
+          auto_cubes_low
+          auto_cubes_mid
+          auto_cubes_top
+          tele_cones_low
+          tele_cones_mid
+          tele_cones_top
+          tele_cubes_low
+          tele_cubes_mid
+          tele_cubes_top
         }
       }
       nodes {
-        climb {
-          title
-          points
-          order
-        }
         robot_match_status {
           title
+        }
+        auto_balance {
+          title
+          auto_points
+          order
+        }
+        endgame_balance {
+          title
+          endgame_points
+          order
         }
       }
     }
   }
 }
-
 """;
