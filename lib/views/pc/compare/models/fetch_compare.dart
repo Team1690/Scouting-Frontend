@@ -1,7 +1,7 @@
 import "dart:collection";
 
-import "package:collection/collection.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/average_or_null.dart";
 import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -115,12 +115,13 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                   )
                   .toList();
               final double avgAutoBalancePoints = matches
-                  .map(
-                    (final dynamic match) =>
-                        (match["auto_balance"]["auto_points"] as int),
-                  )
-                  .toList()
-                  .average;
+                      .map(
+                        (final dynamic match) =>
+                            (match["auto_balance"]["auto_points"] as int),
+                      )
+                      .toList()
+                      .averageOrNull ??
+                  double.nan;
               final List<String> endgameBalanceVals = matches
                   .map(
                     (final dynamic match) =>
@@ -128,12 +129,13 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                   )
                   .toList();
               final double avgEndgameBalancePoints = matches
-                  .map(
-                    (final dynamic match) =>
-                        (match["endgame_balance"]["endgame_points"] as int),
-                  )
-                  .toList()
-                  .average;
+                      .map(
+                        (final dynamic match) =>
+                            (match["endgame_balance"]["endgame_points"] as int),
+                      )
+                      .toList()
+                      .averageOrNull ??
+                  double.nan;
               final List<int> totalCones = matches
                   .map(
                     (final dynamic match) =>
