@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/average_or_null.dart";
 import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/match_model.dart";
@@ -311,30 +312,11 @@ Stream<List<_Team>> _fetchTeamList() {
               final double gamepieceSum = avg["auto_cones_top"] == null
                   ? -1
                   : getPieces(parseMatch(avg));
-              final double autoBalancePointAvg = autoBalancePoints.isEmpty
-                  ? 0
-                  : autoBalancePoints.length == 1
-                      ? autoBalancePoints.single.toDouble()
-                      : autoBalancePoints.reduce(
-                            (
-                              final int autoPointsTotal,
-                              final int autoPointsSingle,
-                            ) =>
-                                autoPointsTotal + autoPointsSingle,
-                          ) /
-                          autoBalancePoints.length;
-              final double endgameBalancePointAvg = endgameBalancePoints.isEmpty
-                  ? 0
-                  : endgameBalancePoints.length == 1
-                      ? endgameBalancePoints.single.toDouble()
-                      : endgameBalancePoints.reduce(
-                            (
-                              final int endgamePointsTotal,
-                              final int endgamePointsSingle,
-                            ) =>
-                                endgamePointsTotal + endgamePointsSingle,
-                          ) /
-                          endgameBalancePoints.length;
+              final double autoBalancePointAvg =
+                  autoBalancePoints.averageOrNull ?? double.nan;
+              final double endgameBalancePointAvg =
+                  endgameBalancePoints.averageOrNull ?? double.nan;
+              endgameBalancePoints.averageOrNull ?? double.nan;
               return _Team(
                 amountOfMatches: (team["technical_matches_aggregate"]["nodes"]
                         as List<dynamic>)
@@ -377,7 +359,8 @@ Stream<List<_Team>> _fetchTeamList() {
       );
 }
 
-const String query = """
+const String query =
+    """
 subscription MySubscription {
   team {
     id
