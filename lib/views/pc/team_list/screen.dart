@@ -356,8 +356,7 @@ Stream<List<_Team>> _fetchTeamList() {
       );
 }
 
-const String query =
-    """
+const String query = """
 subscription MySubscription {
   team {
     id
