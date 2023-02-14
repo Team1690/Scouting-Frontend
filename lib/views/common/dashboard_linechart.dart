@@ -38,6 +38,7 @@ class _BaseLineChart extends StatelessWidget {
             fitInsideVertically: true,
             fitInsideHorizontally: true,
             getTooltipItems: getToolipItems,
+            tooltipPadding: EdgeInsets.all(8),
           ),
         ),
         lineBarsData: List<LineChartBarData>.generate(
@@ -158,10 +159,15 @@ class DashboardClimbLineChart extends StatelessWidget {
         gameNumbers: gameNumbers,
         getToolipItems: (final List<LineBarSpot> touchedSpots) => touchedSpots
             .map(
-              (final LineBarSpot e) => LineTooltipItem(
-                <int, String>{0: "Failed", -1: "No attempt"}[e.y.toInt()] ??
-                    "Level ${e.y.toInt()}",
-                TextStyle(color: e.bar.color),
+              (final LineBarSpot lineBarSpot) => LineTooltipItem(
+                <int, String>{
+                      0: "Failed",
+                      -1: "No attempt",
+                      1: "Unbalanced",
+                      2: "Balanced",
+                    }[lineBarSpot.y.toInt()] ??
+                    "",
+                TextStyle(color: lineBarSpot.bar.color),
               ),
             )
             .toList(),
@@ -176,10 +182,12 @@ class DashboardClimbLineChart extends StatelessWidget {
                     return "No attempt";
                   case 0:
                     return "Failed";
+                  case 1:
+                    return "Unbalanced";
+                  case 2:
+                    return "Balanced";
                   default:
-                    return value == 5 || value == -2
-                        ? ""
-                        : "level ${value.toInt()}";
+                    return "";
                 }
               }(),
               style: TextStyle(
@@ -189,10 +197,10 @@ class DashboardClimbLineChart extends StatelessWidget {
             ),
           ),
           showTitles: true,
-          reservedSize: 70,
+          reservedSize: 120,
         ),
         minY: -1,
-        maxY: 5,
+        maxY: 2,
       );
 }
 

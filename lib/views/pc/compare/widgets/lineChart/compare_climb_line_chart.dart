@@ -27,13 +27,19 @@ class CompareClimbLineChart extends StatelessWidget {
           ),
           child: DashboardClimbLineChart(
             robotMatchStatuses: data
-                .map((final CompareLineChartData e) => e.matchStatuses)
+                .map(
+                  (final CompareLineChartData chartData) =>
+                      chartData.matchStatuses,
+                )
                 .toList(),
             showShadow: false,
             inputedColors: colors,
             gameNumbers: List<MatchIdentifier>.generate(
               data
-                  .map((final CompareLineChartData e) => e.points.length)
+                  .map(
+                    (final CompareLineChartData chartData) =>
+                        chartData.points.length,
+                  )
                   .reduce(max),
               (final int index) => MatchIdentifier(
                 number: index + 1,
@@ -43,7 +49,7 @@ class CompareClimbLineChart extends StatelessWidget {
             ),
             dataSet: data
                 .map(
-                  (final CompareLineChartData e) => e.points,
+                  (final CompareLineChartData chartData) => chartData.points,
                 )
                 .toList(),
           ),

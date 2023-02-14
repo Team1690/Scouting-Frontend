@@ -9,8 +9,9 @@ class CompareSpiderChart extends StatelessWidget {
   const CompareSpiderChart(this.data);
   final SplayTreeSet<CompareTeam> data;
 
-  Iterable<CompareTeam> get emptyTeams =>
-      data.where((final CompareTeam team) => team.climbData.points.length < 2);
+  Iterable<CompareTeam> get emptyTeams => data.where(
+        (final CompareTeam team) => team.gamepieces.points.length < 2,
+      );
 
   @override
   Widget build(final BuildContext context) {
@@ -20,40 +21,50 @@ class CompareSpiderChart extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Builder(
               builder: (final BuildContext context) {
-                final double autoRatio = 100 /
+                final double autoBalanceRatio = 100 /
                     data
                         .map(
-                          (final CompareTeam e) => e.avgAutoUpperScored,
+                          (final CompareTeam team) => team.avgAutoBalancePoints,
                         )
                         .reduce(max);
-                final double teleRatio = 100 /
+                final double endgameBalanceRatio = 100 /
                     data
                         .map(
-                          (final CompareTeam e) => e.avgTeleUpperScored,
+                          (final CompareTeam team) =>
+                              team.avgEndgameBalancePoints,
                         )
                         .reduce(max);
-                final double climbPointsRatio = 100 /
+                final double teleGamepiecePointRatio = 100 /
                     data
                         .map(
-                          (final CompareTeam e) => e.avgClimbPoints,
+                          (final CompareTeam team) =>
+                              team.avgTeleGamepiecesPoints,
+                        )
+                        .reduce(max);
+                final double autoGamepiecePointRatio = 100 /
+                    data
+                        .map(
+                          (final CompareTeam team) =>
+                              team.avgAutoGamepiecePoints,
                         )
                         .reduce(max);
                 return SpiderChart(
                   colors: data
                       .map(
-                        (final CompareTeam element) => element.team.color,
+                        (final CompareTeam team) => team.team.color,
                       )
                       .toList(),
                   numberOfFeatures: 6,
                   data: data
                       .map<List<int>>(
-                        (final CompareTeam e) => <double>[
-                          e.avgAutoUpperScored * autoRatio,
-                          e.autoUpperScoredPercentage,
-                          e.avgTeleUpperScored * teleRatio,
-                          e.teleUpperScoredPercentage,
-                          e.avgClimbPoints * climbPointsRatio,
-                          e.climbPercentage
+                        (final CompareTeam team) => <double>[
+                          team.endgameBalanceSuccessPercentage,
+                          team.autoBalanceSuccessPercentage,
+                          team.avgEndgameBalancePoints * endgameBalanceRatio,
+                          team.avgAutoBalancePoints * autoBalanceRatio,
+                          team.avgTeleGamepiecesPoints *
+                              teleGamepiecePointRatio,
+                          team.avgAutoGamepiecePoints * autoGamepiecePointRatio,
                         ]
                             .map<int>(
                               (final double e) =>
@@ -64,12 +75,12 @@ class CompareSpiderChart extends StatelessWidget {
                       .toList(),
                   ticks: <int>[0, 25, 50, 75, 100],
                   features: <String>[
-                    "Auto upper",
-                    "Auto scoring%",
-                    "Teleop upper",
-                    "Teleop scoring%",
-                    "Climb points",
-                    "Climb%"
+                    "Endgame Balance%",
+                    "Auto Balance%",
+                    "Endgame Balance Score%",
+                    "Auto Balance Score%",
+                    "Tele Gamepieces",
+                    "Auto Gamepieces"
                   ],
                 );
               },
