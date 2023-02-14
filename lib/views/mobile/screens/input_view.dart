@@ -129,16 +129,13 @@ class _UserInputState extends State<UserInput> {
                       height: 15,
                     ),
                     TeamAndMatchSelection(
-                      onTeamChange: (final LightTeam? team) {
-                        setState(() {
-                          match.scoutedTeam = team;
-                        });
-                      },
-                      onMatchChange: (final ScheduleMatch selectedMatch) {
+                      onChange: (
+                        final ScheduleMatch selectedMatch,
+                        final LightTeam? team,
+                      ) {
                         setState(() {
                           match.scheduleMatch = selectedMatch;
-                          match.scoutedTeam = null;
-                          teamNumberController.clear();
+                          match.scoutedTeam = team;
                         });
                       },
                     ),
@@ -488,7 +485,8 @@ class _UserInputState extends State<UserInput> {
   }
 }
 
-const String mutation = r"""
+const String mutation =
+    r"""
 mutation InsertTechnicalMatch($auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int) {
   insert__2023_technical_match(objects: {auto_balance_id: $auto_balance_id, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
     returning {
