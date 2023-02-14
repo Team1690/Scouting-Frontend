@@ -129,7 +129,7 @@ class _UserInputState extends State<UserInput> {
                       height: 15,
                     ),
                     TeamAndMatchSelection(
-                      onTeamChange: (final LightTeam team) {
+                      onTeamChange: (final LightTeam? team) {
                         setState(() {
                           match.scoutedTeam = team;
                         });

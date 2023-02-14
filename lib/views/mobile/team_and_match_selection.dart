@@ -12,7 +12,7 @@ class TeamAndMatchSelection extends StatefulWidget {
     required this.onMatchChange,
   });
   final void Function(ScheduleMatch) onMatchChange;
-  final void Function(LightTeam) onTeamChange;
+  final void Function(LightTeam?) onTeamChange;
   @override
   State<TeamAndMatchSelection> createState() => TeamAndMatchSelectionState();
 }
@@ -39,7 +39,8 @@ class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
               setState(() {
                 widget.onMatchChange(selectedMatch);
                 scheduleMatch = selectedMatch;
-
+                widget.onTeamChange(null);
+                teamNumberController.clear();
                 isUnofficial = <int>[
                   provider["Practice"]!,
                   provider["Pre scouting"]!

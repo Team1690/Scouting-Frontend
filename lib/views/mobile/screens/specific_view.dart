@@ -63,7 +63,7 @@ class _SpecificState extends State<Specific> {
                     height: 15,
                   ),
                   TeamAndMatchSelection(
-                    onTeamChange: (final LightTeam team) {
+                    onTeamChange: (final LightTeam? team) {
                       setState(() {
                         vars.team = team;
                       });
