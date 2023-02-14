@@ -198,7 +198,7 @@ class TeamList extends StatelessWidget {
 
 DataCell show(final double value, [final bool isPercent = false]) => DataCell(
       Text(
-        value == -1
+        value == double.nan
             ? "No data"
             : "${value.toStringAsFixed(2)}${isPercent ? "%" : ""}",
       ),
@@ -291,10 +291,10 @@ Stream<List<_Team>> _fetchTeamList() {
               final dynamic avg =
                   team["technical_matches_aggregate"]["aggregate"]["avg"];
               final double gamepiecePointsAvg = avg["auto_cones_top"] == null
-                  ? -1
+                  ? double.nan
                   : getPoints(parseMatch(avg));
               final double autoGamepieceAvg = avg["auto_cones_top"] == null
-                  ? -1
+                  ? double.nan
                   : getPieces(
                       parseByMode(
                         MatchMode.auto,
@@ -302,7 +302,7 @@ Stream<List<_Team>> _fetchTeamList() {
                       ),
                     );
               final double teleGamepieceAvg = avg["auto_cones_top"] == null
-                  ? -1
+                  ? double.nan
                   : getPieces(
                       parseByMode(
                         MatchMode.tele,
@@ -310,7 +310,7 @@ Stream<List<_Team>> _fetchTeamList() {
                       ),
                     );
               final double gamepieceSum = avg["auto_cones_top"] == null
-                  ? -1
+                  ? double.nan
                   : getPieces(parseMatch(avg));
               final double autoBalancePointAvg =
                   autoBalancePoints.averageOrNull ?? double.nan;
@@ -332,8 +332,7 @@ Stream<List<_Team>> _fetchTeamList() {
                           title != "No attempt" && title != "Failed",
                     )
                     .length,
-                autoBalancePercentage:
-                    autoBalancePercentage.isNaN ? -1 : autoBalancePercentage,
+                autoBalancePercentage: autoBalancePercentage,
                 brokenMatches: robotMatchStatuses
                     .where(
                       (final RobotMatchStatus robotMatchStatus) =>
@@ -345,10 +344,8 @@ Stream<List<_Team>> _fetchTeamList() {
                 gamepieceAvg: gamepieceSum,
                 gamepiecePointAvg: gamepiecePointsAvg,
                 team: LightTeam.fromJson(team),
-                autoBalancePointsAvg:
-                    autoBalancePointAvg.isNaN ? -1 : autoBalancePointAvg,
-                endgameBalancePointsAvg:
-                    endgameBalancePointAvg.isNaN ? -1 : endgameBalancePointAvg,
+                autoBalancePointsAvg: autoBalancePointAvg,
+                endgameBalancePointsAvg: endgameBalancePointAvg,
               );
             }).toList();
           },
