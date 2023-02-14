@@ -1,3 +1,4 @@
+import "package:scouting_frontend/models/average_or_null.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/match_model.dart";
@@ -85,7 +86,7 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
               avg,
             ),
           );
-    final Iterable<int> autoBalance =
+    final List<int> autoBalance =
         (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
             .where(
               (final dynamic node) =>
@@ -94,14 +95,11 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
             .map<int>(
               (final dynamic node) =>
                   node["auto_balance"]["auto_points"] as int,
-            );
+            )
+            .toList();
     final int amountOfMatches =
         (team["technical_matches_aggregate"]["nodes"] as List<dynamic>).length;
-    final double autoBalanceAvg = (autoBalance.reduceSafe(
-              (final int total, final int balance) => total + balance,
-            ) ??
-            0) /
-        autoBalance.length;
+    final double autoBalanceAvg = autoBalance.averageOrNull ?? double.nan;
 
     final List<String> faultMessages = (team["faults"] as List<dynamic>)
         .map((final dynamic fault) => fault["message"] as String)
