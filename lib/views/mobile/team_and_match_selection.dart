@@ -59,6 +59,7 @@ class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
         SizedBox(
           height: 15,
         ),
+        if(scheduleMatch != null)
         TeamsSearchBox(
           buildSuggestion: (final LightTeam currentTeam) => isUnofficial
               ? "${currentTeam.number} ${currentTeam.name}"
