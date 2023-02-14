@@ -82,42 +82,30 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                   teamsTable["technical_matches"] as List<dynamic>;
               final List<int> autoGamepieces = matches
                   .map(
-                    (final dynamic technicalMatch) =>
-                        technicalMatch["auto_cones_top"] == null
-                            ? 0
-                            : (getPieces(
-                                parseByMode(MatchMode.auto, technicalMatch),
-                              ) as int),
+                    (final dynamic technicalMatch) => (getPieces(
+                      parseByMode(MatchMode.auto, technicalMatch),
+                    ).toInt()),
                   )
                   .toList();
               final List<int> teleGamepieces = matches
                   .map(
-                    (final dynamic technicalMatch) =>
-                        technicalMatch["auto_cones_top"] == null
-                            ? 0
-                            : (getPieces(
-                                parseByMode(MatchMode.tele, technicalMatch),
-                              ) as int),
+                    (final dynamic technicalMatch) => (getPieces(
+                      parseByMode(MatchMode.tele, technicalMatch),
+                    ).toInt()),
                   )
                   .toList();
               final List<int> gamepieces = matches
                   .map(
-                    (final dynamic technicalMatch) =>
-                        technicalMatch["auto_cones_top"] == null
-                            ? 0
-                            : (getPieces(
-                                parseMatch(technicalMatch),
-                              ) as int),
+                    (final dynamic technicalMatch) => (getPieces(
+                      parseMatch(technicalMatch),
+                    ).toInt()),
                   )
                   .toList();
               final List<int> points = matches
                   .map(
-                    (final dynamic technicalMatch) =>
-                        technicalMatch["auto_cones_top"] == null
-                            ? 0
-                            : (getPoints(
-                                parseMatch(technicalMatch),
-                              ) as int),
+                    (final dynamic technicalMatch) => (getPoints(
+                      parseMatch(technicalMatch),
+                    ).toInt()),
                   )
                   .toList();
               final List<String> autoBalanceVals = matches
@@ -148,36 +136,33 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                   .average;
               final List<int> totalCones = matches
                   .map(
-                    (final dynamic match) => match["auto_cones_low"] == null
-                        ? 0
-                        : (match["auto_cones_low"] as int) +
-                            (match["auto_cones_mid"] as int) +
-                            (match["auto_cones_top"] as int) +
-                            (match["tele_cones_low"] as int) +
-                            (match["tele_cones_mid"] as int) +
-                            (match["tele_cones_top"] as int),
+                    (final dynamic match) =>
+                        (match["auto_cones_low"] as int) +
+                        (match["auto_cones_mid"] as int) +
+                        (match["auto_cones_top"] as int) +
+                        (match["tele_cones_low"] as int) +
+                        (match["tele_cones_mid"] as int) +
+                        (match["tele_cones_top"] as int),
                   )
                   .toList();
               final List<int> totalCubes = matches
                   .map(
-                    (final dynamic match) => match["auto_cones_low"] == null
-                        ? 0
-                        : (match["auto_cubes_low"] as int) +
-                            (match["auto_cubes_mid"] as int) +
-                            (match["auto_cubes_top"] as int) +
-                            (match["tele_cubes_low"] as int) +
-                            (match["tele_cubes_mid"] as int) +
-                            (match["tele_cubes_top"] as int),
+                    (final dynamic match) =>
+                        (match["auto_cubes_low"] as int) +
+                        (match["auto_cubes_mid"] as int) +
+                        (match["auto_cubes_top"] as int) +
+                        (match["tele_cubes_low"] as int) +
+                        (match["tele_cubes_mid"] as int) +
+                        (match["tele_cubes_top"] as int),
                   )
                   .toList();
-              //spider
               final dynamic avg =
                   teamsTable["technical_matches_aggregate"]["aggregate"]["avg"];
-              final bool nullValidator = avg["auto_cones_top"] == null;
-              final double avgTeleGamepiecesPoints = nullValidator
+              final bool avgNullValidator = avg["auto_cones_top"] == null;
+              final double avgTeleGamepiecesPoints = avgNullValidator
                   ? 0
                   : getPieces(parseByMode(MatchMode.tele, avg));
-              final double avgAutoGamepiecePoints = nullValidator
+              final double avgAutoGamepiecePoints = avgNullValidator
                   ? 0
                   : getPoints(parseByMode(MatchMode.auto, avg));
               final int autoBalanceFailed = autoBalanceVals
