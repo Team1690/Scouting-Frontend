@@ -63,6 +63,7 @@ class PickList extends StatelessWidget {
                                 flex: 2,
                                 child: Row(
                                   children: <Widget>[
+                                    Spacer(),
                                     Expanded(
                                       child: Icon(
                                         e.faultMessages.fold(
@@ -96,19 +97,7 @@ class PickList extends StatelessWidget {
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    "Ball point avg: ${e.avgBallPoints.toStringAsFixed(1)}",
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    "Tele aim: ${(e.teleUpper + e.teleLower).toStringAsFixed(1)}/${(e.teleUpper + e.teleLower + e.teleMissed).toStringAsFixed(1)}",
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    "Auto aim: ${(e.autoUpper + e.autoLower).toStringAsFixed(1)}/${(e.autoUpper + e.autoLower + e.autoMissed).toStringAsFixed(1)}",
+                                    "Gamepiece points avg: ${e.avgGamepiecePoints.toStringAsFixed(1)}",
                                   ),
                                 ),
                               ] else
@@ -144,7 +133,8 @@ class PickList extends StatelessWidget {
                             children: <Widget>[
                               Spacer(),
                               Expanded(
-                                child: Text("Best climb: ${e.maxClimbTitle}"),
+                                child:
+                                    Text("Best Balance: ${e.maxBalanceTitle}"),
                               ),
                               Expanded(
                                 child: Text(
@@ -162,11 +152,6 @@ class PickList extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Text(
-                                  "Worked: ${e.robotMatchStatusToAmount[RobotMatchStatus.worked]}",
-                                ),
-                              ),
                               Spacer()
                             ],
                           ),
@@ -181,6 +166,7 @@ class PickList extends StatelessWidget {
                             ),
                           ),
                           if (e.amountOfMatches != 0) ...<Widget>[
+                            Spacer(),
                             Expanded(
                               child: Text(e.drivetrain ?? "No pit :("),
                             ),
@@ -191,21 +177,30 @@ class PickList extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                "Ball avg: ${e.avgBalls.toStringAsFixed(1)}",
+                                "Gamepiece avg: ${e.avgGamepieces.toStringAsFixed(1)}",
                               ),
                             ),
                             Expanded(
                               child: Text(
-                                "Climb points: ${e.avgClimbPoints.toStringAsFixed(1)}/${e.matchesClimbed}/${e.amountOfMatches}",
+                                "Balance points: ${e.avgAutoBalancePoints.toStringAsFixed(1)}/${e.matchesBalanced}/${e.amountOfMatches}",
                               ),
                             ),
                             Expanded(
                               child: Text(
-                                "Auto balls: ${e.autoBallAvg.toStringAsFixed(1)}",
+                                "Auto Gamepieces: ${e.autoGamepieceAvg.toStringAsFixed(1)}",
                               ),
                             ),
                           ]
-                        ],
+                        ]
+                            .expand(
+                              (final Widget element) => <Widget>[
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                element,
+                              ],
+                            )
+                            .toList(),
                       ),
                       trailing: SizedBox(),
                       leading: Row(
@@ -301,42 +296,30 @@ class PickListTeam {
     required this.firstListIndex,
     required this.secondListIndex,
     required this.taken,
-    required this.avgBallPoints,
-    required this.avgClimbPoints,
-    required this.autoLower,
-    required this.teleUpper,
-    required this.teleLower,
-    required this.autoUpper,
+    required this.avgGamepiecePoints,
+    required this.avgAutoBalancePoints,
     required this.team,
     required this.faultMessages,
     required this.amountOfMatches,
     required this.robotMatchStatusToAmount,
-    required this.autoBallAvg,
-    required this.avgBalls,
-    required this.matchesClimbed,
-    required this.autoMissed,
-    required this.teleMissed,
-    required this.maxClimbTitle,
+    required this.autoGamepieceAvg,
+    required this.avgGamepieces,
+    required this.matchesBalanced,
+    required this.maxBalanceTitle,
     required this.drivetrain,
   });
   final String? drivetrain;
-  final String maxClimbTitle;
+  final String maxBalanceTitle;
   final int amountOfMatches;
-  final double avgBallPoints;
-  final double avgClimbPoints;
-  final double autoBallAvg;
-  final double avgBalls;
-  final double autoUpper;
-  final double autoLower;
-  final double autoMissed;
-  final double teleUpper;
-  final double teleLower;
-  final double teleMissed;
+  final double avgGamepiecePoints;
+  final double avgAutoBalancePoints;
+  final double autoGamepieceAvg;
+  final double avgGamepieces;
 
   final LightTeam team;
   final List<String>? faultMessages;
   final Map<RobotMatchStatus, int> robotMatchStatusToAmount;
-  final int matchesClimbed;
+  final int matchesBalanced;
 
   int firstListIndex;
   int secondListIndex;
