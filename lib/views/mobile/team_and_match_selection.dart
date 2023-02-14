@@ -59,19 +59,19 @@ class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
         SizedBox(
           height: 15,
         ),
-        if(scheduleMatch != null)
-        TeamsSearchBox(
-          buildSuggestion: (final LightTeam currentTeam) => isUnofficial
-              ? "${currentTeam.number} ${currentTeam.name}"
-              : scheduleMatch!.getTeamStation(currentTeam) ?? "",
-          teams: teams,
-          typeAheadController: teamNumberController,
-          onChange: (final LightTeam team) {
-            setState(() {
-              widget.onTeamChange(team);
-            });
-          },
-        ),
+        if (scheduleMatch != null)
+          TeamsSearchBox(
+            buildSuggestion: (final LightTeam currentTeam) => isUnofficial
+                ? "${currentTeam.number} ${currentTeam.name}"
+                : scheduleMatch!.getTeamStation(currentTeam) ?? "",
+            teams: teams,
+            typeAheadController: teamNumberController,
+            onChange: (final LightTeam team) {
+              setState(() {
+                widget.onTeamChange(team);
+              });
+            },
+          ),
       ],
     );
   }
