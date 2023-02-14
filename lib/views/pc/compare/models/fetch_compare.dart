@@ -160,10 +160,10 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                   teamsTable["technical_matches_aggregate"]["aggregate"]["avg"];
               final bool avgNullValidator = avg["auto_cones_top"] == null;
               final double avgTeleGamepiecesPoints = avgNullValidator
-                  ? 0
+                  ? double.nan
                   : getPieces(parseByMode(MatchMode.tele, avg));
               final double avgAutoGamepiecePoints = avgNullValidator
-                  ? 0
+                  ? double.nan
                   : getPoints(parseByMode(MatchMode.auto, avg));
               final int autoBalanceFailed = autoBalanceVals
                   .where((final String title) => title == "Failed")
