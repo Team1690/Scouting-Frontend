@@ -22,8 +22,6 @@ class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
   final TextEditingController teamNumberController = TextEditingController();
   ScheduleMatch? scheduleMatch;
   List<LightTeam> teams = <LightTeam>[];
-  SuggestionsBoxController suggestionsBoxController =
-      SuggestionsBoxController();
   bool isUnofficial = false;
 
   @override
@@ -52,7 +50,6 @@ class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
                         ...selectedMatch.blueAlliance,
                         ...selectedMatch.redAlliance
                       ];
-                suggestionsBoxController.close();
               });
             },
           ),
