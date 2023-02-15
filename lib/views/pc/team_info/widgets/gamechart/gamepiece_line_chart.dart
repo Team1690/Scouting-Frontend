@@ -8,30 +8,35 @@ class GamepiecesLineChart extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => Stack(
         children: <Widget>[
-          Align(
-            alignment: Alignment(0.7, -1),
-            child: RichText(
-              text: TextSpan(
-                children: <InlineSpan>[
-                  TextSpan(
-                    text: " Top ",
-                    style: TextStyle(color: Colors.green),
+          Column(
+            children: <Widget>[
+              Spacer(),
+              Align(
+                alignment: Alignment(0.7, -1),
+                child: RichText(
+                  text: TextSpan(
+                    children: <InlineSpan>[
+                      TextSpan(
+                        text: " Top ",
+                        style: TextStyle(color: Colors.green),
+                      ),
+                      TextSpan(
+                        text: " Mid ",
+                        style: TextStyle(color: Colors.yellow),
+                      ),
+                      TextSpan(
+                        text: " Low ",
+                        style: TextStyle(color: Colors.orange),
+                      ),
+                      TextSpan(
+                        text: " Failed ",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: " Mid ",
-                    style: TextStyle(color: Colors.yellow),
-                  ),
-                  TextSpan(
-                    text: " Low ",
-                    style: TextStyle(color: Colors.orange),
-                  ),
-                  TextSpan(
-                    text: " Failed ",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
           Align(
             alignment: Alignment(-1, -1),
