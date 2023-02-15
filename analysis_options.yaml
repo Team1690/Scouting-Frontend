@@ -46,7 +46,7 @@ linter:
     - unnecessary_lambdas
     - unnecessary_this
       # TODO: not recognized (?)
-      # - unwaited_futures
+    - unawaited_futures
     - use_named_constants
     - avoid_print
     - prefer_const_constructors
