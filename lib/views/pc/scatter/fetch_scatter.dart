@@ -1,5 +1,6 @@
+import "package:collection/collection.dart";
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
+import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/scatter/scatter.dart";
@@ -11,25 +12,40 @@ query Scatter {
     number
     id
     name
-    matches_aggregate(where: {ignored: {_eq: false}}) {
-      aggregate {
-        avg {
-          auto_lower
-          auto_upper
-          tele_lower
-          tele_upper
-        }
+    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+    aggregate {
+      avg {
+        auto_cones_low
+        auto_cones_mid
+        auto_cones_top
+        auto_cubes_low
+        auto_cubes_mid
+        auto_cubes_top
+        tele_cones_low
+        tele_cones_mid
+        tele_cones_top
+        tele_cubes_low
+        tele_cubes_mid
+        tele_cubes_top
       }
     }
-    matches(where: {ignored: {_eq: false}}) {
-      auto_lower
-      auto_upper
-      tele_lower
-      tele_upper
-    }
+  }
+    technical_matches(where: {ignored: {_eq: false}}) {
+    auto_cones_low
+    auto_cones_mid
+    auto_cones_top
+    auto_cubes_low
+    auto_cubes_mid
+    auto_cubes_top
+    tele_cones_low
+    tele_cones_mid
+    tele_cones_top
+    tele_cubes_low
+    tele_cubes_mid
+    tele_cubes_top
+  }
   }
 }
-
 """;
 Future<List<ScatterData>> fetchScatterData() async {
   final GraphQLClient client = getClient();
@@ -39,46 +55,37 @@ Future<List<ScatterData>> fetchScatterData() async {
       document: gql(query),
       parserFn: (final Map<String, dynamic> data) {
         return (data["team"] as List<dynamic>)
-            .map<ScatterData?>((final dynamic e) {
+            .map<ScatterData?>((final dynamic scatterTeam) {
               final LightTeam team = LightTeam(
-                e["id"] as int,
-                e["number"] as int,
-                e["name"] as String,
-                e["colors_index"] as int,
+                scatterTeam["id"] as int,
+                scatterTeam["number"] as int,
+                scatterTeam["name"] as String,
+                scatterTeam["colors_index"] as int,
               );
-              final double? avgAutoUpper = (e["matches_aggregate"]["aggregate"]
-                      ["avg"]["auto_upper"] as double?)
-                  .mapNullable((final double p0) => p0 * 4);
-              final double? avgTeleUpper = (e["matches_aggregate"]["aggregate"]
-                      ["avg"]["tele_upper"] as double?)
-                  .mapNullable((final double p0) => p0 * 2);
-              final double? avgAutoLower = (e["matches_aggregate"]["aggregate"]
-                      ["avg"]["auto_lower"] as double?)
-                  .mapNullable((final double p0) => p0 * 2);
-              final double? avgTeleLower = (e["matches_aggregate"]["aggregate"]
-                  ["avg"]["tele_lower"] as double?);
-              if (avgTeleUpper == null ||
-                  avgTeleLower == null ||
-                  avgAutoLower == null ||
-                  avgAutoUpper == null) return null;
-              final double xBallPointsAvg =
-                  avgTeleLower + avgAutoLower + avgTeleUpper + avgAutoUpper;
-              final List<dynamic> matches = e["matches"] as List<dynamic>;
-              final Iterable<int> matchBallPoints = matches.map(
-                (final dynamic e) => ((e["auto_lower"] as int) * 2 +
-                    (e["tele_lower"] as int) * 1 +
-                    (e["auto_upper"] as int) * 4 +
-                    (e["tele_upper"] as int) * 2),
-              );
-              double yStddevBallPoints = 0;
-              for (final int element in matchBallPoints) {
-                yStddevBallPoints += (element - xBallPointsAvg).abs();
+              final dynamic avg = scatterTeam["technical_matches_aggregate"]
+                  ["aggregate"]["avg"];
+              final List<dynamic> matches =
+                  scatterTeam["technical_matches"] as List<dynamic>;
+              if (avg["auto_cones_top"] == null) {
+                //if one of these is null, the team's match data doesnt exist so we return null
+                return null;
               }
-              yStddevBallPoints /= matchBallPoints.length;
-              return ScatterData(xBallPointsAvg, yStddevBallPoints, team);
+              final double avgPoints = getPoints(parseMatch(avg));
+              final Iterable<double> matchesGamepiecePoints = matches
+                  .map((final dynamic match) => getPoints(parseMatch(match)));
+              final double yStddevGamepiecePoints = matchesGamepiecePoints
+                  .map(
+                    (final double matchPoints) =>
+                        (matchPoints - avgPoints).abs(),
+                  )
+                  .average;
+              return ScatterData(
+                avgPoints,
+                yStddevGamepiecePoints,
+                team,
+              );
             })
-            .where((final ScatterData? element) => element != null)
-            .cast<ScatterData>()
+            .whereType<ScatterData>()
             .toList();
       },
     ),
