@@ -483,7 +483,7 @@ Future<Team> fetchTeamInfo(
             combineLists(autoConesLowData, teleConesLowData),
             combineLists(autoConesFailedData, teleConesFailedData),
           ],
-          title: "Tele+Auto Cones",
+          title: "Cones",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
             3,
             (teamByPk["technical_matches"] as List<dynamic>)
@@ -504,7 +504,39 @@ Future<Team> fetchTeamInfo(
             combineLists(autoCubesLowData, teleCubesLowData),
             combineLists(autoCubesFailedData, teleCubesFailedData),
           ],
-          title: "Tele+Auto Cubes",
+          title: "Cubes",
+          robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+            3,
+            (teamByPk["technical_matches"] as List<dynamic>)
+                .map(
+                  (final dynamic e) => titleToEnum(
+                    e["robot_match_status"]["title"] as String,
+                  ),
+                )
+                .toList(),
+          ),
+        );
+        final LineChartData scoredMissedDataAll = LineChartData(
+          gameNumbers: matchNumbers,
+          points: <List<int>>[
+            combineLists(
+              scoredMissedDataAllCones.points[0],
+              scoredMissedDataAllCubes.points[0],
+            ),
+            combineLists(
+              scoredMissedDataAllCones.points[1],
+              scoredMissedDataAllCubes.points[1],
+            ),
+            combineLists(
+              scoredMissedDataAllCones.points[2],
+              scoredMissedDataAllCubes.points[2],
+            ),
+            combineLists(
+              scoredMissedDataAllCones.points[3],
+              scoredMissedDataAllCubes.points[3],
+            ),
+          ],
+          title: "Gamepieces",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
             3,
             (teamByPk["technical_matches"] as List<dynamic>)
@@ -541,6 +573,7 @@ Future<Team> fetchTeamInfo(
           pointsData: pointsData,
           scoredMissedDataAllCones: scoredMissedDataAllCones,
           scoredMissedDataAllCubes: scoredMissedDataAllCubes,
+          scoredMissedDataAll: scoredMissedDataAll,
           team: teamForQuery,
           specificData: specificData,
           pitViewData: pitData,

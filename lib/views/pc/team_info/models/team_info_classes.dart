@@ -190,6 +190,7 @@ class Team {
     required this.scoredMissedDataTeleCubes,
     required this.scoredMissedDataAutoCubes,
     required this.scoredMissedDataAllCubes,
+    required this.scoredMissedDataAll,
     required this.pointsData,
   });
   final LightTeam team;
@@ -205,4 +206,5 @@ class Team {
   final LineChartData scoredMissedDataTeleCubes;
   final LineChartData scoredMissedDataAutoCubes;
   final LineChartData scoredMissedDataAllCubes;
+  final LineChartData scoredMissedDataAll;
 }
