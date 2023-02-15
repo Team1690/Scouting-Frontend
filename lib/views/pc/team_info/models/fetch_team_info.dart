@@ -1,5 +1,6 @@
 import "package:flutter/cupertino.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/average_or_null.dart";
 import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/match_model.dart";
@@ -151,54 +152,46 @@ Future<Team> fetchTeamInfo(
           ),
         );
 
-        //       final dynamic avg =
-        //    teamByPk["technical_matches_aggregate"]["aggregate"]["avg"];
-        ////TODO add a function for 'avg["auto_cones_top"] as double? ?? 0'
-        // final double autoConesTop = avg["auto_cones_top"] as double? ?? 0;
-        // final double autoConesMid = avg["auto_cones_mid"] as double? ?? 0;
-        // final double autoConesLow = avg["auto_cones_low"] as double? ?? 0;
-        // final double autoConesFailed = avg["auto_cones_failed"] as double? ?? 0;
-        // final double teleConesTop = avg["tele_cones_top"] as double? ?? 0;
-        // final double teleConesMid = avg["tele_cones_mid"] as double? ?? 0;
-        // final double teleConesLow = avg["tele_cones_low"] as double? ?? 0;
-        // final double teleConesFailed = avg["tele_cones_failed"] as double? ?? 0;
-        // final double autoCubesTop = avg["auto_cubes_top"] as double? ?? 0;
-        // final double autoCubesMid = avg["auto_cubes_mid"] as double? ?? 0;
-        // final double autoCubesLow = avg["auto_cubes_low"] as double? ?? 0;
-        // final double autoCubesFailed = avg["auto_cubes_failed"] as double? ?? 0;
-        // final double teleCubesTop = avg["tele_cubes_top"] as double? ?? 0;
-        // final double teleCubesMid = avg["tele_cubes_mid"] as double? ?? 0;
-        // final double teleCubesLow = avg["tele_cubes_low"] as double? ?? 0;
-        // final double teleCubesFailed = avg["tele_cubes_failed"] as double? ?? 0;
+        final dynamic avg =
+            teamByPk["technical_matches_aggregate"]["aggregate"]["avg"];
+        final double autoConesTop = avg["auto_cones_top"] as double? ?? 0;
+        final double autoConesMid = avg["auto_cones_mid"] as double? ?? 0;
+        final double autoConesLow = avg["auto_cones_low"] as double? ?? 0;
+        final double autoConesFailed = avg["auto_cones_failed"] as double? ?? 0;
+        final double teleConesTop = avg["tele_cones_top"] as double? ?? 0;
+        final double teleConesMid = avg["tele_cones_mid"] as double? ?? 0;
+        final double teleConesLow = avg["tele_cones_low"] as double? ?? 0;
+        final double teleConesFailed = avg["tele_cones_failed"] as double? ?? 0;
+        final double autoCubesTop = avg["auto_cubes_top"] as double? ?? 0;
+        final double autoCubesMid = avg["auto_cubes_mid"] as double? ?? 0;
+        final double autoCubesLow = avg["auto_cubes_low"] as double? ?? 0;
+        final double autoCubesFailed = avg["auto_cubes_failed"] as double? ?? 0;
+        final double teleCubesTop = avg["tele_cubes_top"] as double? ?? 0;
+        final double teleCubesMid = avg["tele_cubes_mid"] as double? ?? 0;
+        final double teleCubesLow = avg["tele_cubes_low"] as double? ?? 0;
+        final double teleCubesFailed = avg["tele_cubes_failed"] as double? ?? 0;
 
-        final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
-                ["avg"]["auto_lower"] as double? ??
-            0;
-        final double avgAutoMissed = teamByPk["matches_aggregate"]["aggregate"]
-                ["avg"]["auto_missed"] as double? ??
-            0;
-        final double avgAutoUpper = teamByPk["matches_aggregate"]["aggregate"]
-                ["avg"]["auto_upper"] as double? ??
-            0;
-        final double avgTeleLow = teamByPk["matches_aggregate"]["aggregate"]
-                ["avg"]["tele_lower"] as double? ??
-            0;
-        final double avgTeleMissed = teamByPk["matches_aggregate"]["aggregate"]
-                ["avg"]["tele_missed"] as double? ??
-            0;
-        final double avgTeleUpper = teamByPk["matches_aggregate"]["aggregate"]
-                ["avg"]["tele_upper"] as double? ??
-            0;
         final List<dynamic> matches =
             (teamByPk["technical_matches"] as List<dynamic>);
 
-        final List<int> climbPoints = matches
+        final List<int> autoBalancePoints = matches
             .where(
               (final dynamic element) =>
-                  element["climb"]["title"] != "No attempt",
+                  element["auto_balance"]["title"] != "No attempt",
             )
-            .map((final dynamic e) => e["climb"]["points"] as int)
+            .map((final dynamic e) => e["auto_balance"]["auto_points"] as int)
             .toList();
+        final List<int> endgameBalancePoints = matches
+            .where(
+              (final dynamic element) =>
+                  element["endgame_balance"]["title"] != "No attempt",
+            )
+            .map(
+              (final dynamic e) =>
+                  e["endgame_balance"]["endgame_points"] as int,
+            )
+            .toList();
+        final bool nullValidator = avg["auto_cones_top"] == null;
         final SpecificData specificData = SpecificData(
           (teamByPk["_2023_specifics"] as List<dynamic>)
               .map(
@@ -217,55 +210,67 @@ Future<Team> fetchTeamInfo(
               .toList(),
         );
         final QuickData quickData = QuickData(
-          matchesClimbed: matches
+          matchesBalancedAuto: matches
               .where(
                 (final dynamic element) =>
-                    element["climb"]["title"] != "No attempt" &&
-                    element["climb"]["title"] != "Failed",
+                    element["auto_balance"]["title"] != "No attempt" &&
+                    element["auto_balance"]["title"] != "Failed",
+              )
+              .length,
+          matchesBalancedEndgame: matches
+              .where(
+                (final dynamic element) =>
+                    element["endgame_balance"]["title"] != "No attempt" &&
+                    element["endgame_balance"]["title"] != "Failed",
               )
               .length,
           firstPicklistIndex: team["team_by_pk"]["first_picklist_index"] as int,
           secondPicklistIndex:
               team["team_by_pk"]["second_picklist_index"] as int,
-          highestLevelTitle: matches.isEmpty
+          highestBalanceTitleAuto: matches.isEmpty
               ? "highestLevelTitle QuickData: this isn't supposed to be shown because of amoutOfMatches check in ui"
-              : matches.length == 1
-                  ? matches.single["climb"]["title"] as String
-                  : matches
-                      .map<dynamic>((final dynamic e) => e["climb"])
-                      .reduce(
-                        (final dynamic value, final dynamic element) =>
-                            (value["points"] as int) >
-                                    (element["points"] as int)
-                                ? value
-                                : element,
-                      )["title"] as String,
-          avgAutoLowScored: avgAutoLow,
-          avgAutoMissed: avgAutoMissed,
-          avgAutoUpperScored: avgAutoUpper,
-          avgBallPoints:
-              avgTeleUpper * 2 + avgTeleLow + avgAutoUpper * 4 + avgAutoLow * 2,
-          avgClimbPoints: climbPoints.isEmpty
-              ? 0.0
-              : climbPoints.length == 1
-                  ? climbPoints.single.toDouble()
-                  : climbPoints.reduce(
-                        (final int value, final int element) => value + element,
-                      ) /
-                      climbPoints.length,
-          avgTeleLowScored: avgTeleLow,
-          avgTeleMissed: avgTeleMissed,
-          avgTeleUpperScored: avgTeleUpper,
+              : matches
+                  .map<dynamic>((final dynamic e) => e["auto_balance"])
+                  .reduceSafe(
+                    (final dynamic value, final dynamic element) =>
+                        (value["auto_points"] as int) >
+                                (element["auto_points"] as int)
+                            ? value
+                            : element,
+                  )["title"] as String,
           amoutOfMatches: matches.length,
+          avgAutoBalancePoints: autoBalancePoints.averageOrNull ?? 0,
+          avgEndgameBalancePoints: endgameBalancePoints.averageOrNull ?? 0,
+          avgGamepieces: nullValidator ? 0 : getPieces(parseMatch(avg)),
+          avgGamepiecePoints: nullValidator ? 0 : getPoints(parseMatch(avg)),
+          avgAutoGamepieces:
+              nullValidator ? 0 : getPieces(parseByMode(MatchMode.auto, avg)),
+          avgTeleGamepieces:
+              nullValidator ? 0 : getPieces(parseByMode(MatchMode.tele, avg)),
+          avgAutoConesFailed: autoConesFailed,
+          avgAutoConesLow: autoConesLow,
+          avgAutoConesMid: autoConesMid,
+          avgAutoConesTop: autoConesTop,
+          avgAutoCubesFailed: autoCubesFailed,
+          avgAutoCubesLow: autoCubesLow,
+          avgAutoCubesMid: autoCubesMid,
+          avgAutoCubesTop: autoCubesTop,
+          avgTeleConesFailed: teleConesFailed,
+          avgTeleConesLow: teleConesLow,
+          avgTeleConesMid: teleConesMid,
+          avgTeleConesTop: teleConesTop,
+          avgTeleCubesFailed: teleCubesFailed,
+          avgTeleCubesLow: teleCubesLow,
+          avgTeleCubesMid: teleCubesMid,
+          avgTeleCubesTop: teleCubesTop,
         );
         final List<String> autoBalanceTitles = matches
             .map((final dynamic e) => e["auto_balance"]["title"] as String)
             .toList();
         final List<String> endgameBalanceTitles = matches
-            .map((final dynamic e) => e["tele_balance"]["title"] as String)
+            .map((final dynamic e) => e["endgame_balance"]["title"] as String)
             .toList();
 
-        //TODO fix code dupe
         final List<int> autoBalanceLineChart =
             autoBalanceTitles.map<int>((final String e) {
           switch (e) {
@@ -560,7 +565,7 @@ Future<Team> fetchTeamInfo(
           title: "Points",
           gameNumbers: matchNumbers,
           robotMatchStatuses: <List<RobotMatchStatus>>[
-            (teamByPk["matches"] as List<dynamic>)
+            (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) => titleToEnum(
                     e["robot_match_status"]["title"] as String,

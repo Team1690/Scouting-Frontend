@@ -2,33 +2,63 @@ import "package:scouting_frontend/models/team_model.dart";
 
 class QuickData {
   QuickData({
-    required this.avgAutoLowScored,
-    required this.avgAutoMissed,
-    required this.avgAutoUpperScored,
-    required this.avgBallPoints,
-    required this.avgClimbPoints,
-    required this.avgTeleLowScored,
-    required this.avgTeleMissed,
-    required this.avgTeleUpperScored,
-    required this.highestLevelTitle,
+    required this.avgAutoBalancePoints,
+    required this.avgEndgameBalancePoints,
+    required this.avgAutoConesTop,
+    required this.avgAutoConesMid,
+    required this.avgAutoConesLow,
+    required this.avgAutoConesFailed,
+    required this.avgTeleConesTop,
+    required this.avgTeleConesMid,
+    required this.avgTeleConesLow,
+    required this.avgTeleConesFailed,
+    required this.avgAutoCubesTop,
+    required this.avgAutoCubesMid,
+    required this.avgAutoCubesLow,
+    required this.avgAutoCubesFailed,
+    required this.avgTeleCubesTop,
+    required this.avgTeleCubesMid,
+    required this.avgTeleCubesLow,
+    required this.avgTeleCubesFailed,
+    required this.matchesBalancedAuto,
+    required this.matchesBalancedEndgame,
+    required this.highestBalanceTitleAuto,
     required this.firstPicklistIndex,
     required this.secondPicklistIndex,
     required this.amoutOfMatches,
-    required this.matchesClimbed,
+    required this.avgGamepiecePoints,
+    required this.avgGamepieces,
+    required this.avgAutoGamepieces,
+    required this.avgTeleGamepieces,
   });
   final int amoutOfMatches;
-  final double avgBallPoints;
-  final double avgClimbPoints;
-  final double avgAutoUpperScored;
-  final double avgAutoMissed;
-  final double avgAutoLowScored;
-  final double avgTeleUpperScored;
-  final double avgTeleMissed;
-  final double avgTeleLowScored;
-  final String highestLevelTitle;
+  final double avgGamepiecePoints;
+  final double avgAutoConesTop;
+  final double avgAutoConesMid;
+  final double avgAutoConesLow;
+  final double avgAutoConesFailed;
+  final double avgTeleConesTop;
+  final double avgTeleConesMid;
+  final double avgTeleConesLow;
+  final double avgTeleConesFailed;
+  final double avgAutoCubesTop;
+  final double avgAutoCubesMid;
+  final double avgAutoCubesLow;
+  final double avgAutoCubesFailed;
+  final double avgTeleCubesTop;
+  final double avgTeleCubesMid;
+  final double avgTeleCubesLow;
+  final double avgTeleCubesFailed;
+  final String highestBalanceTitleAuto;
   final int firstPicklistIndex;
   final int secondPicklistIndex;
-  final int matchesClimbed;
+  final int matchesBalancedAuto;
+  final int matchesBalancedEndgame;
+  final double avgAutoBalancePoints;
+  final double avgEndgameBalancePoints;
+  final double avgGamepieces;
+  final double avgAutoGamepieces;
+  final double avgTeleGamepieces;
 }
 
 class SpecificData {
