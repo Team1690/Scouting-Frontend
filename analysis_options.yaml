@@ -48,3 +48,8 @@ linter:
       # TODO: not recognized (?)
       # - unwaited_futures
     - use_named_constants
+    - avoid_print
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_const_literals_to_create_immutables
+    - prefer_expression_function_bodies
