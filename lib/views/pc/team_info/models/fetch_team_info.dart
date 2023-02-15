@@ -276,7 +276,7 @@ Future<Team> fetchTeamInfo(
           switch (e) {
             case "Failed":
               return 0;
-            case "No attempt":
+            case "No Attempt":
               return -1;
             case "Unbalanced":
               return 1;
@@ -291,7 +291,7 @@ Future<Team> fetchTeamInfo(
           switch (e) {
             case "Failed":
               return 0;
-            case "No attempt":
+            case "No Attempt":
               return -1;
             case "Unbalanced":
               return 1;
@@ -316,7 +316,7 @@ Future<Team> fetchTeamInfo(
           points: <List<int>>[autoBalanceLineChart.toList()],
           title: "Auto Balance",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            3,
+            4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) =>
@@ -330,7 +330,7 @@ Future<Team> fetchTeamInfo(
           points: <List<int>>[endgameBalanceLineChart.toList()],
           title: "Endgame Balance",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            3,
+            4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) =>
@@ -362,7 +362,7 @@ Future<Team> fetchTeamInfo(
           ],
           title: "Teleoperated Cones",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            3,
+            4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) =>
@@ -395,7 +395,7 @@ Future<Team> fetchTeamInfo(
           ],
           title: "Autonomous Cones",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            3,
+            4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) =>
@@ -428,7 +428,7 @@ Future<Team> fetchTeamInfo(
           ],
           title: "Teleoperated Cubes",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            3,
+            4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) =>
@@ -457,11 +457,10 @@ Future<Team> fetchTeamInfo(
             autoCubesTopData,
             autoCubesMidData,
             autoCubesLowData,
-            autoCubesFailedData
           ],
           title: "Autonomous Cubes",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            3,
+            4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) =>
@@ -490,7 +489,7 @@ Future<Team> fetchTeamInfo(
           ],
           title: "Cones",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            3,
+            4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) => titleToEnum(
@@ -511,7 +510,7 @@ Future<Team> fetchTeamInfo(
           ],
           title: "Cubes",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            3,
+            4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) => titleToEnum(
@@ -543,7 +542,7 @@ Future<Team> fetchTeamInfo(
           ],
           title: "Gamepieces",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            3,
+            4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) => titleToEnum(
