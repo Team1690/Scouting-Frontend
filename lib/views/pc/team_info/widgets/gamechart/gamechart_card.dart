@@ -12,19 +12,19 @@ class Gamechart extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => DashboardCard(
         title: "Game Chart",
-        body: data.climbData.points[0].isEmpty
+        body: data.autoBalanceData.points[0].isEmpty
             ? Center(
                 child: Container(),
               )
-            : data.climbData.points[0].length == 1
+            : data.autoBalanceData.points[0].length == 1
                 ? Text("Not enough data for line chart")
                 : CarouselWithIndicator(
                     widgets: <Widget>[
-                      BallLineChart(data.scoredMissedDataTele),
-                      BallLineChart(data.scoredMissedDataAuto),
-                      BallLineChart(data.scoredMissedDataAll),
+                      BallLineChart(data.scoredMissedDataTeleCones),
+                      BallLineChart(data.scoredMissedDataAutoCones),
+                      BallLineChart(data.scoredMissedDataAllCones),
                       PointsLineChart(data.pointsData),
-                      ClimbLineChart(data.climbData),
+                      ClimbLineChart(data.autoBalanceData),
                     ],
                   ),
       );

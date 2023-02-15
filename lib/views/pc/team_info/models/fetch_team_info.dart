@@ -2,6 +2,7 @@ import "package:flutter/cupertino.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
+import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
@@ -150,6 +151,26 @@ Future<Team> fetchTeamInfo(
           ),
         );
 
+        //       final dynamic avg =
+        //    teamByPk["technical_matches_aggregate"]["aggregate"]["avg"];
+        ////TODO add a function for 'avg["auto_cones_top"] as double? ?? 0'
+        // final double autoConesTop = avg["auto_cones_top"] as double? ?? 0;
+        // final double autoConesMid = avg["auto_cones_mid"] as double? ?? 0;
+        // final double autoConesLow = avg["auto_cones_low"] as double? ?? 0;
+        // final double autoConesFailed = avg["auto_cones_failed"] as double? ?? 0;
+        // final double teleConesTop = avg["tele_cones_top"] as double? ?? 0;
+        // final double teleConesMid = avg["tele_cones_mid"] as double? ?? 0;
+        // final double teleConesLow = avg["tele_cones_low"] as double? ?? 0;
+        // final double teleConesFailed = avg["tele_cones_failed"] as double? ?? 0;
+        // final double autoCubesTop = avg["auto_cubes_top"] as double? ?? 0;
+        // final double autoCubesMid = avg["auto_cubes_mid"] as double? ?? 0;
+        // final double autoCubesLow = avg["auto_cubes_low"] as double? ?? 0;
+        // final double autoCubesFailed = avg["auto_cubes_failed"] as double? ?? 0;
+        // final double teleCubesTop = avg["tele_cubes_top"] as double? ?? 0;
+        // final double teleCubesMid = avg["tele_cubes_mid"] as double? ?? 0;
+        // final double teleCubesLow = avg["tele_cubes_low"] as double? ?? 0;
+        // final double teleCubesFailed = avg["tele_cubes_failed"] as double? ?? 0;
+
         final double avgAutoLow = teamByPk["matches_aggregate"]["aggregate"]
                 ["avg"]["auto_lower"] as double? ??
             0;
@@ -168,10 +189,8 @@ Future<Team> fetchTeamInfo(
         final double avgTeleUpper = teamByPk["matches_aggregate"]["aggregate"]
                 ["avg"]["tele_upper"] as double? ??
             0;
-        final List<dynamic> matches = (teamByPk["matches"] as List<dynamic>);
-        final List<String> climbTitles = matches
-            .map((final dynamic e) => e["climb"]["title"] as String)
-            .toList();
+        final List<dynamic> matches =
+            (teamByPk["technical_matches"] as List<dynamic>);
 
         final List<int> climbPoints = matches
             .where(
@@ -240,24 +259,42 @@ Future<Team> fetchTeamInfo(
           avgTeleUpperScored: avgTeleUpper,
           amoutOfMatches: matches.length,
         );
+        final List<String> autoBalanceTitles = matches
+            .map((final dynamic e) => e["auto_balance"]["title"] as String)
+            .toList();
+        final List<String> endgameBalanceTitles = matches
+            .map((final dynamic e) => e["tele_balance"]["title"] as String)
+            .toList();
 
-        final List<int> climbLineChartPoints =
-            climbTitles.map<int>((final String e) {
+        //TODO fix code dupe
+        final List<int> autoBalanceLineChart =
+            autoBalanceTitles.map<int>((final String e) {
           switch (e) {
             case "Failed":
               return 0;
             case "No attempt":
               return -1;
-            case "Level 1":
+            case "Unbalanced":
               return 1;
-            case "Level 2":
+            case "Balanced":
               return 2;
-            case "Level 3":
-              return 3;
-            case "Level 4":
-              return 4;
           }
-          throw Exception("Not a climb value");
+          throw Exception("Not a balance value");
+        }).toList();
+
+        final List<int> endgameBalanceLineChart =
+            endgameBalanceTitles.map<int>((final String e) {
+          switch (e) {
+            case "Failed":
+              return 0;
+            case "No attempt":
+              return -1;
+            case "Unbalanced":
+              return 1;
+            case "Balanced":
+              return 2;
+          }
+          throw Exception("Not a balance value");
         }).toList();
 
         final List<MatchIdentifier> matchNumbers = matches
@@ -270,13 +307,59 @@ Future<Team> fetchTeamInfo(
             )
             .toList();
 
-        final LineChartData climbData = LineChartData(
+        final LineChartData autoBalanceData = LineChartData(
           gameNumbers: matchNumbers,
-          points: <List<int>>[climbLineChartPoints.toList()],
-          title: "Climb",
+          points: <List<int>>[autoBalanceLineChart.toList()],
+          title: "Auto Balance",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
             3,
-            (teamByPk["matches"] as List<dynamic>)
+            (teamByPk["technical_matches"] as List<dynamic>)
+                .map(
+                  (final dynamic e) =>
+                      titleToEnum(e["robot_match_status"]["title"] as String),
+                )
+                .toList(),
+          ),
+        );
+        final LineChartData endgameBalanceData = LineChartData(
+          gameNumbers: matchNumbers,
+          points: <List<int>>[endgameBalanceLineChart.toList()],
+          title: "Endgame Balance",
+          robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+            3,
+            (teamByPk["technical_matches"] as List<dynamic>)
+                .map(
+                  (final dynamic e) =>
+                      titleToEnum(e["robot_match_status"]["title"] as String),
+                )
+                .toList(),
+          ),
+        );
+        final List<int> teleConesTopData = matches
+            .map((final dynamic e) => e["tele_cones_top"] as int)
+            .toList();
+        final List<int> teleConesMidData = matches
+            .map((final dynamic e) => e["tele_cones_mid"] as int)
+            .toList();
+        final List<int> teleConesLowData = matches
+            .map((final dynamic e) => e["tele_cones_low"] as int)
+            .toList();
+        final List<int> teleConesFailedData = matches
+            .map((final dynamic e) => e["tele_cones_failed"] as int)
+            .toList();
+
+        final LineChartData scoredMissedDataTeleCones = LineChartData(
+          gameNumbers: matchNumbers,
+          points: <List<int>>[
+            teleConesTopData,
+            teleConesMidData,
+            teleConesLowData,
+            teleConesFailedData
+          ],
+          title: "Teleoperated Cones",
+          robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+            3,
+            (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) =>
                       titleToEnum(e["robot_match_status"]["title"] as String),
@@ -285,24 +368,31 @@ Future<Team> fetchTeamInfo(
           ),
         );
 
-        final List<int> upperScoredDataTele =
-            matches.map((final dynamic e) => e["tele_upper"] as int).toList();
-        final List<int> missedDataTele =
-            matches.map((final dynamic e) => e["tele_missed"] as int).toList();
+        final List<int> autoConesTopData = matches
+            .map((final dynamic e) => e["auto_cones_top"] as int)
+            .toList();
+        final List<int> autoConesMidData = matches
+            .map((final dynamic e) => e["auto_cones_mid"] as int)
+            .toList();
+        final List<int> autoConesLowData = matches
+            .map((final dynamic e) => e["auto_cones_low"] as int)
+            .toList();
+        final List<int> autoConesFailedData = matches
+            .map((final dynamic e) => e["auto_cones_failed"] as int)
+            .toList();
 
-        final List<int> lowerScoredDataTele =
-            matches.map((final dynamic e) => e["tele_lower"] as int).toList();
-        final LineChartData scoredMissedDataTele = LineChartData(
+        final LineChartData scoredMissedDataAutoCones = LineChartData(
           gameNumbers: matchNumbers,
           points: <List<int>>[
-            upperScoredDataTele,
-            missedDataTele,
-            lowerScoredDataTele
+            autoConesTopData,
+            autoConesMidData,
+            autoConesLowData,
+            autoConesFailedData
           ],
-          title: "Teleoperated",
+          title: "Autonomous Cones",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
             3,
-            (teamByPk["matches"] as List<dynamic>)
+            (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) =>
                       titleToEnum(e["robot_match_status"]["title"] as String),
@@ -311,28 +401,67 @@ Future<Team> fetchTeamInfo(
           ),
         );
 
-        final List<int> upperScoredDataAuto =
-            matches.map((final dynamic e) => e["auto_upper"] as int).toList();
-        final List<int> missedDataAuto =
-            matches.map((final dynamic e) => e["auto_missed"] as int).toList();
-        final List<int> lowerScoredDataAuto =
-            matches.map((final dynamic e) => e["auto_lower"] as int).toList();
+        final List<int> teleCubesTopData = matches
+            .map((final dynamic e) => e["tele_cubes_top"] as int)
+            .toList();
+        final List<int> teleCubesMidData = matches
+            .map((final dynamic e) => e["tele_cubes_mid"] as int)
+            .toList();
+        final List<int> teleCubesLowData = matches
+            .map((final dynamic e) => e["tele_cubes_low"] as int)
+            .toList();
+        final List<int> teleCubesFailedData = matches
+            .map((final dynamic e) => e["tele_cubes_failed"] as int)
+            .toList();
 
-        final LineChartData scoredMissedDataAuto = LineChartData(
+        final LineChartData scoredMissedDataTeleCubes = LineChartData(
           gameNumbers: matchNumbers,
           points: <List<int>>[
-            upperScoredDataAuto,
-            missedDataAuto,
-            lowerScoredDataAuto
+            teleCubesTopData,
+            teleCubesMidData,
+            teleCubesLowData,
+            teleCubesFailedData
           ],
-          title: "Autonomous",
+          title: "Teleoperated Cubes",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
             3,
-            (teamByPk["matches"] as List<dynamic>)
+            (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
-                  (final dynamic e) => titleToEnum(
-                    e["robot_match_status"]["title"] as String,
-                  ),
+                  (final dynamic e) =>
+                      titleToEnum(e["robot_match_status"]["title"] as String),
+                )
+                .toList(),
+          ),
+        );
+
+        final List<int> autoCubesTopData = matches
+            .map((final dynamic e) => e["auto_cubes_top"] as int)
+            .toList();
+        final List<int> autoCubesMidData = matches
+            .map((final dynamic e) => e["auto_cubes_mid"] as int)
+            .toList();
+        final List<int> autoCubesLowData = matches
+            .map((final dynamic e) => e["auto_cubes_low"] as int)
+            .toList();
+        final List<int> autoCubesFailedData = matches
+            .map((final dynamic e) => e["auto_cubes_failed"] as int)
+            .toList();
+
+        final LineChartData scoredMissedDataAutoCubes = LineChartData(
+          gameNumbers: matchNumbers,
+          points: <List<int>>[
+            autoCubesTopData,
+            autoCubesMidData,
+            autoCubesLowData,
+            autoCubesFailedData
+          ],
+          title: "Autonomous Cubes",
+          robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+            3,
+            (teamByPk["technical_matches"] as List<dynamic>)
+                .map(
+                  (final dynamic e) =>
+                      titleToEnum(e["robot_match_status"]["title"] as String),
                 )
                 .toList(),
           ),
@@ -347,17 +476,39 @@ Future<Team> fetchTeamInfo(
               (final int index) => (listOne[index] + listTwo[index]),
             ).toList();
 
-        final LineChartData scoredMissedDataAll = LineChartData(
+        final LineChartData scoredMissedDataAllCones = LineChartData(
           gameNumbers: matchNumbers,
           points: <List<int>>[
-            combineLists(upperScoredDataAuto, upperScoredDataTele),
-            combineLists(missedDataAuto, missedDataTele),
-            combineLists(lowerScoredDataAuto, lowerScoredDataTele)
+            combineLists(autoConesTopData, teleConesTopData),
+            combineLists(autoConesMidData, teleConesMidData),
+            combineLists(autoConesLowData, teleConesLowData),
+            combineLists(autoConesFailedData, teleConesFailedData),
           ],
-          title: "Tele+Auto",
+          title: "Tele+Auto Cones",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
             3,
-            (teamByPk["matches"] as List<dynamic>)
+            (teamByPk["technical_matches"] as List<dynamic>)
+                .map(
+                  (final dynamic e) => titleToEnum(
+                    e["robot_match_status"]["title"] as String,
+                  ),
+                )
+                .toList(),
+          ),
+        );
+
+        final LineChartData scoredMissedDataAllCubes = LineChartData(
+          gameNumbers: matchNumbers,
+          points: <List<int>>[
+            combineLists(autoCubesTopData, teleCubesTopData),
+            combineLists(autoCubesMidData, teleCubesMidData),
+            combineLists(autoCubesLowData, teleCubesLowData),
+            combineLists(autoCubesFailedData, teleCubesFailedData),
+          ],
+          title: "Tele+Auto Cubes",
+          robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
+            3,
+            (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic e) => titleToEnum(
                     e["robot_match_status"]["title"] as String,
@@ -371,12 +522,7 @@ Future<Team> fetchTeamInfo(
           points: <List<int>>[
             matches
                 .map(
-                  (final dynamic e) =>
-                      (e["auto_upper"] as int) * 4 +
-                      (e["auto_lower"] as int) * 2 +
-                      (e["tele_upper"] as int) * 2 +
-                      (e["tele_lower"] as int) +
-                      (e["climb"]["points"] as int),
+                  (final dynamic e) => getPoints(parseMatch(e)) as int,
                 )
                 .toList()
           ],
@@ -394,14 +540,18 @@ Future<Team> fetchTeamInfo(
         );
         return Team(
           pointsData: pointsData,
-          scoredMissedDataAll: scoredMissedDataAll,
+          scoredMissedDataAllCones: scoredMissedDataAllCones,
+          scoredMissedDataAllCubes: scoredMissedDataAllCubes,
           team: teamForQuery,
           specificData: specificData,
           pitViewData: pitData,
           quickData: quickData,
-          climbData: climbData,
-          scoredMissedDataTele: scoredMissedDataTele,
-          scoredMissedDataAuto: scoredMissedDataAuto,
+          autoBalanceData: autoBalanceData,
+          endgameBalanceData: endgameBalanceData,
+          scoredMissedDataTeleCones: scoredMissedDataTeleCones,
+          scoredMissedDataAutoCones: scoredMissedDataAutoCones,
+          scoredMissedDataTeleCubes: scoredMissedDataTeleCubes,
+          scoredMissedDataAutoCubes: scoredMissedDataAutoCubes,
         );
       },
       document: gql(teamInfoQuery),

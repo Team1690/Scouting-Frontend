@@ -187,19 +187,27 @@ class Team {
     required this.specificData,
     required this.pitViewData,
     required this.quickData,
-    required this.climbData,
-    required this.scoredMissedDataTele,
-    required this.scoredMissedDataAuto,
-    required this.scoredMissedDataAll,
+    required this.autoBalanceData,
+    required this.endgameBalanceData,
+    required this.scoredMissedDataTeleCones,
+    required this.scoredMissedDataAutoCones,
+    required this.scoredMissedDataAllCones,
+    required this.scoredMissedDataTeleCubes,
+    required this.scoredMissedDataAutoCubes,
+    required this.scoredMissedDataAllCubes,
     required this.pointsData,
   });
   final LightTeam team;
   final SpecificData specificData;
   final PitData? pitViewData;
   final QuickData quickData;
-  final LineChartData climbData;
+  final LineChartData autoBalanceData;
+  final LineChartData endgameBalanceData;
   final LineChartData pointsData;
-  final LineChartData scoredMissedDataTele;
-  final LineChartData scoredMissedDataAuto;
-  final LineChartData scoredMissedDataAll;
+  final LineChartData scoredMissedDataTeleCones;
+  final LineChartData scoredMissedDataAutoCones;
+  final LineChartData scoredMissedDataAllCones;
+  final LineChartData scoredMissedDataTeleCubes;
+  final LineChartData scoredMissedDataAutoCubes;
+  final LineChartData scoredMissedDataAllCubes;
 }

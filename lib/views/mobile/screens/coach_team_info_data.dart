@@ -45,7 +45,7 @@ class CoachTeamData extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: DashboardCard(
                           title: "Line charts",
-                          body: data.climbData.points[0].length < 2
+                          body: data.autoBalanceData.points[0].length < 2
                               ? Center(
                                   child: Text("No data :("),
                                 )
@@ -104,10 +104,11 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
           CoachTeamInfoLineChart(
             DashboardLineChart(
               showShadow: true,
-              gameNumbers: data.scoredMissedDataTele.gameNumbers,
+              gameNumbers: data.scoredMissedDataTeleCones.gameNumbers,
               distanceFromHighest: 4,
-              dataSet: data.scoredMissedDataTele.points,
-              robotMatchStatuses: data.scoredMissedDataTele.robotMatchStatuses,
+              dataSet: data.scoredMissedDataTeleCones.points,
+              robotMatchStatuses:
+                  data.scoredMissedDataTeleCones.robotMatchStatuses,
               inputedColors: <Color>[
                 Colors.green,
                 Colors.red,
@@ -119,10 +120,11 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
           CoachTeamInfoLineChart(
             DashboardLineChart(
               showShadow: true,
-              gameNumbers: data.scoredMissedDataAuto.gameNumbers,
-              robotMatchStatuses: data.scoredMissedDataAuto.robotMatchStatuses,
+              gameNumbers: data.scoredMissedDataAutoCones.gameNumbers,
+              robotMatchStatuses:
+                  data.scoredMissedDataAutoCones.robotMatchStatuses,
               distanceFromHighest: 4,
-              dataSet: data.scoredMissedDataAuto.points,
+              dataSet: data.scoredMissedDataAutoCones.points,
               inputedColors: <Color>[
                 Colors.green,
                 Colors.red,
@@ -134,10 +136,11 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
           CoachTeamInfoLineChart(
             DashboardLineChart(
               showShadow: true,
-              gameNumbers: data.scoredMissedDataAll.gameNumbers,
-              robotMatchStatuses: data.scoredMissedDataAll.robotMatchStatuses,
+              gameNumbers: data.scoredMissedDataAllCones.gameNumbers,
+              robotMatchStatuses:
+                  data.scoredMissedDataAllCones.robotMatchStatuses,
               distanceFromHighest: 4,
-              dataSet: data.scoredMissedDataAll.points,
+              dataSet: data.scoredMissedDataAllCones.points,
               inputedColors: <Color>[
                 Colors.green,
                 Colors.red,
@@ -150,9 +153,9 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
             DashboardClimbLineChart(
               showShadow: true,
               inputedColors: <Color>[primaryColor],
-              gameNumbers: data.climbData.gameNumbers,
-              dataSet: data.climbData.points,
-              robotMatchStatuses: data.climbData.robotMatchStatuses,
+              gameNumbers: data.autoBalanceData.gameNumbers,
+              dataSet: data.autoBalanceData.points,
+              robotMatchStatuses: data.autoBalanceData.robotMatchStatuses,
             ),
             "Climb",
           )
