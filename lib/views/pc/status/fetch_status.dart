@@ -50,13 +50,13 @@ Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
             )
             .entries
             .map<StatusItem<I, V>>(
-              (final MapEntry<I, List<V>> entry) => StatusItem<I, V>(
+              (final MapEntry<I, List<V>> statusCard) => StatusItem<I, V>(
                 missingValues: getMissing(
-                  entry.key,
-                  entry.value,
+                  statusCard.key,
+                  statusCard.value,
                 ),
-                values: entry.value,
-                identifier: entry.key,
+                values: statusCard.value,
+                identifier: statusCard.key,
               ),
             )
             .toList();
@@ -137,12 +137,12 @@ Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
           ...match.blueAlliance,
         ]
             .where(
-              (final LightTeam element) => !scoutedMatches
+              (final LightTeam team) => !scoutedMatches
                   .map(
                     (final StatusMatch statusMatch) =>
                         statusMatch.scoutedTeam.team,
                   )
-                  .contains(element),
+                  .contains(team),
             )
             .map(
               (final LightTeam notScoutedTeam) => StatusMatch(
