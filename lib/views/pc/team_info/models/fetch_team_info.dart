@@ -128,15 +128,16 @@ Future<Team> fetchTeamInfo(
             ? team["team_by_pk"] as Map<String, dynamic>
             : throw Exception("that team doesnt exist");
         final Map<String, dynamic>? pit =
-            (teamByPk["pit"] as Map<String, dynamic>?);
+            (teamByPk["_2023_pit"] as Map<String, dynamic>?);
 
         final List<String> faultMessages = (teamByPk["faults"] as List<dynamic>)
             .map((final dynamic e) => e["message"] as String)
             .toList();
         final PitData? pitData = pit.mapNullable<PitData>(
           (final Map<String, dynamic> p0) => PitData(
-            canPassLowRung: p0["can_pass_low_rung"] as bool?,
             weight: p0["weight"] as int,
+            width: p0["width"] as int,
+            length: p0["length"] as int,
             driveMotorAmount: p0["drive_motor_amount"] as int,
             driveWheelType: p0["drive_wheel_type"] as String,
             gearboxPurchased: p0["gearbox_purchased"] as bool?,
