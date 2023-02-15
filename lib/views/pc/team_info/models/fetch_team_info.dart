@@ -200,7 +200,7 @@ Future<Team> fetchTeamInfo(
             .map((final dynamic e) => e["climb"]["points"] as int)
             .toList();
         final SpecificData specificData = SpecificData(
-          (teamByPk["specifics"] as List<dynamic>)
+          (teamByPk["_2023_specifics"] as List<dynamic>)
               .map(
                 (final dynamic e) => SpecificMatch(
                   drivetrainAndDriving: e["drivetrain_and_driving"] as String?,
