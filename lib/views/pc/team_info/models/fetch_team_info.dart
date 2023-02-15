@@ -15,9 +15,10 @@ query TeamInfo(\$id: Int!) {
     faults {
       message
     }
-    pit {
+    _2023_pit {
       weight
-      can_pass_low_rung
+      width
+      length
       drive_motor_amount
       drive_wheel_type
       gearbox_purchased
@@ -31,13 +32,12 @@ query TeamInfo(\$id: Int!) {
         title
       }
     }
-    specifics{
-      climb
+    _2023_specifics{
       defense
-      shooter
       drivetrain_and_driving
       general_notes
-      intake_and_conveyor
+      intake
+      placement
       is_rematch
       scouter_name
       match{
@@ -45,24 +45,38 @@ query TeamInfo(\$id: Int!) {
         match_number
       }
     }
-    matches_aggregate(where: {ignored: {_eq: false}}) {
+    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
-          auto_lower
-          auto_upper
-          auto_missed
-          tele_lower
-          tele_upper
-          tele_missed
+          auto_cones_low
+          auto_cones_mid
+          auto_cones_top
+          auto_cones_failed
+          auto_cubes_low
+          auto_cubes_mid
+          auto_cubes_top
+          auto_cubes_failed
+          tele_cones_low
+          tele_cones_mid
+          tele_cones_top
+          tele_cones_failed
+          tele_cubes_low
+          tele_cubes_mid
+          tele_cubes_top
+          tele_cubes_failed
         }
       }
     }
-    matches(
+    technical_matches(
       where: {ignored: {_eq: false}}
       order_by: [{match: {match_type: {order: asc}}}, {match: {match_number: asc}}, {is_rematch: asc}]
     ) {
-      climb {
-        points
+      auto_balance {
+        auto_points
+        title
+      }
+      endgame_balance {
+        endgame_points
         title
       }
       match {
@@ -74,15 +88,25 @@ query TeamInfo(\$id: Int!) {
         title
       }
       is_rematch
-      auto_lower
-      auto_upper
-      auto_missed
+      auto_cones_low
+      auto_cones_mid
+      auto_cones_top
+      auto_cones_failed
+      auto_cubes_low
+      auto_cubes_mid
+      auto_cubes_top
+      auto_cubes_failed
       match {
         match_number
       }
-      tele_lower
-      tele_upper
-      tele_missed
+      tele_cones_low
+      tele_cones_mid
+      tele_cones_top
+      tele_cones_failed
+      tele_cubes_low
+      tele_cubes_mid
+      tele_cubes_top
+      tele_cubes_failed
     }
   }
 }
