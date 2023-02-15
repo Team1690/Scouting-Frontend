@@ -3,35 +3,37 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 
 class CompareTeam {
   CompareTeam({
-    required this.autoUpperScoredPercentage,
-    required this.avgAutoUpperScored,
-    required this.avgClimbPoints,
-    required this.avgTeleUpperScored,
-    required this.climbPercentage,
-    required this.teleUpperScoredPercentage,
-    required this.climbData,
-    required this.upperScoredDataAuto,
-    required this.upperScoredDataTele,
-    required this.missedDataAuto,
-    required this.missedDataTele,
+    required this.avgAutoGamepiecePoints,
+    required this.avgTeleGamepiecesPoints,
+    required this.avgEndgameBalancePoints,
+    required this.autoBalanceSuccessPercentage,
+    required this.avgAutoBalancePoints,
+    required this.endgameBalanceSuccessPercentage,
+    required this.teleGamepieces,
+    required this.autoBalanceVals,
+    required this.gamepieces,
+    required this.endgameBalanceVals,
+    required this.points,
     required this.team,
-    required this.allBallsScored,
-    required this.pointsData,
+    required this.autoGamepieces,
+    required this.totalCones,
+    required this.totalCubes,
   });
   final LightTeam team;
-  final double avgAutoUpperScored;
-  final double autoUpperScoredPercentage;
-  final double avgTeleUpperScored;
-  final double teleUpperScoredPercentage;
-  final double avgClimbPoints;
-  final double climbPercentage;
-  final CompareLineChartData allBallsScored;
-  final CompareLineChartData climbData;
-  final CompareLineChartData upperScoredDataTele;
-  final CompareLineChartData missedDataTele;
-  final CompareLineChartData upperScoredDataAuto;
-  final CompareLineChartData missedDataAuto;
-  final CompareLineChartData pointsData;
+  final double avgTeleGamepiecesPoints;
+  final double avgAutoGamepiecePoints;
+  final double autoBalanceSuccessPercentage;
+  final double endgameBalanceSuccessPercentage;
+  final double avgEndgameBalancePoints;
+  final double avgAutoBalancePoints;
+  final CompareLineChartData autoGamepieces;
+  final CompareLineChartData teleGamepieces;
+  final CompareLineChartData gamepieces;
+  final CompareLineChartData points;
+  final CompareLineChartData autoBalanceVals;
+  final CompareLineChartData endgameBalanceVals;
+  final CompareLineChartData totalCones;
+  final CompareLineChartData totalCubes;
 }
 
 class CompareLineChartData {

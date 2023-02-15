@@ -1,5 +1,7 @@
+import "package:scouting_frontend/models/average_or_null.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
+import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
@@ -17,7 +19,7 @@ Stream<List<PickListTeam>> fetchPicklist() {
     number
     second_picklist_index
     taken
-    pit{
+    _2023_pit{
       drivetrain{
         title
       }
@@ -25,21 +27,31 @@ Stream<List<PickListTeam>> fetchPicklist() {
       faults{
       message
   }
-    matches_aggregate(where: {ignored: {_eq: false}}) {
+    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
-          auto_lower
-          auto_missed
-          auto_upper
-          tele_lower
-          tele_missed
-          tele_upper
+          auto_cones_low
+          auto_cones_mid
+          auto_cones_top
+          auto_cubes_low
+          auto_cubes_mid
+          auto_cubes_top
+          tele_cones_low
+          tele_cones_mid
+          tele_cones_top
+          tele_cubes_low
+          tele_cubes_mid
+          tele_cubes_top
         }
       }
       nodes {
-        climb {
+         auto_balance{
           title
-          points
+          auto_points
+        }
+        endgame_balance{
+          title
+          endgame_points
         }
         robot_match_status{
           title
@@ -64,84 +76,91 @@ Stream<List<PickListTeam>> fetchPicklist() {
 
 List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
   final List<PickListTeam> teams =
-      (pickListTeams["team"] as List<dynamic>).map((final dynamic e) {
-    final dynamic avg = e["matches_aggregate"]["aggregate"]["avg"];
-    final double autoLower = (avg["auto_lower"] as double?) ?? double.nan;
-
-    final double autoUpper = (avg["auto_upper"] as double?) ?? double.nan;
-    final double teleLower = (avg["tele_lower"] as double?) ?? double.nan;
-    final double teleUpper = (avg["tele_upper"] as double?) ?? double.nan;
-    final double avgBallPoints =
-        autoLower * 2 + autoUpper * 4 + teleLower + teleUpper * 2;
-    final Iterable<int> climb =
-        (e["matches_aggregate"]["nodes"] as List<dynamic>)
+      (pickListTeams["team"] as List<dynamic>).map((final dynamic team) {
+    final dynamic avg = team["technical_matches_aggregate"]["aggregate"]["avg"];
+    final bool nullValidator = avg["auto_cones_top"] == null;
+    final double avgGamepiecePoints = nullValidator
+        ? double.nan
+        : getPoints(
+            parseMatch(
+              avg,
+            ),
+          );
+    final List<int> autoBalance =
+        (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
             .where(
-              (final dynamic element) =>
-                  element["climb"]["title"] != "No attempt",
+              (final dynamic node) =>
+                  node["auto_balance"]["title"] != "No attempt",
             )
-            .map<int>((final dynamic e) => e["climb"]["points"] as int);
+            .map<int>(
+              (final dynamic node) =>
+                  node["auto_balance"]["auto_points"] as int,
+            )
+            .toList();
     final int amountOfMatches =
-        (e["matches_aggregate"]["nodes"] as List<dynamic>).length;
-    final double climbAvg = (climb.reduceSafe(
-              (final int value, final int element) => value + element,
-            ) ??
-            0) /
-        climb.length;
+        (team["technical_matches_aggregate"]["nodes"] as List<dynamic>).length;
+    final double autoBalanceAvg = autoBalance.averageOrNull ?? double.nan;
 
-    final List<String> faultMessages = (e["faults"] as List<dynamic>)
-        .map((final dynamic e) => e["message"] as String)
+    final List<String> faultMessages = (team["faults"] as List<dynamic>)
+        .map((final dynamic fault) => fault["message"] as String)
         .toList();
     final List<RobotMatchStatus> robotMatchStatuses =
-        (e["matches_aggregate"]["nodes"] as List<dynamic>)
+        (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
             .map(
-              (final dynamic e) => titleToEnum(
-                e["robot_match_status"]["title"] as String,
+              (final dynamic node) => titleToEnum(
+                node["robot_match_status"]["title"] as String,
               ),
             )
             .toList();
     return PickListTeam(
-      drivetrain: e["pit"]?["drivetrain"]["title"] as String?,
-      matchesClimbed: (e["matches_aggregate"]["nodes"] as List<dynamic>)
-          .where(
-            (final dynamic element) =>
-                element["climb"]["title"] != "No attempt" &&
-                element["climb"]["title"] != "Failed",
-          )
-          .length,
-      avgBalls: (avg["tele_upper"] as double? ?? double.nan) +
-          (avg["tele_lower"] as double? ?? double.nan) +
-          (avg["auto_upper"] as double? ?? double.nan) +
-          (avg["auto_lower"] as double? ?? double.nan),
-      autoBallAvg: (avg["auto_upper"] as double? ?? double.nan) +
-          (avg["auto_lower"] as double? ?? double.nan),
+      drivetrain: team["_2023_pit"]?["drivetrain"]["title"] as String?,
+      matchesBalanced:
+          (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+              .where(
+                (final dynamic node) =>
+                    node["auto_balance"]["title"] != "No attempt" &&
+                    node["auto_balance"]["title"] != "Failed",
+              )
+              .length,
+      avgGamepieces: nullValidator
+          ? double.nan
+          : getPieces(
+              parseMatch(
+                avg,
+              ),
+            ),
+      autoGamepieceAvg: nullValidator
+          ? double.nan
+          : getPieces(
+              parseByMode(
+                MatchMode.auto,
+                avg,
+              ),
+            ),
       amountOfMatches: amountOfMatches,
-      team: LightTeam.fromJson(e),
-      firstListIndex: e["first_picklist_index"] as int,
-      secondListIndex: e["second_picklist_index"] as int,
-      taken: e["taken"] as bool,
-      autoLower: avg["auto_lower"] as double? ?? double.nan,
-      autoUpper: avg["auto_upper"] as double? ?? double.nan,
-      autoMissed: avg["auto_missed"] as double? ?? double.nan,
-      teleLower: avg["tele_lower"] as double? ?? double.nan,
-      teleUpper: avg["tele_upper"] as double? ?? double.nan,
-      teleMissed: avg["tele_missed"] as double? ?? double.nan,
-      maxClimbTitle:
-          ((e["matches_aggregate"]["nodes"] as List<dynamic>).reduceSafe(
-                (final dynamic value, final dynamic element) =>
-                    (value["climb"]["points"] as int) >
-                            (element["climb"]["points"] as int)
-                        ? value
-                        : element,
-              )?["climb"]?["title"] as String?) ??
+      team: LightTeam.fromJson(team),
+      firstListIndex: team["first_picklist_index"] as int,
+      secondListIndex: team["second_picklist_index"] as int,
+      taken: team["taken"] as bool,
+      maxBalanceTitle:
+          ((team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+                  .reduceSafe(
+                (final dynamic maxNode, final dynamic newNode) =>
+                    (maxNode["auto_balance"]["auto_points"] as int) >
+                            (newNode["auto_balance"]["auto_points"] as int)
+                        ? maxNode
+                        : newNode,
+              )?["auto_balance"]?["title"] as String?) ??
               "No data",
-      avgBallPoints: avgBallPoints,
-      avgClimbPoints: climbAvg,
+      avgGamepiecePoints: avgGamepiecePoints,
+      avgAutoBalancePoints: autoBalanceAvg,
       faultMessages: faultMessages.isEmpty ? null : faultMessages,
       robotMatchStatusToAmount: <RobotMatchStatus, int>{
-        for (final RobotMatchStatus i in RobotMatchStatus.values)
-          i: robotMatchStatuses
+        for (final RobotMatchStatus status in RobotMatchStatus.values)
+          status: robotMatchStatuses
               .where(
-                (final RobotMatchStatus element) => element == i,
+                (final RobotMatchStatus robotMatchStatus) =>
+                    robotMatchStatus == status,
               )
               .length
       },

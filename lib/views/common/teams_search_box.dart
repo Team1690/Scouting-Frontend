@@ -63,8 +63,11 @@ class TeamsSearchBox extends StatelessWidget {
             (final LightTeam firstTeam, final LightTeam secondTeam) =>
                 firstTeam.number.compareTo(secondTeam.number),
           ),
-        itemBuilder: (final BuildContext context, final LightTeam team) =>
-            ListTile(title: Text(buildSuggestion(team))),
+        itemBuilder: (final BuildContext context, final LightTeam team) {
+          return buildSuggestion(team).isNotEmpty
+              ? ListTile(title: Text(buildSuggestion(team)))
+              : Container();
+        },
         transitionBuilder: (
           final BuildContext context,
           final Widget suggestionsBox,

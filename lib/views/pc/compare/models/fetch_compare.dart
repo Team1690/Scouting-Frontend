@@ -1,7 +1,9 @@
 import "dart:collection";
 
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/average_or_null.dart";
 import "package:scouting_frontend/models/helpers.dart";
+import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
@@ -10,35 +12,51 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 const String query = """
 query FetchCompare(\$ids: [Int!]) {
   team(where: {id: {_in: \$ids}}) {
-    matches_aggregate(where: {ignored: {_eq: false}}) {
+    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
-          auto_lower
-          auto_upper
-          auto_missed
-          tele_lower
-          tele_upper
-          tele_missed
+          auto_cones_low
+          auto_cones_mid
+          auto_cones_top
+          auto_cubes_low
+          auto_cubes_mid
+          auto_cubes_top
+          tele_cones_low
+          tele_cones_mid
+          tele_cones_top
+          tele_cubes_low
+          tele_cubes_mid
+          tele_cubes_top
         }
       }
     }
-    matches(where: {ignored: {_eq: false}},order_by:[ {match: {match_type: {order: asc}}},{ match:{match_number:asc}},{is_rematch: asc}]) {
-      climb {
-        points
+    technical_matches(where: {ignored: {_eq: false}},order_by:[ {match: {match_type: {order: asc}}},{ match:{match_number:asc}},{is_rematch: asc}]) {
+      auto_balance{
+        auto_points
+        title
+      }
+      endgame_balance{
+        endgame_points
         title
       }
       robot_match_status{
         title
       }
-      auto_lower
-      auto_upper
-      auto_missed
       match{
         match_number
       }
-      tele_lower
-      tele_upper
-      tele_missed
+      auto_cones_low
+      auto_cones_mid
+      auto_cones_top
+      auto_cubes_low
+      auto_cubes_mid
+      auto_cubes_top
+      tele_cones_low
+      tele_cones_mid
+      tele_cones_top
+      tele_cubes_low
+      tele_cubes_mid
+      tele_cubes_top 
     }
     name
     number
@@ -58,190 +76,216 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
       parserFn: (final Map<String, dynamic> teams) {
         return SplayTreeSet<CompareTeam>.from(
             (teams["team"] as List<dynamic>)
-                .map<CompareTeam>((final dynamic e) {
-              final LightTeam team = LightTeam(
-                e["id"] as int,
-                e["number"] as int,
-                e["name"] as String,
-                e["colors_index"] as int,
-              );
-              final double avgAutoUpper = e["matches_aggregate"]["aggregate"]
-                      ["avg"]["auto_upper"] as double? ??
-                  0;
-              final double avgAutoMissed = e["matches_aggregate"]["aggregate"]
-                      ["avg"]["auto_missed"] as double? ??
-                  0;
-              final double avgAutoLower = e["matches_aggregate"]["aggregate"]
-                      ["avg"]["auto_lower"] as double? ??
-                  0;
-              final double autoUpperScorePercentage =
-                  ((avgAutoUpper + avgAutoLower) /
-                          (avgAutoUpper + avgAutoMissed + avgAutoLower)) *
-                      100;
-              final double avgTeleUpper = e["matches_aggregate"]["aggregate"]
-                      ["avg"]["tele_upper"] as double? ??
-                  0;
-              final double avgTeleMissed = e["matches_aggregate"]["aggregate"]
-                      ["avg"]["tele_missed"] as double? ??
-                  0;
-              final double avgTeleLower = e["matches_aggregate"]["aggregate"]
-                      ["avg"]["tele_lower"] as double? ??
-                  0;
-              final double teleUpperPointPercentage =
-                  ((avgTeleUpper + avgTeleLower) /
-                          (avgTeleUpper + avgTeleMissed + avgTeleLower)) *
-                      100;
-
-              final List<String> climbVals = (e["matches"] as List<dynamic>)
-                  .map((final dynamic e) => e["climb"]["title"] as String)
+                .map<CompareTeam>((final dynamic teamsTable) {
+              final LightTeam team = LightTeam.fromJson(teamsTable);
+              final List<dynamic> matches =
+                  teamsTable["technical_matches"] as List<dynamic>;
+              final List<int> autoGamepieces = matches
+                  .map(
+                    (final dynamic technicalMatch) => (getPieces(
+                      parseByMode(MatchMode.auto, technicalMatch),
+                    ).toInt()),
+                  )
                   .toList();
-              final Iterable<int> climbPoints = (e["matches"] as List<dynamic>)
-                  .where(
-                    (final dynamic element) =>
-                        element["climb"]["title"] != "No attempt",
+              final List<int> teleGamepieces = matches
+                  .map(
+                    (final dynamic technicalMatch) => (getPieces(
+                      parseByMode(MatchMode.tele, technicalMatch),
+                    ).toInt()),
                   )
-                  .map((final dynamic e) => e["climb"]["points"] as int);
-
-              final int failedClimb = climbVals
-                  .where(
-                    (final String element) => element == "Failed",
+                  .toList();
+              final List<int> gamepieces = matches
+                  .map(
+                    (final dynamic technicalMatch) => (getPieces(
+                      parseMatch(technicalMatch),
+                    ).toInt()),
                   )
+                  .toList();
+              final List<int> points = matches
+                  .map(
+                    (final dynamic technicalMatch) => (getPoints(
+                      parseMatch(technicalMatch),
+                    ).toInt()),
+                  )
+                  .toList();
+              final List<String> autoBalanceVals = matches
+                  .map(
+                    (final dynamic match) =>
+                        match["auto_balance"]["title"] as String,
+                  )
+                  .toList();
+              final double avgAutoBalancePoints = matches
+                      .map(
+                        (final dynamic match) =>
+                            (match["auto_balance"]["auto_points"] as int),
+                      )
+                      .toList()
+                      .averageOrNull ??
+                  double.nan;
+              final List<String> endgameBalanceVals = matches
+                  .map(
+                    (final dynamic match) =>
+                        match["endgame_balance"]["title"] as String,
+                  )
+                  .toList();
+              final double avgEndgameBalancePoints = matches
+                      .map(
+                        (final dynamic match) =>
+                            (match["endgame_balance"]["endgame_points"] as int),
+                      )
+                      .toList()
+                      .averageOrNull ??
+                  double.nan;
+              final List<int> totalCones = matches
+                  .map(
+                    (final dynamic match) =>
+                        (match["auto_cones_low"] as int) +
+                        (match["auto_cones_mid"] as int) +
+                        (match["auto_cones_top"] as int) +
+                        (match["tele_cones_low"] as int) +
+                        (match["tele_cones_mid"] as int) +
+                        (match["tele_cones_top"] as int),
+                  )
+                  .toList();
+              final List<int> totalCubes = matches
+                  .map(
+                    (final dynamic match) =>
+                        (match["auto_cubes_low"] as int) +
+                        (match["auto_cubes_mid"] as int) +
+                        (match["auto_cubes_top"] as int) +
+                        (match["tele_cubes_low"] as int) +
+                        (match["tele_cubes_mid"] as int) +
+                        (match["tele_cubes_top"] as int),
+                  )
+                  .toList();
+              final dynamic avg =
+                  teamsTable["technical_matches_aggregate"]["aggregate"]["avg"];
+              final bool avgNullValidator = avg["auto_cones_top"] == null;
+              final double avgTeleGamepiecesPoints = avgNullValidator
+                  ? double.nan
+                  : getPieces(parseByMode(MatchMode.tele, avg));
+              final double avgAutoGamepiecePoints = avgNullValidator
+                  ? double.nan
+                  : getPoints(parseByMode(MatchMode.auto, avg));
+              final int autoBalanceFailed = autoBalanceVals
+                  .where((final String title) => title == "Failed")
                   .length;
-              final int succededClimb = climbVals
+
+              final int autoBalanceSucceded = autoBalanceVals
                       .where(
                         (final String element) => element != "No attempt",
                       )
                       .length -
-                  failedClimb;
-              final List<RobotMatchStatus> matchStatuses =
-                  (e["matches"] as List<dynamic>)
-                      .map(
-                        (final dynamic e) => titleToEnum(
-                          e["robot_match_status"]["title"] as String,
-                        ),
-                      )
-                      .toList();
-              final double climbSuccessPercent =
-                  (succededClimb / (succededClimb + failedClimb)) * 100;
-              final List<int> climbLineChartPoints =
-                  climbVals.map<int>((final String e) {
-                switch (e) {
+                  autoBalanceFailed;
+              final double autoBalanceSuccessPercentage =
+                  (autoBalanceSucceded) /
+                      (autoBalanceSucceded + autoBalanceFailed) *
+                      100;
+              final List<int> autoBalanceLineChartPoints =
+                  autoBalanceVals.map<int>((final String title) {
+                switch (title) {
+                  case "No Attempt":
+                    return -1;
                   case "Failed":
                     return 0;
-                  case "No attempt":
-                    return -1;
-                  case "Level 1":
+                  case "Unbalanced":
                     return 1;
-                  case "Level 2":
+                  case "Balanced":
                     return 2;
-                  case "Level 3":
-                    return 3;
-                  case "Level 4":
-                    return 4;
                 }
-                throw Exception("Not a climb value");
+                throw Exception("Not a auto balance value");
               }).toList();
+              final int endgameBalanceFailed = endgameBalanceVals
+                  .where((final String title) => title == "Failed")
+                  .length;
 
-              final CompareLineChartData climbData = CompareLineChartData(
-                points: climbLineChartPoints.toList(),
-                matchStatuses: matchStatuses,
-              );
-
-              final List<int> upperScoredDataTele =
-                  (e["matches"] as List<dynamic>)
-                      .map((final dynamic e) => e["tele_upper"] as int)
-                      .toList();
-              final List<int> missedDataTele = (e["matches"] as List<dynamic>)
+              final int endgameBalanceSucceded = endgameBalanceVals
+                      .where(
+                        (final String element) => element != "No attempt",
+                      )
+                      .length -
+                  endgameBalanceFailed;
+              final double endgameBalanceSuccessPercentage =
+                  (endgameBalanceSucceded) /
+                      (endgameBalanceSucceded + endgameBalanceFailed) *
+                      100;
+              final List<int> endgameBalanceLineChartPoints =
+                  endgameBalanceVals.map<int>((final String title) {
+                switch (title) {
+                  case "No Attempt":
+                    return -1;
+                  case "Failed":
+                    return 0;
+                  case "Unbalanced":
+                    return 1;
+                  case "Balanced":
+                    return 2;
+                }
+                throw Exception("Not a endgame balance value");
+              }).toList();
+              final List<RobotMatchStatus> matchStatuses = matches
                   .map(
-                    (final dynamic e) => e["tele_missed"] as int,
+                    (final dynamic e) => titleToEnum(
+                      e["robot_match_status"]["title"] as String,
+                    ),
                   )
                   .toList();
-
-              final CompareLineChartData upperScoredDataTeleLineChart =
+              final CompareLineChartData endgameBalanceLineChartVals =
                   CompareLineChartData(
-                points: upperScoredDataTele.toList(),
+                points: endgameBalanceLineChartPoints,
                 matchStatuses: matchStatuses,
               );
-
-              final CompareLineChartData missedDataTeleLineChart =
+              final CompareLineChartData autoBalanceLineChartVals =
                   CompareLineChartData(
-                points: missedDataTele.toList(),
+                points: autoBalanceLineChartPoints,
                 matchStatuses: matchStatuses,
               );
-
-              final List<int> upperScoredDataAuto =
-                  (e["matches"] as List<dynamic>)
-                      .map((final dynamic e) => e["auto_upper"] as int)
-                      .toList();
-              final List<int> missedDataAuto = (e["matches"] as List<dynamic>)
-                  .map(
-                    (final dynamic e) => e["auto_missed"] as int,
-                  )
-                  .toList();
-
-              final List<int> allBallsScored = (e["matches"] as List<dynamic>)
-                  .map(
-                    (final dynamic e) =>
-                        (e["auto_upper"] as int) +
-                        (e["tele_upper"] as int) +
-                        (e["auto_lower"] as int) +
-                        (e["tele_lower"] as int),
-                  )
-                  .toList();
-              final CompareLineChartData upperScoredDataAutoLinechart =
+              final CompareLineChartData totalCubesLineChart =
                   CompareLineChartData(
-                points: upperScoredDataAuto.toList(),
+                points: totalCubes,
                 matchStatuses: matchStatuses,
               );
-
-              final CompareLineChartData allBallsScoredLinechart =
+              final CompareLineChartData totalConesLineChart =
                   CompareLineChartData(
-                points: allBallsScored.toList(),
+                points: totalCones,
                 matchStatuses: matchStatuses,
               );
-
-              final CompareLineChartData missedDataAutoLinechart =
-                  CompareLineChartData(
-                points: missedDataAuto.toList(),
+              final CompareLineChartData gamepiecesLine = CompareLineChartData(
+                points: gamepieces,
                 matchStatuses: matchStatuses,
               );
-              final CompareLineChartData pointsLinechart = CompareLineChartData(
-                points: (e["matches"] as List<dynamic>)
-                    .map(
-                      (final dynamic e) =>
-                          (e["auto_upper"] as int) * 4 +
-                          (e["auto_lower"] as int) * 2 +
-                          (e["tele_upper"] as int) * 2 +
-                          (e["tele_lower"] as int) +
-                          (e["climb"]["points"] as int),
-                    )
-                    .toList(),
+              final CompareLineChartData autoGamepiecesLineChart =
+                  CompareLineChartData(
+                points: autoGamepieces,
+                matchStatuses: matchStatuses,
+              );
+              final CompareLineChartData teleGamepiecesLineChart =
+                  CompareLineChartData(
+                points: teleGamepieces,
+                matchStatuses: matchStatuses,
+              );
+              final CompareLineChartData pointLineChart = CompareLineChartData(
+                points: points,
                 matchStatuses: matchStatuses,
               );
 
               return CompareTeam(
-                pointsData: pointsLinechart,
-                allBallsScored: allBallsScoredLinechart,
+                autoBalanceSuccessPercentage: autoBalanceSuccessPercentage,
+                endgameBalanceSuccessPercentage:
+                    endgameBalanceSuccessPercentage,
+                autoBalanceVals: autoBalanceLineChartVals,
+                endgameBalanceVals: endgameBalanceLineChartVals,
+                gamepieces: gamepiecesLine,
+                points: pointLineChart,
                 team: team,
-                autoUpperScoredPercentage: autoUpperScorePercentage,
-                avgAutoUpperScored: avgAutoUpper,
-                avgClimbPoints: climbPoints.isEmpty
-                    ? double.nan
-                    : climbPoints.length == 1
-                        ? climbPoints.single.toDouble()
-                        : climbPoints.reduce(
-                              (final int value, final int element) =>
-                                  value + element,
-                            ) /
-                            climbPoints.length,
-                avgTeleUpperScored: avgTeleUpper,
-                climbPercentage: climbSuccessPercent,
-                teleUpperScoredPercentage: teleUpperPointPercentage,
-                climbData: climbData,
-                upperScoredDataAuto: upperScoredDataAutoLinechart,
-                missedDataAuto: missedDataAutoLinechart,
-                upperScoredDataTele: upperScoredDataTeleLineChart,
-                missedDataTele: missedDataTeleLineChart,
+                totalCones: totalConesLineChart,
+                totalCubes: totalCubesLineChart,
+                teleGamepieces: teleGamepiecesLineChart,
+                autoGamepieces: autoGamepiecesLineChart,
+                avgAutoGamepiecePoints: avgAutoGamepiecePoints,
+                avgTeleGamepiecesPoints: avgTeleGamepiecesPoints,
+                avgAutoBalancePoints: avgAutoBalancePoints,
+                avgEndgameBalancePoints: avgEndgameBalancePoints,
               );
             }), (final CompareTeam team1, final CompareTeam team2) {
           return team1.team.id.compareTo(team2.team.id);
