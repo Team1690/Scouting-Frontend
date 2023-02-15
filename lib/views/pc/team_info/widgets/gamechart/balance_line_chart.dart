@@ -3,8 +3,8 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
-class ClimbLineChart extends StatelessWidget {
-  const ClimbLineChart(this.data);
+class BalanceLineChart extends StatelessWidget {
+  const BalanceLineChart(this.data);
 
   final LineChartData data;
   @override

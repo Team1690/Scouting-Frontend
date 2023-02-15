@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
-class BallLineChart extends StatelessWidget {
-  const BallLineChart(this.data);
+class GamepiecesLineChart extends StatelessWidget {
+  const GamepiecesLineChart(this.data);
   final LineChartData data;
   @override
   Widget build(final BuildContext context) => Stack(

@@ -20,14 +20,14 @@ class Gamechart extends StatelessWidget {
                 ? Text("Not enough data for line chart")
                 : CarouselWithIndicator(
                     widgets: <Widget>[
-                      BallLineChart(data.scoredMissedDataAutoCones),
-                      BallLineChart(data.scoredMissedDataTeleCones),
-                      BallLineChart(data.scoredMissedDataAutoCubes),
-                      BallLineChart(data.scoredMissedDataTeleCubes),
-                      BallLineChart(data.scoredMissedDataAll),
+                      GamepiecesLineChart(data.scoredMissedDataAutoCones),
+                      GamepiecesLineChart(data.scoredMissedDataTeleCones),
+                      GamepiecesLineChart(data.scoredMissedDataAutoCubes),
+                      GamepiecesLineChart(data.scoredMissedDataTeleCubes),
+                      GamepiecesLineChart(data.scoredMissedDataAll),
                       PointsLineChart(data.pointsData),
-                      ClimbLineChart(data.autoBalanceData),
-                      ClimbLineChart(data.endgameBalanceData),
+                      BalanceLineChart(data.autoBalanceData),
+                      BalanceLineChart(data.endgameBalanceData),
                     ],
                   ),
       );

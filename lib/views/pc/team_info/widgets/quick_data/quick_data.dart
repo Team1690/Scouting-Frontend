@@ -162,6 +162,7 @@ Widget gamepieceRow(
   final double cubes,
 ) =>
     Row(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text("$title: "),
         Text(style: TextStyle(color: Colors.amber), cones.toStringAsFixed(1)),
