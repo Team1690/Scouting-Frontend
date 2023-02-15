@@ -136,18 +136,18 @@ Future<Team> fetchTeamInfo(
             .map((final dynamic e) => e["message"] as String)
             .toList();
         final PitData? pitData = pit.mapNullable<PitData>(
-          (final Map<String, dynamic> p0) => PitData(
-            weight: p0["weight"] as int,
-            width: p0["width"] as int,
-            length: p0["length"] as int,
-            driveMotorAmount: p0["drive_motor_amount"] as int,
-            driveWheelType: p0["drive_wheel_type"] as String,
-            gearboxPurchased: p0["gearbox_purchased"] as bool?,
-            notes: p0["notes"] as String,
-            hasShifer: p0["has_shifter"] as bool?,
-            url: p0["url"] as String,
-            driveTrainType: p0["drivetrain"]["title"] as String,
-            driveMotorType: p0["drivemotor"]["title"] as String,
+          (final Map<String, dynamic> pitTable) => PitData(
+            weight: pitTable["weight"] as int,
+            width: pitTable["width"] as int,
+            length: pitTable["length"] as int,
+            driveMotorAmount: pitTable["drive_motor_amount"] as int,
+            driveWheelType: pitTable["drive_wheel_type"] as String,
+            gearboxPurchased: pitTable["gearbox_purchased"] as bool?,
+            notes: pitTable["notes"] as String,
+            hasShifer: pitTable["has_shifter"] as bool?,
+            url: pitTable["url"] as String,
+            driveTrainType: pitTable["drivetrain"]["title"] as String,
+            driveMotorType: pitTable["drivemotor"]["title"] as String,
             faultMessages: faultMessages,
           ),
         );
@@ -251,16 +251,17 @@ Future<Team> fetchTeamInfo(
         final SpecificData specificData = SpecificData(
           (teamByPk["_2023_specifics"] as List<dynamic>)
               .map(
-                (final dynamic e) => SpecificMatch(
-                  drivetrainAndDriving: e["drivetrain_and_driving"] as String?,
-                  intake: e["intake"] as String?,
-                  placement: e["placement"] as String?,
-                  generalNotes: e["general_notes"] as String?,
-                  defense: e["defense"] as String?,
-                  isRematch: e["is_rematch"] as bool,
-                  matchNumber: e["match"]["match_number"] as int,
-                  matchTypeId: e["match"]["match_type_id"] as int,
-                  scouterNames: e["scouter_name"] as String,
+                (final dynamic specific) => SpecificMatch(
+                  drivetrainAndDriving:
+                      specific["drivetrain_and_driving"] as String?,
+                  intake: specific["intake"] as String?,
+                  placement: specific["placement"] as String?,
+                  generalNotes: specific["general_notes"] as String?,
+                  defense: specific["defense"] as String?,
+                  isRematch: specific["is_rematch"] as bool,
+                  matchNumber: specific["match"]["match_number"] as int,
+                  matchTypeId: specific["match"]["match_type_id"] as int,
+                  scouterNames: specific["scouter_name"] as String,
                 ),
               )
               .toList(),
@@ -275,7 +276,7 @@ Future<Team> fetchTeamInfo(
           highestBalanceTitleAuto: matches.isEmpty
               ? "highestLevelTitle QuickData: this isn't supposed to be shown because of amoutOfMatches check in ui"
               : matches
-                  .map<dynamic>((final dynamic e) => e["auto_balance"])
+                  .map<dynamic>((final dynamic match) => match["auto_balance"])
                   .reduceSafe(
                     (final dynamic value, final dynamic element) =>
                         (value["auto_points"] as int) >
@@ -334,10 +335,10 @@ Future<Team> fetchTeamInfo(
             getBalanceLineChart("endgame");
         final List<MatchIdentifier> matchNumbers = matches
             .map(
-              (final dynamic e) => MatchIdentifier(
-                number: e["match"]["match_number"] as int,
-                type: e["match"]["match_type"]["title"] as String,
-                isRematch: e["is_rematch"] as bool,
+              (final dynamic match) => MatchIdentifier(
+                number: match["match"]["match_number"] as int,
+                type: match["match"]["match_type"]["title"] as String,
+                isRematch: match["is_rematch"] as bool,
               ),
             )
             .toList();
@@ -354,8 +355,8 @@ Future<Team> fetchTeamInfo(
                 4,
                 (teamByPk["technical_matches"] as List<dynamic>)
                     .map(
-                      (final dynamic e) => titleToEnum(
-                        e["robot_match_status"]["title"] as String,
+                      (final dynamic match) => titleToEnum(
+                        match["robot_match_status"]["title"] as String,
                       ),
                     )
                     .toList(),
@@ -402,26 +403,26 @@ Future<Team> fetchTeamInfo(
                 4,
                 (teamByPk["technical_matches"] as List<dynamic>)
                     .map(
-                      (final dynamic e) => titleToEnum(
-                        e["robot_match_status"]["title"] as String,
+                      (final dynamic match) => titleToEnum(
+                        match["robot_match_status"]["title"] as String,
                       ),
                     )
                     .toList(),
               ),
             );
 
-        final LineChartData scoredMissedDataTeleCones = getGamepieceChartData(
+        final LineChartData dataTeleCones = getGamepieceChartData(
           MatchMode.tele,
           Gamepiece.cone,
         );
 
-        final LineChartData scoredMissedDataAutoCones =
+        final LineChartData dataAutoCones =
             getGamepieceChartData(MatchMode.auto, Gamepiece.cone);
 
-        final LineChartData scoredMissedDataTeleCubes =
+        final LineChartData dataTeleCubes =
             getGamepieceChartData(MatchMode.tele, Gamepiece.cube);
 
-        final LineChartData scoredMissedDataAutoCubes =
+        final LineChartData dataAutoCubes =
             getGamepieceChartData(MatchMode.auto, Gamepiece.cube);
 
         List<int> combineLists(
@@ -475,29 +476,27 @@ Future<Team> fetchTeamInfo(
           );
         }
 
-        final LineChartData scoredMissedDataAllCones =
-            getScoredMissedData(Gamepiece.cone);
+        final LineChartData dataAllCones = getScoredMissedData(Gamepiece.cone);
 
-        final LineChartData scoredMissedDataAllCubes =
-            getScoredMissedData(Gamepiece.cube);
+        final LineChartData dataAllCubes = getScoredMissedData(Gamepiece.cube);
         final LineChartData scoredMissedDataAll = LineChartData(
           gameNumbers: matchNumbers,
           points: <List<int>>[
             combineLists(
-              scoredMissedDataAllCones.points[0],
-              scoredMissedDataAllCubes.points[0],
+              dataAllCones.points[0],
+              dataAllCubes.points[0],
             ),
             combineLists(
-              scoredMissedDataAllCones.points[1],
-              scoredMissedDataAllCubes.points[1],
+              dataAllCones.points[1],
+              dataAllCubes.points[1],
             ),
             combineLists(
-              scoredMissedDataAllCones.points[2],
-              scoredMissedDataAllCubes.points[2],
+              dataAllCones.points[2],
+              dataAllCubes.points[2],
             ),
             combineLists(
-              scoredMissedDataAllCones.points[3],
-              scoredMissedDataAllCubes.points[3],
+              dataAllCones.points[3],
+              dataAllCubes.points[3],
             ),
           ],
           title: "Gamepieces",
@@ -505,8 +504,8 @@ Future<Team> fetchTeamInfo(
             4,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
-                  (final dynamic e) => titleToEnum(
-                    e["robot_match_status"]["title"] as String,
+                  (final dynamic match) => titleToEnum(
+                    match["robot_match_status"]["title"] as String,
                   ),
                 )
                 .toList(),
@@ -517,7 +516,7 @@ Future<Team> fetchTeamInfo(
           points: <List<int>>[
             matches
                 .map(
-                  (final dynamic e) => getPoints(parseMatch(e)) as int,
+                  (final dynamic match) => getPoints(parseMatch(match)) as int,
                 )
                 .toList()
           ],
@@ -526,8 +525,8 @@ Future<Team> fetchTeamInfo(
           robotMatchStatuses: <List<RobotMatchStatus>>[
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
-                  (final dynamic e) => titleToEnum(
-                    e["robot_match_status"]["title"] as String,
+                  (final dynamic match) => titleToEnum(
+                    match["robot_match_status"]["title"] as String,
                   ),
                 )
                 .toList()
@@ -535,19 +534,19 @@ Future<Team> fetchTeamInfo(
         );
         return Team(
           pointsData: pointsData,
-          scoredMissedDataAllCones: scoredMissedDataAllCones,
-          scoredMissedDataAllCubes: scoredMissedDataAllCubes,
-          scoredMissedDataAll: scoredMissedDataAll,
+          allConesData: dataAllCones,
+          allCubesData: dataAllCubes,
+          allData: scoredMissedDataAll,
           team: teamForQuery,
           specificData: specificData,
           pitViewData: pitData,
           quickData: quickData,
           autoBalanceData: autoBalanceData,
           endgameBalanceData: endgameBalanceData,
-          scoredMissedDataTeleCones: scoredMissedDataTeleCones,
-          scoredMissedDataAutoCones: scoredMissedDataAutoCones,
-          scoredMissedDataTeleCubes: scoredMissedDataTeleCubes,
-          scoredMissedDataAutoCubes: scoredMissedDataAutoCubes,
+          teleConesData: dataTeleCones,
+          autoConesData: dataAutoCones,
+          teleCubesData: dataTeleCubes,
+          autoCubesData: dataAutoCubes,
         );
       },
       document: gql(teamInfoQuery),

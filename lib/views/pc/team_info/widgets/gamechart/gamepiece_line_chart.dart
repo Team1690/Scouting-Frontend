@@ -23,7 +23,7 @@ class GamepiecesLineChart extends StatelessWidget {
                   ),
                   TextSpan(
                     text: " Low ",
-                    style: TextStyle(color: Colors.deepOrange),
+                    style: TextStyle(color: Colors.orange),
                   ),
                   TextSpan(
                     text: " Failed ",
@@ -47,12 +47,12 @@ class GamepiecesLineChart extends StatelessWidget {
               top: 40,
             ),
             child: DashboardLineChart(
-              showShadow: true,
+              showShadow: false,
               gameNumbers: data.gameNumbers,
               inputedColors: <Color>[
                 Colors.green,
-                Colors.yellow[700]!,
-                Colors.deepOrange,
+                Colors.yellow,
+                Colors.orange,
                 Colors.red,
               ],
               distanceFromHighest: 4,

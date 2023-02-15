@@ -154,8 +154,8 @@ class MatchIdentifier {
     return "${isRematch ? "R" : ""}${shortenType(type)}$number";
   }
 
-  static String shortenType(final String type) {
-    switch (type) {
+  static String shortenType(final String matchType) {
+    switch (matchType) {
       case "Pre scouting":
         return "pre";
       case "Practice":
@@ -214,13 +214,13 @@ class Team {
     required this.quickData,
     required this.autoBalanceData,
     required this.endgameBalanceData,
-    required this.scoredMissedDataTeleCones,
-    required this.scoredMissedDataAutoCones,
-    required this.scoredMissedDataAllCones,
-    required this.scoredMissedDataTeleCubes,
-    required this.scoredMissedDataAutoCubes,
-    required this.scoredMissedDataAllCubes,
-    required this.scoredMissedDataAll,
+    required this.teleConesData,
+    required this.autoConesData,
+    required this.allConesData,
+    required this.teleCubesData,
+    required this.autoCubesData,
+    required this.allCubesData,
+    required this.allData,
     required this.pointsData,
   });
   final LightTeam team;
@@ -230,11 +230,11 @@ class Team {
   final LineChartData autoBalanceData;
   final LineChartData endgameBalanceData;
   final LineChartData pointsData;
-  final LineChartData scoredMissedDataTeleCones;
-  final LineChartData scoredMissedDataAutoCones;
-  final LineChartData scoredMissedDataAllCones;
-  final LineChartData scoredMissedDataTeleCubes;
-  final LineChartData scoredMissedDataAutoCubes;
-  final LineChartData scoredMissedDataAllCubes;
-  final LineChartData scoredMissedDataAll;
+  final LineChartData teleConesData;
+  final LineChartData autoConesData;
+  final LineChartData allConesData;
+  final LineChartData teleCubesData;
+  final LineChartData autoCubesData;
+  final LineChartData allCubesData;
+  final LineChartData allData;
 }

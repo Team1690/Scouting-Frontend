@@ -66,14 +66,14 @@ class CoachTeamData extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(10),
                         child: DashboardCard(
                           title: "Quick data",
                           body: CoachQuickData(data.quickData),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(10),
                         child: data.pitViewData.mapNullable(
                               PitScoutingCard.new,
                             ) ??
@@ -104,23 +104,23 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
         enableInfininteScroll: true,
         widgets: <Widget>[
           CoachTeamInfoLineChart(
-            GamepiecesLineChart(data.scoredMissedDataAutoCones),
+            GamepiecesLineChart(data.autoConesData),
             "Auto Cones",
           ),
           CoachTeamInfoLineChart(
-            GamepiecesLineChart(data.scoredMissedDataTeleCones),
+            GamepiecesLineChart(data.teleConesData),
             "Tele Cones",
           ),
           CoachTeamInfoLineChart(
-            GamepiecesLineChart(data.scoredMissedDataAutoCubes),
+            GamepiecesLineChart(data.autoCubesData),
             "Auto Cubes",
           ),
           CoachTeamInfoLineChart(
-            GamepiecesLineChart(data.scoredMissedDataTeleCubes),
+            GamepiecesLineChart(data.teleCubesData),
             "Tele Cubes",
           ),
           CoachTeamInfoLineChart(
-            GamepiecesLineChart(data.scoredMissedDataAll),
+            GamepiecesLineChart(data.allData),
             "Gamepieces",
           ),
           CoachTeamInfoLineChart(
