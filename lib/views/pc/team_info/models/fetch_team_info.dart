@@ -204,9 +204,8 @@ Future<Team> fetchTeamInfo(
               .map(
                 (final dynamic e) => SpecificMatch(
                   drivetrainAndDriving: e["drivetrain_and_driving"] as String?,
-                  intakeAndConveyor: e["intake_and_conveyor"] as String?,
-                  shooter: e["shooter"] as String?,
-                  climb: e["climb"] as String?,
+                  intake: e["intake"] as String?,
+                  placement: e["placement"] as String?,
                   generalNotes: e["general_notes"] as String?,
                   defense: e["defense"] as String?,
                   isRematch: e["is_rematch"] as bool,

@@ -43,9 +43,8 @@ class SpecificMatch {
     required this.matchTypeId,
     required this.scouterNames,
     required this.drivetrainAndDriving,
-    required this.intakeAndConveyor,
-    required this.shooter,
-    required this.climb,
+    required this.intake,
+    required this.placement,
     required this.generalNotes,
     required this.defense,
   });
@@ -55,9 +54,8 @@ class SpecificMatch {
   final bool isRematch;
 
   final String? drivetrainAndDriving;
-  final String? intakeAndConveyor;
-  final String? shooter;
-  final String? climb;
+  final String? intake;
+  final String? placement;
   final String? defense;
   final String? generalNotes;
 
@@ -65,12 +63,10 @@ class SpecificMatch {
     switch (val) {
       case "DriveTrain And Driving":
         return drivetrainAndDriving == null ? true : false;
-      case "Intake And Conveyor":
-        return intakeAndConveyor == null ? true : false;
-      case "Shooter":
-        return shooter == null ? true : false;
-      case "Climb":
-        return climb == null ? true : false;
+      case "Intake":
+        return intake == null ? true : false;
+      case "Placement":
+        return placement == null ? true : false;
       case "Defense":
         return defense == null ? true : false;
       case "General Notes":
@@ -78,9 +74,8 @@ class SpecificMatch {
       case "All":
       default:
         return (drivetrainAndDriving == null &&
-                intakeAndConveyor == null &&
-                shooter == null &&
-                climb == null &&
+                intake == null &&
+                placement == null &&
                 defense == null &&
                 generalNotes == null)
             ? true
