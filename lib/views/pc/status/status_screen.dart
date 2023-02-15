@@ -152,7 +152,7 @@ class RegularStatus extends StatelessWidget {
               final StatusItem<MatchIdentifier, StatusMatch> statusItem,
             ) =>
                 scoutedMatch.scoutedTeam.alliancePos != -1 ? null : Colors.red,
-            builder: (final StatusMatch scoutedMatch) =>
+            missingBuilder: (final StatusMatch scoutedMatch) =>
                 Text(scoutedMatch.scoutedTeam.team.number.toString()),
             getTitle:
                 (final StatusItem<MatchIdentifier, StatusMatch> statusItem) =>
@@ -252,7 +252,7 @@ class StatusList<T, V> extends StatelessWidget {
     required this.validate,
     required this.getValueBox,
     required this.validateSpecificValue,
-    this.builder,
+    this.missingBuilder,
     this.pushUnvalidatedToTheTop = false,
   }) {
     if (pushUnvalidatedToTheTop) {
@@ -262,7 +262,7 @@ class StatusList<T, V> extends StatelessWidget {
       );
     }
   }
-  final Widget Function(V)? builder;
+  final Widget Function(V)? missingBuilder;
   final List<StatusItem<T, V>> items;
   final bool Function(StatusItem<T, V>) validate;
   final Widget Function(StatusItem<T, V>) getTitle;
@@ -316,10 +316,10 @@ class StatusList<T, V> extends StatelessWidget {
                               ),
                             )
                             .toList(),
-                        if (builder != null)
+                        if (missingBuilder != null)
                           ...statusItem.missingValues.map(
                             (final V match) => StatusBox(
-                              child: builder!(match),
+                              child: missingBuilder!(match),
                               backgroundColor: Colors.red,
                             ),
                           )
