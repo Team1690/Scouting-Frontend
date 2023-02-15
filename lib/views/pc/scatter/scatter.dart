@@ -48,8 +48,8 @@ class Scatter extends StatelessWidget {
                             scatterSpots: report
                                 .map(
                                   (final ScatterData e) => ScatterSpot(
-                                    e.xBallPointsAvg,
-                                    e.yBallPointsStddev,
+                                    e.gamepiecePointsAvg,
+                                    e.yGamepiecePointsStddev,
                                     color: e.team.color,
                                   ),
                                 )
@@ -91,9 +91,14 @@ class Scatter extends StatelessWidget {
                               bottomTitles: AxisTitles(
                                 axisNameSize: 26,
                                 axisNameWidget: Text(
-                                  "Average ball points",
+                                  "Average gamepiece points",
                                 ),
                                 sideTitles: SideTitles(
+                                  getTitlesWidget: (
+                                    final double title,
+                                    final TitleMeta meta,
+                                  ) =>
+                                      Container(child: Text(title.toString())),
                                   showTitles: true,
                                   interval: 5,
                                 ),
@@ -101,9 +106,14 @@ class Scatter extends StatelessWidget {
                               leftTitles: AxisTitles(
                                 axisNameSize: 26,
                                 axisNameWidget: Text(
-                                  "Ball point standard deviation",
+                                  "Gamepiece points standard deviation",
                                 ),
                                 sideTitles: SideTitles(
+                                  getTitlesWidget: (
+                                    final double title,
+                                    final TitleMeta meta,
+                                  ) =>
+                                      Container(child: Text(title.toString())),
                                   reservedSize: 22,
                                   showTitles: true,
                                   interval: 5,
@@ -132,12 +142,14 @@ class Scatter extends StatelessWidget {
                             minY: 0,
                             maxX: report
                                 .map(
-                                  (final ScatterData e) => (e.xBallPointsAvg),
+                                  (final ScatterData e) =>
+                                      (e.gamepiecePointsAvg),
                                 )
                                 .reduce(max),
                             maxY: report
                                 .map(
-                                  (final ScatterData e) => e.yBallPointsStddev,
+                                  (final ScatterData e) =>
+                                      e.yGamepiecePointsStddev,
                                 )
                                 .fold<double>(25.0, max),
                           ),
@@ -155,8 +167,12 @@ class Scatter extends StatelessWidget {
 }
 
 class ScatterData {
-  const ScatterData(this.xBallPointsAvg, this.yBallPointsStddev, this.team);
+  const ScatterData(
+    this.gamepiecePointsAvg,
+    this.yGamepiecePointsStddev,
+    this.team,
+  );
   final LightTeam team;
-  final double xBallPointsAvg;
-  final double yBallPointsStddev;
+  final double gamepiecePointsAvg;
+  final double yGamepiecePointsStddev;
 }
