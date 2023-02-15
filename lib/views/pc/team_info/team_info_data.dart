@@ -36,7 +36,7 @@ class TeamInfoData extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Expanded(
-                          flex: 3,
+                          flex: 4,
                           child: QuickDataCard(data.quickData),
                         ),
                         SizedBox(height: defaultPadding),

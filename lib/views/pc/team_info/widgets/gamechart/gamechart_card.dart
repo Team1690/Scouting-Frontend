@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
-import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/ball_line_chart.dart";
-import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/climb_line_chart.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/gamepiece_line_chart.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/balance_line_chart.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/points_linechart.dart";
 
 class Gamechart extends StatelessWidget {
@@ -20,11 +20,14 @@ class Gamechart extends StatelessWidget {
                 ? Text("Not enough data for line chart")
                 : CarouselWithIndicator(
                     widgets: <Widget>[
-                      BallLineChart(data.scoredMissedDataTeleCones),
                       BallLineChart(data.scoredMissedDataAutoCones),
-                      BallLineChart(data.scoredMissedDataAllCones),
+                      BallLineChart(data.scoredMissedDataTeleCones),
+                      BallLineChart(data.scoredMissedDataAutoCubes),
+                      BallLineChart(data.scoredMissedDataTeleCubes),
+                      BallLineChart(data.scoredMissedDataAll),
                       PointsLineChart(data.pointsData),
                       ClimbLineChart(data.autoBalanceData),
+                      ClimbLineChart(data.endgameBalanceData),
                     ],
                   ),
       );
