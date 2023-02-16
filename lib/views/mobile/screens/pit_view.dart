@@ -283,9 +283,10 @@ class _PitViewState extends State<PitView> {
                     decoration: InputDecoration(
                       labelText: "Drive Wheel type",
                     ),
-                    validator: _numericValidator(
-                      "please enter the robot's wheel type",
-                    ),
+                    validator: (final String? wheelType) =>
+                        wheelType == null || wheelType.isEmpty
+                            ? "please enter the robot's wheel type"
+                            : null,
                   ),
                   SectionDivider(label: "Robot Image"),
                   ImagePickerWidget(
