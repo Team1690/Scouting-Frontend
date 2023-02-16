@@ -92,15 +92,15 @@ class SpecificMatch {
   bool isNull(final String val) {
     switch (val) {
       case "DriveTrain And Driving":
-        return drivetrainAndDriving == null ? true : false;
+        return drivetrainAndDriving == null;
       case "Intake":
-        return intake == null ? true : false;
+        return intake == null;
       case "Placement":
-        return placement == null ? true : false;
+        return placement == null;
       case "Defense":
-        return defense == null ? true : false;
+        return defense == null;
       case "General Notes":
-        return generalNotes == null ? true : false;
+        return generalNotes == null;
       case "All":
       default:
         return (drivetrainAndDriving == null &&
