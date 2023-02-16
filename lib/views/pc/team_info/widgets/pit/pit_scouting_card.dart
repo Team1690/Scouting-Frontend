@@ -87,14 +87,12 @@ class PitScoutingCard extends StatelessWidget {
               title: "Has shifter:",
               value: data.hasShifer,
             ),
-            HasSomething(
-              title: "Can pass low rung:",
-              value: data.canPassLowRung,
-            ),
             Text(
               "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
             ),
             Text("Weight: ${data.weight}Kg"),
+            Text("Width: ${data.width}m"),
+            Text("Length: ${data.length}m"),
             Align(
               alignment: Alignment.center,
               child: Text(
