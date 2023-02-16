@@ -228,26 +228,26 @@ Future<Team> fetchTeamInfo(
         final List<dynamic> matches =
             (teamByPk["technical_matches"] as List<dynamic>);
 
-        List<int> balancePoints(final String mode) => matches
+        List<int> balancePoints(final MatchMode mode) => matches
             .where(
               (final dynamic match) =>
-                  match["${mode}_balance"]["title"] != "No attempt",
+                  match["${mode.title}_balance"]["title"] != "No attempt",
             )
             .map(
               (final dynamic match) =>
-                  match["${mode}_balance"]["${mode}_points"] as int,
+                  match["${mode.title}_balance"]["${mode.title}_points"] as int,
             )
             .toList();
 
-        int matchesBalanced(final String mode) => matches
+        int matchesBalanced(final MatchMode mode) => matches
             .where(
               (final dynamic match) =>
-                  match["${mode}_balance"]["title"] != "No attempt" &&
-                  match["${mode}_balance"]["title"] != "Failed",
+                  match["${mode.title}_balance"]["title"] != "No attempt" &&
+                  match["${mode.title}_balance"]["title"] != "Failed",
             )
             .length;
-        final List<int> autoBalancePoints = balancePoints("auto");
-        final List<int> endgameBalancePoints = balancePoints("endgame");
+        final List<int> autoBalancePoints = balancePoints(MatchMode.auto);
+        final List<int> endgameBalancePoints = balancePoints(MatchMode.tele);
         final SpecificData specificData = SpecificData(
           (teamByPk["_2023_specifics"] as List<dynamic>)
               .map(
@@ -268,8 +268,8 @@ Future<Team> fetchTeamInfo(
         );
         final bool nullValidator = avg["auto_cones_top"] == null;
         final QuickData quickData = QuickData(
-          matchesBalancedAuto: matchesBalanced("auto"),
-          matchesBalancedEndgame: matchesBalanced("endgame"),
+          matchesBalancedAuto: matchesBalanced(MatchMode.auto),
+          matchesBalancedEndgame: matchesBalanced(MatchMode.tele),
           firstPicklistIndex: team["team_by_pk"]["first_picklist_index"] as int,
           secondPicklistIndex:
               team["team_by_pk"]["second_picklist_index"] as int,
@@ -310,10 +310,10 @@ Future<Team> fetchTeamInfo(
           avgTeleCubesMid: teleCubesMid,
           avgTeleCubesTop: teleCubesTop,
         );
-        List<int> getBalanceLineChart(final String mode) => matches
+        List<int> getBalanceLineChart(final MatchMode mode) => matches
                 .map(
                   (final dynamic match) =>
-                      match["${mode}_balance"]["title"] as String,
+                      match["${mode.title}_balance"]["title"] as String,
                 )
                 .toList()
                 .map<int>((final String title) {
@@ -330,9 +330,10 @@ Future<Team> fetchTeamInfo(
               throw Exception("Not a balance value");
             }).toList();
 
-        final List<int> autoBalanceLineChart = getBalanceLineChart("auto");
+        final List<int> autoBalanceLineChart =
+            getBalanceLineChart(MatchMode.auto);
         final List<int> endgameBalanceLineChart =
-            getBalanceLineChart("endgame");
+            getBalanceLineChart(MatchMode.tele);
         final List<MatchIdentifier> matchNumbers = matches
             .map(
               (final dynamic match) => MatchIdentifier(
@@ -352,7 +353,7 @@ Future<Team> fetchTeamInfo(
               ],
               title: "${isAuto ? "Auto" : "Endgame"} Balance",
               robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-                4,
+                1,
                 (teamByPk["technical_matches"] as List<dynamic>)
                     .map(
                       (final dynamic match) => titleToEnum(
