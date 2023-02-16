@@ -172,6 +172,8 @@ class MatchIdentifier {
         return "rb";
       case "Einstein finals":
         return "ef";
+      case "Double elims":
+        return "de";
     }
     throw Exception("Not a supported match type");
   }

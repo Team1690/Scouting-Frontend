@@ -231,19 +231,27 @@ Future<Team> fetchTeamInfo(
         List<int> balancePoints(final MatchMode mode) => matches
             .where(
               (final dynamic match) =>
-                  match["${mode.title}_balance"]["title"] != "No attempt",
+                  match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
+                      ["title"] !=
+                  "No attempt",
             )
             .map(
-              (final dynamic match) =>
-                  match["${mode.title}_balance"]["${mode.title}_points"] as int,
+              (final dynamic match) => match[
+                      "${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
+                  [
+                  "${mode == MatchMode.auto ? mode.title : "endgame"}_points"] as int,
             )
             .toList();
 
         int matchesBalanced(final MatchMode mode) => matches
             .where(
               (final dynamic match) =>
-                  match["${mode.title}_balance"]["title"] != "No attempt" &&
-                  match["${mode.title}_balance"]["title"] != "Failed",
+                  match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
+                          ["title"] !=
+                      "No attempt" &&
+                  match["${mode.title == MatchMode.auto.title ? mode.title : "endgame"}_balance"]
+                          ["title"] !=
+                      "Failed",
             )
             .length;
         final List<int> autoBalancePoints = balancePoints(MatchMode.auto);
@@ -312,8 +320,9 @@ Future<Team> fetchTeamInfo(
         );
         List<int> getBalanceLineChart(final MatchMode mode) => matches
                 .map(
-                  (final dynamic match) =>
-                      match["${mode.title}_balance"]["title"] as String,
+                  (final dynamic match) => match[
+                          "${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
+                      ["title"] as String,
                 )
                 .toList()
                 .map<int>((final String title) {
