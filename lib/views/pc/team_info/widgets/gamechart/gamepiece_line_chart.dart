@@ -10,11 +10,11 @@ class GamepiecesLineChart extends StatelessWidget {
         children: <Widget>[
           Column(
             children: <Widget>[
-              Spacer(),
+              const Spacer(),
               Align(
-                alignment: Alignment(0.7, -1),
+                alignment: const Alignment(0.7, -1),
                 child: RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                     children: <InlineSpan>[
                       TextSpan(
                         text: " Top ",
@@ -39,7 +39,7 @@ class GamepiecesLineChart extends StatelessWidget {
             ],
           ),
           Align(
-            alignment: Alignment(-1, -1),
+            alignment: Alignment.topLeft,
             child: Text(
               data.title,
             ),
@@ -54,7 +54,7 @@ class GamepiecesLineChart extends StatelessWidget {
             child: DashboardLineChart(
               showShadow: false,
               gameNumbers: data.gameNumbers,
-              inputedColors: <Color>[
+              inputedColors: const <Color>[
                 Colors.green,
                 Colors.yellow,
                 Colors.orange,
