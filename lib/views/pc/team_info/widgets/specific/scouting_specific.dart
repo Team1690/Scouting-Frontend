@@ -87,16 +87,16 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                               ],
                                             )
                                           : Container(),
-                                      (e.intakeAndConveyor != null &&
+                                      (e.intake != null &&
                                               (widget.selectorValue == "All" ||
                                                   widget.selectorValue ==
-                                                      "Intake And Conveyor"))
+                                                      "Intake"))
                                           ? Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.end,
                                               children: <Widget>[
                                                 Text(
-                                                  "הובלה ואיסוף:",
+                                                  "איסוף:",
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
@@ -107,7 +107,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  e.intakeAndConveyor!,
+                                                  e.intake!,
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
@@ -118,16 +118,16 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                               ],
                                             )
                                           : Container(),
-                                      (e.shooter != null &&
+                                      (e.placement != null &&
                                               (widget.selectorValue == "All" ||
                                                   widget.selectorValue ==
-                                                      "Shooter"))
+                                                      "Placement"))
                                           ? Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.end,
                                               children: <Widget>[
                                                 Text(
-                                                  "ירי:",
+                                                  "הנחה:",
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(
@@ -138,38 +138,7 @@ class _ScoutingSpecificState extends State<ScoutingSpecific> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  e.shooter!,
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                  style: TextStyle(
-                                                    color: primaryWhite,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          : Container(),
-                                      (e.climb != null &&
-                                              (widget.selectorValue == "All" ||
-                                                  widget.selectorValue ==
-                                                      "Climb"))
-                                          ? Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: <Widget>[
-                                                Text(
-                                                  "טיפוס:",
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                  style: TextStyle(
-                                                    color: primaryWhite,
-                                                    fontSize: 15,
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  e.climb!,
+                                                  e.placement!,
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style: TextStyle(

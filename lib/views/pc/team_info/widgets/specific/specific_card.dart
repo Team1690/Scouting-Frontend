@@ -17,9 +17,8 @@ class _SpecificCardState extends State<SpecificCard> {
   List<String> items = <String>[
     "All",
     "Drivetrain And Driving",
-    "Intake And Conveyor",
-    "Shooter",
-    "Climb",
+    "Intake",
+    "Placement",
     "Defense",
     "General Notes"
   ];
