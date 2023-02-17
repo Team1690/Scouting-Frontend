@@ -38,7 +38,7 @@ class TeamInfoData extends StatelessWidget {
                             flex: 4,
                             child: QuickDataCard(data.quickData),
                           ),
-                          SizedBox(height: defaultPadding),
+                          const SizedBox(height: defaultPadding),
                           Expanded(
                             flex: 6,
                             child: Gamechart(data),
@@ -46,12 +46,12 @@ class TeamInfoData extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(width: defaultPadding),
+                    const SizedBox(width: defaultPadding),
                     Expanded(
                       flex: 2,
                       child: SpecificCard(data.specificData),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: defaultPadding,
                     ),
                     Expanded(
@@ -61,7 +61,7 @@ class TeamInfoData extends StatelessWidget {
                   ],
                 ),
               ) ??
-              Text("No data available");
+              const Text("No data available");
         },
       );
 }
