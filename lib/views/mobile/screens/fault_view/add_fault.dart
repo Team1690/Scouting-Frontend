@@ -15,55 +15,63 @@ class AddFault extends StatelessWidget {
   Widget build(final BuildContext context) {
     return IconButton(
       onPressed: () async {
-        LightTeam? team;
         String? newMessage;
         (await showDialog<NewFault>(
           context: context,
           builder: (final BuildContext innerContext) {
-            return AlertDialog(
-              title: Text("Add team"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TeamSelectionFuture(
-                    teams: TeamProvider.of(context).teams,
-                    onChange: (final LightTeam newTeam) {
-                      team = newTeam;
-                    },
-                    controller: TextEditingController(),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    maxLines: 4,
-                    textDirection: TextDirection.rtl,
-                    onChanged: (final String a) {
-                      newMessage = a;
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Error message",
-                      border: OutlineInputBorder(),
-                    ),
-                  )
-                ],
+            return TeamSelectionFuture(
+              teams: TeamProvider.of(context).teams,
+              buildWithoutTeam: (final Widget searchBox, final _) =>
+                  AlertDialog(
+                title: Text("Add Team"),
+                content: searchBox,
               ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    if (team == null || newMessage == null) return;
-                    Navigator.of(context).pop(NewFault(newMessage!, team!));
-                  },
-                  child: Text("Submit"),
-                ),
-                TextButton(
-                  onPressed: Navigator.of(context).pop,
-                  child: Text(
-                    "Cancel",
-                    style: TextStyle(color: Colors.red),
+              buildWithTeam: (
+                final BuildContext context,
+                final LightTeam team,
+                final Widget searchBox,
+                final _,
+              ) {
+                return AlertDialog(
+                  title: Text("Add team"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      searchBox,
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        maxLines: 4,
+                        textDirection: TextDirection.rtl,
+                        onChanged: (final String a) {
+                          newMessage = a;
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Error message",
+                          border: OutlineInputBorder(),
+                        ),
+                      )
+                    ],
                   ),
-                ),
-              ],
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        if (newMessage == null) return;
+                        Navigator.of(context).pop(NewFault(newMessage!, team));
+                      },
+                      child: Text("Submit"),
+                    ),
+                    TextButton(
+                      onPressed: Navigator.of(context).pop,
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           },
         ))

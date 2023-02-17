@@ -21,11 +21,8 @@ class _ChangeMatchState extends State<ChangeMatch> {
   late MatchesVars vars =
       widget.initialVars.mapNullable(MatchesVars.fromScheduleMatch) ??
           MatchesVars();
-  List<TextEditingController> teamControllers =
-      List<TextEditingController>.generate(
-    8,
-    (final int i) => TextEditingController(),
-  );
+  List<void Function()> resetControllers =
+      List<void Function()>.filled(8, () {});
   final GlobalKey<FormState> formKey = GlobalKey();
   TextEditingController numberController = TextEditingController();
 
@@ -39,35 +36,6 @@ class _ChangeMatchState extends State<ChangeMatch> {
     if (initialVars == null) {
       return;
     }
-
-    teamControllers[0] = TextEditingController(
-      text: initialVars.blueAlliance[0].number.toString(),
-    );
-    teamControllers[1] = TextEditingController(
-      text: initialVars.blueAlliance[1].number.toString(),
-    );
-    teamControllers[2] = TextEditingController(
-      text: initialVars.blueAlliance[2].number.toString(),
-    );
-    teamControllers[3] = TextEditingController(
-      text: initialVars.blueAlliance.length == 4
-          ? initialVars.blueAlliance[3].number.toString()
-          : null,
-    );
-    teamControllers[4] = TextEditingController(
-      text: initialVars.redAlliance[0].number.toString(),
-    );
-    teamControllers[5] = TextEditingController(
-      text: initialVars.redAlliance[1].number.toString(),
-    );
-    teamControllers[6] = TextEditingController(
-      text: initialVars.redAlliance[2].number.toString(),
-    );
-    teamControllers[7] = TextEditingController(
-      text: initialVars.redAlliance.length == 4
-          ? initialVars.redAlliance[3].number.toString()
-          : null,
-    );
   }
 
   @override
@@ -124,26 +92,62 @@ class _ChangeMatchState extends State<ChangeMatch> {
                           children: <Widget>[
                             SectionDivider(label: "Blue Teams"),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.blue0 = team,
-                              controller: teamControllers[0],
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                                final Widget searchBox,
+                                final void Function() resetTeam,
+                              ) {
+                                resetControllers[0] = resetTeam;
+                                vars.blue0 = team;
+                                return searchBox;
+                              },
                             ),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.blue1 = team,
-                              controller: teamControllers[1],
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                                final Widget searchBox,
+                                final void Function() resetTeam,
+                              ) {
+                                resetControllers[1] = resetTeam;
+                                vars.blue1 = team;
+                                return searchBox;
+                              },
                             ),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.blue2 = team,
-                              controller: teamControllers[2],
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                                final Widget searchBox,
+                                final void Function() resetTeam,
+                              ) {
+                                resetControllers[2] = resetTeam;
+                                vars.blue2 = team;
+                                return searchBox;
+                              },
                             ),
                             SectionDivider(label: "Blue Sub Team"),
                             TeamSelectionFuture(
                               dontValidate: true,
-                              onChange: (final LightTeam team) =>
-                                  vars.blue3 = team,
-                              controller: teamControllers[3],
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                                final Widget searchBox,
+                                final void Function() resetTeam,
+                              ) {
+                                resetControllers[3] = resetTeam;
+                                vars.blue3 = team;
+                                return Column(
+                                  children: <Widget>[
+                                    searchBox,
+                                    ElevatedButton(
+                                      onPressed: resetTeam,
+                                      child: Text("Clear"),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -155,26 +159,62 @@ class _ChangeMatchState extends State<ChangeMatch> {
                           children: <Widget>[
                             SectionDivider(label: "Red Teams"),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.red0 = team,
-                              controller: teamControllers[4],
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                                final Widget searchBox,
+                                final void Function() resetTeam,
+                              ) {
+                                resetControllers[4] = resetTeam;
+                                vars.red0 = team;
+                                return searchBox;
+                              },
                             ),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.red1 = team,
-                              controller: teamControllers[5],
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                                final Widget searchBox,
+                                final void Function() resetTeam,
+                              ) {
+                                resetControllers[5] = resetTeam;
+                                vars.red1 = team;
+                                return searchBox;
+                              },
                             ),
                             TeamSelectionFuture(
-                              onChange: (final LightTeam team) =>
-                                  vars.red2 = team,
-                              controller: teamControllers[6],
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                                final Widget searchBox,
+                                final void Function() resetTeam,
+                              ) {
+                                resetControllers[6] = resetTeam;
+                                vars.red2 = team;
+                                return searchBox;
+                              },
                             ),
                             SectionDivider(label: "Red Sub Team"),
                             TeamSelectionFuture(
                               dontValidate: true,
-                              onChange: (final LightTeam team) =>
-                                  vars.red3 = team,
-                              controller: teamControllers[7],
+                              buildWithTeam: (
+                                final BuildContext context,
+                                final LightTeam team,
+                                final Widget searchBox,
+                                final void Function() resetTeam,
+                              ) {
+                                resetControllers[7] = resetTeam;
+                                vars.red3 = team;
+                                return Column(
+                                  children: <Widget>[
+                                    searchBox,
+                                    ElevatedButton(
+                                      onPressed: resetTeam,
+                                      child: Text("Clear"),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -205,7 +245,10 @@ class _ChangeMatchState extends State<ChangeMatch> {
                 SubmitButton(
                   vars: vars,
                   mutation: widget.initialVars == null ? mutation : update,
-                  resetForm: () {},
+                  resetForm: () => resetControllers
+                    ..forEach((final void Function() resetController) {
+                      resetController();
+                    }),
                   validate: () => formKey.currentState!.validate(),
                 ),
               ],
