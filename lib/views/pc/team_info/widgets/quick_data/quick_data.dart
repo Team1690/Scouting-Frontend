@@ -16,11 +16,11 @@ class QuickDataCard extends StatelessWidget {
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Auto",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         gamepieceRow(
                           "Top",
                           data.avgAutoConesTop,
@@ -41,16 +41,16 @@ class QuickDataCard extends StatelessWidget {
                           data.avgAutoConesFailed,
                           data.avgAutoCubesFailed,
                         ),
-                        Spacer()
+                        const Spacer()
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Teleop",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         gamepieceRow(
                           "Top",
                           data.avgTeleConesTop,
@@ -71,16 +71,16 @@ class QuickDataCard extends StatelessWidget {
                           data.avgTeleConesFailed,
                           data.avgTeleCubesFailed,
                         ),
-                        Spacer()
+                        const Spacer()
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Points",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text(
                           "Gamepieces: ${data.avgGamepiecePoints.toStringAsFixed(1)}",
                         ),
@@ -90,57 +90,57 @@ class QuickDataCard extends StatelessWidget {
                         Text(
                           "Endgame Balance: ${data.avgEndgameBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedEndgame}/${data.amoutOfMatches}",
                         ),
-                        Spacer(
+                        const Spacer(
                           flex: 2,
                         )
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Misc",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text(
                           "Gamepiece sum: ${data.avgGamepieces.toStringAsFixed(1)}",
                         ),
                         Text(
                           "Best Auto Balance: ${data.highestBalanceTitleAuto}",
                         ),
-                        Spacer(
+                        const Spacer(
                           flex: 2,
                         ),
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Picklist",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text("First: ${data.firstPicklistIndex + 1}"),
                         Text("Second: ${data.secondPicklistIndex + 1}"),
-                        Spacer(
+                        const Spacer(
                           flex: 2,
                         ),
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Aim",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text(
                           "Auto: ${data.avgAutoGamepieces.toStringAsFixed(1)}/${(data.avgAutoGamepieces + data.avgAutoConesFailed + data.avgAutoCubesFailed).toStringAsFixed(1)}",
                         ),
                         Text(
                           "Teleop: ${data.avgTeleGamepieces.toStringAsFixed(1)}/${(data.avgTeleGamepieces + data.avgTeleConesFailed + data.avgTeleCubesFailed).toStringAsFixed(1)}",
                         ),
-                        Spacer(
+                        const Spacer(
                           flex: 2,
                         )
                       ],
@@ -148,7 +148,7 @@ class QuickDataCard extends StatelessWidget {
                   ]
                       .expand(
                         (final Widget element) =>
-                            <Widget>[element, SizedBox(width: 40)],
+                            <Widget>[element, const SizedBox(width: 40)],
                       )
                       .toList(),
                 ),
@@ -165,10 +165,13 @@ Widget gamepieceRow(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text("$title: "),
-        Text(style: TextStyle(color: Colors.amber), cones.toStringAsFixed(1)),
-        Text("/"),
         Text(
-          style: TextStyle(color: Colors.deepPurple),
+          style: const TextStyle(color: Colors.amber),
+          cones.toStringAsFixed(1),
+        ),
+        const Text("/"),
+        Text(
+          style: const TextStyle(color: Colors.deepPurple),
           cubes.toStringAsFixed(1),
         ),
       ],

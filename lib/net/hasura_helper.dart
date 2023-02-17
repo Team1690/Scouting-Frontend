@@ -8,7 +8,7 @@ GraphQLClient getClient() {
   );
   final WebSocketLink webSocketLink = WebSocketLink(
     "wss://orbitdb2023.hasura.app/v1/graphql",
-    config: SocketClientConfig(),
+    config: const SocketClientConfig(),
   );
   return GraphQLClient(
     link: Link.split(
@@ -47,7 +47,7 @@ extension MapSnapshot<T> on AsyncSnapshot<T> {
 
 Future<List<LightTeam>> fetchTeams() async {
   final GraphQLClient client = getClient();
-  final String query = """
+  const String query = """
 query FetchTeams {
   team {
     id

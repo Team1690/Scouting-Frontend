@@ -12,8 +12,8 @@ class RobotImageCard extends StatelessWidget {
         body: GestureDetector(
           onTap: () => Navigator.of(context).push<Scaffold>(
             PageRouteBuilder<Scaffold>(
-              reverseTransitionDuration: Duration(milliseconds: 700),
-              transitionDuration: Duration(milliseconds: 700),
+              reverseTransitionDuration: const Duration(milliseconds: 700),
+              transitionDuration: const Duration(milliseconds: 700),
               pageBuilder: (
                 final BuildContext context,
                 final Animation<double> a,
@@ -31,7 +31,7 @@ class RobotImageCard extends StatelessWidget {
                           final BuildContext context,
                           final String url,
                         ) =>
-                            Center(child: CircularProgressIndicator()),
+                            const Center(child: CircularProgressIndicator()),
                       ),
                     ),
                   ),
@@ -45,7 +45,7 @@ class RobotImageCard extends StatelessWidget {
               width: 240,
               imageUrl: url,
               placeholder: (final BuildContext context, final String url) =>
-                  Center(child: CircularProgressIndicator()),
+                  const Center(child: CircularProgressIndicator()),
             ),
           ),
         ),

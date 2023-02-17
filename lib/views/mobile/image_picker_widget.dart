@@ -15,7 +15,7 @@ class ImagePickerWidget extends FormField<XFile> {
           builder: (final FormFieldState<XFile> state) => Column(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.symmetric(vertical: defaultPadding),
+                padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                 child: ElevatedButton(
                   onPressed: () async {
                     final ImagePicker picker = ImagePicker();
@@ -24,14 +24,14 @@ class ImagePickerWidget extends FormField<XFile> {
                       imageQuality: 30,
                     );
                     state.didChange(image);
-                    image.mapNullable((final XFile p0) async {
+                    await image.mapNullable((final XFile p0) async {
                       controller.value = true;
                       onImagePicked(p0);
                     });
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
+                    children: const <Widget>[
                       Icon(Icons.camera_alt),
                       Text(
                         " Take picture",
@@ -47,13 +47,13 @@ class ImagePickerWidget extends FormField<XFile> {
                 enabled: false,
                 activeColor: Colors.green,
                 inactiveColor: Colors.red,
-                activeChild: Text("File Selected"),
-                inactiveChild: Text("No File Selected"),
+                activeChild: const Text("File Selected"),
+                inactiveChild: const Text("No File Selected"),
               ),
               if (state.hasError)
                 Text(
                   state.errorText!,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 )
             ],
           ),

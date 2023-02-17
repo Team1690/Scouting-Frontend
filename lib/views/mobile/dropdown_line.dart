@@ -16,27 +16,25 @@ class DropdownLine<T> extends StatelessWidget {
   final TextEditingController controller;
 
   @override
-  Widget build(final BuildContext context) {
-    return Column(
-      children: <Widget>[
-        GestureDetector(
-          onTap: onTap,
-          child: SectionDivider(label: label),
-        ),
-        AnimatedCrossFade(
-          duration: Duration(milliseconds: 300),
-          crossFadeState: value == null
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
-          firstChild: Container(),
-          secondChild: TextField(
-            controller: controller,
-            textDirection: TextDirection.rtl,
-            onChanged: onChange,
-            decoration: InputDecoration(hintText: label),
+  Widget build(final BuildContext context) => Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: onTap,
+            child: SectionDivider(label: label),
           ),
-        ),
-      ],
-    );
-  }
+          AnimatedCrossFade(
+            duration: const Duration(milliseconds: 300),
+            crossFadeState: value == null
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            firstChild: Container(),
+            secondChild: TextField(
+              controller: controller,
+              textDirection: TextDirection.rtl,
+              onChanged: onChange,
+              decoration: InputDecoration(hintText: label),
+            ),
+          ),
+        ],
+      );
 }

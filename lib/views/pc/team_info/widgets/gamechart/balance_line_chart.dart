@@ -11,7 +11,7 @@ class BalanceLineChart extends StatelessWidget {
   Widget build(final BuildContext context) => Stack(
         children: <Widget>[
           Align(
-            alignment: Alignment(-1, -1),
+            alignment: Alignment.topLeft,
             child: Text(data.title),
           ),
           Padding(
@@ -23,7 +23,7 @@ class BalanceLineChart extends StatelessWidget {
             ),
             child: DashboardClimbLineChart(
               showShadow: true,
-              inputedColors: <Color>[primaryColor],
+              inputedColors: const <Color>[primaryColor],
               gameNumbers: data.gameNumbers,
               dataSet: data.points,
               robotMatchStatuses: data.robotMatchStatuses,

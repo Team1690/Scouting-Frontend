@@ -32,41 +32,39 @@ class _TeamInfoScreenState extends State<TeamInfoScreen> {
   }
 
   @override
-  Widget build(final BuildContext context) {
-    return DashboardScaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: TeamSelectionFuture(
-                    teams: TeamProvider.of(context).teams,
-                    controller: widget.controller,
-                    onChange: (final LightTeam newTeam) =>
-                        setState(() => chosenTeam = newTeam),
+  Widget build(final BuildContext context) => DashboardScaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(defaultPadding),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: TeamSelectionFuture(
+                      teams: TeamProvider.of(context).teams,
+                      controller: widget.controller,
+                      onChange: (final LightTeam newTeam) =>
+                          setState(() => chosenTeam = newTeam),
+                    ),
                   ),
-                ),
-                SizedBox(width: defaultPadding),
-                Expanded(
-                  flex: 2,
-                  child: Container(),
-                ),
-              ],
-            ),
-            SizedBox(height: defaultPadding),
-            Expanded(
-              flex: 10,
-              child: chosenTeam.mapNullable(
-                    TeamInfoData.new,
-                  ) ??
-                  NoTeamSelected(),
-            ),
-          ],
+                  const SizedBox(width: defaultPadding),
+                  Expanded(
+                    flex: 2,
+                    child: Container(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: defaultPadding),
+              Expanded(
+                flex: 10,
+                child: chosenTeam.mapNullable(
+                      TeamInfoData.new,
+                    ) ??
+                    NoTeamSelected(),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 }

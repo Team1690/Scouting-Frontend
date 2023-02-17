@@ -19,26 +19,24 @@ class _MatchTextBoxState extends State<MatchTextBox> {
   bool _validate = false;
 
   @override
-  Widget build(final BuildContext context) {
-    return TextFormField(
-      validator: widget.validate,
-      controller: widget.controller,
-      keyboardType: TextInputType.number,
-      onChanged: (final String value) {
-        setState(() => _validate = value.isEmpty);
-        value.isNotEmpty
-            ? widget.onChange(int.parse(value))
-            : widget.onChange(100);
-      },
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly
-      ],
-      decoration: InputDecoration(
-        prefixIcon: Icon(Icons.tag),
-        border: OutlineInputBorder(),
-        hintText: "Enter Match Number",
-        errorText: _validate ? "Value can't be empty" : null,
-      ),
-    );
-  }
+  Widget build(final BuildContext context) => TextFormField(
+        validator: widget.validate,
+        controller: widget.controller,
+        keyboardType: TextInputType.number,
+        onChanged: (final String value) {
+          setState(() => _validate = value.isEmpty);
+          value.isNotEmpty
+              ? widget.onChange(int.parse(value))
+              : widget.onChange(100);
+        },
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly
+        ],
+        decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.tag),
+          border: const OutlineInputBorder(),
+          hintText: "Enter Match Number",
+          errorText: _validate ? "Value can't be empty" : null,
+        ),
+      );
 }

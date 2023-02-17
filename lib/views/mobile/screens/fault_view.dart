@@ -10,58 +10,56 @@ import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 
 class FaultView extends StatelessWidget {
   @override
-  Widget build(final BuildContext context) {
-    return Scaffold(
-      drawer: SideNavBar(),
-      appBar: AppBar(
-        title: Text("Robot faults"),
-        centerTitle: true,
-        actions: <Widget>[
-          AddFault(
-            onFinished: handleQueryResult(context),
-          )
-        ],
-      ),
-      body: StreamBuilder<List<FaultEntry>>(
-        stream: fetchFaults(),
-        builder: (
-          final BuildContext context,
-          final AsyncSnapshot<List<FaultEntry>> snapshot,
-        ) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return snapshot.data.mapNullable((final List<FaultEntry> data) {
-                  return SingleChildScrollView(
-                    primary: false,
-                    child: Column(
-                      children: data
-                          .map(
-                            (final FaultEntry e) => Card(
-                              elevation: 2,
-                              color: bgColor,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: defaultPadding / 4,
+  Widget build(final BuildContext context) => Scaffold(
+        drawer: SideNavBar(),
+        appBar: AppBar(
+          title: const Text("Robot faults"),
+          centerTitle: true,
+          actions: <Widget>[
+            AddFault(
+              onFinished: handleQueryResult(context),
+            )
+          ],
+        ),
+        body: StreamBuilder<List<FaultEntry>>(
+          stream: fetchFaults(),
+          builder: (
+            final BuildContext context,
+            final AsyncSnapshot<List<FaultEntry>> snapshot,
+          ) {
+            if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return snapshot.data.mapNullable(
+                    (final List<FaultEntry> data) => SingleChildScrollView(
+                      primary: false,
+                      child: Column(
+                        children: data
+                            .map(
+                              (final FaultEntry e) => Card(
+                                elevation: 2,
+                                color: bgColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: defaultPadding / 4,
+                                  ),
+                                  child: FaultTile(e),
                                 ),
-                                child: FaultTile(e),
                               ),
-                            ),
-                          )
-                          .toList(),
+                            )
+                            .toList(),
+                      ),
                     ),
-                  );
-                }) ??
-                (throw Exception("No data"));
-          }
-        },
-      ),
-    );
-  }
+                  ) ??
+                  (throw Exception("No data"));
+            }
+          },
+        ),
+      );
 }
 
 void Function(QueryResult<T>) handleQueryResult<T>(
@@ -72,7 +70,7 @@ void Function(QueryResult<T>) handleQueryResult<T>(
       if (result.hasException) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            duration: Duration(seconds: 5),
+            duration: const Duration(seconds: 5),
             content: Text("Error: ${result.exception}"),
             backgroundColor: Colors.red,
           ),
@@ -82,7 +80,7 @@ void Function(QueryResult<T>) handleQueryResult<T>(
 
 void showLoadingSnackBar(final BuildContext context) =>
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         duration: Duration(days: 365),
         backgroundColor: Color.fromARGB(0, 0, 0, 0),
         content: Align(
@@ -97,23 +95,22 @@ Stream<List<FaultEntry>> fetchFaults() {
   final Stream<QueryResult<List<FaultEntry>>> result = client.subscribe(
     SubscriptionOptions<List<FaultEntry>>(
       document: gql(query),
-      parserFn: (final Map<String, dynamic> data) {
-        return (data["faults"] as List<dynamic>)
-            .map(
-              (final dynamic e) => FaultEntry(
-                e["message"] as String,
-                LightTeam(
-                  e["team"]["id"] as int,
-                  e["team"]["number"] as int,
-                  e["team"]["name"] as String,
-                  e["team"]["colors_index"] as int,
+      parserFn: (final Map<String, dynamic> data) =>
+          (data["faults"] as List<dynamic>)
+              .map(
+                (final dynamic e) => FaultEntry(
+                  e["message"] as String,
+                  LightTeam(
+                    e["team"]["id"] as int,
+                    e["team"]["number"] as int,
+                    e["team"]["name"] as String,
+                    e["team"]["colors_index"] as int,
+                  ),
+                  e["id"] as int,
+                  e["fault_status"]["title"] as String,
                 ),
-                e["id"] as int,
-                e["fault_status"]["title"] as String,
-              ),
-            )
-            .toList();
-      },
+              )
+              .toList(),
     ),
   );
   return result.map(queryResultToParsed);

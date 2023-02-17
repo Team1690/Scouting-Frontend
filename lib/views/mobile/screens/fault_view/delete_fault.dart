@@ -9,26 +9,22 @@ class DeleteFault extends StatelessWidget {
   final void Function(QueryResult<void>) onFinished;
 
   @override
-  Widget build(final BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.delete),
-      onPressed: () async {
-        showLoadingSnackBar(context);
-        final QueryResult<void> result = await deleteFault(faultId);
-        onFinished(result);
-      },
-    );
-  }
+  Widget build(final BuildContext context) => IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () async {
+          showLoadingSnackBar(context);
+          final QueryResult<void> result = await deleteFault(faultId);
+          onFinished(result);
+        },
+      );
 }
 
-Future<QueryResult<void>> deleteFault(final int id) async {
-  return getClient().mutate(
-    MutationOptions<void>(
-      document: gql(_deleteFaultMutaton),
-      variables: <String, dynamic>{"id": id},
-    ),
-  );
-}
+Future<QueryResult<void>> deleteFault(final int id) async => getClient().mutate(
+      MutationOptions<void>(
+        document: gql(_deleteFaultMutaton),
+        variables: <String, dynamic>{"id": id},
+      ),
+    );
 
 const String _deleteFaultMutaton = """
 mutation DeleteFault(\$id: Int) {

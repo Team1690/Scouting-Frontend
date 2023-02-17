@@ -16,83 +16,81 @@ class CoachTeamData extends StatelessWidget {
   const CoachTeamData(this.team);
   final LightTeam team;
   @override
-  Widget build(final BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "${team.number} ${team.name}",
+  Widget build(final BuildContext context) => Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            "${team.number} ${team.name}",
+          ),
         ),
-      ),
-      body: FutureBuilder<Team>(
-        future: fetchTeamInfo(team, context), //fetchTeam(team.id, context),
-        builder: (
-          final BuildContext context,
-          final AsyncSnapshot<Team> snapshot,
-        ) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return snapshot.data.mapNullable((final Team data) {
-                  return CarouselWithIndicator(
-                    enableInfininteScroll: true,
-                    initialPage: 0,
-                    widgets: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: DashboardCard(
-                          title: "Line charts",
-                          body: data.autoBalanceData.points[0].length < 2
-                              ? Center(
-                                  child: Text("No data :("),
-                                )
-                              : CoachTeamInfoLineCharts(data),
+        body: FutureBuilder<Team>(
+          future: fetchTeamInfo(team, context), //fetchTeam(team.id, context),
+          builder: (
+            final BuildContext context,
+            final AsyncSnapshot<Team> snapshot,
+          ) {
+            if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return snapshot.data.mapNullable(
+                    (final Team data) => CarouselWithIndicator(
+                      enableInfininteScroll: true,
+                      initialPage: 0,
+                      widgets: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: DashboardCard(
+                            title: "Line charts",
+                            body: data.autoBalanceData.points[0].length < 2
+                                ? const Center(
+                                    child: Text("No data :("),
+                                  )
+                                : CoachTeamInfoLineCharts(data),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: DashboardCard(
-                          title: "Specific",
-                          body: data.specificData.msg.isEmpty
-                              ? Center(
-                                  child: Text("No data :("),
-                                )
-                              : SpecificCard(data.specificData),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: DashboardCard(
+                            title: "Specific",
+                            body: data.specificData.msg.isEmpty
+                                ? const Center(
+                                    child: Text("No data :("),
+                                  )
+                                : SpecificCard(data.specificData),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: DashboardCard(
-                          title: "Quick data",
-                          body: CoachQuickData(data.quickData),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: DashboardCard(
+                            title: "Quick data",
+                            body: CoachQuickData(data.quickData),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: data.pitViewData.mapNullable(
-                              PitScoutingCard.new,
-                            ) ??
-                            DashboardCard(
-                              title: "Pit scouting",
-                              body: Center(
-                                child: Text("No data"),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: data.pitViewData.mapNullable(
+                                PitScoutingCard.new,
+                              ) ??
+                              const DashboardCard(
+                                title: "Pit scouting",
+                                body: Center(
+                                  child: Text("No data"),
+                                ),
                               ),
-                            ),
-                      )
-                    ],
-                  );
-                }) ??
-                (throw Exception("No data"));
-          }
-        },
-      ),
-    );
-  }
+                        )
+                      ],
+                    ),
+                  ) ??
+                  (throw Exception("No data"));
+            }
+          },
+        ),
+      );
 }
 
 class CoachTeamInfoLineCharts extends StatelessWidget {
@@ -161,7 +159,7 @@ class CoachTeamInfoLineChart extends StatelessWidget {
               child: linechart,
             ),
           ),
-          Spacer()
+          const Spacer()
         ],
       );
 }
@@ -172,10 +170,10 @@ class CoachQuickData extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => data.amoutOfMatches == 0
-      ? Center(child: Text("No data :("))
+      ? const Center(child: Text("No data :("))
       : Column(
           children: <Widget>[
-            Spacer(),
+            const Spacer(),
             Row(
               children: <Expanded>[
                 Expanded(
@@ -183,8 +181,8 @@ class CoachQuickData extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Auto",
                           style: TextStyle(fontSize: 18),
@@ -210,8 +208,8 @@ class CoachQuickData extends StatelessWidget {
                         data.avgAutoConesFailed,
                         data.avgAutoCubesFailed,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Points",
                           style: TextStyle(fontSize: 18),
@@ -226,8 +224,8 @@ class CoachQuickData extends StatelessWidget {
                       Text(
                         "Endgame Balance: ${data.avgEndgameBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedEndgame}/${data.amoutOfMatches}",
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Picklist",
                           style: TextStyle(fontSize: 18),
@@ -241,8 +239,8 @@ class CoachQuickData extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Teleop",
                           style: TextStyle(fontSize: 18),
@@ -268,8 +266,8 @@ class CoachQuickData extends StatelessWidget {
                         data.avgTeleConesFailed,
                         data.avgTeleCubesFailed,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Aim",
                           style: TextStyle(fontSize: 18),
@@ -281,7 +279,7 @@ class CoachQuickData extends StatelessWidget {
                       Text(
                         "Teleop: ${data.avgTeleGamepieces.toStringAsFixed(1)}/${(data.avgTeleGamepieces + data.avgTeleConesFailed + data.avgTeleCubesFailed).toStringAsFixed(1)}",
                       ),
-                      Text(
+                      const Text(
                         "Misc",
                         style: TextStyle(fontSize: 18),
                       ),
@@ -296,7 +294,7 @@ class CoachQuickData extends StatelessWidget {
                 ),
               ],
             ),
-            Spacer(
+            const Spacer(
               flex: 2,
             )
           ],

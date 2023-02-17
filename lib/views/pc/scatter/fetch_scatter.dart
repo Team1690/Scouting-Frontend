@@ -53,41 +53,40 @@ Future<List<ScatterData>> fetchScatterData() async {
   final QueryResult<List<ScatterData>> result = await client.query(
     QueryOptions<List<ScatterData>>(
       document: gql(query),
-      parserFn: (final Map<String, dynamic> data) {
-        return (data["team"] as List<dynamic>)
-            .map<ScatterData?>((final dynamic scatterTeam) {
-              final LightTeam team = LightTeam(
-                scatterTeam["id"] as int,
-                scatterTeam["number"] as int,
-                scatterTeam["name"] as String,
-                scatterTeam["colors_index"] as int,
-              );
-              final dynamic avg = scatterTeam["technical_matches_aggregate"]
-                  ["aggregate"]["avg"];
-              final List<dynamic> matches =
-                  scatterTeam["technical_matches"] as List<dynamic>;
-              if (avg["auto_cones_top"] == null) {
-                //if one of these is null, the team's match data doesnt exist so we return null
-                return null;
-              }
-              final double avgPoints = getPoints(parseMatch(avg));
-              final Iterable<double> matchesGamepiecePoints = matches
-                  .map((final dynamic match) => getPoints(parseMatch(match)));
-              final double yStddevGamepiecePoints = matchesGamepiecePoints
-                  .map(
-                    (final double matchPoints) =>
-                        (matchPoints - avgPoints).abs(),
-                  )
-                  .average;
-              return ScatterData(
-                avgPoints,
-                yStddevGamepiecePoints,
-                team,
-              );
-            })
-            .whereType<ScatterData>()
-            .toList();
-      },
+      parserFn: (final Map<String, dynamic> data) =>
+          (data["team"] as List<dynamic>)
+              .map<ScatterData?>((final dynamic scatterTeam) {
+                final LightTeam team = LightTeam(
+                  scatterTeam["id"] as int,
+                  scatterTeam["number"] as int,
+                  scatterTeam["name"] as String,
+                  scatterTeam["colors_index"] as int,
+                );
+                final dynamic avg = scatterTeam["technical_matches_aggregate"]
+                    ["aggregate"]["avg"];
+                final List<dynamic> matches =
+                    scatterTeam["technical_matches"] as List<dynamic>;
+                if (avg["auto_cones_top"] == null) {
+                  //if one of these is null, the team's match data doesnt exist so we return null
+                  return null;
+                }
+                final double avgPoints = getPoints(parseMatch(avg));
+                final Iterable<double> matchesGamepiecePoints = matches
+                    .map((final dynamic match) => getPoints(parseMatch(match)));
+                final double yStddevGamepiecePoints = matchesGamepiecePoints
+                    .map(
+                      (final double matchPoints) =>
+                          (matchPoints - avgPoints).abs(),
+                    )
+                    .average;
+                return ScatterData(
+                  avgPoints,
+                  yStddevGamepiecePoints,
+                  team,
+                );
+              })
+              .whereType<ScatterData>()
+              .toList(),
     ),
   );
   return result.mapQueryResult();

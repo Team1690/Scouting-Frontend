@@ -14,56 +14,54 @@ class TeamInfoData extends StatelessWidget {
   final LightTeam team;
 
   @override
-  Widget build(final BuildContext context) {
-    return FutureBuilder<Team>(
-      future: fetchTeamInfo(team, context),
-      builder: (
-        final BuildContext context,
-        final AsyncSnapshot<Team> snapShot,
-      ) {
-        if (snapShot.hasError) {
-          return Center(child: Text(snapShot.error.toString()));
-        } else if (snapShot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return snapShot.data.mapNullable<Widget>(
-              (final Team data) => Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 4,
-                          child: QuickDataCard(data.quickData),
-                        ),
-                        SizedBox(height: defaultPadding),
-                        Expanded(
-                          flex: 6,
-                          child: Gamechart(data),
-                        )
-                      ],
+  Widget build(final BuildContext context) => FutureBuilder<Team>(
+        future: fetchTeamInfo(team, context),
+        builder: (
+          final BuildContext context,
+          final AsyncSnapshot<Team> snapShot,
+        ) {
+          if (snapShot.hasError) {
+            return Center(child: Text(snapShot.error.toString()));
+          } else if (snapShot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return snapShot.data.mapNullable<Widget>(
+                (final Team data) => Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 4,
+                            child: QuickDataCard(data.quickData),
+                          ),
+                          const SizedBox(height: defaultPadding),
+                          Expanded(
+                            flex: 6,
+                            child: Gamechart(data),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: defaultPadding),
-                  Expanded(
-                    flex: 2,
-                    child: SpecificCard(data.specificData),
-                  ),
-                  SizedBox(
-                    width: defaultPadding,
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: PitScouting(data.pitViewData),
-                  ),
-                ],
-              ),
-            ) ??
-            Text("No data available");
-      },
-    );
-  }
+                    const SizedBox(width: defaultPadding),
+                    Expanded(
+                      flex: 2,
+                      child: SpecificCard(data.specificData),
+                    ),
+                    const SizedBox(
+                      width: defaultPadding,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: PitScouting(data.pitViewData),
+                    ),
+                  ],
+                ),
+              ) ??
+              const Text("No data available");
+        },
+      );
 }

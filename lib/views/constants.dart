@@ -15,19 +15,19 @@ final ThemeData darkModeTheme = ThemeData.dark().copyWith(
   pageTransitionsTheme: PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
       for (final TargetPlatform platform in TargetPlatform.values)
-        platform: FadeUpwardsPageTransitionsBuilder()
+        platform: const FadeUpwardsPageTransitionsBuilder()
     },
   ),
   scaffoldBackgroundColor: bgColor,
   textTheme: GoogleFonts.poppinsTextTheme().apply(bodyColor: Colors.white),
   canvasColor: secondaryColor,
-  inputDecorationTheme: InputDecorationTheme(
+  inputDecorationTheme: const InputDecorationTheme(
     border: OutlineInputBorder(borderRadius: defaultBorderRadius),
   ),
-  toggleButtonsTheme: ToggleButtonsThemeData(
+  toggleButtonsTheme: const ToggleButtonsThemeData(
     borderRadius: defaultBorderRadius,
   ),
-  buttonTheme: ButtonThemeData(buttonColor: primaryColor),
+  buttonTheme: const ButtonThemeData(buttonColor: primaryColor),
 );
 
 bool isPC(final BuildContext context) {

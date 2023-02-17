@@ -15,20 +15,18 @@ class SpecificVars implements HasuraVars {
 
   String? faultMessage;
   @override
-  Map<String, dynamic> toHasuraVars() {
-    return <String, dynamic>{
-      "team_id": team?.id,
-      "drivetrain_and_driving": drivetrainAndDriving,
-      "intake": intake,
-      "placement": placement,
-      "defense": defense,
-      "general_notes": generalNotes,
-      "is_rematch": isRematch,
-      "schedule_match_id": scheduleMatch?.id,
-      "scouter_name": name,
-      if (faultMessage != null) "fault_message": faultMessage
-    };
-  }
+  Map<String, dynamic> toHasuraVars() => <String, dynamic>{
+        "team_id": team?.id,
+        "drivetrain_and_driving": drivetrainAndDriving,
+        "intake": intake,
+        "placement": placement,
+        "defense": defense,
+        "general_notes": generalNotes,
+        "is_rematch": isRematch,
+        "schedule_match_id": scheduleMatch?.id,
+        "scouter_name": name,
+        if (faultMessage != null) "fault_message": faultMessage
+      };
 
   void reset() {
     isRematch = false;

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import "dart:convert";
 import "dart:io";
 
@@ -50,12 +52,11 @@ void main(final List<String> args) async {
   print(await sendTeams(teams as List<dynamic>, getClient(env)));
 }
 
-Future<http.Response> fetchTeamsFromTba(final String event, final DotEnv env) {
-  return http.get(
-    Uri.parse("https://thebluealliance.com/api/v3/event/$event/teams"),
-    headers: <String, String>{"X-TBA-Auth-Key": env["TBA_API_KEY"]!},
-  );
-}
+Future<http.Response> fetchTeamsFromTba(final String event, final DotEnv env) =>
+    http.get(
+      Uri.parse("https://thebluealliance.com/api/v3/event/$event/teams"),
+      headers: <String, String>{"X-TBA-Auth-Key": env["TBA_API_KEY"]!},
+    );
 
 const String mutation = r"""
 mutation InsertTeams($teams: [team_insert_input!]!) {

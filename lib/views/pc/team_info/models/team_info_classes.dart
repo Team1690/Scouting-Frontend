@@ -150,9 +150,7 @@ class MatchIdentifier {
   int get hashCode => Object.hash(type, number, isRematch);
 
   @override
-  String toString() {
-    return "${isRematch ? "R" : ""}${shortenType(type)}$number";
-  }
+  String toString() => "${isRematch ? "R" : ""}${shortenType(type)}$number";
 
   static String shortenType(final String matchType) {
     switch (matchType) {

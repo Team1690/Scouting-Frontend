@@ -29,44 +29,46 @@ Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
   final I Function(dynamic) parseI,
   final V Function(dynamic) parseV,
   final List<V> Function(I identifier, List<V> currentValues) getMissing,
-) {
-  return getClient()
-      .subscribe(
-    SubscriptionOptions<List<StatusItem<I, V>>>(
-      document: gql(subscription),
-      parserFn: (final Map<String, dynamic> data) {
-        final List<dynamic> matches =
-            data[isSpecific ? "_2023_specific" : "_2023_technical_match"]
-                as List<dynamic>;
-        final Map<I, List<dynamic>> identifierToMatch = matches.groupListsBy(
-          parseI,
+) =>
+    getClient()
+        .subscribe(
+          SubscriptionOptions<List<StatusItem<I, V>>>(
+            document: gql(subscription),
+            parserFn: (final Map<String, dynamic> data) {
+              final List<dynamic> matches =
+                  data[isSpecific ? "_2023_specific" : "_2023_technical_match"]
+                      as List<dynamic>;
+              final Map<I, List<dynamic>> identifierToMatch =
+                  matches.groupListsBy(
+                parseI,
+              );
+              return identifierToMatch
+                  .map(
+                    (final I key, final List<dynamic> value) =>
+                        MapEntry<I, List<V>>(
+                      key,
+                      value.map(parseV).toList(),
+                    ),
+                  )
+                  .entries
+                  .map<StatusItem<I, V>>(
+                    (final MapEntry<I, List<V>> statusCard) => StatusItem<I, V>(
+                      missingValues: getMissing(
+                        statusCard.key,
+                        statusCard.value,
+                      ),
+                      values: statusCard.value,
+                      identifier: statusCard.key,
+                    ),
+                  )
+                  .toList();
+            },
+          ),
+        )
+        .map(
+          (final QueryResult<List<StatusItem<I, V>>> event) =>
+              event.mapQueryResult(),
         );
-        return identifierToMatch
-            .map(
-              (final I key, final List<dynamic> value) => MapEntry<I, List<V>>(
-                key,
-                value.map(parseV).toList(),
-              ),
-            )
-            .entries
-            .map<StatusItem<I, V>>(
-              (final MapEntry<I, List<V>> statusCard) => StatusItem<I, V>(
-                missingValues: getMissing(
-                  statusCard.key,
-                  statusCard.value,
-                ),
-                values: statusCard.value,
-                identifier: statusCard.key,
-              ),
-            )
-            .toList();
-      },
-    ),
-  )
-      .map((final QueryResult<List<StatusItem<I, V>>> event) {
-    return event.mapQueryResult();
-  });
-}
 
 Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
   final bool isSpecific,

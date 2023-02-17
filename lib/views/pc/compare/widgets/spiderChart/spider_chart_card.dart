@@ -11,16 +11,14 @@ class SpiderChartCard extends StatelessWidget {
   final SplayTreeSet<LightTeam> teams;
   final SplayTreeSet<CompareTeam> data;
   @override
-  Widget build(final BuildContext context) {
-    return DashboardCard(
-      title: "Spiderchart",
-      body: Center(
-        child: teams.isEmpty
-            ? Container()
-            : CompareSpiderChart(
-                data,
-              ),
-      ),
-    );
-  }
+  Widget build(final BuildContext context) => DashboardCard(
+        title: "Spiderchart",
+        body: Center(
+          child: teams.isEmpty
+              ? Container()
+              : CompareSpiderChart(
+                  data,
+                ),
+        ),
+      );
 }

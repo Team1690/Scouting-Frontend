@@ -42,7 +42,7 @@ class Selector<T> extends StatelessWidget {
       isExpanded: true,
       value: value,
       elevation: 24,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         border: OutlineInputBorder(
           borderRadius: defaultBorderRadius,
         ),

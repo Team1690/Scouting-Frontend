@@ -29,7 +29,7 @@ class _UserInputState extends State<UserInput> {
             ? Colors.green
             : null;
 
-    Timer(Duration(milliseconds: 10), () {
+    Timer(const Duration(milliseconds: 10), () {
       setState(() {
         screenColor = null;
       });
@@ -82,7 +82,7 @@ class _UserInputState extends State<UserInput> {
         actions: <Widget>[
           RobotImageButton(teamId: () => match.scoutedTeam?.id),
           ToggleButtons(
-            children: <Icon>[Icon(Icons.lightbulb)],
+            children: const <Icon>[Icon(Icons.lightbulb)],
             isSelected: <bool>[toggleLightsState],
             onPressed: (final int i) {
               setState(() {
@@ -119,13 +119,13 @@ class _UserInputState extends State<UserInput> {
                       onChanged: (final String name) {
                         match.name = name;
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.person),
                         border: OutlineInputBorder(),
                         hintText: "Scouter name",
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     TeamAndMatchSelection(
@@ -139,16 +139,16 @@ class _UserInputState extends State<UserInput> {
                         });
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     ToggleButtons(
-                      fillColor: Color.fromARGB(10, 244, 67, 54),
+                      fillColor: const Color.fromARGB(10, 244, 67, 54),
                       selectedColor: Colors.red,
                       selectedBorderColor: Colors.red,
-                      children: <Widget>[
+                      children: const <Widget>[
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Text("Rematch"),
                         )
                       ],
@@ -159,7 +159,7 @@ class _UserInputState extends State<UserInput> {
                         });
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SectionDivider(label: "Autonomous"),
@@ -207,7 +207,7 @@ class _UserInputState extends State<UserInput> {
                               ]
                                   .expand(
                                     (final Widget element) => <Widget>[
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       element,
@@ -262,7 +262,7 @@ class _UserInputState extends State<UserInput> {
                               ]
                                   .expand(
                                     (final Widget element) => <Widget>[
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       element,
@@ -274,7 +274,7 @@ class _UserInputState extends State<UserInput> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -293,7 +293,7 @@ class _UserInputState extends State<UserInput> {
                         value: match.autoBalanceStatus,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SectionDivider(label: "Teleoperated"),
@@ -341,7 +341,7 @@ class _UserInputState extends State<UserInput> {
                               ]
                                   .expand(
                                     (final Widget element) => <Widget>[
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       element,
@@ -396,7 +396,7 @@ class _UserInputState extends State<UserInput> {
                               ]
                                   .expand(
                                     (final Widget element) => <Widget>[
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       element,
@@ -408,13 +408,16 @@ class _UserInputState extends State<UserInput> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SectionDivider(label: "Robot fault"),
                     Switcher(
-                      labels: <String>["Not on field", "Didn't work on field"],
-                      colors: <Color>[
+                      labels: const <String>[
+                        "Not on field",
+                        "Didn't work on field"
+                      ],
+                      colors: const <Color>[
                         Colors.red,
                         Color.fromARGB(255, 198, 29, 228)
                       ],
@@ -430,11 +433,11 @@ class _UserInputState extends State<UserInput> {
                           i.value: i.key
                       }[match.robotMatchStatusId]!,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SectionDivider(label: "Endgame Balance"),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -453,7 +456,7 @@ class _UserInputState extends State<UserInput> {
                         value: match.endgameBalanceStatus,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SubmitButton(
@@ -464,9 +467,7 @@ class _UserInputState extends State<UserInput> {
                           matchController.clear();
                         });
                       },
-                      validate: () {
-                        return formKey.currentState!.validate();
-                      },
+                      validate: () => formKey.currentState!.validate(),
                       vars: match,
                       mutation: mutation,
                     )
