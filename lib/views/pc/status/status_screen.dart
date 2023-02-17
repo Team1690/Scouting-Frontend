@@ -19,51 +19,52 @@ class _StatusScreenState extends State<StatusScreen> {
   bool isSpecific = false;
   bool isPreScouting = false;
   @override
-  Widget build(final BuildContext context) {
-    return DashboardScaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: DashboardCard(
-          titleWidgets: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: ToggleButtons(
-                children:
-                    <Widget>[Text("Technic"), Text("Specific"), Text("Pre")]
-                        .map(
-                          (final Widget text) => Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: text,
-                          ),
-                        )
-                        .toList(),
-                isSelected: <bool>[!isSpecific, isSpecific, isPreScouting],
-                onPressed: (final int pressedIndex) {
-                  if (pressedIndex == 0) {
-                    setState(() {
-                      isSpecific = false;
-                    });
-                  } else if (pressedIndex == 1) {
-                    setState(() {
-                      isSpecific = true;
-                    });
-                  } else if (pressedIndex == 2) {
-                    setState(() {
-                      isPreScouting = !isPreScouting;
-                    });
-                  }
-                },
+  Widget build(final BuildContext context) => DashboardScaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(defaultPadding),
+          child: DashboardCard(
+            titleWidgets: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: ToggleButtons(
+                  children: <Widget>[
+                    const Text("Technic"),
+                    const Text("Specific"),
+                    const Text("Pre")
+                  ]
+                      .map(
+                        (final Widget text) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: text,
+                        ),
+                      )
+                      .toList(),
+                  isSelected: <bool>[!isSpecific, isSpecific, isPreScouting],
+                  onPressed: (final int pressedIndex) {
+                    if (pressedIndex == 0) {
+                      setState(() {
+                        isSpecific = false;
+                      });
+                    } else if (pressedIndex == 1) {
+                      setState(() {
+                        isSpecific = true;
+                      });
+                    } else if (pressedIndex == 2) {
+                      setState(() {
+                        isPreScouting = !isPreScouting;
+                      });
+                    }
+                  },
+                ),
               ),
-            ),
-          ],
-          title: "",
-          body: isPreScouting
-              ? PreScoutingStatus(isSpecific)
-              : RegularStatus(isSpecific),
+            ],
+            title: "",
+            body: isPreScouting
+                ? PreScoutingStatus(isSpecific)
+                : RegularStatus(isSpecific),
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 class PreScoutingStatus extends StatelessWidget {
@@ -120,7 +121,7 @@ class PreScoutingStatus extends StatelessWidget {
                   statusItem.values.length == 4,
             );
           },
-          onWaiting: () => Center(
+          onWaiting: () => const Center(
             child: CircularProgressIndicator(),
           ),
         ),
@@ -165,12 +166,12 @@ class RegularStatus extends StatelessWidget {
                   Row(
                     children: <Widget>[
                       Text(
-                        style: TextStyle(color: Colors.blue),
+                        style: const TextStyle(color: Colors.blue),
                         "${statusItem.values.where((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.allianceColor == Colors.blue).map((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.points).fold<int>(0, (final int previousValue, final int currentValue) => previousValue + currentValue)}",
                       ),
-                      Text(" - "),
+                      const Text(" - "),
                       Text(
-                        style: TextStyle(color: Colors.red),
+                        style: const TextStyle(color: Colors.red),
                         "${statusItem.values.where((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.allianceColor == Colors.red).map((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.points).fold<int>(0, (final int sumUntilNow, final int currentValue) => sumUntilNow + currentValue)}",
                       )
                     ],
@@ -227,7 +228,7 @@ class RegularStatus extends StatelessWidget {
               ),
             validate: always2(true),
           ),
-          onWaiting: () => Center(
+          onWaiting: () => const Center(
             child: CircularProgressIndicator(),
           ),
         ),
@@ -271,68 +272,66 @@ class StatusList<T, V> extends StatelessWidget {
   final bool pushUnvalidatedToTheTop;
 
   @override
-  Widget build(final BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      primary: false,
-      child: Column(
-        children: items
-            .map(
-              (final StatusItem<T, V> statusItem) => Card(
-                color: validate(statusItem) ? bgColor : Colors.red,
-                elevation: 2,
-                margin: EdgeInsets.fromLTRB(
-                  5,
-                  0,
-                  5,
-                  defaultPadding,
-                ),
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(
+  Widget build(final BuildContext context) => SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        primary: false,
+        child: Column(
+          children: items
+              .map(
+                (final StatusItem<T, V> statusItem) => Card(
+                  color: validate(statusItem) ? bgColor : Colors.red,
+                  elevation: 2,
+                  margin: const EdgeInsets.fromLTRB(
+                    5,
+                    0,
+                    5,
                     defaultPadding,
-                    defaultPadding / 4,
-                    defaultPadding,
-                    defaultPadding / 4,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(
-                      defaultPadding / 2,
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(
+                      defaultPadding,
+                      defaultPadding / 4,
+                      defaultPadding,
+                      defaultPadding / 4,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        getTitle(statusItem),
-                        ...statusItem.values
-                            .map(
-                              (
-                                final V identifier,
-                              ) =>
-                                  StatusBox(
-                                child: getValueBox(identifier, statusItem),
-                                backgroundColor: validateSpecificValue(
-                                  identifier,
-                                  statusItem,
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                        defaultPadding / 2,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          getTitle(statusItem),
+                          ...statusItem.values
+                              .map(
+                                (
+                                  final V identifier,
+                                ) =>
+                                    StatusBox(
+                                  child: getValueBox(identifier, statusItem),
+                                  backgroundColor: validateSpecificValue(
+                                    identifier,
+                                    statusItem,
+                                  ),
                                 ),
+                              )
+                              .toList(),
+                          if (missingBuilder != null)
+                            ...statusItem.missingValues.map(
+                              (final V match) => StatusBox(
+                                child: missingBuilder!(match),
+                                backgroundColor: Colors.red,
                               ),
                             )
-                            .toList(),
-                        if (missingBuilder != null)
-                          ...statusItem.missingValues.map(
-                            (final V match) => StatusBox(
-                              child: missingBuilder!(match),
-                              backgroundColor: Colors.red,
-                            ),
-                          )
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )
-            .toList(),
-      ),
-    );
-  }
+              )
+              .toList(),
+        ),
+      );
 }
 
 class TextByTeam extends StatelessWidget {
@@ -340,12 +339,10 @@ class TextByTeam extends StatelessWidget {
   final StatusMatch match;
   final String text;
   @override
-  Widget build(final BuildContext context) {
-    return Text(
-      style: TextStyle(color: match.scoutedTeam.allianceColor),
-      text,
-    );
-  }
+  Widget build(final BuildContext context) => Text(
+        style: TextStyle(color: match.scoutedTeam.allianceColor),
+        text,
+      );
 }
 
 class StatusBox extends StatelessWidget {
@@ -353,24 +350,22 @@ class StatusBox extends StatelessWidget {
   final Widget child;
   final Color? backgroundColor;
   @override
-  Widget build(final BuildContext context) {
-    return Container(
-      width: 80,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(
-        defaultPadding / 3,
-      ),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        border: Border.all(
-          color: primaryWhite,
-          width: 1,
+  Widget build(final BuildContext context) => Container(
+        width: 80,
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(
+          defaultPadding / 3,
         ),
-        borderRadius: defaultBorderRadius / 2,
-      ),
-      child: child,
-    );
-  }
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          border: Border.all(
+            color: primaryWhite,
+            width: 1,
+          ),
+          borderRadius: defaultBorderRadius / 2,
+        ),
+        child: child,
+      );
 }
 
 class StatusLightTeam {

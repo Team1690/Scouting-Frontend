@@ -35,93 +35,88 @@ class CompareGamechartCard extends StatelessWidget {
               : Builder(
                   builder: (
                     final BuildContext context,
-                  ) {
-                    return CarouselWithIndicator(
-                      direction:
-                          isPC(context) ? Axis.horizontal : Axis.vertical,
-                      widgets: <Widget>[
-                        CompareLineChart(
-                          data
-                              .map(
-                                (final CompareTeam element) => element.points,
-                              )
-                              .toList(),
-                          colors,
-                          "Points",
-                        ),
-                        CompareLineChart(
-                          data
-                              .map(
-                                (final CompareTeam element) =>
-                                    element.gamepieces,
-                              )
-                              .toList(),
-                          colors,
-                          "Total Gamepieces",
-                        ),
-                        CompareLineChart(
-                          data
-                              .map(
-                                (final CompareTeam element) =>
-                                    element.autoGamepieces,
-                              )
-                              .toList(),
-                          colors,
-                          "Auto Gamepieces",
-                        ),
-                        CompareLineChart(
-                          data
-                              .map(
-                                (final CompareTeam element) =>
-                                    element.teleGamepieces,
-                              )
-                              .toList(),
-                          colors,
-                          "Teleop Gamepieces",
-                        ),
-                        CompareLineChart(
-                          data
-                              .map(
-                                (final CompareTeam element) =>
-                                    element.totalCones,
-                              )
-                              .toList(),
-                          colors,
-                          "Total Cones",
-                        ),
-                        CompareLineChart(
-                          data
-                              .map(
-                                (final CompareTeam element) =>
-                                    element.totalCubes,
-                              )
-                              .toList(),
-                          colors,
-                          "Total Cubes",
-                        ),
-                        CompareClimbLineChart(
-                          data
-                              .map(
-                                (final CompareTeam element) =>
-                                    element.autoBalanceVals,
-                              )
-                              .toList(),
-                          colors,
-                          "Auto Balance Values",
-                        ),
-                        CompareClimbLineChart(
-                          data
-                              .map(
-                                (final CompareTeam element) =>
-                                    element.endgameBalanceVals,
-                              )
-                              .toList(),
-                          colors,
-                          "Endgame Balance Values",
-                        ),
-                      ],
-                    );
-                  },
+                  ) =>
+                      CarouselWithIndicator(
+                    direction: isPC(context) ? Axis.horizontal : Axis.vertical,
+                    widgets: <Widget>[
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) => element.points,
+                            )
+                            .toList(),
+                        colors,
+                        "Points",
+                      ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) => element.gamepieces,
+                            )
+                            .toList(),
+                        colors,
+                        "Total Gamepieces",
+                      ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) =>
+                                  element.autoGamepieces,
+                            )
+                            .toList(),
+                        colors,
+                        "Auto Gamepieces",
+                      ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) =>
+                                  element.teleGamepieces,
+                            )
+                            .toList(),
+                        colors,
+                        "Teleop Gamepieces",
+                      ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) => element.totalCones,
+                            )
+                            .toList(),
+                        colors,
+                        "Total Cones",
+                      ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) => element.totalCubes,
+                            )
+                            .toList(),
+                        colors,
+                        "Total Cubes",
+                      ),
+                      CompareClimbLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) =>
+                                  element.autoBalanceVals,
+                            )
+                            .toList(),
+                        colors,
+                        "Auto Balance Values",
+                      ),
+                      CompareClimbLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) =>
+                                  element.endgameBalanceVals,
+                            )
+                            .toList(),
+                        colors,
+                        "Endgame Balance Values",
+                      ),
+                    ],
+                  ),
                 ),
     );
   }

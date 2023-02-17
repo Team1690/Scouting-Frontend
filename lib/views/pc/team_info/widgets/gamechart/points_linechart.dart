@@ -10,7 +10,7 @@ class PointsLineChart extends StatelessWidget {
   Widget build(final BuildContext context) => Stack(
         children: <Widget>[
           Align(
-            alignment: Alignment(-1, -1),
+            alignment: Alignment.topLeft,
             child: Text(
               data.title,
             ),
@@ -26,7 +26,7 @@ class PointsLineChart extends StatelessWidget {
               sideTitlesInterval: 10,
               showShadow: true,
               gameNumbers: data.gameNumbers,
-              inputedColors: <Color>[
+              inputedColors: const <Color>[
                 Colors.green,
               ],
               distanceFromHighest: 20,

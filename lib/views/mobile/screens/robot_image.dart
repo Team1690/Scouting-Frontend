@@ -11,7 +11,7 @@ class RobotImage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text("Robot image"),
+          title: const Text("Robot image"),
           centerTitle: true,
         ),
         body: StreamBuilder<QueryResult<Widget>>(
@@ -24,14 +24,12 @@ class RobotImage extends StatelessWidget {
               return Text(snapshot.error.toString());
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }
             return snapshot.data.mapNullable(
-                  (final QueryResult<Widget> event) {
-                    return event.mapQueryResult();
-                  },
+                  (final QueryResult<Widget> event) => event.mapQueryResult(),
                 ) ??
                 (throw Exception("No data"));
           },
@@ -59,41 +57,41 @@ class RobotImageButton extends StatelessWidget {
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 backgroundColor: Colors.red,
                 content: Text("Cant show photo of team without team selected"),
               ),
             );
           }
         },
-        icon: Icon(Icons.camera_alt),
+        icon: const Icon(Icons.camera_alt),
       );
 }
 
-Stream<QueryResult<Widget>> fetchRobotImageUrl(final int teamId) {
-  return getClient().subscribe(
-    SubscriptionOptions<Widget>(
-      variables: <String, dynamic>{"id": teamId},
-      parserFn: (final Map<String, dynamic> p0) {
-        final Map<String, dynamic>? pit =
-            p0["team_by_pk"]["pit"] as Map<String, dynamic>?;
-        return pit.mapNullable(
-              (final Map<String, dynamic> p0) => Center(
-                child: CachedNetworkImage(
-                  progressIndicatorBuilder: (final _, final __, final ___) =>
-                      CircularProgressIndicator(),
-                  imageUrl: p0["url"] as String,
+Stream<QueryResult<Widget>> fetchRobotImageUrl(final int teamId) =>
+    getClient().subscribe(
+      SubscriptionOptions<Widget>(
+        variables: <String, dynamic>{"id": teamId},
+        parserFn: (final Map<String, dynamic> p0) {
+          final Map<String, dynamic>? pit =
+              p0["team_by_pk"]["pit"] as Map<String, dynamic>?;
+          return pit.mapNullable(
+                (final Map<String, dynamic> p0) => Center(
+                  child: CachedNetworkImage(
+                    progressIndicatorBuilder: (final _, final __, final ___) =>
+                        const CircularProgressIndicator(),
+                    imageUrl: p0["url"] as String,
+                  ),
                 ),
-              ),
-            ) ??
-            Center(
-              child: Text(
-                "No pit entry for this team",
-              ),
-            );
-      },
-      document: gql(
-        r"""
+              ) ??
+              const Center(
+                child: Text(
+                  "No pit entry for this team",
+                ),
+              );
+        },
+        document: gql(
+          r"""
 query RobotImage($id: Int!) {
   team_by_pk(id: $id) {
     pit {
@@ -104,7 +102,6 @@ query RobotImage($id: Int!) {
 
 
 """,
+        ),
       ),
-    ),
-  );
-}
+    );

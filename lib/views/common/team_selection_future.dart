@@ -18,7 +18,7 @@ class TeamSelectionFuture extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     if (TeamProvider.of(context).teams.isEmpty) {
-      return Text("No teams available :(");
+      return const Text("No teams available :(");
     } else {
       return TeamsSearchBox(
         buildSuggestion: (final LightTeam p0) => "${p0.number} ${p0.name}",

@@ -15,67 +15,65 @@ class DashboardScaffold extends StatelessWidget {
   final Widget body;
 
   @override
-  Widget build(final BuildContext context) {
-    return RawKeyboardListener(
-      autofocus: true,
-      focusNode: FocusNode(),
-      onKey: (final RawKeyEvent event) {
-        keyboardShortcut<TeamInfoScreen>(
-          context,
-          event,
-          TeamInfoScreen(),
-          (final RawKeyEvent event) =>
-              event.isControlPressed &&
-              event.physicalKey == PhysicalKeyboardKey.keyM &&
-              event.runtimeType == RawKeyDownEvent,
-        );
+  Widget build(final BuildContext context) => RawKeyboardListener(
+        autofocus: true,
+        focusNode: FocusNode(),
+        onKey: (final RawKeyEvent event) {
+          keyboardShortcut<TeamInfoScreen>(
+            context,
+            event,
+            TeamInfoScreen(),
+            (final RawKeyEvent event) =>
+                event.isControlPressed &&
+                event.physicalKey == PhysicalKeyboardKey.keyM &&
+                event.runtimeType == RawKeyDownEvent,
+          );
 
-        keyboardShortcut<PickListScreen>(
-          context,
-          event,
-          PickListScreen(),
-          (final RawKeyEvent event) =>
-              event.isControlPressed &&
-              event.physicalKey == PhysicalKeyboardKey.comma &&
-              event.runtimeType == RawKeyDownEvent,
-        );
+          keyboardShortcut<PickListScreen>(
+            context,
+            event,
+            PickListScreen(),
+            (final RawKeyEvent event) =>
+                event.isControlPressed &&
+                event.physicalKey == PhysicalKeyboardKey.comma &&
+                event.runtimeType == RawKeyDownEvent,
+          );
 
-        keyboardShortcut<CompareScreen>(
-          context,
-          event,
-          CompareScreen(),
-          (final RawKeyEvent event) =>
-              event.isControlPressed &&
-              event.physicalKey == PhysicalKeyboardKey.period &&
-              event.runtimeType == RawKeyDownEvent,
-        );
+          keyboardShortcut<CompareScreen>(
+            context,
+            event,
+            CompareScreen(),
+            (final RawKeyEvent event) =>
+                event.isControlPressed &&
+                event.physicalKey == PhysicalKeyboardKey.period &&
+                event.runtimeType == RawKeyDownEvent,
+          );
 
-        keyboardShortcut<ScattersScreen>(
-          context,
-          event,
-          ScattersScreen(),
-          (final RawKeyEvent event) =>
-              event.isControlPressed &&
-              event.physicalKey == PhysicalKeyboardKey.slash &&
-              event.runtimeType == RawKeyDownEvent,
-        );
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        // appBar: AppBar(title: Text('Orbit Scouting')),
-        body: SafeArea(
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: NavigationTab(),
-              ),
-              Expanded(flex: 5, child: body)
-            ],
+          keyboardShortcut<ScattersScreen>(
+            context,
+            event,
+            ScattersScreen(),
+            (final RawKeyEvent event) =>
+                event.isControlPressed &&
+                event.physicalKey == PhysicalKeyboardKey.slash &&
+                event.runtimeType == RawKeyDownEvent,
+          );
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          // appBar: AppBar(title: Text('Orbit Scouting')),
+          body: SafeArea(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: NavigationTab(),
+                ),
+                Expanded(flex: 5, child: body)
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 void keyboardShortcut<E extends Widget>(

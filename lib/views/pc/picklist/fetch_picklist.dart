@@ -9,7 +9,7 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 
 Stream<List<PickListTeam>> fetchPicklist() {
   final GraphQLClient client = getClient();
-  final String query = """
+  const String query = """
  subscription My {
   team {
     colors_index

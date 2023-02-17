@@ -27,84 +27,82 @@ class Counter extends StatelessWidget {
 
   final int count;
   @override
-  Widget build(final BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Spacer(),
-            Expanded(
-              child: Icon(
-                icon,
-                color: Colors.blue,
-                size: 30,
-                semanticLabel: "Text to announce in accessibility modes",
+  Widget build(final BuildContext context) => Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              const Spacer(),
+              Expanded(
+                child: Icon(
+                  icon,
+                  color: Colors.blue,
+                  size: 30,
+                  semanticLabel: "Text to announce in accessibility modes",
+                ),
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: FittedBox(
-                fit: BoxFit.fitWidth,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    textScaleFactor: 1.5,
-                    textAlign: TextAlign.center,
+              Expanded(
+                flex: 2,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      textScaleFactor: 1.5,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Spacer(
-              flex: 2,
-            )
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Spacer(),
-              Expanded(
-                flex: 6,
-                child: RoundedIconButton(
-                  color: minus,
-                  icon: Icons.remove,
-                  onPress: () => onChange(max(lowerLimit, count - stepValue)),
-                  onLongPress: () =>
-                      onChange(max(lowerLimit, count - longPressedValue)),
-                ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Text(
-                  "$count",
-                  style: TextStyle(fontSize: 40),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                flex: 6,
-                child: RoundedIconButton(
-                  color: plus,
-                  icon: Icons.add,
-                  onPress: () {
-                    onChange(min(upperLimit, count + stepValue));
-                  },
-                  onLongPress: () {
-                    onChange(min(upperLimit, count + longPressedValue));
-                  },
-                ),
-              ),
-              Spacer(),
+              const Spacer(
+                flex: 2,
+              )
             ],
           ),
-        ),
-      ],
-    );
-  }
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                const Spacer(),
+                Expanded(
+                  flex: 6,
+                  child: RoundedIconButton(
+                    color: minus,
+                    icon: Icons.remove,
+                    onPress: () => onChange(max(lowerLimit, count - stepValue)),
+                    onLongPress: () =>
+                        onChange(max(lowerLimit, count - longPressedValue)),
+                  ),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Text(
+                    "$count",
+                    style: const TextStyle(fontSize: 40),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Expanded(
+                  flex: 6,
+                  child: RoundedIconButton(
+                    color: plus,
+                    icon: Icons.add,
+                    onPress: () {
+                      onChange(min(upperLimit, count + stepValue));
+                    },
+                    onLongPress: () {
+                      onChange(min(upperLimit, count + longPressedValue));
+                    },
+                  ),
+                ),
+                const Spacer(),
+              ],
+            ),
+          ),
+        ],
+      );
 }
 
 class RoundedIconButton extends StatelessWidget {
@@ -121,22 +119,20 @@ class RoundedIconButton extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(final BuildContext context) {
-    return RawMaterialButton(
-      elevation: 6.0,
-      onPressed: onPress,
-      onLongPress: onLongPress,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      fillColor: color,
-      child: Icon(
-        icon,
-        color: Colors.white,
-        size: 40,
-      ),
-    );
-  }
+  Widget build(final BuildContext context) => RawMaterialButton(
+        elevation: 6.0,
+        onPressed: onPress,
+        onLongPress: onLongPress,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        fillColor: color,
+        child: Icon(
+          icon,
+          color: Colors.white,
+          size: 40,
+        ),
+      );
 }
 
 class CounterSpec {

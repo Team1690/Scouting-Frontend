@@ -38,13 +38,12 @@ class LightTeam {
   final int colorsIndex;
 
   @override
-  bool operator ==(final Object other) {
-    return other is LightTeam &&
-        other.name == name &&
-        other.id == id &&
-        other.number == number &&
-        other.colorsIndex == colorsIndex;
-  }
+  bool operator ==(final Object other) =>
+      other is LightTeam &&
+      other.name == name &&
+      other.id == id &&
+      other.number == number &&
+      other.colorsIndex == colorsIndex;
 }
 
 const Map<int, Color> _teamNumberToColor = <int, Color>{

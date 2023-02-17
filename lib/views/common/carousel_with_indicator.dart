@@ -9,9 +9,7 @@ class CarouselWithIndicator extends StatefulWidget {
     this.enableInfininteScroll = true,
   });
   @override
-  State<StatefulWidget> createState() {
-    return _CarouselWithIndicatorState();
-  }
+  State<StatefulWidget> createState() => _CarouselWithIndicatorState();
 
   final bool enableInfininteScroll;
   final int initialPage;
@@ -24,54 +22,55 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
   final CarouselController _controller = CarouselController();
 
   @override
-  Widget build(final BuildContext context) {
-    return Flex(
-      direction:
-          widget.direction == Axis.vertical ? Axis.horizontal : Axis.vertical,
-      children: <Widget>[
-        Expanded(
-          child: CarouselSlider(
-            items: widget.widgets,
-            carouselController: _controller,
-            options: CarouselOptions(
-              enableInfiniteScroll: widget.enableInfininteScroll,
-              initialPage: widget.initialPage,
-              scrollDirection: widget.direction,
-              height: 3500,
-              aspectRatio: 2.0,
-              viewportFraction: 1,
-              onPageChanged:
-                  (final int index, final CarouselPageChangedReason reason) {
-                setState(() {
-                  _current = index;
-                });
-              },
-            ),
-          ),
-        ),
-        Flex(
-          direction: widget.direction,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List<Widget>.generate(
-            widget.widgets.length,
-            (final int index) => GestureDetector(
-              onTap: () => _controller.animateToPage(index),
-              child: Container(
-                width: 12.0,
-                height: 12.0,
-                margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.black)
-                      .withOpacity(_current == index ? 0.9 : 0.4),
-                ),
+  Widget build(final BuildContext context) => Flex(
+        direction:
+            widget.direction == Axis.vertical ? Axis.horizontal : Axis.vertical,
+        children: <Widget>[
+          Expanded(
+            child: CarouselSlider(
+              items: widget.widgets,
+              carouselController: _controller,
+              options: CarouselOptions(
+                enableInfiniteScroll: widget.enableInfininteScroll,
+                initialPage: widget.initialPage,
+                scrollDirection: widget.direction,
+                height: 3500,
+                aspectRatio: 2.0,
+                viewportFraction: 1,
+                onPageChanged:
+                    (final int index, final CarouselPageChangedReason reason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
               ),
             ),
-          ).toList(),
-        ),
-      ],
-    );
-  }
+          ),
+          Flex(
+            direction: widget.direction,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List<Widget>.generate(
+              widget.widgets.length,
+              (final int index) => GestureDetector(
+                onTap: () => _controller.animateToPage(index),
+                child: Container(
+                  width: 12.0,
+                  height: 12.0,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 4.0,
+                    horizontal: 4.0,
+                  ),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black)
+                        .withOpacity(_current == index ? 0.9 : 0.4),
+                  ),
+                ),
+              ),
+            ).toList(),
+          ),
+        ],
+      );
 }

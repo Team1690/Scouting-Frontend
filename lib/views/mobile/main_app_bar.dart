@@ -5,20 +5,18 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => AppBar().preferredSize;
 
   @override
-  Widget build(final BuildContext context) {
-    return AppBar(
-      elevation: 5,
-      title: Row(
-        children: <Widget>[
-          Expanded(
-            child: const Text(
-              "Orbit Scouting",
-              textAlign: TextAlign.center,
+  Widget build(final BuildContext context) => AppBar(
+        elevation: 5,
+        title: Row(
+          children: const <Widget>[
+            Expanded(
+              child: Text(
+                "Orbit Scouting",
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-          SizedBox(width: 30),
-        ],
-      ),
-    );
-  }
+            SizedBox(width: 30),
+          ],
+        ),
+      );
 }

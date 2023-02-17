@@ -13,33 +13,31 @@ class DashboardCard extends StatelessWidget {
   final List<Widget> titleWidgets;
 
   @override
-  Widget build(final BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: secondaryColor,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  title,
-                  // style: TextStyle(fontSize: 10),
-                ),
-                ...titleWidgets
-              ],
-            ),
-            SizedBox(
-              height: defaultPadding,
-            ),
-            Expanded(child: body),
-          ],
+  Widget build(final BuildContext context) => Container(
+        decoration: const BoxDecoration(
+          color: secondaryColor,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-      ),
-    );
-  }
+        child: Padding(
+          padding: const EdgeInsets.all(defaultPadding),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    title,
+                    // style: TextStyle(fontSize: 10),
+                  ),
+                  ...titleWidgets
+                ],
+              ),
+              const SizedBox(
+                height: defaultPadding,
+              ),
+              Expanded(child: body),
+            ],
+          ),
+        ),
+      );
 }

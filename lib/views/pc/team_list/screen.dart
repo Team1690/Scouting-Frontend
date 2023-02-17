@@ -29,7 +29,7 @@ class TeamList extends StatelessWidget {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
@@ -82,7 +82,7 @@ class TeamList extends StatelessWidget {
                                 sortColumnIndex: sortedColumn,
                                 sortAscending: isAscending,
                                 columns: <DataColumn>[
-                                  DataColumn(
+                                  const DataColumn(
                                     label: Text("Team number"),
                                     numeric: true,
                                   ),
@@ -148,7 +148,7 @@ class TeamList extends StatelessWidget {
                                               Expanded(
                                                 child: Text(
                                                   team.team.number.toString(),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     color: Colors.white,
                                                   ),
                                                 ),
@@ -231,130 +231,124 @@ class _Team {
   final int matchesBalanced;
 }
 
-Stream<List<_Team>> _fetchTeamList() {
-  return getClient()
-      .subscribe(
-        SubscriptionOptions<List<_Team>>(
-          document: gql(query),
-          parserFn: (final Map<String, dynamic> data) {
-            final List<dynamic> teams = data["team"] as List<dynamic>;
-            return teams.map<_Team>((final dynamic team) {
-              final List<int> autoBalancePoints =
-                  (team["technical_matches_aggregate"]["nodes"]
-                          as List<dynamic>)
-                      .where(
-                        (final dynamic node) =>
-                            node["auto_balance"]["title"] != "No attempt",
-                      )
-                      .map(
-                        (final dynamic node) =>
-                            node["auto_balance"]["auto_points"] as int,
-                      )
-                      .toList();
-              final List<int> endgameBalancePoints =
-                  (team["technical_matches_aggregate"]["nodes"]
-                          as List<dynamic>)
-                      .where(
-                        (final dynamic node) =>
-                            node["endgame_balance"]["title"] != "No attempt",
-                      )
-                      .map(
-                        (final dynamic node) =>
-                            node["endgame_balance"]["endgame_points"] as int,
-                      )
-                      .toList();
-              final List<RobotMatchStatus> robotMatchStatuses =
-                  (team["technical_matches_aggregate"]["nodes"]
-                          as List<dynamic>)
-                      .map(
-                        (final dynamic node) => titleToEnum(
-                          node["robot_match_status"]["title"] as String,
-                        ),
-                      )
-                      .toList();
-              final List<String> autoBalance =
-                  (team["technical_matches_aggregate"]["nodes"]
-                          as List<dynamic>)
-                      .map(
-                        (final dynamic node) =>
-                            node["auto_balance"]["title"] as String,
-                      )
-                      .where((final String title) => title != "No attempt")
-                      .toList();
-              final double autoBalancePercentage = (autoBalance
-                          .where(
-                            (final String title) => title != "Failed",
-                          )
-                          .length /
-                      autoBalance.length) *
-                  100;
-              final dynamic avg =
-                  team["technical_matches_aggregate"]["aggregate"]["avg"];
-              final double gamepiecePointsAvg = avg["auto_cones_top"] == null
-                  ? double.nan
-                  : getPoints(parseMatch(avg));
-              final double autoGamepieceAvg = avg["auto_cones_top"] == null
-                  ? double.nan
-                  : getPieces(
-                      parseByMode(
-                        MatchMode.auto,
-                        avg,
+Stream<List<_Team>> _fetchTeamList() => getClient()
+    .subscribe(
+      SubscriptionOptions<List<_Team>>(
+        document: gql(query),
+        parserFn: (final Map<String, dynamic> data) {
+          final List<dynamic> teams = data["team"] as List<dynamic>;
+          return teams.map<_Team>((final dynamic team) {
+            final List<int> autoBalancePoints =
+                (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+                    .where(
+                      (final dynamic node) =>
+                          node["auto_balance"]["title"] != "No attempt",
+                    )
+                    .map(
+                      (final dynamic node) =>
+                          node["auto_balance"]["auto_points"] as int,
+                    )
+                    .toList();
+            final List<int> endgameBalancePoints =
+                (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+                    .where(
+                      (final dynamic node) =>
+                          node["endgame_balance"]["title"] != "No attempt",
+                    )
+                    .map(
+                      (final dynamic node) =>
+                          node["endgame_balance"]["endgame_points"] as int,
+                    )
+                    .toList();
+            final List<RobotMatchStatus> robotMatchStatuses =
+                (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+                    .map(
+                      (final dynamic node) => titleToEnum(
+                        node["robot_match_status"]["title"] as String,
                       ),
-                    );
-              final double teleGamepieceAvg = avg["auto_cones_top"] == null
-                  ? double.nan
-                  : getPieces(
-                      parseByMode(
-                        MatchMode.tele,
-                        avg,
-                      ),
-                    );
-              final double gamepieceSum = avg["auto_cones_top"] == null
-                  ? double.nan
-                  : getPieces(parseMatch(avg));
-              final double autoBalancePointAvg =
-                  autoBalancePoints.averageOrNull ?? double.nan;
-              final double endgameBalancePointAvg =
-                  endgameBalancePoints.averageOrNull ?? double.nan;
-              endgameBalancePoints.averageOrNull ?? double.nan;
-              return _Team(
-                amountOfMatches: (team["technical_matches_aggregate"]["nodes"]
-                        as List<dynamic>)
-                    .length,
-                matchesBalanced: (team["technical_matches_aggregate"]["nodes"]
-                        as List<dynamic>)
+                    )
+                    .toList();
+            final List<String> autoBalance =
+                (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
                     .map(
                       (final dynamic node) =>
                           node["auto_balance"]["title"] as String,
                     )
-                    .where(
-                      (final String title) =>
-                          title != "No attempt" && title != "Failed",
-                    )
-                    .length,
-                autoBalancePercentage: autoBalancePercentage,
-                brokenMatches: robotMatchStatuses
-                    .where(
-                      (final RobotMatchStatus robotMatchStatus) =>
-                          robotMatchStatus != RobotMatchStatus.worked,
-                    )
-                    .length,
-                autoGamepieceAvg: autoGamepieceAvg,
-                teleGamepieceAvg: teleGamepieceAvg,
-                gamepieceAvg: gamepieceSum,
-                gamepiecePointAvg: gamepiecePointsAvg,
-                team: LightTeam.fromJson(team),
-                autoBalancePointsAvg: autoBalancePointAvg,
-                endgameBalancePointsAvg: endgameBalancePointAvg,
-              );
-            }).toList();
-          },
-        ),
-      )
-      .map(
-        (final QueryResult<List<_Team>> event) => event.mapQueryResult(),
-      );
-}
+                    .where((final String title) => title != "No attempt")
+                    .toList();
+            final double autoBalancePercentage = (autoBalance
+                        .where(
+                          (final String title) => title != "Failed",
+                        )
+                        .length /
+                    autoBalance.length) *
+                100;
+            final dynamic avg =
+                team["technical_matches_aggregate"]["aggregate"]["avg"];
+            final double gamepiecePointsAvg = avg["auto_cones_top"] == null
+                ? double.nan
+                : getPoints(parseMatch(avg));
+            final double autoGamepieceAvg = avg["auto_cones_top"] == null
+                ? double.nan
+                : getPieces(
+                    parseByMode(
+                      MatchMode.auto,
+                      avg,
+                    ),
+                  );
+            final double teleGamepieceAvg = avg["auto_cones_top"] == null
+                ? double.nan
+                : getPieces(
+                    parseByMode(
+                      MatchMode.tele,
+                      avg,
+                    ),
+                  );
+            final double gamepieceSum = avg["auto_cones_top"] == null
+                ? double.nan
+                : getPieces(parseMatch(avg));
+            final double autoBalancePointAvg =
+                autoBalancePoints.averageOrNull ?? double.nan;
+            final double endgameBalancePointAvg =
+                endgameBalancePoints.averageOrNull ?? double.nan;
+            endgameBalancePoints.averageOrNull ?? double.nan;
+            return _Team(
+              amountOfMatches: (team["technical_matches_aggregate"]["nodes"]
+                      as List<dynamic>)
+                  .length,
+              matchesBalanced: (team["technical_matches_aggregate"]["nodes"]
+                      as List<dynamic>)
+                  .map(
+                    (final dynamic node) =>
+                        node["auto_balance"]["title"] as String,
+                  )
+                  .where(
+                    (final String title) =>
+                        title != "No attempt" && title != "Failed",
+                  )
+                  .length,
+              autoBalancePercentage: autoBalancePercentage,
+              brokenMatches: robotMatchStatuses
+                  .where(
+                    (final RobotMatchStatus robotMatchStatus) =>
+                        robotMatchStatus != RobotMatchStatus.worked,
+                  )
+                  .length,
+              autoGamepieceAvg: autoGamepieceAvg,
+              teleGamepieceAvg: teleGamepieceAvg,
+              gamepieceAvg: gamepieceSum,
+              gamepiecePointAvg: gamepiecePointsAvg,
+              team: LightTeam.fromJson(team),
+              autoBalancePointsAvg: autoBalancePointAvg,
+              endgameBalancePointsAvg: endgameBalancePointAvg,
+            );
+          }).toList();
+        },
+      ),
+    )
+    .map(
+      (final QueryResult<List<_Team>> event) => event.mapQueryResult(),
+    );
 
 const String query = """
 subscription MySubscription {

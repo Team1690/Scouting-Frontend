@@ -30,110 +30,104 @@ class _BaseLineChart extends StatelessWidget {
   final SideTitles rightTitles;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
   @override
-  Widget build(final BuildContext context) {
-    return LineChart(
-      LineChartData(
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            fitInsideVertically: true,
-            fitInsideHorizontally: true,
-            getTooltipItems: getToolipItems,
-            tooltipPadding: EdgeInsets.all(8),
-          ),
-        ),
-        lineBarsData: List<LineChartBarData>.generate(
-          dataSet.length,
-          (final int index) => LineChartBarData(
-            isCurved: false,
-            color: inputedColors[index],
-            barWidth: 2,
-            isStrokeCapRound: true,
-            dotData: FlDotData(
-              show: true,
-              getDotPainter: (
-                final FlSpot spot,
-                final double d,
-                final LineChartBarData a,
-                final int v,
-              ) =>
-                  FlDotCirclePainter(
-                strokeWidth: 4,
-                radius: 6,
-                color: secondaryColor,
-                strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
-                        RobotMatchStatus.didntComeToField
-                    ? Colors.red
-                    : Colors.purple,
-              ),
-              checkToShowDot:
-                  (final FlSpot spot, final LineChartBarData data) =>
-                      robotMatchStatuses[index][spot.x.toInt()] ==
-                          RobotMatchStatus.didntComeToField ||
-                      robotMatchStatuses[index][spot.x.toInt()] ==
-                          RobotMatchStatus.didntWorkOnField,
-            ),
-            belowBarData: BarAreaData(
-              show: true,
-              color: inputedColors[index].withOpacity(showShadow ? 0.3 : 0),
-            ),
-            spots: List<FlSpot>.generate(
-              dataSet[index].length,
-              (final int inner) => FlSpot(
-                inner.toDouble(),
-                dataSet[index][inner].toDouble(),
-              ),
+  Widget build(final BuildContext context) => LineChart(
+        LineChartData(
+          lineTouchData: LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              fitInsideVertically: true,
+              fitInsideHorizontally: true,
+              getTooltipItems: getToolipItems,
+              tooltipPadding: const EdgeInsets.all(8),
             ),
           ),
-        ),
-        gridData: FlGridData(
-          verticalInterval: 1,
-          horizontalInterval: 1,
-          show: true,
-          drawVerticalLine: true,
-          getDrawingHorizontalLine: (final double value) {
-            return FlLine(
-              color: const Color(0xff37434d),
-              strokeWidth: 1,
-            );
-          },
-          getDrawingVerticalLine: (final double value) {
-            return FlLine(
-              color: const Color(0xff37434d),
-              strokeWidth: 1,
-            );
-          },
-        ),
-        titlesData: FlTitlesData(
-          show: true,
-          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: AxisTitles(sideTitles: rightTitles),
-          topTitles: AxisTitles(
-            sideTitles: SideTitles(
-              reservedSize: 20,
-              getTitlesWidget:
-                  (final double value, final TitleMeta titleMeta) => Text(
-                gameNumbers[value.toInt()].toString(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: isPC(context) ? 12 : 8,
+          lineBarsData: List<LineChartBarData>.generate(
+            dataSet.length,
+            (final int index) => LineChartBarData(
+              isCurved: false,
+              color: inputedColors[index],
+              barWidth: 2,
+              isStrokeCapRound: true,
+              dotData: FlDotData(
+                show: true,
+                getDotPainter: (
+                  final FlSpot spot,
+                  final double d,
+                  final LineChartBarData a,
+                  final int v,
+                ) =>
+                    FlDotCirclePainter(
+                  strokeWidth: 4,
+                  radius: 6,
+                  color: secondaryColor,
+                  strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
+                          RobotMatchStatus.didntComeToField
+                      ? Colors.red
+                      : Colors.purple,
+                ),
+                checkToShowDot:
+                    (final FlSpot spot, final LineChartBarData data) =>
+                        robotMatchStatuses[index][spot.x.toInt()] ==
+                            RobotMatchStatus.didntComeToField ||
+                        robotMatchStatuses[index][spot.x.toInt()] ==
+                            RobotMatchStatus.didntWorkOnField,
+              ),
+              belowBarData: BarAreaData(
+                show: true,
+                color: inputedColors[index].withOpacity(showShadow ? 0.3 : 0),
+              ),
+              spots: List<FlSpot>.generate(
+                dataSet[index].length,
+                (final int inner) => FlSpot(
+                  inner.toDouble(),
+                  dataSet[index][inner].toDouble(),
                 ),
               ),
-              showTitles: true,
-              interval: 1,
             ),
           ),
+          gridData: FlGridData(
+            verticalInterval: 1,
+            horizontalInterval: 1,
+            show: true,
+            drawVerticalLine: true,
+            getDrawingHorizontalLine: (final double value) => FlLine(
+              color: const Color(0xff37434d),
+              strokeWidth: 1,
+            ),
+            getDrawingVerticalLine: (final double value) => FlLine(
+              color: const Color(0xff37434d),
+              strokeWidth: 1,
+            ),
+          ),
+          titlesData: FlTitlesData(
+            show: true,
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: AxisTitles(sideTitles: rightTitles),
+            topTitles: AxisTitles(
+              sideTitles: SideTitles(
+                reservedSize: 20,
+                getTitlesWidget:
+                    (final double value, final TitleMeta titleMeta) => Text(
+                  gameNumbers[value.toInt()].toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isPC(context) ? 12 : 8,
+                  ),
+                ),
+                showTitles: true,
+                interval: 1,
+              ),
+            ),
+          ),
+          borderData: FlBorderData(
+            show: true,
+            border: Border.all(color: const Color(0xff37434d), width: 1),
+          ),
+          minX: 0,
+          minY: minY,
+          maxY: maxY,
         ),
-        borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: const Color(0xff37434d), width: 1),
-        ),
-        minX: 0,
-        minY: minY,
-        maxY: maxY,
-      ),
-    );
-  }
+      );
 }
 
 class DashboardClimbLineChart extends StatelessWidget {
@@ -190,7 +184,7 @@ class DashboardClimbLineChart extends StatelessWidget {
                     return "";
                 }
               }(),
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,
               ),
@@ -247,7 +241,7 @@ class DashboardLineChart extends StatelessWidget {
               value % a.appliedInterval.toInt() == 0
                   ? value.toInt().toString()
                   : "",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
               ),

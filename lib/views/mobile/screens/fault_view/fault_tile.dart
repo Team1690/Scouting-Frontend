@@ -9,52 +9,50 @@ class FaultTile extends StatelessWidget {
   final FaultEntry e;
 
   @override
-  Widget build(final BuildContext context) {
-    return ExpansionTile(
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          EditFault(
-            onFinished: handleQueryResult(context),
-            faultMessage: e.faultMessage,
-            faultId: e.id,
-          ),
-          DeleteFault(
-            faultId: e.id,
-            onFinished: handleQueryResult(context),
-          ),
-          ChangeFaultStatus(
-            faultId: e.id,
-            onFinished: handleQueryResult(context),
-          ),
-        ],
-      ),
-      title: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: Text(
-              "${e.team.number} ${e.team.name}",
+  Widget build(final BuildContext context) => ExpansionTile(
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            EditFault(
+              onFinished: handleQueryResult(context),
+              faultMessage: e.faultMessage,
+              faultId: e.id,
             ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Text(
-              "Status: ${e.faultStatus}",
-              style: TextStyle(
-                color: faultTitleToColor(
-                  e.faultStatus,
+            DeleteFault(
+              faultId: e.id,
+              onFinished: handleQueryResult(context),
+            ),
+            ChangeFaultStatus(
+              faultId: e.id,
+              onFinished: handleQueryResult(context),
+            ),
+          ],
+        ),
+        title: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 3,
+              child: Text(
+                "${e.team.number} ${e.team.name}",
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Text(
+                "Status: ${e.faultStatus}",
+                style: TextStyle(
+                  color: faultTitleToColor(
+                    e.faultStatus,
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
+        ),
+        children: <Widget>[
+          ListTile(
+            title: Text(e.faultMessage),
+          )
         ],
-      ),
-      children: <Widget>[
-        ListTile(
-          title: Text(e.faultMessage),
-        )
-      ],
-    );
-  }
+      );
 }

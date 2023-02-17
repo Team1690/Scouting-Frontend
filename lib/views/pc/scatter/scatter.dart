@@ -29,14 +29,14 @@ class Scatter extends StatelessWidget {
                   );
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else {
                   return snapshot.data
                           .mapNullable((final List<ScatterData> report) {
                         if (report.isEmpty) {
-                          return Text("No data");
+                          return const Text("No data");
                         }
                         final List<LightTeam> teams = report
                             .map(
@@ -71,13 +71,13 @@ class Scatter extends StatelessWidget {
                               touchTooltipData: ScatterTouchTooltipData(
                                 tooltipBgColor: bgColor,
                                 getTooltipItems:
-                                    (final ScatterSpot touchedBarSpot) {
-                                  return ScatterTooltipItem(
-                                    tooltip!,
-                                    textStyle: TextStyle(color: Colors.white),
-                                    bottomMargin: 10,
-                                  );
-                                },
+                                    (final ScatterSpot touchedBarSpot) =>
+                                        ScatterTooltipItem(
+                                  tooltip!,
+                                  textStyle:
+                                      const TextStyle(color: Colors.white),
+                                  bottomMargin: 10,
+                                ),
                               ),
                             ),
                             titlesData: FlTitlesData(
@@ -90,7 +90,7 @@ class Scatter extends StatelessWidget {
                               ),
                               bottomTitles: AxisTitles(
                                 axisNameSize: 26,
-                                axisNameWidget: Text(
+                                axisNameWidget: const Text(
                                   "Average gamepiece points",
                                 ),
                                 sideTitles: SideTitles(
@@ -105,7 +105,7 @@ class Scatter extends StatelessWidget {
                               ),
                               leftTitles: AxisTitles(
                                 axisNameSize: 26,
-                                axisNameWidget: Text(
+                                axisNameWidget: const Text(
                                   "Gamepiece points standard deviation",
                                 ),
                                 sideTitles: SideTitles(

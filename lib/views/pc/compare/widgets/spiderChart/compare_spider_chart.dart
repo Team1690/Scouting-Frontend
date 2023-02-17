@@ -14,77 +14,73 @@ class CompareSpiderChart extends StatelessWidget {
       );
 
   @override
-  Widget build(final BuildContext context) {
-    return emptyTeams.isNotEmpty
-        ? Container()
-        : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Builder(
-              builder: (final BuildContext context) {
-                final double autoBalanceRatio = 100 /
-                    data
-                        .map(
-                          (final CompareTeam team) => team.avgAutoBalancePoints,
-                        )
-                        .reduce(max);
-                final double endgameBalanceRatio = 100 /
-                    data
-                        .map(
-                          (final CompareTeam team) =>
-                              team.avgEndgameBalancePoints,
-                        )
-                        .reduce(max);
-                final double teleGamepiecePointRatio = 100 /
-                    data
-                        .map(
-                          (final CompareTeam team) =>
-                              team.avgTeleGamepiecesPoints,
-                        )
-                        .reduce(max);
-                final double autoGamepiecePointRatio = 100 /
-                    data
-                        .map(
-                          (final CompareTeam team) =>
-                              team.avgAutoGamepiecePoints,
-                        )
-                        .reduce(max);
-                return SpiderChart(
-                  colors: data
+  Widget build(final BuildContext context) => emptyTeams.isNotEmpty
+      ? Container()
+      : Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Builder(
+            builder: (final BuildContext context) {
+              final double autoBalanceRatio = 100 /
+                  data
                       .map(
-                        (final CompareTeam team) => team.team.color,
+                        (final CompareTeam team) => team.avgAutoBalancePoints,
                       )
-                      .toList(),
-                  numberOfFeatures: 6,
-                  data: data
-                      .map<List<int>>(
-                        (final CompareTeam team) => <double>[
-                          team.endgameBalanceSuccessPercentage,
-                          team.autoBalanceSuccessPercentage,
-                          team.avgEndgameBalancePoints * endgameBalanceRatio,
-                          team.avgAutoBalancePoints * autoBalanceRatio,
-                          team.avgTeleGamepiecesPoints *
-                              teleGamepiecePointRatio,
-                          team.avgAutoGamepiecePoints * autoGamepiecePointRatio,
-                        ]
-                            .map<int>(
-                              (final double e) =>
-                                  e.isNaN || e.isInfinite ? 0 : e.toInt(),
-                            )
-                            .toList(),
+                      .reduce(max);
+              final double endgameBalanceRatio = 100 /
+                  data
+                      .map(
+                        (final CompareTeam team) =>
+                            team.avgEndgameBalancePoints,
                       )
-                      .toList(),
-                  ticks: <int>[0, 25, 50, 75, 100],
-                  features: <String>[
-                    "Endgame Balance%",
-                    "Auto Balance%",
-                    "Endgame Balance Score%",
-                    "Auto Balance Score%",
-                    "Tele Gamepieces",
-                    "Auto Gamepieces"
-                  ],
-                );
-              },
-            ),
-          );
-  }
+                      .reduce(max);
+              final double teleGamepiecePointRatio = 100 /
+                  data
+                      .map(
+                        (final CompareTeam team) =>
+                            team.avgTeleGamepiecesPoints,
+                      )
+                      .reduce(max);
+              final double autoGamepiecePointRatio = 100 /
+                  data
+                      .map(
+                        (final CompareTeam team) => team.avgAutoGamepiecePoints,
+                      )
+                      .reduce(max);
+              return SpiderChart(
+                colors: data
+                    .map(
+                      (final CompareTeam team) => team.team.color,
+                    )
+                    .toList(),
+                numberOfFeatures: 6,
+                data: data
+                    .map<List<int>>(
+                      (final CompareTeam team) => <double>[
+                        team.endgameBalanceSuccessPercentage,
+                        team.autoBalanceSuccessPercentage,
+                        team.avgEndgameBalancePoints * endgameBalanceRatio,
+                        team.avgAutoBalancePoints * autoBalanceRatio,
+                        team.avgTeleGamepiecesPoints * teleGamepiecePointRatio,
+                        team.avgAutoGamepiecePoints * autoGamepiecePointRatio,
+                      ]
+                          .map<int>(
+                            (final double e) =>
+                                e.isNaN || e.isInfinite ? 0 : e.toInt(),
+                          )
+                          .toList(),
+                    )
+                    .toList(),
+                ticks: const <int>[0, 25, 50, 75, 100],
+                features: const <String>[
+                  "Endgame Balance%",
+                  "Auto Balance%",
+                  "Endgame Balance Score%",
+                  "Auto Balance Score%",
+                  "Tele Gamepieces",
+                  "Auto Gamepieces"
+                ],
+              );
+            },
+          ),
+        );
 }

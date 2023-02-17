@@ -27,26 +27,24 @@ class App extends StatelessWidget {
   final Map<String, int> matchTypeIds;
   final Map<String, int> faultStatus;
   @override
-  Widget build(final BuildContext context) {
-    return TeamProvider(
-      teams: teams,
-      child: MatchesProvider(
-        matches: matches,
-        child: IdProvider(
-          matchTypeIds: matchTypeIds,
-          balanceIds: balanceIds,
-          drivemotorIds: driveMotorIds,
-          drivetrainIds: drivetrainIds,
-          robotMatchStatusIds: robotMatchStatusIds,
-          faultStatus: faultStatus,
-          child: MaterialApp(
-            title: "Orbit Scouting",
-            home: isPC(context) ? TeamInfoScreen() : UserInput(),
-            theme: darkModeTheme,
-            debugShowCheckedModeBanner: false,
+  Widget build(final BuildContext context) => TeamProvider(
+        teams: teams,
+        child: MatchesProvider(
+          matches: matches,
+          child: IdProvider(
+            matchTypeIds: matchTypeIds,
+            balanceIds: balanceIds,
+            drivemotorIds: driveMotorIds,
+            drivetrainIds: drivetrainIds,
+            robotMatchStatusIds: robotMatchStatusIds,
+            faultStatus: faultStatus,
+            child: MaterialApp(
+              title: "Orbit Scouting",
+              home: isPC(context) ? TeamInfoScreen() : UserInput(),
+              theme: darkModeTheme,
+              debugShowCheckedModeBanner: false,
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

@@ -75,7 +75,7 @@ class _ChangeMatchState extends State<ChangeMatch> {
         width: 100,
         height: double.infinity,
         child: AlertDialog(
-          title: Text("Add Match"),
+          title: const Text("Add Match"),
           content: Form(
             key: formKey,
             child: Column(
@@ -86,7 +86,7 @@ class _ChangeMatchState extends State<ChangeMatch> {
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: "Enter match number",
                     prefixIcon: Icon(Icons.numbers),
                   ),
@@ -96,7 +96,7 @@ class _ChangeMatchState extends State<ChangeMatch> {
                   validator: (final String? value) =>
                       vars.matchNumber.onNull("Please pick a match number"),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Selector<int>(
@@ -111,7 +111,7 @@ class _ChangeMatchState extends State<ChangeMatch> {
                   },
                   validate: (final int p0) => null,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Expanded(
@@ -183,12 +183,12 @@ class _ChangeMatchState extends State<ChangeMatch> {
                   ),
                 ),
                 ToggleButtons(
-                  fillColor: Color.fromARGB(10, 244, 67, 54),
+                  fillColor: const Color.fromARGB(10, 244, 67, 54),
                   selectedColor: Colors.blue,
                   selectedBorderColor: Colors.blue,
-                  children: <Widget>[
+                  children: const <Widget>[
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Text("Happened"),
                     )
                   ],
@@ -199,7 +199,7 @@ class _ChangeMatchState extends State<ChangeMatch> {
                     });
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 SubmitButton(
