@@ -2,10 +2,10 @@ import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
+import "mobile/screens/new_input_view.dart";
 
 class App extends StatelessWidget {
   App({
@@ -40,7 +40,7 @@ class App extends StatelessWidget {
             faultStatus: faultStatus,
             child: MaterialApp(
               title: "Orbit Scouting",
-              home: isPC(context) ? TeamInfoScreen() : UserInput(),
+              home: isPC(context) ? TeamInfoScreen() : UserInput2(),
               theme: darkModeTheme,
               debugShowCheckedModeBanner: false,
             ),
