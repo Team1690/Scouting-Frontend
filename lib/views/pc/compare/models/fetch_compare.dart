@@ -73,224 +73,220 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
 
   final QueryResult<SplayTreeSet<CompareTeam>> result = await client.query(
     QueryOptions<SplayTreeSet<CompareTeam>>(
-      parserFn: (final Map<String, dynamic> teams) {
-        return SplayTreeSet<CompareTeam>.from(
-            (teams["team"] as List<dynamic>)
-                .map<CompareTeam>((final dynamic teamsTable) {
-              final LightTeam team = LightTeam.fromJson(teamsTable);
-              final List<dynamic> matches =
-                  teamsTable["technical_matches"] as List<dynamic>;
-              final List<int> autoGamepieces = matches
-                  .map(
-                    (final dynamic technicalMatch) => (getPieces(
-                      parseByMode(MatchMode.auto, technicalMatch),
-                    ).toInt()),
-                  )
-                  .toList();
-              final List<int> teleGamepieces = matches
-                  .map(
-                    (final dynamic technicalMatch) => (getPieces(
-                      parseByMode(MatchMode.tele, technicalMatch),
-                    ).toInt()),
-                  )
-                  .toList();
-              final List<int> gamepieces = matches
-                  .map(
-                    (final dynamic technicalMatch) => (getPieces(
-                      parseMatch(technicalMatch),
-                    ).toInt()),
-                  )
-                  .toList();
-              final List<int> points = matches
-                  .map(
-                    (final dynamic technicalMatch) => (getPoints(
-                      parseMatch(technicalMatch),
-                    ).toInt()),
-                  )
-                  .toList();
-              final List<String> autoBalanceVals = matches
-                  .map(
-                    (final dynamic match) =>
-                        match["auto_balance"]["title"] as String,
-                  )
-                  .toList();
-              final double avgAutoBalancePoints = matches
-                      .map(
-                        (final dynamic match) =>
-                            (match["auto_balance"]["auto_points"] as int),
-                      )
-                      .toList()
-                      .averageOrNull ??
-                  double.nan;
-              final List<String> endgameBalanceVals = matches
+      parserFn: (final Map<String, dynamic> teams) =>
+          SplayTreeSet<CompareTeam>.from(
+        (teams["team"] as List<dynamic>)
+            .map<CompareTeam>((final dynamic teamsTable) {
+          final LightTeam team = LightTeam.fromJson(teamsTable);
+          final List<dynamic> matches =
+              teamsTable["technical_matches"] as List<dynamic>;
+          final List<int> autoGamepieces = matches
+              .map(
+                (final dynamic technicalMatch) => (getPieces(
+                  parseByMode(MatchMode.auto, technicalMatch),
+                ).toInt()),
+              )
+              .toList();
+          final List<int> teleGamepieces = matches
+              .map(
+                (final dynamic technicalMatch) => (getPieces(
+                  parseByMode(MatchMode.tele, technicalMatch),
+                ).toInt()),
+              )
+              .toList();
+          final List<int> gamepieces = matches
+              .map(
+                (final dynamic technicalMatch) => (getPieces(
+                  parseMatch(technicalMatch),
+                ).toInt()),
+              )
+              .toList();
+          final List<int> points = matches
+              .map(
+                (final dynamic technicalMatch) => (getPoints(
+                  parseMatch(technicalMatch),
+                ).toInt()),
+              )
+              .toList();
+          final List<String> autoBalanceVals = matches
+              .map(
+                (final dynamic match) =>
+                    match["auto_balance"]["title"] as String,
+              )
+              .toList();
+          final double avgAutoBalancePoints = matches
                   .map(
                     (final dynamic match) =>
-                        match["endgame_balance"]["title"] as String,
+                        (match["auto_balance"]["auto_points"] as int),
                   )
-                  .toList();
-              final double avgEndgameBalancePoints = matches
-                      .map(
-                        (final dynamic match) =>
-                            (match["endgame_balance"]["endgame_points"] as int),
-                      )
-                      .toList()
-                      .averageOrNull ??
-                  double.nan;
-              final List<int> totalCones = matches
+                  .toList()
+                  .averageOrNull ??
+              double.nan;
+          final List<String> endgameBalanceVals = matches
+              .map(
+                (final dynamic match) =>
+                    match["endgame_balance"]["title"] as String,
+              )
+              .toList();
+          final double avgEndgameBalancePoints = matches
                   .map(
                     (final dynamic match) =>
-                        (match["auto_cones_low"] as int) +
-                        (match["auto_cones_mid"] as int) +
-                        (match["auto_cones_top"] as int) +
-                        (match["tele_cones_low"] as int) +
-                        (match["tele_cones_mid"] as int) +
-                        (match["tele_cones_top"] as int),
+                        (match["endgame_balance"]["endgame_points"] as int),
                   )
-                  .toList();
-              final List<int> totalCubes = matches
-                  .map(
-                    (final dynamic match) =>
-                        (match["auto_cubes_low"] as int) +
-                        (match["auto_cubes_mid"] as int) +
-                        (match["auto_cubes_top"] as int) +
-                        (match["tele_cubes_low"] as int) +
-                        (match["tele_cubes_mid"] as int) +
-                        (match["tele_cubes_top"] as int),
-                  )
-                  .toList();
-              final dynamic avg =
-                  teamsTable["technical_matches_aggregate"]["aggregate"]["avg"];
-              final bool avgNullValidator = avg["auto_cones_top"] == null;
-              final double avgTeleGamepiecesPoints = avgNullValidator
-                  ? double.nan
-                  : getPieces(parseByMode(MatchMode.tele, avg));
-              final double avgAutoGamepiecePoints = avgNullValidator
-                  ? double.nan
-                  : getPoints(parseByMode(MatchMode.auto, avg));
-              final int autoBalanceFailed = autoBalanceVals
-                  .where((final String title) => title == "Failed")
-                  .length;
+                  .toList()
+                  .averageOrNull ??
+              double.nan;
+          final List<int> totalCones = matches
+              .map(
+                (final dynamic match) =>
+                    (match["auto_cones_low"] as int) +
+                    (match["auto_cones_mid"] as int) +
+                    (match["auto_cones_top"] as int) +
+                    (match["tele_cones_low"] as int) +
+                    (match["tele_cones_mid"] as int) +
+                    (match["tele_cones_top"] as int),
+              )
+              .toList();
+          final List<int> totalCubes = matches
+              .map(
+                (final dynamic match) =>
+                    (match["auto_cubes_low"] as int) +
+                    (match["auto_cubes_mid"] as int) +
+                    (match["auto_cubes_top"] as int) +
+                    (match["tele_cubes_low"] as int) +
+                    (match["tele_cubes_mid"] as int) +
+                    (match["tele_cubes_top"] as int),
+              )
+              .toList();
+          final dynamic avg =
+              teamsTable["technical_matches_aggregate"]["aggregate"]["avg"];
+          final bool avgNullValidator = avg["auto_cones_top"] == null;
+          final double avgTeleGamepiecesPoints = avgNullValidator
+              ? double.nan
+              : getPieces(parseByMode(MatchMode.tele, avg));
+          final double avgAutoGamepiecePoints = avgNullValidator
+              ? double.nan
+              : getPoints(parseByMode(MatchMode.auto, avg));
+          final int autoBalanceFailed = autoBalanceVals
+              .where((final String title) => title == "Failed")
+              .length;
 
-              final int autoBalanceSucceded = autoBalanceVals
-                      .where(
-                        (final String element) => element != "No attempt",
-                      )
-                      .length -
-                  autoBalanceFailed;
-              final double autoBalanceSuccessPercentage =
-                  (autoBalanceSucceded) /
-                      (autoBalanceSucceded + autoBalanceFailed) *
-                      100;
-              final List<int> autoBalanceLineChartPoints =
-                  autoBalanceVals.map<int>((final String title) {
-                switch (title) {
-                  case "No Attempt":
-                    return -1;
-                  case "Failed":
-                    return 0;
-                  case "Unbalanced":
-                    return 1;
-                  case "Balanced":
-                    return 2;
-                }
-                throw Exception("Not a auto balance value");
-              }).toList();
-              final int endgameBalanceFailed = endgameBalanceVals
-                  .where((final String title) => title == "Failed")
-                  .length;
-
-              final int endgameBalanceSucceded = endgameBalanceVals
-                      .where(
-                        (final String element) => element != "No attempt",
-                      )
-                      .length -
-                  endgameBalanceFailed;
-              final double endgameBalanceSuccessPercentage =
-                  (endgameBalanceSucceded) /
-                      (endgameBalanceSucceded + endgameBalanceFailed) *
-                      100;
-              final List<int> endgameBalanceLineChartPoints =
-                  endgameBalanceVals.map<int>((final String title) {
-                switch (title) {
-                  case "No Attempt":
-                    return -1;
-                  case "Failed":
-                    return 0;
-                  case "Unbalanced":
-                    return 1;
-                  case "Balanced":
-                    return 2;
-                }
-                throw Exception("Not a endgame balance value");
-              }).toList();
-              final List<RobotMatchStatus> matchStatuses = matches
-                  .map(
-                    (final dynamic e) => titleToEnum(
-                      e["robot_match_status"]["title"] as String,
-                    ),
+          final int autoBalanceSucceded = autoBalanceVals
+                  .where(
+                    (final String element) => element != "No attempt",
                   )
-                  .toList();
-              final CompareLineChartData endgameBalanceLineChartVals =
-                  CompareLineChartData(
-                points: endgameBalanceLineChartPoints,
-                matchStatuses: matchStatuses,
-              );
-              final CompareLineChartData autoBalanceLineChartVals =
-                  CompareLineChartData(
-                points: autoBalanceLineChartPoints,
-                matchStatuses: matchStatuses,
-              );
-              final CompareLineChartData totalCubesLineChart =
-                  CompareLineChartData(
-                points: totalCubes,
-                matchStatuses: matchStatuses,
-              );
-              final CompareLineChartData totalConesLineChart =
-                  CompareLineChartData(
-                points: totalCones,
-                matchStatuses: matchStatuses,
-              );
-              final CompareLineChartData gamepiecesLine = CompareLineChartData(
-                points: gamepieces,
-                matchStatuses: matchStatuses,
-              );
-              final CompareLineChartData autoGamepiecesLineChart =
-                  CompareLineChartData(
-                points: autoGamepieces,
-                matchStatuses: matchStatuses,
-              );
-              final CompareLineChartData teleGamepiecesLineChart =
-                  CompareLineChartData(
-                points: teleGamepieces,
-                matchStatuses: matchStatuses,
-              );
-              final CompareLineChartData pointLineChart = CompareLineChartData(
-                points: points,
-                matchStatuses: matchStatuses,
-              );
+                  .length -
+              autoBalanceFailed;
+          final double autoBalanceSuccessPercentage = (autoBalanceSucceded) /
+              (autoBalanceSucceded + autoBalanceFailed) *
+              100;
+          final List<int> autoBalanceLineChartPoints =
+              autoBalanceVals.map<int>((final String title) {
+            switch (title) {
+              case "No Attempt":
+                return -1;
+              case "Failed":
+                return 0;
+              case "Unbalanced":
+                return 1;
+              case "Balanced":
+                return 2;
+            }
+            throw Exception("Not a auto balance value");
+          }).toList();
+          final int endgameBalanceFailed = endgameBalanceVals
+              .where((final String title) => title == "Failed")
+              .length;
 
-              return CompareTeam(
-                autoBalanceSuccessPercentage: autoBalanceSuccessPercentage,
-                endgameBalanceSuccessPercentage:
-                    endgameBalanceSuccessPercentage,
-                autoBalanceVals: autoBalanceLineChartVals,
-                endgameBalanceVals: endgameBalanceLineChartVals,
-                gamepieces: gamepiecesLine,
-                points: pointLineChart,
-                team: team,
-                totalCones: totalConesLineChart,
-                totalCubes: totalCubesLineChart,
-                teleGamepieces: teleGamepiecesLineChart,
-                autoGamepieces: autoGamepiecesLineChart,
-                avgAutoGamepiecePoints: avgAutoGamepiecePoints,
-                avgTeleGamepiecesPoints: avgTeleGamepiecesPoints,
-                avgAutoBalancePoints: avgAutoBalancePoints,
-                avgEndgameBalancePoints: avgEndgameBalancePoints,
-              );
-            }), (final CompareTeam team1, final CompareTeam team2) {
-          return team1.team.id.compareTo(team2.team.id);
-        });
-      },
+          final int endgameBalanceSucceded = endgameBalanceVals
+                  .where(
+                    (final String element) => element != "No attempt",
+                  )
+                  .length -
+              endgameBalanceFailed;
+          final double endgameBalanceSuccessPercentage =
+              (endgameBalanceSucceded) /
+                  (endgameBalanceSucceded + endgameBalanceFailed) *
+                  100;
+          final List<int> endgameBalanceLineChartPoints =
+              endgameBalanceVals.map<int>((final String title) {
+            switch (title) {
+              case "No Attempt":
+                return -1;
+              case "Failed":
+                return 0;
+              case "Unbalanced":
+                return 1;
+              case "Balanced":
+                return 2;
+            }
+            throw Exception("Not a endgame balance value");
+          }).toList();
+          final List<RobotMatchStatus> matchStatuses = matches
+              .map(
+                (final dynamic e) => titleToEnum(
+                  e["robot_match_status"]["title"] as String,
+                ),
+              )
+              .toList();
+          final CompareLineChartData endgameBalanceLineChartVals =
+              CompareLineChartData(
+            points: endgameBalanceLineChartPoints,
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData autoBalanceLineChartVals =
+              CompareLineChartData(
+            points: autoBalanceLineChartPoints,
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData totalCubesLineChart = CompareLineChartData(
+            points: totalCubes,
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData totalConesLineChart = CompareLineChartData(
+            points: totalCones,
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData gamepiecesLine = CompareLineChartData(
+            points: gamepieces,
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData autoGamepiecesLineChart =
+              CompareLineChartData(
+            points: autoGamepieces,
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData teleGamepiecesLineChart =
+              CompareLineChartData(
+            points: teleGamepieces,
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData pointLineChart = CompareLineChartData(
+            points: points,
+            matchStatuses: matchStatuses,
+          );
+
+          return CompareTeam(
+            autoBalanceSuccessPercentage: autoBalanceSuccessPercentage,
+            endgameBalanceSuccessPercentage: endgameBalanceSuccessPercentage,
+            autoBalanceVals: autoBalanceLineChartVals,
+            endgameBalanceVals: endgameBalanceLineChartVals,
+            gamepieces: gamepiecesLine,
+            points: pointLineChart,
+            team: team,
+            totalCones: totalConesLineChart,
+            totalCubes: totalCubesLineChart,
+            teleGamepieces: teleGamepiecesLineChart,
+            autoGamepieces: autoGamepiecesLineChart,
+            avgAutoGamepiecePoints: avgAutoGamepiecePoints,
+            avgTeleGamepiecesPoints: avgTeleGamepiecesPoints,
+            avgAutoBalancePoints: avgAutoBalancePoints,
+            avgEndgameBalancePoints: avgEndgameBalancePoints,
+          );
+        }),
+        (final CompareTeam team1, final CompareTeam team2) =>
+            team1.team.id.compareTo(team2.team.id),
+      ),
       document: gql(query),
       variables: <String, dynamic>{
         "ids": ids,

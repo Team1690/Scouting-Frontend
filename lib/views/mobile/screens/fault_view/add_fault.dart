@@ -12,16 +12,14 @@ class AddFault extends StatelessWidget {
   final void Function(QueryResult<void>) onFinished;
 
   @override
-  Widget build(final BuildContext context) {
-    return IconButton(
-      onPressed: () async {
-        LightTeam? team;
-        String? newMessage;
-        (await showDialog<NewFault>(
-          context: context,
-          builder: (final BuildContext innerContext) {
-            return AlertDialog(
-              title: Text("Add team"),
+  Widget build(final BuildContext context) => IconButton(
+        onPressed: () async {
+          LightTeam? team;
+          String? newMessage;
+          await (await showDialog<NewFault>(
+            context: context,
+            builder: (final BuildContext innerContext) => AlertDialog(
+              title: const Text("Add team"),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -32,7 +30,7 @@ class AddFault extends StatelessWidget {
                     },
                     controller: TextEditingController(),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   TextField(
@@ -41,7 +39,7 @@ class AddFault extends StatelessWidget {
                     onChanged: (final String a) {
                       newMessage = a;
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Error message",
                       border: OutlineInputBorder(),
                     ),
@@ -54,39 +52,39 @@ class AddFault extends StatelessWidget {
                     if (team == null || newMessage == null) return;
                     Navigator.of(context).pop(NewFault(newMessage!, team!));
                   },
-                  child: Text("Submit"),
+                  child: const Text("Submit"),
                 ),
                 TextButton(
                   onPressed: Navigator.of(context).pop,
-                  child: Text(
+                  child: const Text(
                     "Cancel",
                     style: TextStyle(color: Colors.red),
                   ),
                 ),
               ],
-            );
-          },
-        ))
-            .mapNullable((final NewFault p0) async {
-          showLoadingSnackBar(context);
-          final QueryResult<void> result =
-              await _addFault(p0.team.id, p0.message);
-          onFinished(result);
-        });
-      },
-      icon: Icon(Icons.add),
-    );
-  }
+            ),
+          ))
+              .mapNullable((final NewFault p0) async {
+            showLoadingSnackBar(context);
+            final QueryResult<void> result =
+                await _addFault(p0.team.id, p0.message);
+            onFinished(result);
+          });
+        },
+        icon: const Icon(Icons.add),
+      );
 }
 
-Future<QueryResult<void>> _addFault(final int teamId, final String message) {
-  return getClient().mutate(
-    MutationOptions<void>(
-      document: gql(_addFaultMutation),
-      variables: <String, dynamic>{"team_id": teamId, "fault_message": message},
-    ),
-  );
-}
+Future<QueryResult<void>> _addFault(final int teamId, final String message) =>
+    getClient().mutate(
+      MutationOptions<void>(
+        document: gql(_addFaultMutation),
+        variables: <String, dynamic>{
+          "team_id": teamId,
+          "fault_message": message
+        },
+      ),
+    );
 
 const String _addFaultMutation = """
 mutation AddFault(\$team_id:Int,\$fault_message:String){

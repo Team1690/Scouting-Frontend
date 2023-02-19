@@ -32,24 +32,22 @@ class PitViewSlider extends StatelessWidget {
   final double value;
   final void Function(double) onChange;
   @override
-  Widget build(final BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.fitWidth,
-      child: Row(
-        children: <Widget>[
-          Text(
-            label,
-          ),
-          Slider(
-            min: min,
-            max: max,
-            divisions: divisions,
-            value: value,
-            label: value.round().toString(),
-            onChanged: onChange,
-          )
-        ],
-      ),
-    );
-  }
+  Widget build(final BuildContext context) => FittedBox(
+        fit: BoxFit.fitWidth,
+        child: Row(
+          children: <Widget>[
+            Text(
+              label,
+            ),
+            Slider(
+              min: min,
+              max: max,
+              divisions: divisions,
+              value: value,
+              label: value.round().toString(),
+              onChanged: onChange,
+            )
+          ],
+        ),
+      );
 }

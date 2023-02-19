@@ -12,12 +12,12 @@ class NoTeamSelected extends StatelessWidget {
               Expanded(
                 child: Container(),
               ),
-              Icon(
+              const Icon(
                 Icons.search,
                 size: 100,
               ),
-              SizedBox(height: defaultPadding),
-              Text("Please choose a team in order to display data"),
+              const SizedBox(height: defaultPadding),
+              const Text("Please choose a team in order to display data"),
               Expanded(
                 child: Container(),
               ),

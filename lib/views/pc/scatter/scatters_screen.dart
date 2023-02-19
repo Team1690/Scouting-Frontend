@@ -8,22 +8,20 @@ import "package:scouting_frontend/views/pc/scatter/scatter.dart";
 
 class ScattersScreen extends StatelessWidget {
   @override
-  Widget build(final BuildContext context) {
-    return DashboardScaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 4,
-              child: DashboardCard(
-                title: "Scatter",
-                body: Scatter(),
+  Widget build(final BuildContext context) => DashboardScaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(defaultPadding),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: DashboardCard(
+                  title: "Scatter",
+                  body: Scatter(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 }

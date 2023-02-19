@@ -18,7 +18,7 @@ class CoachView extends StatelessWidget {
       drawer: SideNavBar(),
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Coach"),
+        title: const Text("Coach"),
         actions: <Widget>[
           IconButton(
             onPressed: () {
@@ -39,7 +39,7 @@ class CoachView extends StatelessWidget {
                 ),
               );
             },
-            icon: Icon(Icons.compare_arrows),
+            icon: const Icon(Icons.compare_arrows),
           )
         ],
       ),
@@ -52,7 +52,7 @@ class CoachView extends StatelessWidget {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -343,102 +343,101 @@ Widget teamData(
   final CoachViewLightTeam team,
   final BuildContext context,
   final bool isBlue,
-) {
-  return Padding(
-    padding: const EdgeInsets.all(defaultPadding / 4),
-    child: ElevatedButton(
-      style: ButtonStyle(
-        minimumSize: MaterialStateProperty.all(Size.infinite),
-        shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(borderRadius: defaultBorderRadius),
+) =>
+    Padding(
+      padding: const EdgeInsets.all(defaultPadding / 4),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          minimumSize: MaterialStateProperty.all(Size.infinite),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(borderRadius: defaultBorderRadius),
+          ),
+          backgroundColor: MaterialStateProperty.all<Color>(
+            isBlue ? Colors.blue : Colors.red,
+          ),
         ),
-        backgroundColor: MaterialStateProperty.all<Color>(
-          isBlue ? Colors.blue : Colors.red,
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute<CoachTeamData>(
+            builder: (final BuildContext context) => CoachTeamData(team.team),
+          ),
         ),
-      ),
-      onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute<CoachTeamData>(
-          builder: (final BuildContext context) => CoachTeamData(team.team),
-        ),
-      ),
-      child: Column(
-        children: <Widget>[
-          Spacer(),
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.fitHeight,
-              child: Text(
-                team.team.number.toString(),
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: team.team.number == 1690
-                      ? FontWeight.w900
-                      : FontWeight.normal,
+        child: Column(
+          children: <Widget>[
+            const Spacer(),
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.fitHeight,
+                child: Text(
+                  team.team.number.toString(),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: team.team.number == 1690
+                        ? FontWeight.w900
+                        : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 6,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                children: <Widget>[
-                  if (team.amountOfMatches == 0)
-                    ...List<Spacer>.filled(7, Spacer())
-                  else ...<Widget>[
-                    Spacer(),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
-                          "Ball points: ${team.avgBallPoints.toStringAsFixed(1)}",
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Column(
+                  children: <Widget>[
+                    if (team.amountOfMatches == 0)
+                      ...List<Spacer>.filled(7, const Spacer())
+                    else ...<Widget>[
+                      const Spacer(),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Ball points: ${team.avgBallPoints.toStringAsFixed(1)}",
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
-                          "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}/${team.matchesClimbed}/${team.amountOfMatches}",
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Climb points: ${team.avgClimbPoints.toStringAsFixed(1)}/${team.matchesClimbed}/${team.amountOfMatches}",
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
-                          "Auto aim: ${(team.autoUpper + team.autoLower).toStringAsFixed(1)}/${(team.autoUpper + team.autoLower + team.autoMissed).toStringAsFixed(1)}",
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Auto aim: ${(team.autoUpper + team.autoLower).toStringAsFixed(1)}/${(team.autoUpper + team.autoLower + team.autoMissed).toStringAsFixed(1)}",
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
-                          "Tele aim: ${(team.teleUpper + team.teleLower).toStringAsFixed(1)}/${(team.teleUpper + team.teleLower + team.teleMissed).toStringAsFixed(1)}",
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Tele aim: ${(team.teleUpper + team.teleLower).toStringAsFixed(1)}/${(team.teleUpper + team.teleLower + team.teleMissed).toStringAsFixed(1)}",
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
-                          "Teleop balls 20sc: ${(team.teleUpper * (2 / 9)).toStringAsFixed(1)}",
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Teleop balls 20sc: ${(team.teleUpper * (2 / 9)).toStringAsFixed(1)}",
+                          ),
                         ),
                       ),
-                    ),
-                    Spacer(
-                      flex: 1,
-                    )
-                  ]
-                ],
+                      const Spacer(
+                        flex: 1,
+                      )
+                    ]
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );

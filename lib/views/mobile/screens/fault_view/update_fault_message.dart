@@ -14,77 +14,74 @@ class EditFault extends StatelessWidget {
   final int faultId;
   final void Function(QueryResult<void>) onFinished;
   @override
-  Widget build(final BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.edit),
-      onPressed: () async {
-        final TextEditingController controller = TextEditingController();
-        controller.text = faultMessage;
-        (await showDialog<String>(
-          context: context,
-          builder: (final BuildContext context) => AlertDialog(
-            title: Text("Edit message"),
-            content: TextField(
-              maxLines: 4,
-              controller: controller,
-              autofocus: true,
-              textDirection: TextDirection.rtl,
-              decoration: InputDecoration(
-                hintText: "Error message",
+  Widget build(final BuildContext context) => IconButton(
+        icon: const Icon(Icons.edit),
+        onPressed: () async {
+          final TextEditingController controller = TextEditingController();
+          controller.text = faultMessage;
+          await (await showDialog<String>(
+            context: context,
+            builder: (final BuildContext context) => AlertDialog(
+              title: const Text("Edit message"),
+              content: TextField(
+                maxLines: 4,
+                controller: controller,
+                autofocus: true,
+                textDirection: TextDirection.rtl,
+                decoration: const InputDecoration(
+                  hintText: "Error message",
+                ),
               ),
+              actions: <TextButton>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop<String>(
+                      controller.text,
+                    );
+                  },
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: Navigator.of(context).pop,
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              ],
             ),
-            actions: <TextButton>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop<String>(
-                    controller.text,
-                  );
-                },
-                child: Text(
-                  "Submit",
-                  style: TextStyle(
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: Navigator.of(context).pop,
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ))
-            .mapNullable((
-          final String message,
-        ) async {
-          showLoadingSnackBar(context);
-          final QueryResult<void> result = await updateFaultMessage(
-            faultId,
-            message,
-          );
-          onFinished(result);
-        });
-      },
-    );
-  }
+          ))
+              .mapNullable((
+            final String message,
+          ) async {
+            showLoadingSnackBar(context);
+            final QueryResult<void> result = await updateFaultMessage(
+              faultId,
+              message,
+            );
+            onFinished(result);
+          });
+        },
+      );
 }
 
 Future<QueryResult<void>> updateFaultMessage(
   final int id,
   final String message,
-) async {
-  return getClient().mutate(
-    MutationOptions<void>(
-      document: gql(updateMessage),
-      variables: <String, dynamic>{"id": id, "message": message},
-    ),
-  );
-}
+) async =>
+    getClient().mutate(
+      MutationOptions<void>(
+        document: gql(updateMessage),
+        variables: <String, dynamic>{"id": id, "message": message},
+      ),
+    );
 
 const String updateMessage = """
 mutation UpdateFaultMessage(\$id: Int, \$message: String) {

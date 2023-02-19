@@ -16,110 +16,131 @@ class QuickDataCard extends StatelessWidget {
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Auto",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
-                        Text(
-                          "Upper: ${data.avgAutoUpperScored.toStringAsFixed(1)}",
-                          style: TextStyle(color: Colors.green),
+                        const Spacer(),
+                        gamepieceRow(
+                          "Top",
+                          data.avgAutoConesTop,
+                          data.avgAutoCubesTop,
                         ),
-                        Text(
-                          "Lower: ${data.avgAutoLowScored.toStringAsFixed(1)}",
-                          style: TextStyle(color: Colors.yellow),
+                        gamepieceRow(
+                          "Mid",
+                          data.avgAutoConesMid,
+                          data.avgAutoCubesMid,
                         ),
-                        Text(
-                          "Missed: ${data.avgAutoMissed.toStringAsFixed(1)}",
-                          style: TextStyle(color: Colors.red),
+                        gamepieceRow(
+                          "Low",
+                          data.avgAutoConesLow,
+                          data.avgAutoCubesLow,
                         ),
-                        Spacer()
+                        gamepieceRow(
+                          "Failed",
+                          data.avgAutoConesFailed,
+                          data.avgAutoCubesFailed,
+                        ),
+                        const Spacer()
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Teleop",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
-                        Text(
-                          "Upper: ${data.avgTeleUpperScored.toStringAsFixed(1)}",
-                          style: TextStyle(color: Colors.green),
+                        const Spacer(),
+                        gamepieceRow(
+                          "Top",
+                          data.avgTeleConesTop,
+                          data.avgTeleCubesTop,
                         ),
-                        Text(
-                          "Lower: ${data.avgTeleLowScored.toStringAsFixed(1)}",
-                          style: TextStyle(color: Colors.yellow),
+                        gamepieceRow(
+                          "Mid",
+                          data.avgTeleConesMid,
+                          data.avgTeleCubesMid,
                         ),
-                        Text(
-                          "Missed: ${data.avgTeleMissed.toStringAsFixed(1)}",
-                          style: TextStyle(color: Colors.red),
+                        gamepieceRow(
+                          "Low",
+                          data.avgTeleConesLow,
+                          data.avgTeleCubesLow,
                         ),
-                        Spacer()
+                        gamepieceRow(
+                          "Failed",
+                          data.avgTeleConesFailed,
+                          data.avgTeleCubesFailed,
+                        ),
+                        const Spacer()
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Points",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
-                        Text("Balls: ${data.avgBallPoints.toStringAsFixed(1)}"),
+                        const Spacer(),
                         Text(
-                          "Climb: ${data.avgClimbPoints.toStringAsFixed(1)}/${data.matchesClimbed}/${data.amoutOfMatches}",
+                          "Gamepieces: ${data.avgGamepiecePoints.toStringAsFixed(1)}",
                         ),
-                        Spacer(
+                        Text(
+                          "Auto Balance: ${data.avgAutoBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedAuto}/${data.amoutOfMatches}",
+                        ),
+                        Text(
+                          "Endgame Balance: ${data.avgEndgameBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedEndgame}/${data.amoutOfMatches}",
+                        ),
+                        const Spacer(
                           flex: 2,
                         )
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Misc",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text(
-                          "Ball sum: ${(data.avgAutoLowScored + data.avgAutoUpperScored + data.avgTeleLowScored + data.avgTeleUpperScored).toStringAsFixed(1)}",
+                          "Gamepiece sum: ${data.avgGamepieces.toStringAsFixed(1)}",
                         ),
                         Text(
-                          "Best climb: ${data.highestLevelTitle}",
+                          "Best Auto Balance: ${data.highestBalanceTitleAuto}",
                         ),
-                        Spacer(
+                        const Spacer(
                           flex: 2,
                         ),
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Picklist",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text("First: ${data.firstPicklistIndex + 1}"),
                         Text("Second: ${data.secondPicklistIndex + 1}"),
-                        Spacer(
+                        const Spacer(
                           flex: 2,
                         ),
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text(
+                        const Text(
                           "Aim",
                           style: TextStyle(fontSize: 18),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text(
-                          "Auto: ${(data.avgAutoUpperScored + data.avgAutoLowScored).toStringAsFixed(1)}/${(data.avgAutoUpperScored + data.avgAutoLowScored + data.avgAutoMissed).toStringAsFixed(1)}",
+                          "Auto: ${data.avgAutoGamepieces.toStringAsFixed(1)}/${(data.avgAutoGamepieces + data.avgAutoConesFailed + data.avgAutoCubesFailed).toStringAsFixed(1)}",
                         ),
                         Text(
-                          "Teleop: ${(data.avgTeleUpperScored + data.avgTeleLowScored).toStringAsFixed(1)}/${(data.avgTeleUpperScored + data.avgTeleLowScored + data.avgTeleMissed).toStringAsFixed(1)}",
+                          "Teleop: ${data.avgTeleGamepieces.toStringAsFixed(1)}/${(data.avgTeleGamepieces + data.avgTeleConesFailed + data.avgTeleCubesFailed).toStringAsFixed(1)}",
                         ),
-                        Spacer(
+                        const Spacer(
                           flex: 2,
                         )
                       ],
@@ -127,10 +148,31 @@ class QuickDataCard extends StatelessWidget {
                   ]
                       .expand(
                         (final Widget element) =>
-                            <Widget>[element, SizedBox(width: 40)],
+                            <Widget>[element, const SizedBox(width: 40)],
                       )
                       .toList(),
                 ),
               ),
       );
 }
+
+Widget gamepieceRow(
+  final String title,
+  final double cones,
+  final double cubes,
+) =>
+    Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Text("$title: "),
+        Text(
+          style: const TextStyle(color: Colors.amber),
+          cones.toStringAsFixed(1),
+        ),
+        const Text("/"),
+        Text(
+          style: const TextStyle(color: Colors.deepPurple),
+          cubes.toStringAsFixed(1),
+        ),
+      ],
+    );

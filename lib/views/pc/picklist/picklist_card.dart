@@ -34,47 +34,45 @@ class _PicklistCardState extends State<PicklistCard> {
   }
 
   @override
-  Widget build(final BuildContext context) {
-    return DashboardCard(
-      titleWidgets: <Widget>[
-        IconButton(
-          onPressed: () {
-            setState(() {
-              currentPickList = currentPickList.nextScreen();
-            });
-          },
-          icon: Icon(Icons.swap_horiz),
+  Widget build(final BuildContext context) => DashboardCard(
+        titleWidgets: <Widget>[
+          IconButton(
+            onPressed: () {
+              setState(() {
+                currentPickList = currentPickList.nextScreen();
+              });
+            },
+            icon: const Icon(Icons.swap_horiz),
+          ),
+          IconButton(
+            onPressed: () => save(List<PickListTeam>.from(data), context),
+            icon: const Icon(Icons.save),
+          ),
+          IconButton(
+            tooltip: "Sort taken",
+            onPressed: () {
+              setState(() {
+                final List<PickListTeam> teamsUntaken = data
+                    .where((final PickListTeam element) => !element.taken)
+                    .toList();
+                final Iterable<PickListTeam> teamsTaken =
+                    data.where((final PickListTeam element) => element.taken);
+                data = teamsUntaken..addAll(teamsTaken);
+                for (int i = 0; i < data.length; i++) {
+                  currentPickList.setIndex(data[i], i);
+                }
+              });
+            },
+            icon: const Icon(Icons.sort),
+          )
+        ],
+        title: currentPickList.title,
+        body: PickList(
+          uiList: data,
+          onReorder: (final List<PickListTeam> list) => setState(() {
+            data = list;
+          }),
+          screen: currentPickList,
         ),
-        IconButton(
-          onPressed: () => save(List<PickListTeam>.from(data), context),
-          icon: Icon(Icons.save),
-        ),
-        IconButton(
-          tooltip: "Sort taken",
-          onPressed: () {
-            setState(() {
-              final List<PickListTeam> teamsUntaken = data
-                  .where((final PickListTeam element) => !element.taken)
-                  .toList();
-              final Iterable<PickListTeam> teamsTaken =
-                  data.where((final PickListTeam element) => element.taken);
-              data = teamsUntaken..addAll(teamsTaken);
-              for (int i = 0; i < data.length; i++) {
-                currentPickList.setIndex(data[i], i);
-              }
-            });
-          },
-          icon: Icon(Icons.sort),
-        )
-      ],
-      title: currentPickList.title,
-      body: PickList(
-        uiList: data,
-        onReorder: (final List<PickListTeam> list) => setState(() {
-          data = list;
-        }),
-        screen: currentPickList,
-      ),
-    );
-  }
+      );
 }

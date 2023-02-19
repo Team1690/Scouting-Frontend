@@ -3,94 +3,94 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
-import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/views/common/dashboard_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/models/fetch_team_info.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/balance_line_chart.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/gamepiece_line_chart.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/points_linechart.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/pit/pit_scouting_card.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/quick_data/quick_data.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/specific/specific_card.dart";
 
 class CoachTeamData extends StatelessWidget {
   const CoachTeamData(this.team);
   final LightTeam team;
   @override
-  Widget build(final BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "${team.number} ${team.name}",
+  Widget build(final BuildContext context) => Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            "${team.number} ${team.name}",
+          ),
         ),
-      ),
-      body: FutureBuilder<Team>(
-        future: fetchTeamInfo(team, context), //fetchTeam(team.id, context),
-        builder: (
-          final BuildContext context,
-          final AsyncSnapshot<Team> snapshot,
-        ) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return snapshot.data.mapNullable((final Team data) {
-                  return CarouselWithIndicator(
-                    enableInfininteScroll: true,
-                    initialPage: 0,
-                    widgets: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: DashboardCard(
-                          title: "Line charts",
-                          body: data.climbData.points[0].length < 2
-                              ? Center(
-                                  child: Text("No data :("),
-                                )
-                              : CoachTeamInfoLineCharts(data),
+        body: FutureBuilder<Team>(
+          future: fetchTeamInfo(team, context), //fetchTeam(team.id, context),
+          builder: (
+            final BuildContext context,
+            final AsyncSnapshot<Team> snapshot,
+          ) {
+            if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return snapshot.data.mapNullable(
+                    (final Team data) => CarouselWithIndicator(
+                      enableInfininteScroll: true,
+                      initialPage: 0,
+                      widgets: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: DashboardCard(
+                            title: "Line charts",
+                            body: data.autoBalanceData.points[0].length < 2
+                                ? const Center(
+                                    child: Text("No data :("),
+                                  )
+                                : CoachTeamInfoLineCharts(data),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: DashboardCard(
-                          title: "Specific",
-                          body: data.specificData.msg.isEmpty
-                              ? Center(
-                                  child: Text("No data :("),
-                                )
-                              : SpecificCard(data.specificData),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: DashboardCard(
+                            title: "Specific",
+                            body: data.specificData.msg.isEmpty
+                                ? const Center(
+                                    child: Text("No data :("),
+                                  )
+                                : SpecificCard(data.specificData),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: DashboardCard(
-                          title: "Quick data",
-                          body: CoachQuickData(data.quickData),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: DashboardCard(
+                            title: "Quick data",
+                            body: CoachQuickData(data.quickData),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: data.pitViewData.mapNullable(
-                              PitScoutingCard.new,
-                            ) ??
-                            DashboardCard(
-                              title: "Pit scouting",
-                              body: Center(
-                                child: Text("No data"),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: data.pitViewData.mapNullable(
+                                PitScoutingCard.new,
+                              ) ??
+                              const DashboardCard(
+                                title: "Pit scouting",
+                                body: Center(
+                                  child: Text("No data"),
+                                ),
                               ),
-                            ),
-                      )
-                    ],
-                  );
-                }) ??
-                (throw Exception("No data"));
-          }
-        },
-      ),
-    );
-  }
+                        )
+                      ],
+                    ),
+                  ) ??
+                  (throw Exception("No data"));
+            }
+          },
+        ),
+      );
 }
 
 class CoachTeamInfoLineCharts extends StatelessWidget {
@@ -102,60 +102,37 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
         enableInfininteScroll: true,
         widgets: <Widget>[
           CoachTeamInfoLineChart(
-            DashboardLineChart(
-              showShadow: true,
-              gameNumbers: data.scoredMissedDataTele.gameNumbers,
-              distanceFromHighest: 4,
-              dataSet: data.scoredMissedDataTele.points,
-              robotMatchStatuses: data.scoredMissedDataTele.robotMatchStatuses,
-              inputedColors: <Color>[
-                Colors.green,
-                Colors.red,
-                Colors.yellow[700]!
-              ],
-            ),
-            "Teleop",
+            GamepiecesLineChart(data.autoConesData),
+            "Auto Cones",
           ),
           CoachTeamInfoLineChart(
-            DashboardLineChart(
-              showShadow: true,
-              gameNumbers: data.scoredMissedDataAuto.gameNumbers,
-              robotMatchStatuses: data.scoredMissedDataAuto.robotMatchStatuses,
-              distanceFromHighest: 4,
-              dataSet: data.scoredMissedDataAuto.points,
-              inputedColors: <Color>[
-                Colors.green,
-                Colors.red,
-                Colors.yellow[700]!
-              ],
-            ),
-            "Autonomous",
+            GamepiecesLineChart(data.teleConesData),
+            "Tele Cones",
           ),
           CoachTeamInfoLineChart(
-            DashboardLineChart(
-              showShadow: true,
-              gameNumbers: data.scoredMissedDataAll.gameNumbers,
-              robotMatchStatuses: data.scoredMissedDataAll.robotMatchStatuses,
-              distanceFromHighest: 4,
-              dataSet: data.scoredMissedDataAll.points,
-              inputedColors: <Color>[
-                Colors.green,
-                Colors.red,
-                Colors.yellow[700]!
-              ],
-            ),
-            "Balls",
+            GamepiecesLineChart(data.autoCubesData),
+            "Auto Cubes",
           ),
           CoachTeamInfoLineChart(
-            DashboardClimbLineChart(
-              showShadow: true,
-              inputedColors: <Color>[primaryColor],
-              gameNumbers: data.climbData.gameNumbers,
-              dataSet: data.climbData.points,
-              robotMatchStatuses: data.climbData.robotMatchStatuses,
-            ),
-            "Climb",
-          )
+            GamepiecesLineChart(data.teleCubesData),
+            "Tele Cubes",
+          ),
+          CoachTeamInfoLineChart(
+            GamepiecesLineChart(data.allData),
+            "Gamepieces",
+          ),
+          CoachTeamInfoLineChart(
+            PointsLineChart(data.pointsData),
+            "Points",
+          ),
+          CoachTeamInfoLineChart(
+            BalanceLineChart(data.autoBalanceData),
+            "Auto Balance",
+          ),
+          CoachTeamInfoLineChart(
+            BalanceLineChart(data.endgameBalanceData),
+            "Endgame Balance",
+          ),
         ],
       );
 }
@@ -182,7 +159,7 @@ class CoachTeamInfoLineChart extends StatelessWidget {
               child: linechart,
             ),
           ),
-          Spacer()
+          const Spacer()
         ],
       );
 }
@@ -193,47 +170,62 @@ class CoachQuickData extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => data.amoutOfMatches == 0
-      ? Center(child: Text("No data :("))
+      ? const Center(child: Text("No data :("))
       : Column(
           children: <Widget>[
-            Spacer(),
+            const Spacer(),
             Row(
               children: <Expanded>[
                 Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Auto",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
-                      Text(
-                        "Upper: ${data.avgAutoUpperScored.toStringAsFixed(1)}",
-                        style: TextStyle(color: Colors.green[300]),
+                      gamepieceRow(
+                        "Top",
+                        data.avgAutoConesTop,
+                        data.avgAutoCubesTop,
                       ),
-                      Text(
-                        "Lower: ${data.avgAutoLowScored.toStringAsFixed(1)}",
-                        style: TextStyle(color: Colors.yellow),
+                      gamepieceRow(
+                        "Mid",
+                        data.avgAutoConesMid,
+                        data.avgAutoCubesMid,
                       ),
-                      Text(
-                        "Missed: ${data.avgAutoMissed.toStringAsFixed(1)}",
-                        style: TextStyle(color: Colors.red),
+                      gamepieceRow(
+                        "Low",
+                        data.avgAutoConesLow,
+                        data.avgAutoCubesLow,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      gamepieceRow(
+                        "Failed",
+                        data.avgAutoConesFailed,
+                        data.avgAutoCubesFailed,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Points",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
-                      Text("Balls: ${data.avgBallPoints.toStringAsFixed(1)}"),
                       Text(
-                        "Climb: ${data.avgClimbPoints.toStringAsFixed(1)}/${data.matchesClimbed}/${data.amoutOfMatches}",
+                        "Gamepieces: ${data.avgGamepiecePoints.toStringAsFixed(1)}",
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      Text(
+                        "Auto Balance: ${data.avgAutoBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedAuto}/${data.amoutOfMatches}",
+                      ),
+                      Text(
+                        "Endgame Balance: ${data.avgEndgameBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedEndgame}/${data.amoutOfMatches}",
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Picklist",
                           style: TextStyle(fontSize: 18),
@@ -247,54 +239,62 @@ class CoachQuickData extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Teleop",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
-                      Text(
-                        "Upper: ${data.avgTeleUpperScored.toStringAsFixed(1)}",
-                        style: TextStyle(color: Colors.green[300]),
+                      gamepieceRow(
+                        "Top",
+                        data.avgTeleConesTop,
+                        data.avgTeleCubesTop,
                       ),
-                      Text(
-                        "Lower: ${data.avgTeleLowScored.toStringAsFixed(1)}",
-                        style: TextStyle(color: Colors.yellow),
+                      gamepieceRow(
+                        "Mid",
+                        data.avgTeleConesMid,
+                        data.avgTeleCubesMid,
                       ),
-                      Text(
-                        "Missed: ${data.avgTeleMissed.toStringAsFixed(1)}",
-                        style: TextStyle(color: Colors.red),
+                      gamepieceRow(
+                        "Low",
+                        data.avgTeleConesLow,
+                        data.avgTeleCubesLow,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
+                      gamepieceRow(
+                        "Failed",
+                        data.avgTeleConesFailed,
+                        data.avgTeleCubesFailed,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
                         child: Text(
                           "Aim",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
                       Text(
-                        "Auto: ${(data.avgAutoUpperScored + data.avgAutoLowScored).toStringAsFixed(1)}/${(data.avgAutoUpperScored + data.avgAutoLowScored + data.avgAutoMissed).toStringAsFixed(1)}",
+                        "Auto: ${data.avgAutoGamepieces.toStringAsFixed(1)}/${(data.avgAutoGamepieces + data.avgAutoConesFailed + data.avgAutoCubesFailed).toStringAsFixed(1)}",
                       ),
                       Text(
-                        "Teleop: ${(data.avgTeleUpperScored + data.avgTeleLowScored).toStringAsFixed(1)}/${(data.avgTeleUpperScored + data.avgTeleLowScored + data.avgTeleMissed).toStringAsFixed(1)}",
+                        "Teleop: ${data.avgTeleGamepieces.toStringAsFixed(1)}/${(data.avgTeleGamepieces + data.avgTeleConesFailed + data.avgTeleCubesFailed).toStringAsFixed(1)}",
                       ),
-                      Text(
+                      const Text(
                         "Misc",
                         style: TextStyle(fontSize: 18),
                       ),
                       Text(
-                        "Ball sum: ${(data.avgAutoLowScored + data.avgAutoUpperScored + data.avgTeleLowScored + data.avgTeleUpperScored).toStringAsFixed(1)}",
+                        "Gamepiece sum: ${data.avgGamepieces.toStringAsFixed(1)}",
                       ),
                       Text(
-                        "Best climb: ${data.highestLevelTitle}",
+                        "Best Auto Balance: ${data.highestBalanceTitleAuto}",
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            Spacer(
+            const Spacer(
               flex: 2,
             )
           ],

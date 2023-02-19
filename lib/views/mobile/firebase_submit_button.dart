@@ -31,81 +31,77 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
   String graphqlErrorMessage = "";
 
   @override
-  Widget build(final BuildContext context) {
-    return ProgressButton.icon(
-      iconedButtons: <ButtonState, IconedButton>{
-        ButtonState.idle: IconedButton(
-          text: "Submit",
-          icon: Icon(Icons.send, color: Colors.white),
-          color: Colors.blue[400]!,
-        ),
-        ButtonState.loading: IconedButton(
-          text: "Loading",
-          color: Colors.blue[400]!,
-        ),
-        ButtonState.fail: IconedButton(
-          text: errorMessage,
-          icon: Icon(Icons.cancel, color: Colors.white),
-          color: Colors.red.shade300,
-        ),
-        ButtonState.success: IconedButton(
-          text: "Success",
-          icon: Icon(
-            Icons.check_circle,
-            color: Colors.white,
+  Widget build(final BuildContext context) => ProgressButton.icon(
+        iconedButtons: <ButtonState, IconedButton>{
+          ButtonState.idle: IconedButton(
+            text: "Submit",
+            icon: const Icon(Icons.send, color: Colors.white),
+            color: Colors.blue[400]!,
           ),
-          color: Colors.green.shade400,
-        )
-      },
-      state: _state,
-      onPressed: () {
-        if (_state == ButtonState.loading) return;
+          ButtonState.loading: IconedButton(
+            text: "Loading",
+            color: Colors.blue[400]!,
+          ),
+          ButtonState.fail: IconedButton(
+            text: errorMessage,
+            icon: const Icon(Icons.cancel, color: Colors.white),
+            color: Colors.red.shade300,
+          ),
+          ButtonState.success: IconedButton(
+            text: "Success",
+            icon: const Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            color: Colors.green.shade400,
+          )
+        },
+        state: _state,
+        onPressed: () {
+          if (_state == ButtonState.loading) return;
 
-        if (_state == ButtonState.fail) {
-          setState(() {
-            _state = ButtonState.idle;
-          });
+          if (_state == ButtonState.fail) {
+            setState(() {
+              _state = ButtonState.idle;
+            });
 
-          Navigator.push(
-            context,
-            MaterialPageRoute<Scaffold>(
-              builder: (final BuildContext context) {
-                return Scaffold(
+            Navigator.push(
+              context,
+              MaterialPageRoute<Scaffold>(
+                builder: (final BuildContext context) => Scaffold(
                   appBar: AppBar(
-                    title: Text("Error message"),
+                    title: const Text("Error message"),
                   ),
                   body: Center(
                     child: Text(graphqlErrorMessage),
                   ),
-                );
-              },
-            ),
-          );
-          return;
-        }
+                ),
+              ),
+            );
+            return;
+          }
 
-        if (!widget.validate()) {
-          setState(() {
-            errorMessage = "Input Error";
-            _state = ButtonState.fail;
-          });
+          if (!widget.validate()) {
+            setState(() {
+              errorMessage = "Input Error";
+              _state = ButtonState.fail;
+            });
 
-          Future<void>.delayed(
-            Duration(seconds: 5),
-            () => setState((() => _state = ButtonState.idle)),
-          );
-          return;
-        } else {
-          final int? teamid = widget.vars.toHasuraVars()["team_id"] as int?;
-          final XFile? file = widget.getResult();
-          uploadResult(
-            teamid!,
-            file!,
-          );
-        }
-      },
-    );
-  }
+            Future<void>.delayed(
+              const Duration(seconds: 5),
+              () => setState((() => _state = ButtonState.idle)),
+            );
+            return;
+          } else {
+            final int? teamid = widget.vars.toHasuraVars()["team_id"] as int?;
+            final XFile? file = widget.getResult();
+            uploadResult(
+              teamid!,
+              file!,
+            );
+          }
+        },
+      );
 
   void uploadResult(final int teamid, final XFile result) async {
     final int a = result.name.lastIndexOf(".");
@@ -138,7 +134,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
         );
 
         if (graphqlQueryResult.hasException) {
-          ref.delete();
+          await ref.delete();
           setState(() {
             _state = ButtonState.fail;
             errorMessage = "Error";
@@ -147,7 +143,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           graphqlErrorMessage = graphqlQueryResult.exception.toString();
 
           Future<void>.delayed(
-            Duration(seconds: 5),
+            const Duration(seconds: 5),
             () => setState((() => _state = ButtonState.idle)),
           );
         } else {
@@ -156,7 +152,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
             _state = ButtonState.success;
           });
           Future<void>.delayed(
-            Duration(seconds: 5),
+            const Duration(seconds: 5),
             () => setState((() => _state = ButtonState.idle)),
           );
         }
@@ -166,7 +162,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
           errorMessage = "error";
           graphqlErrorMessage = "Firebase error";
           Future<void>.delayed(
-            Duration(seconds: 5),
+            const Duration(seconds: 5),
             () => setState((() => _state = ButtonState.idle)),
           );
         });

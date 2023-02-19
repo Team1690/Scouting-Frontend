@@ -12,44 +12,43 @@ class PitScouting extends StatelessWidget {
   final PitData? p0;
 
   @override
-  Widget build(final BuildContext context) {
-    return p0.mapNullable(
-          (final PitData p0) => Column(
-            children: <Widget>[
-              Expanded(
-                flex: 3,
-                child: RobotImageCard(p0.url),
-              ),
-              SizedBox(
-                height: defaultPadding,
-              ),
-              Expanded(
-                flex: 6,
-                child: PitScoutingCard(p0),
-              ),
-            ],
-          ),
-        ) ??
-        Column(
+  Widget build(final BuildContext context) =>
+      p0.mapNullable(
+        (final PitData p0) => Column(
           children: <Widget>[
             Expanded(
               flex: 3,
-              child: DashboardCard(
-                title: "Robot Image",
-                body: Container(),
-              ),
+              child: RobotImageCard(p0.url),
             ),
-            SizedBox(
+            const SizedBox(
               height: defaultPadding,
             ),
             Expanded(
               flex: 6,
-              child: DashboardCard(
-                title: "Pit Scouting",
-                body: Container(),
-              ),
+              child: PitScoutingCard(p0),
             ),
           ],
-        );
-  }
+        ),
+      ) ??
+      Column(
+        children: <Widget>[
+          Expanded(
+            flex: 3,
+            child: DashboardCard(
+              title: "Robot Image",
+              body: Container(),
+            ),
+          ),
+          const SizedBox(
+            height: defaultPadding,
+          ),
+          Expanded(
+            flex: 6,
+            child: DashboardCard(
+              title: "Pit Scouting",
+              body: Container(),
+            ),
+          ),
+        ],
+      );
 }

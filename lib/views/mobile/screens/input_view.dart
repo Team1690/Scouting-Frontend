@@ -6,9 +6,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
-import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/common/matches_search_box_future.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
@@ -16,7 +14,7 @@ import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
-import "package:scouting_frontend/views/mobile/team_selection_matches.dart";
+import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
 class UserInput extends StatefulWidget {
   @override
@@ -31,7 +29,7 @@ class _UserInputState extends State<UserInput> {
             ? Colors.green
             : null;
 
-    Timer(Duration(milliseconds: 10), () {
+    Timer(const Duration(milliseconds: 10), () {
       setState(() {
         screenColor = null;
       });
@@ -84,7 +82,7 @@ class _UserInputState extends State<UserInput> {
         actions: <Widget>[
           RobotImageButton(teamId: () => match.scoutedTeam?.id),
           ToggleButtons(
-            children: <Icon>[Icon(Icons.lightbulb)],
+            children: const <Icon>[Icon(Icons.lightbulb)],
             isSelected: <bool>[toggleLightsState],
             onPressed: (final int i) {
               setState(() {
@@ -121,48 +119,36 @@ class _UserInputState extends State<UserInput> {
                       onChanged: (final String name) {
                         match.name = name;
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.person),
                         border: OutlineInputBorder(),
                         hintText: "Scouter name",
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
-                    MatchSelectionFuture(
-                      controller: matchController,
-                      matches: MatchesProvider.of(context).matches,
-                      onChange: (final ScheduleMatch selectedMatch) {
+                    TeamAndMatchSelection(
+                      onChange: (
+                        final ScheduleMatch selectedMatch,
+                        final LightTeam? team,
+                      ) {
                         setState(() {
                           match.scheduleMatch = selectedMatch;
-                          match.scoutedTeam = null;
-                          teamNumberController.clear();
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    TeamSelectionMatches(
-                      match: match.scheduleMatch,
-                      controller: teamNumberController,
-                      onChange: (final LightTeam team) {
-                        setState(() {
                           match.scoutedTeam = team;
                         });
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     ToggleButtons(
-                      fillColor: Color.fromARGB(10, 244, 67, 54),
+                      fillColor: const Color.fromARGB(10, 244, 67, 54),
                       selectedColor: Colors.red,
                       selectedBorderColor: Colors.red,
-                      children: <Widget>[
+                      children: const <Widget>[
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Text("Rematch"),
                         )
                       ],
@@ -173,7 +159,7 @@ class _UserInputState extends State<UserInput> {
                         });
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SectionDivider(label: "Autonomous"),
@@ -221,7 +207,7 @@ class _UserInputState extends State<UserInput> {
                               ]
                                   .expand(
                                     (final Widget element) => <Widget>[
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       element,
@@ -276,7 +262,7 @@ class _UserInputState extends State<UserInput> {
                               ]
                                   .expand(
                                     (final Widget element) => <Widget>[
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       element,
@@ -288,7 +274,7 @@ class _UserInputState extends State<UserInput> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -307,7 +293,7 @@ class _UserInputState extends State<UserInput> {
                         value: match.autoBalanceStatus,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SectionDivider(label: "Teleoperated"),
@@ -355,7 +341,7 @@ class _UserInputState extends State<UserInput> {
                               ]
                                   .expand(
                                     (final Widget element) => <Widget>[
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       element,
@@ -410,7 +396,7 @@ class _UserInputState extends State<UserInput> {
                               ]
                                   .expand(
                                     (final Widget element) => <Widget>[
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       element,
@@ -422,13 +408,16 @@ class _UserInputState extends State<UserInput> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SectionDivider(label: "Robot fault"),
                     Switcher(
-                      labels: <String>["Not on field", "Didn't work on field"],
-                      colors: <Color>[
+                      labels: const <String>[
+                        "Not on field",
+                        "Didn't work on field"
+                      ],
+                      colors: const <Color>[
                         Colors.red,
                         Color.fromARGB(255, 198, 29, 228)
                       ],
@@ -444,11 +433,11 @@ class _UserInputState extends State<UserInput> {
                           i.value: i.key
                       }[match.robotMatchStatusId]!,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SectionDivider(label: "Endgame Balance"),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -467,7 +456,7 @@ class _UserInputState extends State<UserInput> {
                         value: match.endgameBalanceStatus,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SubmitButton(
@@ -478,9 +467,7 @@ class _UserInputState extends State<UserInput> {
                           matchController.clear();
                         });
                       },
-                      validate: () {
-                        return formKey.currentState!.validate();
-                      },
+                      validate: () => formKey.currentState!.validate(),
                       vars: match,
                       mutation: mutation,
                     )

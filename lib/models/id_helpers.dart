@@ -1,7 +1,7 @@
 import "package:graphql/client.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 
-final String tableFragment = """{
+const String tableFragment = """{
     id
     title
   }

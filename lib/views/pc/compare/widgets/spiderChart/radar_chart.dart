@@ -31,22 +31,20 @@ class SpiderChart extends StatelessWidget {
   final List<String> features;
 
   @override
-  Widget build(final BuildContext context) {
-    return Container(
-      child: RadarChart(
-        graphColors: colors,
-        reverseAxis: false,
-        data: data,
-        features: features,
-        ticks: ticks,
-        axisColor: primaryWhite,
-        outlineColor: secondaryWhite,
-        featuresTextStyle: Theme.of(context)
-            .textTheme
-            .bodyMedium!
-            .copyWith(fontSize: isPC(context) ? null : 10),
-        ticksTextStyle: TextStyle(fontSize: 0),
-      ),
-    );
-  }
+  Widget build(final BuildContext context) => Container(
+        child: RadarChart(
+          graphColors: colors,
+          reverseAxis: false,
+          data: data,
+          features: features,
+          ticks: ticks,
+          axisColor: primaryWhite,
+          outlineColor: secondaryWhite,
+          featuresTextStyle: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(fontSize: isPC(context) ? null : 10),
+          ticksTextStyle: const TextStyle(fontSize: 0),
+        ),
+      );
 }

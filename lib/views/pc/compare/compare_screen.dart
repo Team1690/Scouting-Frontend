@@ -35,21 +35,19 @@ class _CompareScreenState extends State<CompareScreen> {
   }
 
   @override
-  Widget build(final BuildContext context) {
-    return isPC(context)
-        ? DashboardScaffold(
-            body: compareScreen(context),
-          )
-        : Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              title: Text("Compare"),
-              centerTitle: true,
-            ),
-            drawer: SideNavBar(),
-            body: compareScreen(context),
-          );
-  }
+  Widget build(final BuildContext context) => isPC(context)
+      ? DashboardScaffold(
+          body: compareScreen(context),
+        )
+      : Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: const Text("Compare"),
+            centerTitle: true,
+          ),
+          drawer: SideNavBar(),
+          body: compareScreen(context),
+        );
 
   Padding compareScreen(final BuildContext context) => Padding(
         padding: const EdgeInsets.all(defaultPadding),
@@ -74,7 +72,7 @@ class _CompareScreenState extends State<CompareScreen> {
                       controller: controller,
                     ),
                   ),
-                  SizedBox(width: defaultPadding),
+                  const SizedBox(width: defaultPadding),
                   Expanded(
                     flex: 2,
                     child: SingleChildScrollView(
@@ -106,7 +104,7 @@ class _CompareScreenState extends State<CompareScreen> {
                 ],
               ),
             ),
-            SizedBox(height: defaultPadding),
+            const SizedBox(height: defaultPadding),
             Expanded(
               flex: 5,
               child: FutureBuilder<SplayTreeSet<CompareTeam>>(
@@ -129,7 +127,7 @@ class _CompareScreenState extends State<CompareScreen> {
                       return Center(
                         child: Row(
                           children: <Widget>[
-                            Expanded(
+                            const Expanded(
                               flex: 4,
                               child: DashboardCard(
                                 title: "Gamechart",
@@ -138,7 +136,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: defaultPadding,
                             ),
                             Expanded(
@@ -152,7 +150,7 @@ class _CompareScreenState extends State<CompareScreen> {
                         ),
                       );
                     } else {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
@@ -167,7 +165,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                 flex: 4,
                                 child: CompareGamechartCard(data, teams),
                               ),
-                              SizedBox(width: defaultPadding),
+                              const SizedBox(width: defaultPadding),
                               Expanded(
                                 flex: 3,
                                 child: SpiderChartCard(teams, data),
@@ -178,11 +176,13 @@ class _CompareScreenState extends State<CompareScreen> {
                           return CarouselSlider(
                             items: <Widget>[
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
                                 child: CompareGamechartCard(data, teams),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
                                 child: SpiderChartCard(teams, data),
                               ),
                             ],

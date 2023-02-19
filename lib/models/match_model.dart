@@ -81,33 +81,31 @@ class Match implements HasuraVars {
 
   LightTeam? scoutedTeam;
   @override
-  Map<String, dynamic> toHasuraVars() {
-    return <String, dynamic>{
-      "auto_cones_mid": autoConesMid,
-      "auto_cones_top": autoConesTop,
-      "auto_cones_low": autoConesLow,
-      "auto_cones_failed": autoConesFailed,
-      "auto_cubes_mid": autoCubesMid,
-      "auto_cubes_top": autoCubesTop,
-      "auto_cubes_low": autoCubesLow,
-      "auto_cubes_failed": autoCubesFailed,
-      "auto_balance_id": autoBalanceStatus,
-      "endgame_balance_id": endgameBalanceStatus,
-      "team_id": scoutedTeam?.id,
-      "tele_cones_mid": teleConesMid,
-      "tele_cones_top": teleConesTop,
-      "tele_cones_low": teleConesLow,
-      "tele_cones_failed": teleConesFailed,
-      "tele_cubes_mid": teleCubesMid,
-      "tele_cubes_top": teleCubesTop,
-      "tele_cubes_low": teleCubesLow,
-      "tele_cubes_failed": teleCubesFailed,
-      "scouter_name": name,
-      "schedule_match_id": scheduleMatch?.id,
-      "robot_match_status_id": robotMatchStatusId,
-      "is_rematch": isRematch,
-    };
-  }
+  Map<String, dynamic> toHasuraVars() => <String, dynamic>{
+        "auto_cones_mid": autoConesMid,
+        "auto_cones_top": autoConesTop,
+        "auto_cones_low": autoConesLow,
+        "auto_cones_failed": autoConesFailed,
+        "auto_cubes_mid": autoCubesMid,
+        "auto_cubes_top": autoCubesTop,
+        "auto_cubes_low": autoCubesLow,
+        "auto_cubes_failed": autoCubesFailed,
+        "auto_balance_id": autoBalanceStatus,
+        "endgame_balance_id": endgameBalanceStatus,
+        "team_id": scoutedTeam?.id,
+        "tele_cones_mid": teleConesMid,
+        "tele_cones_top": teleConesTop,
+        "tele_cones_low": teleConesLow,
+        "tele_cones_failed": teleConesFailed,
+        "tele_cubes_mid": teleCubesMid,
+        "tele_cubes_top": teleCubesTop,
+        "tele_cubes_low": teleCubesLow,
+        "tele_cubes_failed": teleCubesFailed,
+        "scouter_name": name,
+        "schedule_match_id": scheduleMatch?.id,
+        "robot_match_status_id": robotMatchStatusId,
+        "is_rematch": isRematch,
+      };
 }
 
 enum MatchMode {
@@ -148,21 +146,18 @@ class EffectiveScore {
   final GridLevel? level;
 
   @override
-  int get hashCode {
-    return Object.hashAll(<Object?>[
-      mode,
-      piece,
-      level,
-    ]);
-  }
+  int get hashCode => Object.hashAll(<Object?>[
+        mode,
+        piece,
+        level,
+      ]);
 
   @override
-  bool operator ==(final Object other) {
-    return other is EffectiveScore &&
-        other.level == level &&
-        other.mode == mode &&
-        other.piece == piece;
-  }
+  bool operator ==(final Object other) =>
+      other is EffectiveScore &&
+      other.level == level &&
+      other.mode == mode &&
+      other.piece == piece;
 }
 
 List<EffectiveScore> coneAndCube(final GridLevel level, final MatchMode mode) =>
@@ -198,21 +193,19 @@ final Map<EffectiveScore, int> score = <EffectiveScore, int>{
       )
 };
 
-double getPoints(final Map<EffectiveScore, double> countedValues) {
-  return countedValues.keys.fold(
-    0,
-    (final double points, final EffectiveScore effectiveScore) =>
-        countedValues[effectiveScore]! * score[effectiveScore]! + points,
-  );
-}
+double getPoints(final Map<EffectiveScore, double> countedValues) =>
+    countedValues.keys.fold(
+      0,
+      (final double points, final EffectiveScore effectiveScore) =>
+          countedValues[effectiveScore]! * score[effectiveScore]! + points,
+    );
 
-double getPieces(final Map<EffectiveScore, double> countedValues) {
-  return countedValues.keys.fold(
-    0,
-    (final double gamepieces, final EffectiveScore effectiveScore) =>
-        countedValues[effectiveScore]! + gamepieces,
-  );
-}
+double getPieces(final Map<EffectiveScore, double> countedValues) =>
+    countedValues.keys.fold(
+      0,
+      (final double gamepieces, final EffectiveScore effectiveScore) =>
+          countedValues[effectiveScore]! + gamepieces,
+    );
 
 Map<EffectiveScore, double> parseByMode(
   final MatchMode mode,
@@ -229,9 +222,8 @@ Map<EffectiveScore, double> parseByMode(
 
 Map<EffectiveScore, double> parseMatch(
   final dynamic data,
-) {
-  return <EffectiveScore, double>{
-    ...parseByMode(MatchMode.auto, data),
-    ...parseByMode(MatchMode.tele, data)
-  };
-}
+) =>
+    <EffectiveScore, double>{
+      ...parseByMode(MatchMode.auto, data),
+      ...parseByMode(MatchMode.tele, data)
+    };

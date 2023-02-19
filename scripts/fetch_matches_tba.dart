@@ -54,6 +54,7 @@ void main(final List<String> args) async {
   final DotEnv env = DotEnv()..load(<String>["dev.env"]);
 
   if (results.wasParsed("help")) {
+    // ignore: avoid_print
     print(arg.usage);
     exit(0);
   }
@@ -107,6 +108,7 @@ void main(final List<String> args) async {
     }
   }
 
+  // ignore: avoid_print
   print(
     await sendMatches(
       parseResponse(
@@ -209,14 +211,13 @@ class Match {
   final List<int> blueAlliance;
 }
 
-Future<http.Response> fetchTeamMatches(final String event, final DotEnv env) {
-  return http.get(
-    Uri.parse(
-      "https://www.thebluealliance.com/api/v3/event/$event/matches/simple",
-    ),
-    headers: <String, String>{"X-TBA-Auth-Key": env["TBA_API_KEY"]!},
-  );
-}
+Future<http.Response> fetchTeamMatches(final String event, final DotEnv env) =>
+    http.get(
+      Uri.parse(
+        "https://www.thebluealliance.com/api/v3/event/$event/matches/simple",
+      ),
+      headers: <String, String>{"X-TBA-Auth-Key": env["TBA_API_KEY"]!},
+    );
 
 //I had to copy these from existing files because if you import a file that has flutter imports to a dart file the file doesn't run
 class LightTeam {
@@ -228,7 +229,7 @@ class LightTeam {
 
 Future<List<LightTeam>> fetchTeams(final DotEnv env) async {
   final GraphQLClient client = getClient(env);
-  final String query = """
+  const String query = """
 query FetchTeams {
   team {
     id

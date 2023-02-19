@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/id_providers.dart";
+import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -10,88 +11,96 @@ import "package:collection/collection.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 Stream<List<StatusItem<LightTeam, String>>> fetchPreScoutingStatus(
-  final bool specific,
+  final bool isSpecific,
 ) =>
     fetchBase(
-      getSubscription(specific, true),
-      specific,
-      (final dynamic element) => LightTeam.fromJson(element["team"]),
-      (final dynamic e) => e["scouter_name"] as String,
+      getSubscription(isSpecific, true),
+      isSpecific,
+      (final dynamic scoutedMatchTable) =>
+          LightTeam.fromJson(scoutedMatchTable["team"]),
+      (final dynamic scoutedMatchTable) =>
+          scoutedMatchTable["scouter_name"] as String,
       (final __, final _) => <String>[],
     );
 
 Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
   final String subscription,
-  final bool specific,
+  final bool isSpecific,
   final I Function(dynamic) parseI,
   final V Function(dynamic) parseV,
   final List<V> Function(I identifier, List<V> currentValues) getMissing,
-) {
-  return getClient()
-      .subscribe(
-    SubscriptionOptions<List<StatusItem<I, V>>>(
-      document: gql(subscription),
-      parserFn: (final Map<String, dynamic> data) {
-        final List<dynamic> matches =
-            data[specific ? "specific" : "match"] as List<dynamic>;
-        final Map<I, List<dynamic>> identifierToMatch = matches.groupListsBy(
-          parseI,
+) =>
+    getClient()
+        .subscribe(
+          SubscriptionOptions<List<StatusItem<I, V>>>(
+            document: gql(subscription),
+            parserFn: (final Map<String, dynamic> data) {
+              final List<dynamic> matches =
+                  data[isSpecific ? "_2023_specific" : "_2023_technical_match"]
+                      as List<dynamic>;
+              final Map<I, List<dynamic>> identifierToMatch =
+                  matches.groupListsBy(
+                parseI,
+              );
+              return identifierToMatch
+                  .map(
+                    (final I key, final List<dynamic> value) =>
+                        MapEntry<I, List<V>>(
+                      key,
+                      value.map(parseV).toList(),
+                    ),
+                  )
+                  .entries
+                  .map<StatusItem<I, V>>(
+                    (final MapEntry<I, List<V>> statusCard) => StatusItem<I, V>(
+                      missingValues: getMissing(
+                        statusCard.key,
+                        statusCard.value,
+                      ),
+                      values: statusCard.value,
+                      identifier: statusCard.key,
+                    ),
+                  )
+                  .toList();
+            },
+          ),
+        )
+        .map(
+          (final QueryResult<List<StatusItem<I, V>>> event) =>
+              event.mapQueryResult(),
         );
-        return identifierToMatch
-            .map(
-              (final I key, final List<dynamic> value) => MapEntry<I, List<V>>(
-                key,
-                value.map(parseV).toList(),
-              ),
-            )
-            .entries
-            .map<StatusItem<I, V>>(
-              (final MapEntry<I, List<V>> e) => StatusItem<I, V>(
-                missingValues: getMissing(e.key, e.value),
-                values: e.value,
-                identifier: e.key,
-              ),
-            )
-            .toList();
-      },
-    ),
-  )
-      .map((final QueryResult<List<StatusItem<I, V>>> event) {
-    return event.mapQueryResult();
-  });
-}
 
-Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
-  final bool specific,
+Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
+  final bool isSpecific,
   final BuildContext context,
 ) =>
     fetchBase(
-      getSubscription(specific, false),
-      specific,
-      (final dynamic element) => MatchIdentifier(
-        number: element["match"]["match_number"] as int,
-        type: element["match"]["match_type"]["title"] as String,
-        isRematch: element["is_rematch"] as bool,
+      getSubscription(isSpecific, false),
+      isSpecific,
+      (final dynamic matchTable) => MatchIdentifier(
+        number: matchTable["match"]["match_number"] as int,
+        type: matchTable["match"]["match_type"]["title"] as String,
+        isRematch: matchTable["is_rematch"] as bool,
       ),
-      (final dynamic e) {
-        final LightTeam team = LightTeam.fromJson(e);
+      (final dynamic scoutedMatchTable) {
+        final LightTeam team = LightTeam.fromJson(scoutedMatchTable["team"]);
         final ScheduleMatch scheduleMatch = (MatchesProvider.of(context)
             .matches
             .where(
-              (final ScheduleMatch element) =>
-                  element.matchNumber == e["match"]["match_number"] as int,
+              (final ScheduleMatch match) =>
+                  match.matchNumber ==
+                  scoutedMatchTable["match"]["match_number"] as int,
             )
             .toList()
             .single);
-        return Match(
+        return StatusMatch(
           scoutedTeam: StatusLightTeam(
-            specific
+            isSpecific
                 ? 0
-                : (e["auto_upper"] as int) * 4 +
-                    (e["auto_lower"] as int) * 2 +
-                    (e["tele_upper"] as int) * 2 +
-                    (e["tele_lower"] as int) +
-                    (e["climb"]["points"] as int),
+                : (getPoints(parseMatch(scoutedMatchTable)) as int) +
+                    (scoutedMatchTable["endgame_balance"]["endgame_points"]
+                        as int) +
+                    (scoutedMatchTable["auto_balance"]["auto_points"] as int),
             scheduleMatch.redAlliance.contains(
               team,
             )
@@ -108,10 +117,13 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
                     team,
                   ),
           ),
-          scouter: e["scouter_name"] as String,
+          scouter: scoutedMatchTable["scouter_name"] as String,
         );
       },
-      (final MatchIdentifier identifier, final List<Match> scoutedMatches) {
+      (
+        final MatchIdentifier identifier,
+        final List<StatusMatch> scoutedMatches,
+      ) {
         final ScheduleMatch match =
             MatchesProvider.of(context).matches.firstWhere(
                   (final ScheduleMatch element) =>
@@ -127,17 +139,22 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
           ...match.blueAlliance,
         ]
             .where(
-              (final LightTeam element) => !scoutedMatches
-                  .map((final Match e) => e.scoutedTeam.team)
-                  .contains(element),
+              (final LightTeam team) => !scoutedMatches
+                  .map(
+                    (final StatusMatch statusMatch) =>
+                        statusMatch.scoutedTeam.team,
+                  )
+                  .contains(team),
             )
             .map(
-              (final LightTeam e) => Match(
+              (final LightTeam notScoutedTeam) => StatusMatch(
                 scouter: "?",
                 scoutedTeam: StatusLightTeam(
                   0,
-                  match.redAlliance.contains(e) ? Colors.red : Colors.blue,
-                  e,
+                  match.redAlliance.contains(notScoutedTeam)
+                      ? Colors.red
+                      : Colors.blue,
+                  notScoutedTeam,
                   -1,
                 ),
               ),
@@ -146,12 +163,11 @@ Stream<List<StatusItem<MatchIdentifier, Match>>> fetchStatus(
       },
     );
 
-String getSubscription(final bool specific, final bool preScouting) => """
+String getSubscription(final bool isSpecific, final bool isPreScouting) => """
 subscription Status {
-  ${specific ? "specific" : "match"}(
-    order_by: [{match: {match_type: {order: asc}}}, {match: {match_number: asc}}, {is_rematch: asc}]
-    where: {match: {match_type: {title: {${preScouting ? "_eq" : "_neq"}: "Pre scouting"}}}}
-  ) {
+   _2023_${isSpecific ? "specific" : "technical_match"}
+  (order_by: {match: {match_type: {order: asc}, match_number: asc}, is_rematch: asc},
+   where: {match: {match_type: {title: {${isPreScouting ? "_eq" : "_neq"}: "Pre scouting"}}}}) {
     team {
       colors_index
       id
@@ -160,17 +176,24 @@ subscription Status {
     }
     scouter_name
     is_rematch
-    ${!specific ? """
-    auto_upper
-    auto_lower
-    auto_missed
-    tele_upper
-    tele_lower
-    tele_missed
-    climb{
-      points
-    } 
-""" : ""}
+     ${!isSpecific ? """tele_cones_low
+    tele_cones_mid
+    tele_cones_top
+    tele_cubes_low
+    tele_cubes_mid
+    tele_cubes_top
+    auto_cones_low
+    auto_cones_mid
+    auto_cones_top
+    auto_cubes_low
+    auto_cubes_mid
+    auto_cubes_top
+    auto_balance {
+      auto_points
+    }
+    endgame_balance {
+      endgame_points
+    } """ : ""}
     match {
       match_number
       match_type {

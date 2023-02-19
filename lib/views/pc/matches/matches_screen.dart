@@ -15,202 +15,211 @@ class MatchesScreen extends StatelessWidget {
   const MatchesScreen();
 
   @override
-  Widget build(final BuildContext context) {
-    return DashboardScaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: DashboardCard(
-          title: "Matches",
-          titleWidgets: <Widget>[
-            IconButton(
-              onPressed: () async {
-                (await showDialog<ScheduleMatch>(
-                  context: context,
-                  builder: ((final BuildContext dialogContext) =>
-                      ChangeMatch()),
-                ));
-              },
-              icon: Icon(Icons.add_circle_outline_outlined),
-            ),
-          ],
-          body: StreamBuilder<List<ScheduleMatch>>(
-            stream: fetchMatchesSubscription(),
-            builder: (
-              final BuildContext context,
-              final AsyncSnapshot<List<ScheduleMatch>> snapshot,
-            ) =>
-                snapshot.mapSnapshot(
-              onWaiting: () => Center(
-                child: CircularProgressIndicator(),
+  Widget build(final BuildContext context) => DashboardScaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(defaultPadding),
+          child: DashboardCard(
+            title: "Matches",
+            titleWidgets: <Widget>[
+              IconButton(
+                onPressed: () async {
+                  (await showDialog<ScheduleMatch>(
+                    context: context,
+                    builder: ((final BuildContext dialogContext) =>
+                        const ChangeMatch()),
+                  ));
+                },
+                icon: const Icon(Icons.add_circle_outline_outlined),
               ),
-              onError: (final Object error) => Text(error.toString()),
-              onNoData: () => Center(
-                child: Text("No data"),
-              ),
-              onSuccess: (final List<ScheduleMatch> data) => ListView(
-                children: data
-                    .map(
-                      (final ScheduleMatch e) => Card(
-                        color: bgColor,
-                        child: ListTile(
-                          title: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  style: TextStyle(
-                                    color: e.happened
-                                        ? Colors.green
-                                        : Colors.white,
+            ],
+            body: StreamBuilder<List<ScheduleMatch>>(
+              stream: fetchMatchesSubscription(),
+              builder: (
+                final BuildContext context,
+                final AsyncSnapshot<List<ScheduleMatch>> snapshot,
+              ) =>
+                  snapshot.mapSnapshot(
+                onWaiting: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                onError: (final Object error) => Text(error.toString()),
+                onNoData: () => const Center(
+                  child: Text("No data"),
+                ),
+                onSuccess: (final List<ScheduleMatch> data) => ListView(
+                  children: data
+                      .map(
+                        (final ScheduleMatch e) => Card(
+                          color: bgColor,
+                          child: ListTile(
+                            title: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    style: TextStyle(
+                                      color: e.happened
+                                          ? Colors.green
+                                          : Colors.white,
+                                    ),
+                                    "${IdProvider.of(context).matchType.idToName[e.matchTypeId]} ${e.matchNumber}",
                                   ),
-                                  "${IdProvider.of(context).matchType.idToName[e.matchTypeId]} ${e.matchNumber}",
                                 ),
-                              ),
-                              ...e.blueAlliance
-                                  .map(
-                                    (final LightTeam currentTeam) => Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () =>
-                                            Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute<TeamInfoScreen>(
-                                            builder:
-                                                (final BuildContext context) =>
-                                                    TeamInfoScreen(
-                                              initalTeam: currentTeam,
+                                ...e.blueAlliance
+                                    .map(
+                                      (final LightTeam currentTeam) => Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute<TeamInfoScreen>(
+                                              builder: (
+                                                final BuildContext context,
+                                              ) =>
+                                                  TeamInfoScreen(
+                                                initalTeam: currentTeam,
+                                              ),
+                                            ),
+                                          ),
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                              secondaryColor,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            currentTeam.number.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.blue,
                                             ),
                                           ),
                                         ),
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            secondaryColor,
+                                      ),
+                                    )
+                                    .toList(),
+                                ...e.redAlliance.map(
+                                  (final LightTeam currentTeam) => Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () =>
+                                          Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute<TeamInfoScreen>(
+                                          builder:
+                                              (final BuildContext context) =>
+                                                  TeamInfoScreen(
+                                            initalTeam: currentTeam,
                                           ),
                                         ),
-                                        child: Text(
-                                          currentTeam.number.toString(),
-                                          style: TextStyle(color: Colors.blue),
+                                      ),
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                          secondaryColor,
                                         ),
                                       ),
-                                    ),
-                                  )
-                                  .toList(),
-                              ...e.redAlliance.map(
-                                (final LightTeam currentTeam) => Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute<TeamInfoScreen>(
-                                        builder: (final BuildContext context) =>
-                                            TeamInfoScreen(
-                                          initalTeam: currentTeam,
-                                        ),
+                                      child: Text(
+                                        currentTeam.number.toString(),
+                                        style:
+                                            const TextStyle(color: Colors.red),
                                       ),
-                                    ),
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                        secondaryColor,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      currentTeam.number.toString(),
-                                      style: TextStyle(color: Colors.red),
                                     ),
                                   ),
                                 ),
-                              ),
-                              IconButton(
-                                onPressed: () async {
-                                  (await showDialog<ScheduleMatch>(
-                                    context: context,
-                                    builder:
-                                        (final BuildContext dialogContext) =>
-                                            ChangeMatch(
-                                      e,
-                                    ),
-                                  ));
-                                },
-                                icon: Icon(Icons.edit),
-                              ),
-                              IconButton(
-                                onPressed: () async {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      duration: Duration(seconds: 5),
-                                      content: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            "Deleting",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        ],
+                                IconButton(
+                                  onPressed: () async {
+                                    (await showDialog<ScheduleMatch>(
+                                      context: context,
+                                      builder:
+                                          (final BuildContext dialogContext) =>
+                                              ChangeMatch(
+                                        e,
                                       ),
-                                      backgroundColor: Colors.blue,
-                                    ),
-                                  );
-                                  final GraphQLClient client = getClient();
-
-                                  final QueryResult<void> result =
-                                      await client.mutate(
-                                    MutationOptions<void>(
-                                      document: gql(mutation),
-                                      variables: <String, dynamic>{"id": e.id},
-                                    ),
-                                  );
-                                  if (result.hasException) {
+                                    ));
+                                  },
+                                  icon: const Icon(Icons.edit),
+                                ),
+                                IconButton(
+                                  onPressed: () async {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        duration: Duration(seconds: 5),
-                                        content:
-                                            Text("Error: ${result.exception}"),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
-                                  } else {
-                                    ScaffoldMessenger.of(context)
-                                        .clearSnackBars();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        duration: Duration(seconds: 2),
+                                        duration: const Duration(seconds: 5),
                                         content: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: <Widget>[
+                                          children: const <Widget>[
                                             Text(
-                                              "Saved",
+                                              "Deleting",
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),
                                             )
                                           ],
                                         ),
-                                        backgroundColor: Colors.green,
+                                        backgroundColor: Colors.blue,
                                       ),
                                     );
-                                  }
-                                },
-                                icon: Icon(Icons.delete),
-                              ),
-                            ],
+                                    final GraphQLClient client = getClient();
+
+                                    final QueryResult<void> result =
+                                        await client.mutate(
+                                      MutationOptions<void>(
+                                        document: gql(mutation),
+                                        variables: <String, dynamic>{
+                                          "id": e.id
+                                        },
+                                      ),
+                                    );
+                                    if (result.hasException) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          duration: const Duration(seconds: 5),
+                                          content: Text(
+                                            "Error: ${result.exception}",
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .clearSnackBars();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          duration: const Duration(seconds: 2),
+                                          content: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const <Widget>[
+                                              Text(
+                                                "Saved",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                    .toList(),
+                      )
+                      .toList(),
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }
 
-final String mutation = """mutation DeleteMatch(\$id: Int!){
+const String mutation = """mutation DeleteMatch(\$id: Int!){
   delete_matches_by_pk(id: \$id){
   	id
   }

@@ -17,42 +17,39 @@ class _SpecificCardState extends State<SpecificCard> {
   List<String> items = <String>[
     "All",
     "Drivetrain And Driving",
-    "Intake And Conveyor",
-    "Shooter",
-    "Climb",
+    "Intake",
+    "Placement",
     "Defense",
     "General Notes"
   ];
 
   @override
-  Widget build(final BuildContext context) {
-    return DashboardCard(
-      title: "Specific Scouting",
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Selector<String>(
-              options: items,
-              placeholder: "Select Category",
-              value: selectorVal,
-              makeItem: (final String p0) => p0,
-              onChange: (final String p0) {
-                setState(() {
-                  selectorVal = p0;
-                });
-              },
-              validate: (final String p0) => null,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            ScoutingSpecific(
-              selectorValue: selectorVal ?? "All",
-              msg: widget.data,
-            ),
-          ],
+  Widget build(final BuildContext context) => DashboardCard(
+        title: "Specific Scouting",
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Selector<String>(
+                options: items,
+                placeholder: "Select Category",
+                value: selectorVal,
+                makeItem: (final String p0) => p0,
+                onChange: (final String p0) {
+                  setState(() {
+                    selectorVal = p0;
+                  });
+                },
+                validate: (final String p0) => null,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              ScoutingSpecific(
+                selectorValue: selectorVal ?? "All",
+                msg: widget.data,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
