@@ -6,8 +6,8 @@ import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart
 import "package:scouting_frontend/views/mobile/screens/coach_view.dart";
 import "package:scouting_frontend/views/mobile/screens/fault_view.dart";
 import "package:scouting_frontend/views/mobile/screens/input_view.dart";
+import "package:scouting_frontend/views/mobile/screens/new_specific_view.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view.dart";
-import "package:scouting_frontend/views/mobile/screens/specific_view.dart";
 import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 
@@ -58,7 +58,7 @@ class SideNavBar extends StatelessWidget {
             const NavbarTile(
               icon: Icons.search,
               title: "Specific",
-              widget: Specific.new,
+              widget: Specific2.new,
             ),
             const NavbarTile(
               icon: Icons.feed_outlined,

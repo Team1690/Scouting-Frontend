@@ -168,8 +168,8 @@ class _UserInput2State extends State<UserInput2> {
                       height: 20,
                     ),
                     SizedBox(
-                      height: 50,
-                      width: 100,
+                      height: 75,
+                      width: 150,
                       child: ElevatedButton(
                         onPressed: () {},
                         child: const Text("Start Game"),
@@ -437,6 +437,7 @@ class _UserInput2State extends State<UserInput2> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 20,),
                     SubmitButton(
                       resetForm: () {
                         setState(() {
