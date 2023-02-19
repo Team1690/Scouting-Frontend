@@ -164,6 +164,21 @@ class _UserInput2State extends State<UserInput2> {
                     const SizedBox(
                       height: 20,
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: 100,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Start Game"),
+                        style: ElevatedButton.styleFrom(),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     SectionDivider(label: "Events"),
                     IntrinsicHeight(
                       child: Row(
