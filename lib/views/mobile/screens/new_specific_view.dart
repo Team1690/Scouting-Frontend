@@ -18,6 +18,7 @@ class Specific2 extends StatefulWidget {
 
 class _Specific2State extends State<Specific2> {
   final GlobalKey<FormState> formKey = GlobalKey();
+  Stopwatch time = Stopwatch();
   List<TextEditingController> controllers =
       List<TextEditingController>.generate(
     9,
@@ -25,6 +26,7 @@ class _Specific2State extends State<Specific2> {
   );
   final SpecificVars vars = SpecificVars();
   final FocusNode node = FocusNode();
+  List<int> communityEntries = <int>[];
 
   @override
   Widget build(final BuildContext context) => GestureDetector(
@@ -201,9 +203,26 @@ class _Specific2State extends State<Specific2> {
                     const SizedBox(
                       height: 20,
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      height: 75,
+                      width: 150,
+                      child: ElevatedButton(
+                        onPressed: () => !time.isRunning ? time.start() : null,
+                        child: const Text("Start Game"),
+                        style: ElevatedButton.styleFrom(),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     ...<ElevatedButton>[
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          communityEntries.add(time.elapsedMilliseconds);
+                        },
                         child: const Text("Community"),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
@@ -398,7 +417,6 @@ mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes:
     affected_rows
   }"""}
                   }
-
                       """,
                         vars: vars,
                       ),
