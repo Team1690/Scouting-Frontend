@@ -7,6 +7,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
@@ -82,17 +83,15 @@ class _UserInput2State extends State<UserInput2> {
       ),
       body: Stack(
         children: <Widget>[
-          SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+          Form(
+            key: formKey,
+            child: CarouselWithIndicator(
+              widgets: <Widget>[
+                Column(
                   children: <Widget>[
+                    const SizedBox(
+                      height: 15,
+                    ),
                     TextFormField(
                       controller: scouterNameController,
                       validator: (final String? value) =>
@@ -145,7 +144,7 @@ class _UserInput2State extends State<UserInput2> {
                     const SizedBox(
                       height: 20,
                     ),
-                    SectionDivider(label: "gamepiece in bot"),
+                    SectionDivider(label: "gamepiece in robot"),
                     Switcher(
                       labels: const <String>["Cone", "Cube"],
                       colors: const <Color>[Colors.amber, Colors.deepPurple],
@@ -156,19 +155,19 @@ class _UserInput2State extends State<UserInput2> {
                       height: 20,
                     ),
                     SectionDivider(label: "robot Placement"),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     Container(
                       color: Colors.blue,
                       width: 300,
                       height: 100,
                     ),
                     const SizedBox(
-                      height: 20,
-                    ),
-                    const SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     SizedBox(
-                      height: 75,
+                      height: 50,
                       width: 150,
                       child: ElevatedButton(
                         onPressed: () {},
@@ -176,10 +175,32 @@ class _UserInput2State extends State<UserInput2> {
                         style: ElevatedButton.styleFrom(),
                       ),
                     ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
-                    SectionDivider(label: "Events"),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Selector<int>(
+                        validate: (final int? submission) =>
+                            submission.onNull("Please pick a balance result"),
+                        options: provider.keys.toList(),
+                        placeholder: "Choose a balance result",
+                        makeItem: (final int index) => provider[index]!,
+                        onChange: (final int balance) {
+                          setState(() {
+                            match.autoBalanceStatus = balance;
+                          });
+                        },
+                        value: match.autoBalanceStatus,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     IntrinsicHeight(
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -212,13 +233,6 @@ class _UserInput2State extends State<UserInput2> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {},
-                                  child: const Text("Failed"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {},
                                   child: const Text("Feeder"),
                                 ),
                                 ElevatedButton(
@@ -235,7 +249,7 @@ class _UserInput2State extends State<UserInput2> {
                                         height: 10,
                                       ),
                                       SizedBox(
-                                        width: 100,
+                                        width: 120,
                                         height: 50,
                                         child: element,
                                       ),
@@ -243,6 +257,11 @@ class _UserInput2State extends State<UserInput2> {
                                   )
                                   .toList(),
                             ),
+                          ),
+                          VerticalDivider(
+                            color: Colors.black.withOpacity(0.4),
+                            thickness: 2,
+                            indent: 35,
                           ),
                           Expanded(
                             child: Column(
@@ -272,13 +291,6 @@ class _UserInput2State extends State<UserInput2> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {},
-                                  child: const Text("Failed"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {},
                                   child: const Text("Feeder"),
                                 ),
                                 ElevatedButton(
@@ -295,7 +307,7 @@ class _UserInput2State extends State<UserInput2> {
                                         height: 10,
                                       ),
                                       SizedBox(
-                                        width: 100,
+                                        width: 120,
                                         height: 50,
                                         child: element,
                                       ),
@@ -308,10 +320,10 @@ class _UserInput2State extends State<UserInput2> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 40,
                       width: 100,
                       child: ElevatedButton(
                         onPressed: () {},
@@ -321,38 +333,13 @@ class _UserInput2State extends State<UserInput2> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SectionDivider(label: "Auto Balance"),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Selector<int>(
-                        validate: (final int? submission) =>
-                            submission.onNull("Please pick a balance result"),
-                        options: provider.keys.toList(),
-                        placeholder: "Choose a balance result",
-                        makeItem: (final int index) => provider[index]!,
-                        onChange: (final int balance) {
-                          setState(() {
-                            match.autoBalanceStatus = balance;
-                          });
-                        },
-                        value: match.autoBalanceStatus,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
                     SectionDivider(label: "Endgame Balance"),
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -369,9 +356,6 @@ class _UserInput2State extends State<UserInput2> {
                         },
                         value: match.endgameBalanceStatus,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
                     ),
                     const SizedBox(
                       height: 20,
@@ -437,7 +421,9 @@ class _UserInput2State extends State<UserInput2> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     SubmitButton(
                       resetForm: () {
                         setState(() {
@@ -452,13 +438,13 @@ class _UserInput2State extends State<UserInput2> {
                     )
                   ],
                 ),
-              ),
+                if (screenColor != null)
+                  Container(
+                    color: screenColor,
+                  )
+              ],
             ),
           ),
-          if (screenColor != null)
-            Container(
-              color: screenColor,
-            )
         ],
       ),
     );
