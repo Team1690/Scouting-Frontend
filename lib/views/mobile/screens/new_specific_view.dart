@@ -1,14 +1,15 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/event_model.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/dropdown_line.dart";
-
+import "package:scouting_frontend/views/mobile/event_submit_button.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
-import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
 class Specific2 extends StatefulWidget {
@@ -26,7 +27,7 @@ class _Specific2State extends State<Specific2> {
   );
   final SpecificVars vars = SpecificVars();
   final FocusNode node = FocusNode();
-  List<int> communityEntries = <int>[];
+  List<MatchEvent> events = <MatchEvent>[];
 
   @override
   Widget build(final BuildContext context) => GestureDetector(
@@ -210,7 +211,7 @@ class _Specific2State extends State<Specific2> {
                       height: 75,
                       width: 150,
                       child: ElevatedButton(
-                        onPressed: () => !time.isRunning ? time.start() : null,
+                        onPressed: () => time.start(),
                         child: const Text("Start Game"),
                         style: ElevatedButton.styleFrom(),
                       ),
@@ -221,7 +222,14 @@ class _Specific2State extends State<Specific2> {
                     ...<ElevatedButton>[
                       ElevatedButton(
                         onPressed: () {
-                          communityEntries.add(time.elapsedMilliseconds);
+                          events.add(
+                            MatchEvent(
+                              eventTypeId: IdProvider.of(context)
+                                  .locationIds
+                                  .nameToId["Entered Community"]!,
+                              timestamp: time.elapsedMilliseconds,
+                            ),
+                          );
                         },
                         child: const Text("Community"),
                         style: ElevatedButton.styleFrom(
@@ -229,14 +237,32 @@ class _Specific2State extends State<Specific2> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          events.add(
+                            MatchEvent(
+                              eventTypeId: IdProvider.of(context)
+                                  .locationIds
+                                  .nameToId["Entered Open Field"]!,
+                              timestamp: time.elapsedMilliseconds,
+                            ),
+                          );
+                        },
                         child: const Text("Open Field"),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          events.add(
+                            MatchEvent(
+                              eventTypeId: IdProvider.of(context)
+                                  .locationIds
+                                  .nameToId["Entered Feeder"]!,
+                              timestamp: time.elapsedMilliseconds,
+                            ),
+                          );
+                        },
                         child: const Text("Feeder"),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
@@ -396,7 +422,9 @@ class _Specific2State extends State<Specific2> {
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
-                      child: SubmitButton(
+                      child: EventSubmitButton(
+                        events: events,
+                        isSpecific: true,
                         validate: () => formKey.currentState!.validate(),
                         resetForm: () {
                           setState(() {
