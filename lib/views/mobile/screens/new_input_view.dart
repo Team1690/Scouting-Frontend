@@ -1,18 +1,20 @@
 import "dart:async";
 
+import "package:carousel_slider/carousel_controller.dart";
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 
-import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
+import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
+import "package:scouting_frontend/views/mobile/event_submit_button.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
-import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
@@ -37,13 +39,15 @@ class _UserInput2State extends State<UserInput2> {
   }
 
   Color? screenColor;
-
+  final CarouselController carouselController = CarouselController();
   final TextEditingController matchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
+  List<MatchEvent> events = <MatchEvent>[];
+  Stopwatch time = Stopwatch();
   bool toggleLightsState = false;
-  late final Match match = Match(
+  late final TechnicalMatch match = TechnicalMatch(
     robotMatchStatusId:
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
   );
@@ -57,7 +61,13 @@ class _UserInput2State extends State<UserInput2> {
   };
   @override
   Widget build(final BuildContext context) {
-    final Map<int, String> provider = IdProvider.of(context).balance.idToName;
+    final Map<int, String> balanceProvider =
+        IdProvider.of(context).balance.idToName;
+    final Map<int, String> startingPosProvider =
+        IdProvider.of(context).startingPosIds.idToName;
+    final Map<String, int> robotActionsProvider =
+        IdProvider.of(context).robotActionIds.nameToId;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: SideNavBar(),
@@ -88,9 +98,11 @@ class _UserInput2State extends State<UserInput2> {
             child: CarouselWithIndicator(
               widgets: <Widget>[
                 Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    SectionDivider(label: "Pre-match"),
                     const SizedBox(
-                      height: 15,
+                      height: 20,
                     ),
                     TextFormField(
                       controller: scouterNameController,
@@ -111,6 +123,8 @@ class _UserInput2State extends State<UserInput2> {
                       height: 15,
                     ),
                     TeamAndMatchSelection(
+                      matchController: matchController,
+                      teamNumberController: teamNumberController,
                       onChange: (
                         final ScheduleMatch selectedMatch,
                         final LightTeam? team,
@@ -142,26 +156,22 @@ class _UserInput2State extends State<UserInput2> {
                       },
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
-                    SectionDivider(label: "gamepiece in robot"),
-                    Switcher(
-                      labels: const <String>["Cone", "Cube"],
-                      colors: const <Color>[Colors.amber, Colors.deepPurple],
-                      onChange: (final int p0) {},
-                      selected: 1,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SectionDivider(label: "robot Placement"),
+                    SectionDivider(label: "Robot Placement"),
                     const SizedBox(
                       height: 15,
                     ),
-                    Container(
-                      color: Colors.blue,
-                      width: 300,
-                      height: 100,
+                    Selector<int>(
+                      options: startingPosProvider.keys.toList(),
+                      placeholder: "Choose a starting position",
+                      value: match.startingPosId,
+                      makeItem: (final int index) =>
+                          startingPosProvider[index]!,
+                      onChange: ((final int currentValue) =>
+                          match.startingPosId = currentValue),
+                      validate: (final int? submmission) =>
+                          submmission.onNull("Please pick a starting position"),
                     ),
                     const SizedBox(
                       height: 15,
@@ -170,26 +180,30 @@ class _UserInput2State extends State<UserInput2> {
                       height: 50,
                       width: 150,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          carouselController.animateToPage(1);
+                          time.start();
+                        },
                         child: const Text("Start Game"),
-                        style: ElevatedButton.styleFrom(),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
                 Column(
                   children: <Widget>[
-                    const SizedBox(
-                      height: 10,
-                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Selector<int>(
                         validate: (final int? submission) =>
                             submission.onNull("Please pick a balance result"),
-                        options: provider.keys.toList(),
+                        options: balanceProvider.keys.toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int index) => provider[index]!,
+                        makeItem: (final int index) => balanceProvider[index]!,
                         onChange: (final int balance) {
                           setState(() {
                             match.autoBalanceStatus = balance;
@@ -211,32 +225,72 @@ class _UserInput2State extends State<UserInput2> {
                               children: <Widget>[
                                 SectionDivider(label: "Cones"),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId:
+                                            robotActionsProvider["Top Cone"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Top"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId:
+                                            robotActionsProvider["Mid Cone"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Mid"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.yellow,
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId:
+                                            robotActionsProvider["Low Cone"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Low"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.orange,
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId: robotActionsProvider[
+                                            "Feeder Cone"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Feeder"),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId: robotActionsProvider[
+                                            "Ground Cone"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Ground"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.brown,
@@ -269,32 +323,72 @@ class _UserInput2State extends State<UserInput2> {
                               children: <Widget>[
                                 SectionDivider(label: "Cubes"),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId:
+                                            robotActionsProvider["Top Cube"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Top"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId:
+                                            robotActionsProvider["Mid Cube"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Mid"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.yellow,
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId:
+                                            robotActionsProvider["Low Cube"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Low"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.orange,
                                   ),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId: robotActionsProvider[
+                                            "Feeder Cube"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Feeder"),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId: robotActionsProvider[
+                                            "Ground Cube"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
                                   child: const Text("Ground"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.brown,
@@ -326,7 +420,9 @@ class _UserInput2State extends State<UserInput2> {
                       height: 40,
                       width: 100,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          events.remove(events.last);
+                        },
                         child: const Text("Reset"),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey,
@@ -337,6 +433,10 @@ class _UserInput2State extends State<UserInput2> {
                 ),
                 Column(
                   children: <Widget>[
+                    SectionDivider(label: "Post-match"),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     SectionDivider(label: "Endgame Balance"),
                     const SizedBox(
                       height: 10,
@@ -346,9 +446,9 @@ class _UserInput2State extends State<UserInput2> {
                       child: Selector<int>(
                         validate: (final int? submission) =>
                             submission.onNull("Please pick a balance result"),
-                        options: provider.keys.toList(),
+                        options: balanceProvider.keys.toList(),
                         placeholder: "Choose a balance result",
-                        makeItem: (final int index) => provider[index]!,
+                        makeItem: (final int index) => balanceProvider[index]!,
                         onChange: (final int balance) {
                           setState(() {
                             match.endgameBalanceStatus = balance;
@@ -393,28 +493,94 @@ class _UserInput2State extends State<UserInput2> {
                           Expanded(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: const <Widget>[
-                                Text(
+                              children: <Widget>[
+                                const Text(
                                   "Cones",
                                   style: TextStyle(color: Colors.amber),
                                 ),
-                                Text("1"),
-                                Text("2"),
-                                Text("3")
+                                Text(
+                                  events
+                                      .where(
+                                        (final MatchEvent event) =>
+                                            event.eventTypeId ==
+                                            IdProvider.of(context)
+                                                .robotActionIds
+                                                .nameToId["Top Cone"]!,
+                                      )
+                                      .length
+                                      .toString(),
+                                ),
+                                Text(
+                                  events
+                                      .where(
+                                        (final MatchEvent event) =>
+                                            event.eventTypeId ==
+                                            IdProvider.of(context)
+                                                .robotActionIds
+                                                .nameToId["Mid Cone"]!,
+                                      )
+                                      .length
+                                      .toString(),
+                                ),
+                                Text(
+                                  events
+                                      .where(
+                                        (final MatchEvent event) =>
+                                            event.eventTypeId ==
+                                            IdProvider.of(context)
+                                                .robotActionIds
+                                                .nameToId["Low Cone"]!,
+                                      )
+                                      .length
+                                      .toString(),
+                                )
                               ],
                             ),
                           ),
                           Expanded(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: const <Widget>[
-                                Text(
+                              children: <Widget>[
+                                const Text(
                                   "Cubes",
                                   style: TextStyle(color: Colors.deepPurple),
                                 ),
-                                Text("1"),
-                                Text("2"),
-                                Text("3")
+                                Text(
+                                  events
+                                      .where(
+                                        (final MatchEvent event) =>
+                                            event.eventTypeId ==
+                                            IdProvider.of(context)
+                                                .robotActionIds
+                                                .nameToId["Top Cube"]!,
+                                      )
+                                      .length
+                                      .toString(),
+                                ),
+                                Text(
+                                  events
+                                      .where(
+                                        (final MatchEvent event) =>
+                                            event.eventTypeId ==
+                                            IdProvider.of(context)
+                                                .robotActionIds
+                                                .nameToId["Mid Cube"]!,
+                                      )
+                                      .length
+                                      .toString(),
+                                ),
+                                Text(
+                                  events
+                                      .where(
+                                        (final MatchEvent event) =>
+                                            event.eventTypeId ==
+                                            IdProvider.of(context)
+                                                .robotActionIds
+                                                .nameToId["Low Cube"]!,
+                                      )
+                                      .length
+                                      .toString(),
+                                )
                               ],
                             ),
                           )
@@ -424,7 +590,9 @@ class _UserInput2State extends State<UserInput2> {
                     const SizedBox(
                       height: 20,
                     ),
-                    SubmitButton(
+                    EventSubmitButton(
+                      events: events,
+                      isSpecific: false,
                       resetForm: () {
                         setState(() {
                           match.clear(context);
