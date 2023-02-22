@@ -1,3 +1,4 @@
+import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/id_providers.dart";
@@ -20,6 +21,7 @@ class Specific2 extends StatefulWidget {
 
 class _Specific2State extends State<Specific2> {
   final GlobalKey<FormState> formKey = GlobalKey();
+  final CarouselController carouselController = CarouselController();
   Stopwatch time = Stopwatch();
   List<TextEditingController> controllers =
       List<TextEditingController>.generate(
@@ -43,6 +45,7 @@ class _Specific2State extends State<Specific2> {
           child: Form(
             key: formKey,
             child: CarouselWithIndicator(
+              controller: carouselController,
               widgets: <Widget>[
                 Column(
                   children: <Widget>[
@@ -105,9 +108,17 @@ class _Specific2State extends State<Specific2> {
                       height: 75,
                       width: 150,
                       child: ElevatedButton(
-                        onPressed: () => time.start(),
+                        onPressed: () {
+                          time.start();
+                          setState(() {
+                            carouselController.animateToPage(1);
+                          });
+                        },
                         child: const Text("Start Game"),
-                        style: ElevatedButton.styleFrom(),
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        )),
                       ),
                     ),
                     const SizedBox(
