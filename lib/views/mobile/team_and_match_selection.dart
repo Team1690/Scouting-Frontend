@@ -9,7 +9,11 @@ import "package:scouting_frontend/views/common/teams_search_box.dart";
 class TeamAndMatchSelection extends StatefulWidget {
   const TeamAndMatchSelection({
     required this.onChange,
+    required this.matchController,
+    required this.teamNumberController,
   });
+  final TextEditingController matchController;
+  final TextEditingController teamNumberController;
   final void Function(
     ScheduleMatch,
     LightTeam?,
@@ -19,8 +23,6 @@ class TeamAndMatchSelection extends StatefulWidget {
 }
 
 class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
-  final TextEditingController matchController = TextEditingController();
-  final TextEditingController teamNumberController = TextEditingController();
   ScheduleMatch? scheduleMatch;
   List<LightTeam> teams = <LightTeam>[];
   LightTeam? team;
@@ -38,7 +40,7 @@ class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
             const Text("No matches found :(")
           else
             MatchSearchBox(
-              typeAheadController: matchController,
+              typeAheadController: widget.matchController,
               matches: MatchesProvider.of(context).matches,
               onChange: (final ScheduleMatch selectedMatch) {
                 setState(() {
@@ -49,7 +51,7 @@ class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
                           ...selectedMatch.blueAlliance,
                           ...selectedMatch.redAlliance
                         ];
-                  teamNumberController.clear();
+                  widget.teamNumberController.clear();
                   widget.onChange(selectedMatch, null);
                 });
               },
@@ -64,7 +66,7 @@ class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
                       ? "${currentTeam.number} ${currentTeam.name}"
                       : scheduleMatch!.getTeamStation(currentTeam) ?? "",
               teams: teams,
-              typeAheadController: teamNumberController,
+              typeAheadController: widget.teamNumberController,
               onChange: (final LightTeam team) {
                 setState(() {
                   widget.onChange(scheduleMatch!, team);

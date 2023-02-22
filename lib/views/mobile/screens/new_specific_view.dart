@@ -80,6 +80,10 @@ class _Specific2State extends State<Specific2> {
                       height: 15,
                     ),
                     TeamAndMatchSelection(
+                      matchController:
+                          controllers[1], //index of matchController
+                      teamNumberController:
+                          controllers[2], //index of teamNumberController
                       onChange: (
                         final ScheduleMatch selectedMatch,
                         final LightTeam? selectedTeam,
