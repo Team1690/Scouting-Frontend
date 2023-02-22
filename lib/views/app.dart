@@ -17,7 +17,11 @@ class App extends StatelessWidget {
     required this.robotMatchStatusIds,
     required this.faultStatus,
     required this.matches,
+    required this.robotActions,
+    required this.locations,
   });
+  final Map<String, int> robotActions;
+  final Map<String, int> locations;
   final List<ScheduleMatch> matches;
   final Map<String, int> robotMatchStatusIds;
   final List<LightTeam> teams;
@@ -33,6 +37,8 @@ class App extends StatelessWidget {
           matches: matches,
           child: IdProvider(
             matchTypeIds: matchTypeIds,
+            robotActions: robotActions,
+            locations: locations,
             balanceIds: balanceIds,
             drivemotorIds: driveMotorIds,
             drivetrainIds: drivetrainIds,
