@@ -10,6 +10,7 @@ import "mobile/screens/new_input_view.dart";
 class App extends StatelessWidget {
   App({
     required this.teams,
+    required this.startingPos,
     required this.balanceIds,
     required this.driveMotorIds,
     required this.drivetrainIds,
@@ -20,6 +21,7 @@ class App extends StatelessWidget {
     required this.robotActions,
     required this.locations,
   });
+  final Map<String, int> startingPos;
   final Map<String, int> robotActions;
   final Map<String, int> locations;
   final List<ScheduleMatch> matches;
@@ -36,6 +38,7 @@ class App extends StatelessWidget {
         child: MatchesProvider(
           matches: matches,
           child: IdProvider(
+            startingPos: startingPos,
             matchTypeIds: matchTypeIds,
             robotActions: robotActions,
             locations: locations,
