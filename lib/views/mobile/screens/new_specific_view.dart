@@ -10,6 +10,7 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/dropdown_line.dart";
 import "package:scouting_frontend/views/mobile/event_submit_button.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
+import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
@@ -48,9 +49,17 @@ class _Specific2State extends State<Specific2> {
               controller: carouselController,
               widgets: <Widget>[
                 Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    SectionDivider(label: "Pre-match"),
                     const SizedBox(
-                      height: 15,
+                      height: 5,
+                    ),
+                    Divider(
+                      color: Colors.black.withOpacity(0.4),
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     TextFormField(
                       controller: controllers[0], //index of nameController
@@ -80,9 +89,6 @@ class _Specific2State extends State<Specific2> {
                           vars.scheduleMatch = selectedMatch;
                         });
                       },
-                    ),
-                    const SizedBox(
-                      height: 15,
                     ),
                     ToggleButtons(
                       fillColor: const Color.fromARGB(10, 244, 67, 54),
@@ -116,9 +122,10 @@ class _Specific2State extends State<Specific2> {
                         },
                         child: const Text("Start Game"),
                         style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        )),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -130,6 +137,16 @@ class _Specific2State extends State<Specific2> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
+                    SectionDivider(label: "Match"),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Divider(
+                      color: Colors.black.withOpacity(0.4),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     ...<ElevatedButton>[
                       ElevatedButton(
                         onPressed: () {
@@ -144,7 +161,7 @@ class _Specific2State extends State<Specific2> {
                         },
                         child: const Text("Community"),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
+                          backgroundColor: Colors.indigo,
                         ),
                       ),
                       ElevatedButton(
@@ -160,7 +177,7 @@ class _Specific2State extends State<Specific2> {
                         },
                         child: const Text("Open Field"),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
+                          backgroundColor: Colors.blue,
                         ),
                       ),
                       ElevatedButton(
@@ -176,7 +193,7 @@ class _Specific2State extends State<Specific2> {
                         },
                         child: const Text("Feeder"),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
+                          backgroundColor: Colors.teal,
                         ),
                       )
                     ].toList().expand(
@@ -199,7 +216,16 @@ class _Specific2State extends State<Specific2> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        const SizedBox(height: 15.0),
+                        SectionDivider(label: "Post-match"),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Divider(
+                          color: Colors.black.withOpacity(0.4),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         DropdownLine<String>(
                           onTap: () {
                             setState(() {
