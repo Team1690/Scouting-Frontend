@@ -44,7 +44,7 @@ class _EventSubmitButtonState extends State<EventSubmitButton> {
         final GraphQLError error = errors.single;
         _errorMessage = error.extensions?["code"]?.toString() ==
                 "constraint-violation"
-            ? "That match already exisits check if you scouted that correct robot/wrote the correct match"
+            ? "That match already exists check if you scouted that correct robot/wrote the correct match"
             : error.message;
       } else {
         _errorMessage = errors.join(", ");
@@ -119,8 +119,9 @@ class _EventSubmitButtonState extends State<EventSubmitButton> {
             MutationOptions<int>(
               document: gql(widget.mutation),
               variables: widget.vars.toHasuraVars(),
-              parserFn: (final Map<String, dynamic> data) =>
-                  data["insert__2023_specific"]["returning"][0]["id"] as int,
+              parserFn: (final Map<String, dynamic> data) => data[
+                      "insert__2023_${widget.isSpecific ? "specific" : "new_technical_match"}"]
+                  ["returning"][0]["id"] as int,
             ),
           );
           final OperationException? exception = queryResult.exception;
@@ -130,13 +131,12 @@ class _EventSubmitButtonState extends State<EventSubmitButton> {
               event.matchId = id;
             }
             eventMutation = """
-mutation Events(\$objects: [${widget.isSpecific ? "_2023_specific_events_insert_input" : "_2023_techical_events_insert_input"}!]!) {
+mutation Events(\$objects: [${widget.isSpecific ? "_2023_specific_events_insert_input" : "_2023_technical_events_insert_input"}!]!) {
   ${widget.isSpecific ? "insert__2023_specific_events" : "insert__2023_technical_events"}(objects: \$objects) {
     affected_rows
   }
 }
 """;
-
             final QueryResult<void> eventsQueryResult = await client.mutate(
               MutationOptions<void>(
                 document: gql(eventMutation),
@@ -150,7 +150,6 @@ mutation Events(\$objects: [${widget.isSpecific ? "_2023_specific_events_insert_
                 },
               ),
             );
-
             final OperationException? eventException =
                 eventsQueryResult.exception;
             validateResult(eventException, () {
