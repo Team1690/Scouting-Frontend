@@ -48,172 +48,200 @@ class _Specific2State extends State<Specific2> {
             child: CarouselWithIndicator(
               controller: carouselController,
               widgets: <Widget>[
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SectionDivider(label: "Pre-match"),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Divider(
-                      color: Colors.black.withOpacity(0.4),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      controller: controllers[0], //index of nameController
-                      validator: (final String? value) =>
-                          value != null && value.isNotEmpty
-                              ? null
-                              : "Please enter your name",
-                      onChanged: (final String p0) {
-                        vars.name = p0;
-                      },
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(),
-                        hintText: "Scouter names",
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      SectionDivider(label: "Pre-match"),
+                      const SizedBox(
+                        height: 5,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    TeamAndMatchSelection(
-                      matchController:
-                          controllers[1], //index of matchController
-                      teamNumberController:
-                          controllers[2], //index of teamNumberController
-                      onChange: (
-                        final ScheduleMatch selectedMatch,
-                        final LightTeam? selectedTeam,
-                      ) {
-                        setState(() {
-                          vars.team = selectedTeam;
-                          vars.scheduleMatch = selectedMatch;
-                        });
-                      },
-                    ),
-                    ToggleButtons(
-                      fillColor: const Color.fromARGB(10, 244, 67, 54),
-                      selectedColor: Colors.red,
-                      selectedBorderColor: Colors.red,
-                      children: const <Widget>[
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text("Rematch"),
-                        )
-                      ],
-                      isSelected: <bool>[vars.isRematch],
-                      onPressed: (final int i) {
-                        setState(() {
-                          vars.isRematch = !vars.isRematch;
-                        });
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 75,
-                      width: 150,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          time.start();
+                      Divider(
+                        color: Colors.black.withOpacity(0.4),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: controllers[0], //index of nameController
+                        validator: (final String? value) =>
+                            value != null && value.isNotEmpty
+                                ? null
+                                : "Please enter your name",
+                        onChanged: (final String p0) {
+                          vars.name = p0;
+                        },
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(),
+                          hintText: "Scouter names",
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      TeamAndMatchSelection(
+                        matchController:
+                            controllers[1], //index of matchController
+                        teamNumberController:
+                            controllers[2], //index of teamNumberController
+                        onChange: (
+                          final ScheduleMatch selectedMatch,
+                          final LightTeam? selectedTeam,
+                        ) {
                           setState(() {
-                            carouselController.animateToPage(1);
+                            vars.team = selectedTeam;
+                            vars.scheduleMatch = selectedMatch;
                           });
                         },
-                        child: const Text("Start Game"),
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
+                      ),
+                      ToggleButtons(
+                        fillColor: const Color.fromARGB(10, 244, 67, 54),
+                        selectedColor: Colors.red,
+                        selectedBorderColor: Colors.red,
+                        children: const <Widget>[
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text("Rematch"),
+                          )
+                        ],
+                        isSelected: <bool>[vars.isRematch],
+                        onPressed: (final int i) {
+                          setState(() {
+                            vars.isRematch = !vars.isRematch;
+                          });
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        height: 75,
+                        width: 150,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            time.start();
+                            setState(() {
+                              carouselController.animateToPage(1);
+                            });
+                          },
+                          child: const Text("Start Game"),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: 150,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              time.stop();
+                              time.reset();
+                            });
+                          },
+                          child: const Text("Reset Time"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    SectionDivider(label: "Match"),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Divider(
-                      color: Colors.black.withOpacity(0.4),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ...<ElevatedButton>[
-                      ElevatedButton(
-                        onPressed: () {
-                          events.add(
-                            MatchEvent(
-                              eventTypeId: IdProvider.of(context)
-                                  .locationIds
-                                  .nameToId["Entered Community"]!,
-                              timestamp: time.elapsedMilliseconds,
+                  children: time.elapsedMilliseconds == 0
+                      ? <Align>[
+                          const Align(
+                            alignment: Alignment.center,
+                            child: Text("Please Start The Match Timer"),
+                          )
+                        ]
+                      : <Widget>[
+                          SectionDivider(label: "Match"),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Divider(
+                            color: Colors.black.withOpacity(0.4),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          ...<ElevatedButton>[
+                            ElevatedButton(
+                              onPressed: () {
+                                events.add(
+                                  MatchEvent(
+                                    eventTypeId: IdProvider.of(context)
+                                        .locationIds
+                                        .nameToId["Entered Community"]!,
+                                    timestamp: time.elapsedMilliseconds,
+                                  ),
+                                );
+                              },
+                              child: const Text("Community"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.indigo,
+                              ),
                             ),
-                          );
-                        },
-                        child: const Text("Community"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.indigo,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          events.add(
-                            MatchEvent(
-                              eventTypeId: IdProvider.of(context)
-                                  .locationIds
-                                  .nameToId["Entered Open Field"]!,
-                              timestamp: time.elapsedMilliseconds,
+                            ElevatedButton(
+                              onPressed: () {
+                                events.add(
+                                  MatchEvent(
+                                    eventTypeId: IdProvider.of(context)
+                                        .locationIds
+                                        .nameToId["Entered Open Field"]!,
+                                    timestamp: time.elapsedMilliseconds,
+                                  ),
+                                );
+                              },
+                              child: const Text("Open Field"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                              ),
                             ),
-                          );
-                        },
-                        child: const Text("Open Field"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          events.add(
-                            MatchEvent(
-                              eventTypeId: IdProvider.of(context)
-                                  .locationIds
-                                  .nameToId["Entered Feeder"]!,
-                              timestamp: time.elapsedMilliseconds,
-                            ),
-                          );
-                        },
-                        child: const Text("Feeder"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                        ),
-                      )
-                    ].toList().expand(
-                          (final Widget element) => <Widget>[
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            Expanded(
-                              child: element,
-                            ),
-                          ],
-                        ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                  ],
+                            ElevatedButton(
+                              onPressed: () {
+                                events.add(
+                                  MatchEvent(
+                                    eventTypeId: IdProvider.of(context)
+                                        .locationIds
+                                        .nameToId["Entered Feeder"]!,
+                                    timestamp: time.elapsedMilliseconds,
+                                  ),
+                                );
+                              },
+                              child: const Text("Feeder"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.teal,
+                              ),
+                            )
+                          ].toList().expand(
+                                (final Widget element) => <Widget>[
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Expanded(
+                                    child: element,
+                                  ),
+                                ],
+                              ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                        ],
                 ),
                 GestureDetector(
                   onTap: node.unfocus,
@@ -375,12 +403,15 @@ class _Specific2State extends State<Specific2> {
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: EventSubmitButton(
-                            events: events,
+                            events: filterEvents(events),
                             isSpecific: true,
                             validate: () => formKey.currentState!.validate(),
                             resetForm: () {
                               setState(() {
+                                time.stop();
+                                time.reset();
                                 vars.reset();
+                                events = <MatchEvent>[];
                                 for (final TextEditingController controller
                                     in controllers) {
                                   controller.clear();
@@ -414,3 +445,7 @@ class _Specific2State extends State<Specific2> {
         ),
       );
 }
+
+List<MatchEvent> filterEvents(final List<MatchEvent> events) => events
+    .where((final MatchEvent event) => event.timestamp <= 153000)
+    .toList();
