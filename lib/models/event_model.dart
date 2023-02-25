@@ -11,6 +11,6 @@ class MatchEvent {
   Map<String, dynamic> toHasuraVars() => <String, dynamic>{
         "timestamp": timestamp,
         "event_type_id": eventTypeId,
-        "specific_match_id": matchId,
+        "match_id": matchId,
       };
 }
