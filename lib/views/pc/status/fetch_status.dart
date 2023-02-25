@@ -35,9 +35,9 @@ Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
           SubscriptionOptions<List<StatusItem<I, V>>>(
             document: gql(subscription),
             parserFn: (final Map<String, dynamic> data) {
-              final List<dynamic> matches =
-                  data[isSpecific ? "_2023_specific" : "_2023_technical_match"]
-                      as List<dynamic>;
+              final List<dynamic> matches = data[isSpecific
+                  ? "_2023_specific"
+                  : "_2023_new_technical_match"] as List<dynamic>;
               final Map<I, List<dynamic>> identifierToMatch =
                   matches.groupListsBy(
                 parseI,
@@ -165,7 +165,7 @@ Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
 
 String getSubscription(final bool isSpecific, final bool isPreScouting) => """
 subscription Status {
-   _2023_${isSpecific ? "specific" : "technical_match"}
+   _2023_${isSpecific ? "specific" : "new_technical_match"}
   (order_by: {match: {match_type: {order: asc}, match_number: asc}, is_rematch: asc},
    where: {match: {match_type: {title: {${isPreScouting ? "_eq" : "_neq"}: "Pre scouting"}}}}) {
     team {

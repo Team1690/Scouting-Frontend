@@ -27,7 +27,7 @@ Stream<List<PickListTeam>> fetchPicklist() {
       faults{
       message
   }
-    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+    new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
           auto_cones_low
@@ -77,7 +77,8 @@ Stream<List<PickListTeam>> fetchPicklist() {
 List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
   final List<PickListTeam> teams =
       (pickListTeams["team"] as List<dynamic>).map((final dynamic team) {
-    final dynamic avg = team["technical_matches_aggregate"]["aggregate"]["avg"];
+    final dynamic avg =
+        team["new_technical_matches_aggregate"]["aggregate"]["avg"];
     final bool nullValidator = avg["auto_cones_top"] == null;
     final double avgGamepiecePoints = nullValidator
         ? double.nan
@@ -87,7 +88,7 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
             ),
           );
     final List<int> autoBalance =
-        (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+        (team["new_technical_matches_aggregate"]["nodes"] as List<dynamic>)
             .where(
               (final dynamic node) =>
                   node["auto_balance"]["title"] != "No attempt",
@@ -98,14 +99,15 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
             )
             .toList();
     final int amountOfMatches =
-        (team["technical_matches_aggregate"]["nodes"] as List<dynamic>).length;
+        (team["new_technical_matches_aggregate"]["nodes"] as List<dynamic>)
+            .length;
     final double autoBalanceAvg = autoBalance.averageOrNull ?? double.nan;
 
     final List<String> faultMessages = (team["faults"] as List<dynamic>)
         .map((final dynamic fault) => fault["message"] as String)
         .toList();
     final List<RobotMatchStatus> robotMatchStatuses =
-        (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+        (team["new_technical_matches_aggregate"]["nodes"] as List<dynamic>)
             .map(
               (final dynamic node) => titleToEnum(
                 node["robot_match_status"]["title"] as String,
@@ -115,7 +117,7 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
     return PickListTeam(
       drivetrain: team["_2023_pit"]?["drivetrain"]["title"] as String?,
       matchesBalanced:
-          (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+          (team["new_technical_matches_aggregate"]["nodes"] as List<dynamic>)
               .where(
                 (final dynamic node) =>
                     node["auto_balance"]["title"] != "No attempt" &&
@@ -143,7 +145,7 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
       secondListIndex: team["second_picklist_index"] as int,
       taken: team["taken"] as bool,
       maxBalanceTitle:
-          ((team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+          ((team["new_technical_matches_aggregate"]["nodes"] as List<dynamic>)
                   .reduceSafe(
                 (final dynamic maxNode, final dynamic newNode) =>
                     (maxNode["auto_balance"]["auto_points"] as int) >
