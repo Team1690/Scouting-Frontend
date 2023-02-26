@@ -40,15 +40,12 @@ class _EventSubmitButtonState extends State<EventSubmitButton> {
         _state = ButtonState.fail;
       });
       final List<GraphQLError> errors = exception.graphqlErrors;
-      if (errors.length == 1) {
-        final GraphQLError error = errors.single;
-        _errorMessage = error.extensions?["code"]?.toString() ==
-                "constraint-violation"
-            ? "That match already exists check if you scouted that correct robot/wrote the correct match"
-            : error.message;
-      } else {
-        _errorMessage = errors.join(", ");
-      }
+      final GraphQLError error = errors.first;
+      _errorMessage = error.extensions?["code"]?.toString() ==
+                  "constraint-violation" ||
+              error.extensions?["code"]?.toString() == "Uniqueness violation"
+          ? "That match already exists check if you scouted that correct robot/wrote the correct match"
+          : error.message;
     } else {
       onSuccess();
     }
@@ -125,40 +122,49 @@ class _EventSubmitButtonState extends State<EventSubmitButton> {
             ),
           );
           final OperationException? exception = queryResult.exception;
-          final int id = queryResult.mapQueryResult();
-          validateResult(exception, () async {
-            for (final MatchEvent event in widget.events) {
-              event.matchId = id;
-            }
-            eventMutation = """
+          if (widget.events.isNotEmpty) {
+            final int id = queryResult.mapQueryResult();
+            validateResult(exception, () async {
+              for (final MatchEvent event in widget.events) {
+                event.matchId = id;
+              }
+              eventMutation = """
 mutation Events(\$objects: [${widget.isSpecific ? "_2023_specific_events_insert_input" : "_2023_technical_events_insert_input"}!]!) {
   ${widget.isSpecific ? "insert__2023_specific_events" : "insert__2023_technical_events"}(objects: \$objects) {
     affected_rows
   }
 }
 """;
-            final QueryResult<void> eventsQueryResult = await client.mutate(
-              MutationOptions<void>(
-                document: gql(eventMutation),
-                variables: <String, dynamic>{
-                  "objects": widget.events
-                      .map(
-                        (final MatchEvent matchEvent) =>
-                            matchEvent.toHasuraVars(),
-                      )
-                      .toList(),
-                },
-              ),
-            );
-            final OperationException? eventException =
-                eventsQueryResult.exception;
-            validateResult(eventException, () {
-              widget.resetForm();
+              final QueryResult<void> eventsQueryResult = await client.mutate(
+                MutationOptions<void>(
+                  document: gql(eventMutation),
+                  variables: <String, dynamic>{
+                    "objects": widget.events
+                        .map(
+                          (final MatchEvent matchEvent) =>
+                              matchEvent.toHasuraVars(),
+                        )
+                        .toList(),
+                  },
+                ),
+              );
+              final OperationException? eventException =
+                  eventsQueryResult.exception;
+              validateResult(eventException, () {
+                widget.resetForm();
+                setState(() {
+                  _state = ButtonState.success;
+                });
+              });
+            });
+          } else {
+            validateResult(exception, () {
               setState(() {
+                widget.resetForm();
                 _state = ButtonState.success;
               });
             });
-          });
+          }
           Future<void>.delayed(const Duration(seconds: 5), () {
             if (mounted) {
               setState(() {
