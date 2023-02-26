@@ -14,7 +14,6 @@ import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
-import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
@@ -801,29 +800,12 @@ class _UserInput2State extends State<UserInput2> {
                             teamNumberController.clear();
                             matchController.clear();
                             events = <MatchEvent>[];
-                            carouselController.animateToPage(0);
                           });
                         },
                         validate: () => formKey.currentState!.validate(),
                         vars: updateMatch(match, filterEvents(events)),
                         mutation: mutation,
                       ),
-                      SectionDivider(label: "Submit Button With No Events"),
-                      SubmitButton(
-                        vars: updateMatch(match, filterEvents(events)),
-                        mutation: mutation,
-                        resetForm: () {
-                          setState(() {
-                            time.stop();
-                            time.reset();
-                            match.clear(context);
-                            teamNumberController.clear();
-                            matchController.clear();
-                            events = <MatchEvent>[];
-                          });
-                        },
-                        validate: () => formKey.currentState!.validate(),
-                      )
                     ],
                   ),
                   if (screenColor != null)

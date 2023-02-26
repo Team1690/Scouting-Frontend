@@ -14,8 +14,6 @@ import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
-import "../submit_button.dart";
-
 class Specific2 extends StatefulWidget {
   @override
   State<Specific2> createState() => _Specific2State();
@@ -25,6 +23,7 @@ class _Specific2State extends State<Specific2> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final CarouselController carouselController = CarouselController();
   Stopwatch time = Stopwatch();
+  TextEditingController nameController = TextEditingController();
   List<TextEditingController> controllers =
       List<TextEditingController>.generate(
     9,
@@ -65,7 +64,7 @@ class _Specific2State extends State<Specific2> {
                           height: 20,
                         ),
                         TextFormField(
-                          controller: controllers[0], //index of nameController
+                          controller: nameController, //index of nameController
                           validator: (final String? value) =>
                               value != null && value.isNotEmpty
                                   ? null
@@ -473,37 +472,6 @@ class _Specific2State extends State<Specific2> {
                             vars: vars,
                           ),
                         ),
-                        SectionDivider(label: "Submit Button With No Events"),
-                        SubmitButton(
-                          vars: vars,
-                          mutation: """
-                        mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int, \$fault_message:String){
-                          insert__2023_specific(objects: {defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id}) {
-                            affected_rows
-                            returning{
-                              id
-                            }
-                          }
-                                          ${vars.faultMessage == null ? "" : """
-                          insert_faults(objects: {team_id: \$team_id, message: \$fault_message}) {
-                            affected_rows
-                          }"""}
-                                          }
-                            """,
-                          resetForm: () {
-                            setState(() {
-                              time.stop();
-                              time.reset();
-                              vars.reset();
-                              events = <MatchEvent>[];
-                              for (final TextEditingController controller
-                                  in controllers) {
-                                controller.clear();
-                              }
-                            });
-                          },
-                          validate: () => formKey.currentState!.validate(),
-                        )
                       ],
                     ),
                   ],
