@@ -118,7 +118,7 @@ class _Specific2State extends State<Specific2> {
                           height: 20,
                         ),
                         SizedBox(
-                          height: 75,
+                          height: 50,
                           width: 150,
                           child: ElevatedButton(
                             onPressed: () {
@@ -180,53 +180,95 @@ class _Specific2State extends State<Specific2> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              ...<ElevatedButton>[
-                                ElevatedButton(
-                                  onPressed: () {
-                                    events.add(
-                                      MatchEvent(
-                                        eventTypeId: IdProvider.of(context)
-                                            .locationIds
-                                            .nameToId["Entered Community"]!,
-                                        timestamp: time.elapsedMilliseconds,
-                                      ),
-                                    );
-                                  },
-                                  child: const Text("Community"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.indigo,
+                              ...<Widget>[
+                                Container(
+                                  color: events.isEmpty
+                                      ? Colors.transparent
+                                      : events.last.eventTypeId ==
+                                              IdProvider.of(context)
+                                                      .locationIds
+                                                      .nameToId[
+                                                  "Entered Community"]!
+                                          ? Colors.white
+                                          : Colors.transparent,
+                                  padding: const EdgeInsets.all(8),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        events.add(
+                                          MatchEvent(
+                                            eventTypeId: IdProvider.of(context)
+                                                .locationIds
+                                                .nameToId["Entered Community"]!,
+                                            timestamp: time.elapsedMilliseconds,
+                                          ),
+                                        );
+                                      });
+                                    },
+                                    child: const Text("Community"),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.indigo,
+                                    ),
                                   ),
                                 ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    events.add(
-                                      MatchEvent(
-                                        eventTypeId: IdProvider.of(context)
-                                            .locationIds
-                                            .nameToId["Entered Open Field"]!,
-                                        timestamp: time.elapsedMilliseconds,
-                                      ),
-                                    );
-                                  },
-                                  child: const Text("Open Field"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                Container(
+                                  color: events.isEmpty
+                                      ? Colors.transparent
+                                      : events.last.eventTypeId ==
+                                              IdProvider.of(context)
+                                                      .locationIds
+                                                      .nameToId[
+                                                  "Entered Open Field"]!
+                                          ? Colors.white
+                                          : Colors.transparent,
+                                  padding: const EdgeInsets.all(8),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        events.add(
+                                          MatchEvent(
+                                            eventTypeId: IdProvider.of(context)
+                                                    .locationIds
+                                                    .nameToId[
+                                                "Entered Open Field"]!,
+                                            timestamp: time.elapsedMilliseconds,
+                                          ),
+                                        );
+                                      });
+                                    },
+                                    child: const Text("Open Field"),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                    ),
                                   ),
                                 ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    events.add(
-                                      MatchEvent(
-                                        eventTypeId: IdProvider.of(context)
-                                            .locationIds
-                                            .nameToId["Entered Feeder"]!,
-                                        timestamp: time.elapsedMilliseconds,
-                                      ),
-                                    );
-                                  },
-                                  child: const Text("Feeder"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.teal,
+                                Container(
+                                  color: events.isEmpty
+                                      ? Colors.transparent
+                                      : events.last.eventTypeId ==
+                                              IdProvider.of(context)
+                                                  .locationIds
+                                                  .nameToId["Entered Feeder"]!
+                                          ? Colors.white
+                                          : Colors.transparent,
+                                  padding: const EdgeInsets.all(8),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        events.add(
+                                          MatchEvent(
+                                            eventTypeId: IdProvider.of(context)
+                                                .locationIds
+                                                .nameToId["Entered Feeder"]!,
+                                            timestamp: time.elapsedMilliseconds,
+                                          ),
+                                        );
+                                      });
+                                    },
+                                    child: const Text("Feeder"),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.teal,
+                                    ),
                                   ),
                                 )
                               ].toList().expand(

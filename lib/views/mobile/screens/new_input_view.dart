@@ -373,7 +373,12 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Top"),
+                                          child: Text("Top: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Top Cone"]!,
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.green,
                                           ),
@@ -392,9 +397,14 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Mid"),
+                                          child: Text("Mid: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Mid Cone"]!,
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.yellow,
+                                            backgroundColor: Colors.amber,
                                           ),
                                         ),
                                         ElevatedButton(
@@ -411,7 +421,12 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Low"),
+                                          child: Text("Low: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Low Cone"]!,
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.orange,
                                           ),
@@ -430,7 +445,12 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Failed"),
+                                          child: Text("Failed: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Failed Cone"]!,
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.red,
                                           ),
@@ -449,7 +469,12 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Feeder"),
+                                          child: Text("Feeder: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Feeder Cone"]!,
+                                              ).length.toString()}"),
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
@@ -465,7 +490,12 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Ground"),
+                                          child: Text("Ground: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Ground Cone"]!,
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.brown,
                                           ),
@@ -498,17 +528,24 @@ class _UserInput2State extends State<UserInput2> {
                                         SectionDivider(label: "Cubes"),
                                         ElevatedButton(
                                           onPressed: () {
-                                            events.add(
-                                              MatchEvent(
-                                                eventTypeId:
+                                            setState(() {
+                                              events.add(
+                                                MatchEvent(
+                                                  eventTypeId:
+                                                      robotActionsProvider[
+                                                          "Top Cube"]!,
+                                                  timestamp:
+                                                      time.elapsedMilliseconds,
+                                                ),
+                                              );
+                                            });
+                                          },
+                                          child: Text("Top: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
                                                     robotActionsProvider[
                                                         "Top Cube"]!,
-                                                timestamp:
-                                                    time.elapsedMilliseconds,
-                                              ),
-                                            );
-                                          },
-                                          child: const Text("Top"),
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.green,
                                           ),
@@ -527,9 +564,14 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Mid"),
+                                          child: Text("Mid: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Mid Cube"]!,
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.yellow,
+                                            backgroundColor: Colors.amber,
                                           ),
                                         ),
                                         ElevatedButton(
@@ -546,7 +588,12 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Low"),
+                                          child: Text("Low: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Low Cube"]!,
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.orange,
                                           ),
@@ -565,7 +612,12 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Failed"),
+                                          child: Text("Failed: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Failed Cube"]!,
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.red,
                                           ),
@@ -584,7 +636,12 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Feeder"),
+                                          child: Text("Feeder: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Feeder Cube"]!,
+                                              ).length.toString()}"),
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
@@ -600,7 +657,12 @@ class _UserInput2State extends State<UserInput2> {
                                               );
                                             });
                                           },
-                                          child: const Text("Ground"),
+                                          child: Text("Ground: ${events.where(
+                                                (final MatchEvent event) =>
+                                                    event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Ground Cube"]!,
+                                              ).length.toString()}"),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.brown,
                                           ),
@@ -636,7 +698,11 @@ class _UserInput2State extends State<UserInput2> {
                                     events.remove(events.last);
                                   });
                                 },
-                                child: const Text("Reset"),
+                                child: const SizedBox(
+                                  width: 120,
+                                  height: 50,
+                                  child: Center(child: Text("Undo")),
+                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.grey,
                                 ),
@@ -644,6 +710,10 @@ class _UserInput2State extends State<UserInput2> {
                             ),
                             const SizedBox(
                               height: 15,
+                            ),
+                            SectionDivider(label: "Auto Balance"),
+                            const SizedBox(
+                              height: 10,
                             ),
                             Padding(
                               padding:
@@ -716,123 +786,6 @@ class _UserInput2State extends State<UserInput2> {
                               in robotMatchStatusIndexToId.entries)
                             i.value: i.key
                         }[match.robotMatchStatusId]!,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SectionDivider(label: "results"),
-                      IntrinsicHeight(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  const Text(
-                                    "Cones",
-                                    style: TextStyle(color: Colors.amber),
-                                  ),
-                                  Text(
-                                    events
-                                        .where(
-                                          (final MatchEvent event) =>
-                                              event.eventTypeId ==
-                                              robotActionsProvider["Top Cone"]!,
-                                        )
-                                        .length
-                                        .toString(),
-                                  ),
-                                  Text(
-                                    events
-                                        .where(
-                                          (final MatchEvent event) =>
-                                              event.eventTypeId ==
-                                              robotActionsProvider["Mid Cone"]!,
-                                        )
-                                        .length
-                                        .toString(),
-                                  ),
-                                  Text(
-                                    events
-                                        .where(
-                                          (final MatchEvent event) =>
-                                              event.eventTypeId ==
-                                              robotActionsProvider["Low Cone"]!,
-                                        )
-                                        .length
-                                        .toString(),
-                                  ),
-                                  Text(
-                                    events
-                                        .where(
-                                          (final MatchEvent event) =>
-                                              event.eventTypeId ==
-                                              robotActionsProvider[
-                                                  "Failed Cone"]!,
-                                        )
-                                        .length
-                                        .toString(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  const Text(
-                                    "Cubes",
-                                    style: TextStyle(color: Colors.deepPurple),
-                                  ),
-                                  Text(
-                                    events
-                                        .where(
-                                          (final MatchEvent event) =>
-                                              event.eventTypeId ==
-                                              IdProvider.of(context)
-                                                  .robotActionIds
-                                                  .nameToId["Top Cube"]!,
-                                        )
-                                        .length
-                                        .toString(),
-                                  ),
-                                  Text(
-                                    events
-                                        .where(
-                                          (final MatchEvent event) =>
-                                              event.eventTypeId ==
-                                              robotActionsProvider["Mid Cube"]!,
-                                        )
-                                        .length
-                                        .toString(),
-                                  ),
-                                  Text(
-                                    events
-                                        .where(
-                                          (final MatchEvent event) =>
-                                              event.eventTypeId ==
-                                              robotActionsProvider["Low Cube"]!,
-                                        )
-                                        .length
-                                        .toString(),
-                                  ),
-                                  Text(
-                                    events
-                                        .where(
-                                          (final MatchEvent event) =>
-                                              event.eventTypeId ==
-                                              robotActionsProvider[
-                                                  "Failed Cube"]!,
-                                        )
-                                        .length
-                                        .toString(),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
                       ),
                       const SizedBox(
                         height: 20,
