@@ -9,12 +9,12 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/mobile/event_submit_button.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
+import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
@@ -214,11 +214,10 @@ class _UserInput2State extends State<UserInput2> {
         children: <Widget>[
           Form(
             key: formKey,
-            child: CarouselWithIndicator(
-              controller: carouselController,
-              widgets: <Widget>[
-                SingleChildScrollView(
-                  child: Column(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       SectionDivider(label: "Pre-match"),
@@ -303,9 +302,8 @@ class _UserInput2State extends State<UserInput2> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              carouselController.animateToPage(1);
+                              time.start();
                             });
-                            time.start();
                           },
                           child: const Text("Start Game"),
                           style: ElevatedButton.styleFrom(
@@ -339,9 +337,7 @@ class _UserInput2State extends State<UserInput2> {
                       ),
                     ],
                   ),
-                ),
-                SingleChildScrollView(
-                  child: Column(
+                  Column(
                     children: time.elapsedMilliseconds == 0
                         ? <Align>[
                             const Align(
@@ -631,6 +627,24 @@ class _UserInput2State extends State<UserInput2> {
                             const SizedBox(
                               height: 15,
                             ),
+                            SizedBox(
+                              height: 40,
+                              width: 100,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    events.remove(events.last);
+                                  });
+                                },
+                                child: const Text("Reset"),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
@@ -649,27 +663,9 @@ class _UserInput2State extends State<UserInput2> {
                                 value: match.autoBalanceStatus,
                               ),
                             ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            SizedBox(
-                              height: 40,
-                              width: 100,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  events.remove(events.last);
-                                },
-                                child: const Text("Reset"),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.grey,
-                                ),
-                              ),
-                            ),
                           ],
                   ),
-                ),
-                SingleChildScrollView(
-                  child: Column(
+                  Column(
                     children: <Widget>[
                       SectionDivider(label: "Post-match"),
                       const SizedBox(
@@ -858,15 +854,31 @@ class _UserInput2State extends State<UserInput2> {
                         validate: () => formKey.currentState!.validate(),
                         vars: updateMatch(match, filterEvents(events)),
                         mutation: mutation,
+                      ),
+                      SectionDivider(label: "Submit Button With No Events"),
+                      SubmitButton(
+                        vars: updateMatch(match, filterEvents(events)),
+                        mutation: mutation,
+                        resetForm: () {
+                          setState(() {
+                            time.stop();
+                            time.reset();
+                            match.clear(context);
+                            teamNumberController.clear();
+                            matchController.clear();
+                            events = <MatchEvent>[];
+                          });
+                        },
+                        validate: () => formKey.currentState!.validate(),
                       )
                     ],
                   ),
-                ),
-                if (screenColor != null)
-                  Container(
-                    color: screenColor,
-                  )
-              ],
+                  if (screenColor != null)
+                    Container(
+                      color: screenColor,
+                    )
+                ],
+              ),
             ),
           ),
         ],

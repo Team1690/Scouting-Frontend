@@ -5,7 +5,6 @@ import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
-import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/dropdown_line.dart";
 import "package:scouting_frontend/views/mobile/event_submit_button.dart";
@@ -14,6 +13,8 @@ import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
+
+import "../submit_button.dart";
 
 class Specific2 extends StatefulWidget {
   @override
@@ -45,208 +46,203 @@ class _Specific2State extends State<Specific2> {
           padding: const EdgeInsets.all(defaultPadding),
           child: Form(
             key: formKey,
-            child: CarouselWithIndicator(
-              controller: carouselController,
-              widgets: <Widget>[
-                SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      SectionDivider(label: "Pre-match"),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Divider(
-                        color: Colors.black.withOpacity(0.4),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        controller: controllers[0], //index of nameController
-                        validator: (final String? value) =>
-                            value != null && value.isNotEmpty
-                                ? null
-                                : "Please enter your name",
-                        onChanged: (final String p0) {
-                          vars.name = p0;
-                        },
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(),
-                          hintText: "Scouter names",
+            child: GestureDetector(
+              onTap: node.unfocus,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SectionDivider(label: "Pre-match"),
+                        const SizedBox(
+                          height: 5,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      TeamAndMatchSelection(
-                        matchController:
-                            controllers[1], //index of matchController
-                        teamNumberController:
-                            controllers[2], //index of teamNumberController
-                        onChange: (
-                          final ScheduleMatch selectedMatch,
-                          final LightTeam? selectedTeam,
-                        ) {
-                          setState(() {
-                            vars.team = selectedTeam;
-                            vars.scheduleMatch = selectedMatch;
-                          });
-                        },
-                      ),
-                      ToggleButtons(
-                        fillColor: const Color.fromARGB(10, 244, 67, 54),
-                        selectedColor: Colors.red,
-                        selectedBorderColor: Colors.red,
-                        children: const <Widget>[
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text("Rematch"),
-                          )
-                        ],
-                        isSelected: <bool>[vars.isRematch],
-                        onPressed: (final int i) {
-                          setState(() {
-                            vars.isRematch = !vars.isRematch;
-                          });
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: 75,
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            time.start();
+                        Divider(
+                          color: Colors.black.withOpacity(0.4),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          controller: controllers[0], //index of nameController
+                          validator: (final String? value) =>
+                              value != null && value.isNotEmpty
+                                  ? null
+                                  : "Please enter your name",
+                          onChanged: (final String p0) {
+                            vars.name = p0;
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.person),
+                            border: OutlineInputBorder(),
+                            hintText: "Scouter names",
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        TeamAndMatchSelection(
+                          matchController:
+                              controllers[1], //index of matchController
+                          teamNumberController:
+                              controllers[2], //index of teamNumberController
+                          onChange: (
+                            final ScheduleMatch selectedMatch,
+                            final LightTeam? selectedTeam,
+                          ) {
                             setState(() {
-                              carouselController.animateToPage(1);
+                              vars.team = selectedTeam;
+                              vars.scheduleMatch = selectedMatch;
                             });
                           },
-                          child: const Text("Start Game"),
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              time.stop();
-                              time.reset();
-                            });
-                          },
-                          child: const Text("Reset Time"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: time.elapsedMilliseconds == 0
-                      ? <Align>[
-                          const Align(
-                            alignment: Alignment.center,
-                            child: Text("Please Start The Match Timer"),
-                          )
-                        ]
-                      : <Widget>[
-                          SectionDivider(label: "Match"),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Divider(
-                            color: Colors.black.withOpacity(0.4),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          ...<ElevatedButton>[
-                            ElevatedButton(
-                              onPressed: () {
-                                events.add(
-                                  MatchEvent(
-                                    eventTypeId: IdProvider.of(context)
-                                        .locationIds
-                                        .nameToId["Entered Community"]!,
-                                    timestamp: time.elapsedMilliseconds,
-                                  ),
-                                );
-                              },
-                              child: const Text("Community"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.indigo,
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                events.add(
-                                  MatchEvent(
-                                    eventTypeId: IdProvider.of(context)
-                                        .locationIds
-                                        .nameToId["Entered Open Field"]!,
-                                    timestamp: time.elapsedMilliseconds,
-                                  ),
-                                );
-                              },
-                              child: const Text("Open Field"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                events.add(
-                                  MatchEvent(
-                                    eventTypeId: IdProvider.of(context)
-                                        .locationIds
-                                        .nameToId["Entered Feeder"]!,
-                                    timestamp: time.elapsedMilliseconds,
-                                  ),
-                                );
-                              },
-                              child: const Text("Feeder"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.teal,
-                              ),
+                        ToggleButtons(
+                          fillColor: const Color.fromARGB(10, 244, 67, 54),
+                          selectedColor: Colors.red,
+                          selectedBorderColor: Colors.red,
+                          children: const <Widget>[
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text("Rematch"),
                             )
-                          ].toList().expand(
-                                (final Widget element) => <Widget>[
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Expanded(
-                                    child: element,
-                                  ),
-                                ],
+                          ],
+                          isSelected: <bool>[vars.isRematch],
+                          onPressed: (final int i) {
+                            setState(() {
+                              vars.isRematch = !vars.isRematch;
+                            });
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          height: 75,
+                          width: 150,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                time.start();
+                              });
+                            },
+                            child: const Text("Start Game"),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
                               ),
-                          const SizedBox(
-                            height: 15,
+                            ),
                           ),
-                        ],
-                ),
-                GestureDetector(
-                  onTap: node.unfocus,
-                  child: SingleChildScrollView(
-                    child: Column(
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        SizedBox(
+                          height: 50,
+                          width: 150,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                time.stop();
+                                time.reset();
+                              });
+                            },
+                            child: const Text("Reset Time"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: time.elapsedMilliseconds == 0
+                          ? <Align>[
+                              const Align(
+                                alignment: Alignment.center,
+                                child: Text("Please Start The Match Timer"),
+                              )
+                            ]
+                          : <Widget>[
+                              SectionDivider(label: "Match"),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Divider(
+                                color: Colors.black.withOpacity(0.4),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              ...<ElevatedButton>[
+                                ElevatedButton(
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId: IdProvider.of(context)
+                                            .locationIds
+                                            .nameToId["Entered Community"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
+                                  child: const Text("Community"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.indigo,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId: IdProvider.of(context)
+                                            .locationIds
+                                            .nameToId["Entered Open Field"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
+                                  child: const Text("Open Field"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    events.add(
+                                      MatchEvent(
+                                        eventTypeId: IdProvider.of(context)
+                                            .locationIds
+                                            .nameToId["Entered Feeder"]!,
+                                        timestamp: time.elapsedMilliseconds,
+                                      ),
+                                    );
+                                  },
+                                  child: const Text("Feeder"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.teal,
+                                  ),
+                                )
+                              ].toList().expand(
+                                    (final Widget element) => <Widget>[
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      SizedBox(height: 150, child: element),
+                                    ],
+                                  ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                            ],
+                    ),
+                    Column(
                       children: <Widget>[
                         SectionDivider(label: "Post-match"),
                         const SizedBox(
@@ -419,27 +415,58 @@ class _Specific2State extends State<Specific2> {
                               });
                             },
                             mutation: """
-                      mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int, \$fault_message:String){
-                        insert__2023_specific(objects: {defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id}) {
-                          affected_rows
-                          returning{
-                            id
+                        mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int, \$fault_message:String){
+                          insert__2023_specific(objects: {defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id}) {
+                            affected_rows
+                            returning{
+                              id
+                            }
                           }
-                        }
-                                        ${vars.faultMessage == null ? "" : """
-                        insert_faults(objects: {team_id: \$team_id, message: \$fault_message}) {
-                          affected_rows
-                        }"""}
-                                        }
-                          """,
+                                          ${vars.faultMessage == null ? "" : """
+                          insert_faults(objects: {team_id: \$team_id, message: \$fault_message}) {
+                            affected_rows
+                          }"""}
+                                          }
+                            """,
                             vars: vars,
                           ),
                         ),
+                        SectionDivider(label: "Submit Button With No Events"),
+                        SubmitButton(
+                          vars: vars,
+                          mutation: """
+                        mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int, \$fault_message:String){
+                          insert__2023_specific(objects: {defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id}) {
+                            affected_rows
+                            returning{
+                              id
+                            }
+                          }
+                                          ${vars.faultMessage == null ? "" : """
+                          insert_faults(objects: {team_id: \$team_id, message: \$fault_message}) {
+                            affected_rows
+                          }"""}
+                                          }
+                            """,
+                          resetForm: () {
+                            setState(() {
+                              time.stop();
+                              time.reset();
+                              vars.reset();
+                              events = <MatchEvent>[];
+                              for (final TextEditingController controller
+                                  in controllers) {
+                                controller.clear();
+                              }
+                            });
+                          },
+                          validate: () => formKey.currentState!.validate(),
+                        )
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
