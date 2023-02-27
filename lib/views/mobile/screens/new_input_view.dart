@@ -44,7 +44,15 @@ class _UserInput2State extends State<UserInput2> {
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
   List<MatchEvent> events = <MatchEvent>[];
-  Stopwatch time = Stopwatch();
+  int time = 0;
+  Timer? _timer;
+  Timer? get timer => _timer;
+  set timer(final Timer? t) {
+    _timer?.cancel();
+    _timer = t;
+    time = 0;
+  }
+
   bool toggleLightsState = false;
   late final TechnicalMatch match = TechnicalMatch(
     robotMatchStatusId:
@@ -300,8 +308,12 @@ class _UserInput2State extends State<UserInput2> {
                         width: 150,
                         child: ElevatedButton(
                           onPressed: () {
-                            setState(() {
-                              time.start();
+                            timer = Timer.periodic(
+                                const Duration(milliseconds: 100),
+                                (final Timer timer) {
+                              setState(() {
+                                time = 100 * timer.tick;
+                              });
                             });
                           },
                           child: const Text("Start Game"),
@@ -321,8 +333,7 @@ class _UserInput2State extends State<UserInput2> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              time.stop();
-                              time.reset();
+                              timer = null;
                             });
                           },
                           child: const Text("Reset Time"),
@@ -334,10 +345,15 @@ class _UserInput2State extends State<UserInput2> {
                           ),
                         ),
                       ),
+                      Text(() {
+                        final int seconds = time ~/ 1000;
+                        final int minutes = seconds ~/ 60;
+                        return "${minutes.toString().padLeft(2, "0")}:${(seconds % 60).toString().padLeft(2, "0")}";
+                      }()),
                     ],
                   ),
                   Column(
-                    children: time.elapsedMilliseconds == 0
+                    children: time == 0
                         ? <Align>[
                             const Align(
                               alignment: Alignment.center,
@@ -366,8 +382,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Top Cone"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -390,8 +405,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Mid Cone"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -414,8 +428,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Low Cone"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -438,8 +451,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Failed Cone"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -462,8 +474,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Feeder Cone"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -483,8 +494,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Ground Cone"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -533,8 +543,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Top Cube"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -557,8 +566,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Mid Cube"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -581,8 +589,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Low Cube"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -605,8 +612,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Failed Cube"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -629,8 +635,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Feeder Cube"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -650,8 +655,7 @@ class _UserInput2State extends State<UserInput2> {
                                                   eventTypeId:
                                                       robotActionsProvider[
                                                           "Ground Cube"]!,
-                                                  timestamp:
-                                                      time.elapsedMilliseconds,
+                                                  timestamp: time,
                                                 ),
                                               );
                                             });
@@ -794,8 +798,7 @@ class _UserInput2State extends State<UserInput2> {
                         isSpecific: false,
                         resetForm: () {
                           setState(() {
-                            time.stop();
-                            time.reset();
+                            timer = null;
                             match.clear(context);
                             teamNumberController.clear();
                             matchController.clear();

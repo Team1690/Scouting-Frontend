@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/event_model.dart";
@@ -22,7 +24,6 @@ class Specific2 extends StatefulWidget {
 class _Specific2State extends State<Specific2> {
   final GlobalKey<FormState> formKey = GlobalKey();
   final CarouselController carouselController = CarouselController();
-  Stopwatch time = Stopwatch();
   TextEditingController nameController = TextEditingController();
   List<TextEditingController> controllers =
       List<TextEditingController>.generate(
@@ -32,6 +33,15 @@ class _Specific2State extends State<Specific2> {
   final SpecificVars vars = SpecificVars();
   final FocusNode node = FocusNode();
   List<MatchEvent> events = <MatchEvent>[];
+
+  int time = 0;
+  Timer? _timer;
+  Timer? get timer => _timer;
+  set timer(final Timer? t) {
+    _timer?.cancel();
+    _timer = t;
+    time = 0;
+  }
 
   @override
   Widget build(final BuildContext context) => Scaffold(
@@ -122,7 +132,13 @@ class _Specific2State extends State<Specific2> {
                           child: ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                time.start();
+                                timer = Timer.periodic(
+                                    const Duration(milliseconds: 100),
+                                    (final Timer timer) {
+                                  setState(() {
+                                    time = 100 * timer.tick;
+                                  });
+                                });
                               });
                             },
                             child: const Text("Start Game"),
@@ -142,8 +158,7 @@ class _Specific2State extends State<Specific2> {
                           child: ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                time.stop();
-                                time.reset();
+                                timer = null;
                               });
                             },
                             child: const Text("Reset Time"),
@@ -155,13 +170,18 @@ class _Specific2State extends State<Specific2> {
                             ),
                           ),
                         ),
+                        Text(() {
+                          final int seconds = time ~/ 1000;
+                          final int minutes = seconds ~/ 60;
+                          return "${minutes.toString().padLeft(2, "0")}:${(seconds % 60).toString().padLeft(2, "0")}";
+                        }()),
                       ],
                     ),
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: time.elapsedMilliseconds == 0
+                      children: time == 0
                           ? <Align>[
                               const Align(
                                 alignment: Alignment.center,
@@ -199,7 +219,7 @@ class _Specific2State extends State<Specific2> {
                                             eventTypeId: IdProvider.of(context)
                                                 .locationIds
                                                 .nameToId["Entered Community"]!,
-                                            timestamp: time.elapsedMilliseconds,
+                                            timestamp: time,
                                           ),
                                         );
                                       });
@@ -230,7 +250,7 @@ class _Specific2State extends State<Specific2> {
                                                     .locationIds
                                                     .nameToId[
                                                 "Entered Open Field"]!,
-                                            timestamp: time.elapsedMilliseconds,
+                                            timestamp: time,
                                           ),
                                         );
                                       });
@@ -259,7 +279,7 @@ class _Specific2State extends State<Specific2> {
                                             eventTypeId: IdProvider.of(context)
                                                 .locationIds
                                                 .nameToId["Entered Feeder"]!,
-                                            timestamp: time.elapsedMilliseconds,
+                                            timestamp: time,
                                           ),
                                         );
                                       });
@@ -445,8 +465,7 @@ class _Specific2State extends State<Specific2> {
                             validate: () => formKey.currentState!.validate(),
                             resetForm: () {
                               setState(() {
-                                time.stop();
-                                time.reset();
+                                timer = null;
                                 vars.reset();
                                 events = <MatchEvent>[];
                                 for (final TextEditingController controller
