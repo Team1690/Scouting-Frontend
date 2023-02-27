@@ -191,6 +191,8 @@ class PitData {
     required this.weight,
     required this.width,
     required this.length,
+    required this.hasGroundIntake,
+    required this.canScoreTop,
   });
   final String driveTrainType;
   final int driveMotorAmount;
@@ -204,6 +206,8 @@ class PitData {
   final int length;
   final String url;
   final List<String>? faultMessages;
+  final bool hasGroundIntake;
+  final bool canScoreTop;
 }
 
 class Team {

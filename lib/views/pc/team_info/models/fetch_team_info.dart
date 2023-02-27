@@ -33,6 +33,8 @@ query TeamInfo(\$id: Int!) {
       drivemotor {
         title
       }
+      has_ground_intake
+      can_score_top
     }
     _2023_specifics{
       defense
@@ -149,6 +151,8 @@ Future<Team> fetchTeamInfo(
             driveTrainType: pitTable["drivetrain"]["title"] as String,
             driveMotorType: pitTable["drivemotor"]["title"] as String,
             faultMessages: faultMessages,
+            hasGroundIntake: pitTable["has_ground_intake"] as bool,
+            canScoreTop: pitTable["can_score_top"] as bool,
           ),
         );
 
