@@ -100,6 +100,11 @@ class _UserInput2State extends State<UserInput2> {
       final TechnicalMatch match,
       final List<MatchEvent> events,
     ) {
+      if (match.robotMatchStatusId == notOnFieldId) {
+        match.autoBalanceStatus = null;
+        match.endgameBalanceStatus = null;
+        match.startingPosId = null;
+      }
       match.autoConesScored = events
           .where(
             (final MatchEvent event) =>
@@ -589,7 +594,6 @@ class _UserInput2State extends State<UserInput2> {
                       const SizedBox(
                         height: 20,
                       ),
-                      //TODO resolve bug that may accur if a balanceqposition is selected before "not on field"
                       Switcher(
                         labels: const <String>[
                           "Not on field",
