@@ -77,7 +77,7 @@ class _UserInput2State extends State<UserInput2> {
     final int notOnFieldId = IdProvider.of(context)
         .robotMatchStatus
         .nameToId["Didn't come to field"] as int;
-    void actionByGamepiece(String event) {
+    void actionByGamepiece(final String event) {
       if (events.last.eventTypeId == robotActionsProvider["Intaked Cone"]) {
         events.add(
           MatchEvent(
@@ -280,23 +280,22 @@ class _UserInput2State extends State<UserInput2> {
                       const SizedBox(
                         height: 15,
                       ),
-                      SectionDivider(label: "Robot Placement"),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Selector<int>(
-                        options: startingPosProvider.keys.toList(),
-                        placeholder: "Choose a starting position",
-                        value: match.startingPosId,
-                        makeItem: (final int index) =>
-                            startingPosProvider[index]!,
-                        onChange: ((final int currentValue) =>
-                            match.startingPosId = currentValue),
-                        validate: (final int? submmission) =>
-                            notOnFieldId != match.robotMatchStatusId
-                                ? submmission
-                                    .onNull("Please pick a starting position")
-                                : null,
+                      Visibility(
+                        visible: notOnFieldId != match.robotMatchStatusId,
+                        child: Selector<int>(
+                          options: startingPosProvider.keys.toList(),
+                          placeholder: "Choose a starting position",
+                          value: match.startingPosId,
+                          makeItem: (final int index) =>
+                              startingPosProvider[index]!,
+                          onChange: ((final int currentValue) =>
+                              match.startingPosId = currentValue),
+                          validate: (final int? submmission) =>
+                              notOnFieldId != match.robotMatchStatusId
+                                  ? submmission
+                                      .onNull("Please pick a starting position")
+                                  : null,
+                        ),
                       ),
                       const SizedBox(
                         height: 15,
@@ -365,26 +364,31 @@ class _UserInput2State extends State<UserInput2> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Selector<int>(
-                                  validate: (final int? submission) =>
-                                      notOnFieldId != match.robotMatchStatusId
-                                          ? submission.onNull(
-                                              "Please pick an auto balance result",
-                                            )
-                                          : null,
-                                  options: balanceProvider.keys.toList(),
-                                  placeholder: "Choose an auto balance",
-                                  makeItem: (final int index) =>
-                                      balanceProvider[index]!,
-                                  onChange: (final int balance) {
-                                    setState(() {
-                                      match.autoBalanceStatus = balance;
-                                    });
-                                  },
-                                  value: match.autoBalanceStatus,
+                              Visibility(
+                                visible:
+                                    notOnFieldId != match.robotMatchStatusId,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                  ),
+                                  child: Selector<int>(
+                                    validate: (final int? submission) =>
+                                        notOnFieldId != match.robotMatchStatusId
+                                            ? submission.onNull(
+                                                "Please pick an auto balance result",
+                                              )
+                                            : null,
+                                    options: balanceProvider.keys.toList(),
+                                    placeholder: "Choose an auto balance",
+                                    makeItem: (final int index) =>
+                                        balanceProvider[index]!,
+                                    onChange: (final int balance) {
+                                      setState(() {
+                                        match.autoBalanceStatus = balance;
+                                      });
+                                    },
+                                    value: match.autoBalanceStatus,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -457,7 +461,7 @@ class _UserInput2State extends State<UserInput2> {
                                                             "Scored Cone"]! ||
                                                     event.eventTypeId ==
                                                         robotActionsProvider[
-                                                            "Scored Cone"]!,
+                                                            "Scored Cube"]!,
                                               ).length.toString()}"),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.green,
@@ -558,30 +562,34 @@ class _UserInput2State extends State<UserInput2> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Selector<int>(
-                          validate: (final int? submission) =>
-                              notOnFieldId != match.robotMatchStatusId
-                                  ? submission.onNull(
-                                      "Please pick an endgame balance result",
-                                    )
-                                  : null,
-                          options: balanceProvider.keys.toList(),
-                          placeholder: "Choose an endgame balance result",
-                          makeItem: (final int index) =>
-                              balanceProvider[index]!,
-                          onChange: (final int balance) {
-                            setState(() {
-                              match.endgameBalanceStatus = balance;
-                            });
-                          },
-                          value: match.endgameBalanceStatus,
+                      Visibility(
+                        visible: notOnFieldId != match.robotMatchStatusId,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Selector<int>(
+                            validate: (final int? submission) =>
+                                notOnFieldId != match.robotMatchStatusId
+                                    ? submission.onNull(
+                                        "Please pick an endgame balance result",
+                                      )
+                                    : null,
+                            options: balanceProvider.keys.toList(),
+                            placeholder: "Choose an endgame balance result",
+                            makeItem: (final int index) =>
+                                balanceProvider[index]!,
+                            onChange: (final int balance) {
+                              setState(() {
+                                match.endgameBalanceStatus = balance;
+                              });
+                            },
+                            value: match.endgameBalanceStatus,
+                          ),
                         ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
+                      //TODO resolve bug that may accur if a balanceqposition is selected before "not on field"
                       Switcher(
                         labels: const <String>[
                           "Not on field",
@@ -639,8 +647,8 @@ class _UserInput2State extends State<UserInput2> {
 }
 
 const String mutation = r"""
-mutation InsertTechnicalMatch($auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int, $starting_position_id: Int) {
-  insert__2023_new_technical_match(objects: {auto_balance_id: $auto_balance_id, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id, starting_position_id: $starting_position_id}) {
+mutation InsertTechnicalMatch($auto_cones_delivered: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_scored: Int, $auto_cubes_failed: Int, $auto_cubes_delivered: Int, $auto_cubes_scored: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cubes_scored: Int, $tele_cubes_delivered: Int, $tele_cubes_failed: Int, $tele_cones_scored: Int, $tele_cones_delivered: Int, $is_rematch: Boolean, $schedule_match_id: Int, $starting_position_id: Int) {
+  insert__2023_technical_match_v3(objects: {auto_balance_id: $auto_balance_id, auto_cones_failed: $auto_cones_failed, auto_cones_delivered: $auto_cones_delivered, auto_cones_scored: $auto_cones_scored, auto_cubes_failed: $auto_cubes_failed, auto_cubes_delivered: $auto_cubes_delivered, auto_cubes_scored: $auto_cubes_scored, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_delivered: $tele_cones_delivered, tele_cones_scored: $tele_cones_scored, tele_cubes_failed: $tele_cubes_failed, tele_cubes_scored: $tele_cubes_scored, tele_cubes_delivered: $tele_cubes_delivered, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id, starting_position_id: $starting_position_id}) {
     returning {
     id
 }

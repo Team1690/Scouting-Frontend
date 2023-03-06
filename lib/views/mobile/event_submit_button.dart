@@ -117,7 +117,7 @@ class _EventSubmitButtonState extends State<EventSubmitButton> {
               document: gql(widget.mutation),
               variables: widget.vars.toHasuraVars(),
               parserFn: (final Map<String, dynamic> data) => data[
-                      "insert__2023_${widget.isSpecific ? "specific" : "new_technical_match"}"]
+                      "insert__2023_${widget.isSpecific ? "specific" : "technical_match_v3"}"]
                   ["returning"][0]["id"] as int,
             ),
           );
@@ -129,8 +129,8 @@ class _EventSubmitButtonState extends State<EventSubmitButton> {
                 event.matchId = id;
               }
               eventMutation = """
-mutation Events(\$objects: [${widget.isSpecific ? "_2023_specific_events_insert_input" : "_2023_technical_events_insert_input"}!]!) {
-  ${widget.isSpecific ? "insert__2023_specific_events" : "insert__2023_technical_events"}(objects: \$objects) {
+mutation Events(\$objects: [${widget.isSpecific ? "_2023_specific_events_insert_input" : "_2023_new_technical_events_insert_input"}!]!) {
+  ${widget.isSpecific ? "insert__2023_specific_events" : "insert__2023_new_technical_events"}(objects: \$objects) {
     affected_rows
   }
 }
