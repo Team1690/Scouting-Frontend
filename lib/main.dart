@@ -25,14 +25,14 @@ void main() async {
     "drivemotor",
     "robot_match_status",
     "fault_status",
-    "_2023_robot_actions",
+    "_2023_new_robot_actions",
     "_2023_locations",
     "_2023_starting_position"
   ], <String>[
     "match_type"
   ]);
   final Map<String, int> startingPos = enums["_2023_starting_position"]!;
-  final Map<String, int> robotActions = enums["_2023_robot_actions"]!;
+  final Map<String, int> robotActions = enums["_2023_new_robot_actions"]!;
   final Map<String, int> locations = enums["_2023_locations"]!;
   final Map<String, int> balances = enums["_2023_balance"]!;
   final Map<String, int> driveTrains = enums["drivetrain"]!;

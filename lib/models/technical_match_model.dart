@@ -8,21 +8,17 @@ import "map_nullable.dart";
 
 class TechnicalMatch implements HasuraVars {
   TechnicalMatch({
-    this.autoConesTop = 0,
-    this.autoConesMid = 0,
-    this.autoConesLow = 0,
+    this.autoConesScored = 0,
+    this.autoConesDelivered = 0,
     this.autoConesFailed = 0,
-    this.autoCubesTop = 0,
-    this.autoCubesMid = 0,
-    this.autoCubesLow = 0,
+    this.autoCubesScored = 0,
+    this.autoCubesDelivered = 0,
     this.autoCubesFailed = 0,
-    this.teleConesTop = 0,
-    this.teleConesMid = 0,
-    this.teleConesLow = 0,
+    this.teleConesScored = 0,
+    this.teleConesDelivered = 0,
     this.teleConesFailed = 0,
-    this.teleCubesTop = 0,
-    this.teleCubesMid = 0,
-    this.teleCubesLow = 0,
+    this.teleCubesScored = 0,
+    this.teleCubesDelivered = 0,
     this.teleCubesFailed = 0,
     this.scoutedTeam,
     required this.robotMatchStatusId,
@@ -31,21 +27,17 @@ class TechnicalMatch implements HasuraVars {
   });
 
   void clear(final BuildContext context) {
-    autoConesTop = 0;
-    autoConesMid = 0;
-    autoConesLow = 0;
+    autoConesScored = 0;
+    autoConesDelivered = 0;
     autoConesFailed = 0;
-    autoCubesTop = 0;
-    autoCubesMid = 0;
-    autoCubesLow = 0;
+    autoCubesScored = 0;
+    autoCubesDelivered = 0;
     autoCubesFailed = 0;
-    teleConesTop = 0;
-    teleConesMid = 0;
-    teleConesLow = 0;
+    teleConesScored = 0;
+    teleConesDelivered = 0;
     teleConesFailed = 0;
-    teleCubesTop = 0;
-    teleCubesMid = 0;
-    teleCubesLow = 0;
+    teleCubesScored = 0;
+    teleCubesDelivered = 0;
     teleCubesFailed = 0;
     autoBalanceStatus = null;
     endgameBalanceStatus = null;
@@ -60,22 +52,18 @@ class TechnicalMatch implements HasuraVars {
   bool preScouting = false;
   bool isRematch;
   ScheduleMatch? scheduleMatch;
-  int autoConesTop;
-  int autoConesMid;
-  int autoConesLow;
+  int autoConesScored;
   int autoConesFailed;
-  int autoCubesTop;
-  int autoCubesMid;
-  int autoCubesLow;
+  int autoConesDelivered;
+  int autoCubesScored;
   int autoCubesFailed;
-  int teleConesTop;
-  int teleConesMid;
-  int teleConesLow;
+  int autoCubesDelivered;
+  int teleConesScored;
   int teleConesFailed;
-  int teleCubesTop;
-  int teleCubesMid;
-  int teleCubesLow;
+  int teleConesDelivered;
+  int teleCubesScored;
   int teleCubesFailed;
+  int teleCubesDelivered;
   String? name;
   int? autoBalanceStatus;
   int? endgameBalanceStatus;
@@ -85,24 +73,20 @@ class TechnicalMatch implements HasuraVars {
   LightTeam? scoutedTeam;
   @override
   Map<String, dynamic> toHasuraVars() => <String, dynamic>{
-        "auto_cones_mid": autoConesMid,
-        "auto_cones_top": autoConesTop,
-        "auto_cones_low": autoConesLow,
+        "auto_cones_delivered": autoConesDelivered,
+        "auto_cones_scored": autoConesScored,
         "auto_cones_failed": autoConesFailed,
-        "auto_cubes_mid": autoCubesMid,
-        "auto_cubes_top": autoCubesTop,
-        "auto_cubes_low": autoCubesLow,
+        "auto_cubes_delivered": autoCubesDelivered,
+        "auto_cubes_scored": autoCubesScored,
         "auto_cubes_failed": autoCubesFailed,
         "auto_balance_id": autoBalanceStatus,
         "endgame_balance_id": endgameBalanceStatus,
         "team_id": scoutedTeam?.id,
-        "tele_cones_mid": teleConesMid,
-        "tele_cones_top": teleConesTop,
-        "tele_cones_low": teleConesLow,
+        "tele_cones_delivered": teleConesDelivered,
+        "tele_cones_scored": teleConesScored,
         "tele_cones_failed": teleConesFailed,
-        "tele_cubes_mid": teleCubesMid,
-        "tele_cubes_top": teleCubesTop,
-        "tele_cubes_low": teleCubesLow,
+        "tele_cubes_delivered": teleCubesDelivered,
+        "tele_cubes_scored": teleCubesScored,
         "tele_cubes_failed": teleCubesFailed,
         "scouter_name": name,
         "schedule_match_id": scheduleMatch?.id,
@@ -139,6 +123,7 @@ enum GridLevel {
   final String title;
 }
 
+//TODO get rid of this. points are irrelevant now...
 class EffectiveScore {
   const EffectiveScore({
     required this.mode,
