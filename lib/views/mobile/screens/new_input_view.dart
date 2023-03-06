@@ -78,45 +78,31 @@ class _UserInput2State extends State<UserInput2> {
       final TechnicalMatch match,
       final List<MatchEvent> events,
     ) {
-      match.autoConesTop = events
+      match.autoConesScored = events
           .where(
             (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Top Cone"] &&
+                event.eventTypeId == robotActionsProvider["Scored Cone"] &&
                 event.timestamp < 18000,
           )
           .length;
-      match.autoCubesTop = events
+      match.autoCubesScored = events
           .where(
             (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Top Cube"] &&
+                event.eventTypeId == robotActionsProvider["Scored Cube"] &&
                 event.timestamp < 18000,
           )
           .length;
-      match.autoConesMid = events
+      match.autoConesDelivered = events
           .where(
             (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Mid Cone"] &&
+                event.eventTypeId == robotActionsProvider["Delivered Cone"] &&
                 event.timestamp < 18000,
           )
           .length;
-      match.autoCubesMid = events
+      match.autoCubesDelivered = events
           .where(
             (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Mid Cube"] &&
-                event.timestamp < 18000,
-          )
-          .length;
-      match.autoConesLow = events
-          .where(
-            (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Low Cone"] &&
-                event.timestamp < 18000,
-          )
-          .length;
-      match.autoCubesLow = events
-          .where(
-            (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Low Cube"] &&
+                event.eventTypeId == robotActionsProvider["Delivered Cube"] &&
                 event.timestamp < 18000,
           )
           .length;
@@ -135,45 +121,31 @@ class _UserInput2State extends State<UserInput2> {
           )
           .length;
 
-      match.teleConesTop = events
+      match.teleConesScored = events
           .where(
             (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Top Cone"] &&
+                event.eventTypeId == robotActionsProvider["Scored Cone"] &&
                 event.timestamp >= 18000,
           )
           .length;
-      match.teleCubesTop = events
+      match.teleCubesScored = events
           .where(
             (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Top Cube"] &&
+                event.eventTypeId == robotActionsProvider["Scored Cube"] &&
                 event.timestamp >= 18000,
           )
           .length;
-      match.teleConesMid = events
+      match.teleConesDelivered = events
           .where(
             (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Mid Cone"] &&
+                event.eventTypeId == robotActionsProvider["Delivered Cone"] &&
                 event.timestamp >= 18000,
           )
           .length;
-      match.teleCubesMid = events
+      match.teleCubesDelivered = events
           .where(
             (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Mid Cube"] &&
-                event.timestamp >= 18000,
-          )
-          .length;
-      match.teleConesLow = events
-          .where(
-            (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Low Cone"] &&
-                event.timestamp >= 18000,
-          )
-          .length;
-      match.teleCubesLow = events
-          .where(
-            (final MatchEvent event) =>
-                event.eventTypeId == robotActionsProvider["Low Cube"] &&
+                event.eventTypeId == robotActionsProvider["Delivered Cube"] &&
                 event.timestamp >= 18000,
           )
           .length;
@@ -223,6 +195,7 @@ class _UserInput2State extends State<UserInput2> {
             key: formKey,
             child: SingleChildScrollView(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Column(
                     mainAxisSize: MainAxisSize.min,
@@ -297,8 +270,15 @@ class _UserInput2State extends State<UserInput2> {
                             startingPosProvider[index]!,
                         onChange: ((final int currentValue) =>
                             match.startingPosId = currentValue),
-                        validate: (final int? submmission) => submmission
-                            .onNull("Please pick a starting position"),
+                        validate: (final int? submmission) =>
+                            //TODO code dupe
+                            IdProvider.of(context)
+                                        .robotMatchStatus
+                                        .nameToId["Didn't come to field"] !=
+                                    match.robotMatchStatusId
+                                ? submmission
+                                    .onNull("Please pick a starting position")
+                                : null,
                       ),
                       const SizedBox(
                         height: 15,
@@ -352,393 +332,263 @@ class _UserInput2State extends State<UserInput2> {
                       }()),
                     ],
                   ),
-                  Column(
-                    children: time == 0
-                        ? <Align>[
-                            const Align(
-                              alignment: Alignment.center,
-                              child: Text("Please Start The Match Timer"),
-                            )
-                          ]
-                        : <Widget>[
-                            SectionDivider(label: "Match"),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            IntrinsicHeight(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        SectionDivider(label: "Cones"),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Top Cone"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Top: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
+                  IntrinsicHeight(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: time == 0
+                          ? <Align>[
+                              const Align(
+                                alignment: Alignment.center,
+                                child: Text("Please Start The Match Timer"),
+                              )
+                            ]
+                          : <Widget>[
+                              SectionDivider(label: "Match"),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Selector<int>(
+                                  validate: (final int? submission) => IdProvider
+                                                      .of(context)
+                                                  .robotMatchStatus
+                                                  .nameToId[
+                                              "Didn't come to field"] !=
+                                          match.robotMatchStatusId
+                                      ? submission.onNull(
+                                          "Please pick an auto balance result")
+                                      : null,
+                                  options: balanceProvider.keys.toList(),
+                                  placeholder: "Choose an auto balance",
+                                  makeItem: (final int index) =>
+                                      balanceProvider[index]!,
+                                  onChange: (final int balance) {
+                                    setState(() {
+                                      match.autoBalanceStatus = balance;
+                                    });
+                                  },
+                                  value: match.autoBalanceStatus,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          events.add(
+                                            MatchEvent(
+                                              eventTypeId: robotActionsProvider[
+                                                  "Intaked Cone"]!,
+                                              timestamp: time,
+                                            ),
+                                          );
+                                        });
+                                      },
+                                      child: Text("Intaked Cone: ${events.where(
+                                            (final MatchEvent event) =>
+                                                event.eventTypeId ==
+                                                robotActionsProvider[
+                                                    "Intaked Cone"]!,
+                                          ).length.toString()}"),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.amber,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          events.add(
+                                            MatchEvent(
+                                              eventTypeId: robotActionsProvider[
+                                                  "Intaked Cube"]!,
+                                              timestamp: time,
+                                            ),
+                                          );
+                                        });
+                                      },
+                                      child: Text("Intaked Cube: ${events.where(
+                                            (final MatchEvent event) =>
+                                                event.eventTypeId ==
+                                                robotActionsProvider[
+                                                    "Intaked Cube"]!,
+                                          ).length.toString()}"),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.deepPurple,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          //TODO make this a function for less code dupe
+                                          if (events.last.eventTypeId ==
+                                              robotActionsProvider[
+                                                  "Intaked Cone"]) {
+                                            events.add(
+                                              MatchEvent(
+                                                eventTypeId:
                                                     robotActionsProvider[
-                                                        "Top Cone"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.green,
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Mid Cone"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Mid: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
+                                                        "Delivered Cone"]!,
+                                                timestamp: time,
+                                              ),
+                                            );
+                                          } else if (events.last.eventTypeId ==
+                                              robotActionsProvider[
+                                                  "Intaked Cube"]) {
+                                            events.add(
+                                              MatchEvent(
+                                                eventTypeId:
                                                     robotActionsProvider[
-                                                        "Mid Cone"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.amber,
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Low Cone"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Low: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
+                                                        "Delivered Cube"]!,
+                                                timestamp: time,
+                                              ),
+                                            );
+                                          }
+                                        });
+                                      },
+                                      child: Text("Delivered: ${events.where(
+                                            (final MatchEvent event) =>
+                                                event.eventTypeId ==
                                                     robotActionsProvider[
-                                                        "Low Cone"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.orange,
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Failed Cone"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Failed: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
+                                                        "Delivered Cone"]! ||
+                                                event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Delivered Cube"]!,
+                                          ).length.toString()}"),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blue,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          //TODO make this a function for less code dupe
+                                          if (events.last.eventTypeId ==
+                                              robotActionsProvider[
+                                                  "Intaked Cone"]) {
+                                            events.add(
+                                              MatchEvent(
+                                                eventTypeId:
+                                                    robotActionsProvider[
+                                                        "Scored Cone"]!,
+                                                timestamp: time,
+                                              ),
+                                            );
+                                          } else if (events.last.eventTypeId ==
+                                              robotActionsProvider[
+                                                  "Intaked Cube"]) {
+                                            events.add(
+                                              MatchEvent(
+                                                eventTypeId:
+                                                    robotActionsProvider[
+                                                        "Scored Cube"]!,
+                                                timestamp: time,
+                                              ),
+                                            );
+                                          }
+                                        });
+                                      },
+                                      child: Text("Scored: ${events.where(
+                                            (final MatchEvent event) =>
+                                                event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Scored Cone"]! ||
+                                                event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Scored Cone"]!,
+                                          ).length.toString()}"),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          //TODO make this a function for less code dupe
+                                          if (events.last.eventTypeId ==
+                                              robotActionsProvider[
+                                                  "Intaked Cone"]) {
+                                            events.add(
+                                              MatchEvent(
+                                                eventTypeId:
                                                     robotActionsProvider[
                                                         "Failed Cone"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Feeder Cone"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Feeder: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                    robotActionsProvider[
-                                                        "Feeder Cone"]!,
-                                              ).length.toString()}"),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Ground Cone"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Ground: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                    robotActionsProvider[
-                                                        "Ground Cone"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.brown,
-                                          ),
-                                        ),
-                                      ]
-                                          .expand(
-                                            (final Widget element) => <Widget>[
-                                              const SizedBox(
-                                                height: 10,
+                                                timestamp: time,
                                               ),
-                                              SizedBox(
-                                                width: 120,
-                                                height: 50,
-                                                child: element,
-                                              ),
-                                            ],
-                                          )
-                                          .toList(),
-                                    ),
-                                  ),
-                                  VerticalDivider(
-                                    color: Colors.black.withOpacity(0.4),
-                                    thickness: 2,
-                                    indent: 35,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        SectionDivider(label: "Cubes"),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Top Cube"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Top: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                    robotActionsProvider[
-                                                        "Top Cube"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.green,
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Mid Cube"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Mid: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                    robotActionsProvider[
-                                                        "Mid Cube"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.amber,
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Low Cube"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Low: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                    robotActionsProvider[
-                                                        "Low Cube"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.orange,
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Failed Cube"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Failed: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
+                                            );
+                                          } else if (events.last.eventTypeId ==
+                                              robotActionsProvider[
+                                                  "Intaked Cube"]) {
+                                            events.add(
+                                              MatchEvent(
+                                                eventTypeId:
                                                     robotActionsProvider[
                                                         "Failed Cube"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Feeder Cube"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Feeder: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                    robotActionsProvider[
-                                                        "Feeder Cube"]!,
-                                              ).length.toString()}"),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              events.add(
-                                                MatchEvent(
-                                                  eventTypeId:
-                                                      robotActionsProvider[
-                                                          "Ground Cube"]!,
-                                                  timestamp: time,
-                                                ),
-                                              );
-                                            });
-                                          },
-                                          child: Text("Ground: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                    robotActionsProvider[
-                                                        "Ground Cube"]!,
-                                              ).length.toString()}"),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.brown,
-                                          ),
-                                        ),
-                                      ]
-                                          .expand(
-                                            (final Widget element) => <Widget>[
-                                              const SizedBox(
-                                                height: 10,
+                                                timestamp: time,
                                               ),
-                                              SizedBox(
-                                                width: 120,
-                                                height: 50,
-                                                child: element,
-                                              ),
-                                            ],
-                                          )
-                                          .toList(),
+                                            );
+                                          }
+                                        });
+                                      },
+                                      child: Text("Failed: ${events.where(
+                                            (final MatchEvent event) =>
+                                                event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Failed Cone"]! ||
+                                                event.eventTypeId ==
+                                                    robotActionsProvider[
+                                                        "Failed Cube"]!,
+                                          ).length.toString()}"),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            SizedBox(
-                              height: 40,
-                              width: 100,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    events.remove(events.last);
-                                  });
-                                },
-                                child: const SizedBox(
-                                  width: 120,
-                                  height: 50,
-                                  child: Center(child: Text("Undo")),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.grey,
+                                  ]
+                                      .expand(
+                                        (final Widget element) => <Widget>[
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          SizedBox(
+                                            width: 120,
+                                            height: 60,
+                                            child: element,
+                                          ),
+                                        ],
+                                      )
+                                      .toList(),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            SectionDivider(label: "Auto Balance"),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: Selector<int>(
-                                validate: (final int? submission) => submission
-                                    .onNull("Please pick a balance result"),
-                                options: balanceProvider.keys.toList(),
-                                placeholder: "Choose a balance result",
-                                makeItem: (final int index) =>
-                                    balanceProvider[index]!,
-                                onChange: (final int balance) {
-                                  setState(() {
-                                    match.autoBalanceStatus = balance;
-                                  });
-                                },
-                                value: match.autoBalanceStatus,
+                              const SizedBox(
+                                height: 15,
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                height: 40,
+                                width: 100,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      events.remove(events.last);
+                                    });
+                                  },
+                                  child: const SizedBox(
+                                    width: 120,
+                                    height: 50,
+                                    child: Center(child: Text("Undo")),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            ],
+                    ),
                   ),
                   Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       SectionDivider(label: "Post-match"),
                       const SizedBox(
@@ -752,9 +602,15 @@ class _UserInput2State extends State<UserInput2> {
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Selector<int>(
                           validate: (final int? submission) =>
-                              submission.onNull("Please pick a balance result"),
+                              IdProvider.of(context)
+                                          .robotMatchStatus
+                                          .nameToId["Didn't come to field"] !=
+                                      match.robotMatchStatusId
+                                  ? submission.onNull(
+                                      "Please pick an endgame balance result")
+                                  : null,
                           options: balanceProvider.keys.toList(),
-                          placeholder: "Choose a balance result",
+                          placeholder: "Choose an endgame balance result",
                           makeItem: (final int index) =>
                               balanceProvider[index]!,
                           onChange: (final int balance) {
