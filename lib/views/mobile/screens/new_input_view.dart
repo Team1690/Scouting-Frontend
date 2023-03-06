@@ -399,136 +399,243 @@ class _UserInput2State extends State<UserInput2> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          events.add(
-                                            MatchEvent(
-                                              eventTypeId: robotActionsProvider[
-                                                  "Intaked Cone"]!,
-                                              timestamp: time,
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          ElevatedButton(
+                                            onPressed: () => setState(() {
+                                              events.add(
+                                                MatchEvent(
+                                                  eventTypeId:
+                                                      robotActionsProvider[
+                                                          "Entered Community"]!,
+                                                  timestamp: time,
+                                                ),
+                                              );
+                                            }),
+                                            child: const Text(
+                                              textAlign: TextAlign.center,
+                                              "Entered Community",
                                             ),
-                                          );
-                                        });
-                                      },
-                                      child: Text(
-                                          textAlign: TextAlign.center,
-                                          "Intaked Cone: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                    robotActionsProvider[
-                                                        "Intaked Cone"]!,
-                                              ).length.toString()}"),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.amber,
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          events.add(
-                                            MatchEvent(
-                                              eventTypeId: robotActionsProvider[
-                                                  "Intaked Cube"]!,
-                                              timestamp: time,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.teal,
                                             ),
-                                          );
-                                        });
-                                      },
-                                      child: Text(
-                                          textAlign: TextAlign.center,
-                                          "Intaked Cube: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                    robotActionsProvider[
-                                                        "Intaked Cube"]!,
-                                              ).length.toString()}"),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.deepPurple,
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          actionByGamepiece("Scored");
-                                        });
-                                      },
-                                      child: Text(
-                                          textAlign: TextAlign.center,
-                                          "Scored: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                        robotActionsProvider[
-                                                            "Scored Cone"]! ||
-                                                    event.eventTypeId ==
-                                                        robotActionsProvider[
-                                                            "Scored Cube"]!,
-                                              ).length.toString()}"),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green,
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          actionByGamepiece("Delivered");
-                                        });
-                                      },
-                                      child: Text(
-                                          textAlign: TextAlign.center,
-                                          "Delivered: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                        robotActionsProvider[
-                                                            "Delivered Cone"]! ||
-                                                    event.eventTypeId ==
-                                                        robotActionsProvider[
-                                                            "Delivered Cube"]!,
-                                              ).length.toString()}"),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blue,
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          actionByGamepiece("Failed");
-                                        });
-                                      },
-                                      child: Text(
-                                          textAlign: TextAlign.center,
-                                          "Failed: ${events.where(
-                                                (final MatchEvent event) =>
-                                                    event.eventTypeId ==
-                                                        robotActionsProvider[
-                                                            "Failed Cone"]! ||
-                                                    event.eventTypeId ==
-                                                        robotActionsProvider[
-                                                            "Failed Cube"]!,
-                                              ).length.toString()}"),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    ),
-                                  ]
-                                      .expand(
-                                        (final Widget element) => <Widget>[
-                                          const SizedBox(
-                                            height: 10,
                                           ),
-                                          SizedBox(
-                                            width: 120,
-                                            height: 60,
-                                            child: element,
+                                          ElevatedButton(
+                                            onPressed: () => setState(() {
+                                              events.add(
+                                                MatchEvent(
+                                                  eventTypeId:
+                                                      robotActionsProvider[
+                                                          "Entered Open Field"]!,
+                                                  timestamp: time,
+                                                ),
+                                              );
+                                            }),
+                                            child: const Text(
+                                              textAlign: TextAlign.center,
+                                              "Entered Open Field",
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.blue,
+                                            ),
                                           ),
-                                        ],
-                                      )
-                                      .toList(),
-                                ),
+                                          ElevatedButton(
+                                            onPressed: () => setState(() {
+                                              events.add(
+                                                MatchEvent(
+                                                  eventTypeId:
+                                                      robotActionsProvider[
+                                                          "Entered Feeder"]!,
+                                                  timestamp: time,
+                                                ),
+                                              );
+                                            }),
+                                            child: const Text(
+                                              textAlign: TextAlign.center,
+                                              "Entered Feeder",
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.indigo,
+                                            ),
+                                          ),
+                                        ]
+                                            .expand(
+                                              (final Widget element) =>
+                                                  <Widget>[
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                SizedBox(
+                                                  width: 120,
+                                                  height: 107,
+                                                  child: element,
+                                                ),
+                                              ],
+                                            )
+                                            .toList(),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                events.add(
+                                                  MatchEvent(
+                                                    eventTypeId:
+                                                        robotActionsProvider[
+                                                            "Intaked Cone"]!,
+                                                    timestamp: time,
+                                                  ),
+                                                );
+                                              });
+                                            },
+                                            child: Text(
+                                                textAlign: TextAlign.center,
+                                                "Intaked Cone: ${events.where(
+                                                      (
+                                                        final MatchEvent event,
+                                                      ) =>
+                                                          event.eventTypeId ==
+                                                          robotActionsProvider[
+                                                              "Intaked Cone"]!,
+                                                    ).length.toString()}"),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.amber,
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                events.add(
+                                                  MatchEvent(
+                                                    eventTypeId:
+                                                        robotActionsProvider[
+                                                            "Intaked Cube"]!,
+                                                    timestamp: time,
+                                                  ),
+                                                );
+                                              });
+                                            },
+                                            child: Text(
+                                                textAlign: TextAlign.center,
+                                                "Intaked Cube: ${events.where(
+                                                      (
+                                                        final MatchEvent event,
+                                                      ) =>
+                                                          event.eventTypeId ==
+                                                          robotActionsProvider[
+                                                              "Intaked Cube"]!,
+                                                    ).length.toString()}"),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.deepPurple,
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                actionByGamepiece("Scored");
+                                              });
+                                            },
+                                            child: Text(
+                                                textAlign: TextAlign.center,
+                                                "Scored: ${events.where(
+                                                      (
+                                                        final MatchEvent event,
+                                                      ) =>
+                                                          event.eventTypeId ==
+                                                              robotActionsProvider[
+                                                                  "Scored Cone"]! ||
+                                                          event.eventTypeId ==
+                                                              robotActionsProvider[
+                                                                  "Scored Cube"]!,
+                                                    ).length.toString()}"),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.green,
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                actionByGamepiece("Delivered");
+                                              });
+                                            },
+                                            child: Text(
+                                                textAlign: TextAlign.center,
+                                                "Delivered: ${events.where(
+                                                      (
+                                                        final MatchEvent event,
+                                                      ) =>
+                                                          event.eventTypeId ==
+                                                              robotActionsProvider[
+                                                                  "Delivered Cone"]! ||
+                                                          event.eventTypeId ==
+                                                              robotActionsProvider[
+                                                                  "Delivered Cube"]!,
+                                                    ).length.toString()}"),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.blue,
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                actionByGamepiece("Failed");
+                                              });
+                                            },
+                                            child: Text(
+                                                textAlign: TextAlign.center,
+                                                "Failed: ${events.where(
+                                                      (
+                                                        final MatchEvent event,
+                                                      ) =>
+                                                          event.eventTypeId ==
+                                                              robotActionsProvider[
+                                                                  "Failed Cone"]! ||
+                                                          event.eventTypeId ==
+                                                              robotActionsProvider[
+                                                                  "Failed Cube"]!,
+                                                    ).length.toString()}"),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          ),
+                                        ]
+                                            .expand(
+                                              (final Widget element) =>
+                                                  <Widget>[
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                SizedBox(
+                                                  width: 120,
+                                                  height: 60,
+                                                  child: element,
+                                                ),
+                                              ],
+                                            )
+                                            .toList(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(
                                 height: 30,
@@ -594,6 +701,7 @@ class _UserInput2State extends State<UserInput2> {
                       const SizedBox(
                         height: 20,
                       ),
+                      //TODO resolve bug that may accur if a balance position is selected before "not on field"
                       Switcher(
                         labels: const <String>[
                           "Not on field",
