@@ -300,7 +300,7 @@ class _PitViewState extends State<PitView> {
                       children: const <Widget>[
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text("Ground Intake"),
+                          child: Text("Tipped Cones Intake"),
                         )
                       ],
                       isSelected: <bool>[vars.hasGroundIntake],
@@ -320,7 +320,7 @@ class _PitViewState extends State<PitView> {
                       children: const <Widget>[
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text("Top Scoring"),
+                          child: Text("Top Cones Scoring"),
                         )
                       ],
                       isSelected: <bool>[vars.canScoreTop],

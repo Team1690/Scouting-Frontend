@@ -336,6 +336,7 @@ class _UserInput2State extends State<UserInput2> {
                           onPressed: () {
                             setState(() {
                               timer = null;
+                              events = <MatchEvent>[];
                             });
                           },
                           child: const Text("Reset Time"),
