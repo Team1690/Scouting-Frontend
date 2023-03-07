@@ -13,14 +13,14 @@ class EventSubmitButton extends StatefulWidget {
     required this.resetForm,
     required this.validate,
     required this.events,
-    required this.isSpecific,
+    required this.isSecondary,
   });
   final bool Function() validate;
   final HasuraVars vars;
   final String mutation;
   final void Function() resetForm;
   final List<MatchEvent> events;
-  final bool isSpecific;
+  final bool isSecondary;
 
   @override
   State<EventSubmitButton> createState() => _EventSubmitButtonState();
@@ -117,7 +117,7 @@ class _EventSubmitButtonState extends State<EventSubmitButton> {
               document: gql(widget.mutation),
               variables: widget.vars.toHasuraVars(),
               parserFn: (final Map<String, dynamic> data) => data[
-                      "insert__2023_${widget.isSpecific ? "specific" : "technical_match_v3"}"]
+                      "insert__2023_${widget.isSecondary ? "secondary_technical" : "technical_match_v3"}"]
                   ["returning"][0]["id"] as int,
             ),
           );
@@ -129,8 +129,8 @@ class _EventSubmitButtonState extends State<EventSubmitButton> {
                 event.matchId = id;
               }
               eventMutation = """
-mutation Events(\$objects: [${widget.isSpecific ? "_2023_specific_events_insert_input" : "_2023_new_technical_events_insert_input"}!]!) {
-  ${widget.isSpecific ? "insert__2023_specific_events" : "insert__2023_new_technical_events"}(objects: \$objects) {
+mutation Events(\$objects: [${widget.isSecondary ? "_2023_secondary_technical_events_insert_input" : "_2023_new_technical_events_insert_input"}!]!) {
+  ${widget.isSecondary ? "insert__2023_secondary_technical_events" : "insert__2023_new_technical_events"}(objects: \$objects) {
     affected_rows
   }
 }

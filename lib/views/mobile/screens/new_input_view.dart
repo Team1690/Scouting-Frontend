@@ -5,7 +5,6 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
-
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -657,7 +656,7 @@ class _UserInput2State extends State<UserInput2> {
                       ),
                       EventSubmitButton(
                         events: filterEvents(events),
-                        isSpecific: false,
+                        isSecondary: false,
                         resetForm: () {
                           setState(() {
                             timer = null;
