@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/id_providers.dart";
-import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/matches_provider.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -37,7 +36,7 @@ Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
             parserFn: (final Map<String, dynamic> data) {
               final List<dynamic> matches = data[isSpecific
                   ? "_2023_specific"
-                  : "_2023_new_technical_match"] as List<dynamic>;
+                  : "_2023_technical_match_v3"] as List<dynamic>;
               final Map<I, List<dynamic>> identifierToMatch =
                   matches.groupListsBy(
                 parseI,
@@ -95,12 +94,6 @@ Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
             .single);
         return StatusMatch(
           scoutedTeam: StatusLightTeam(
-            isSpecific
-                ? 0
-                : (getPoints(parseMatch(scoutedMatchTable)) as int) +
-                    (scoutedMatchTable["endgame_balance"]["endgame_points"]
-                        as int) +
-                    (scoutedMatchTable["auto_balance"]["auto_points"] as int),
             scheduleMatch.redAlliance.contains(
               team,
             )
@@ -150,7 +143,6 @@ Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
               (final LightTeam notScoutedTeam) => StatusMatch(
                 scouter: "?",
                 scoutedTeam: StatusLightTeam(
-                  0,
                   match.redAlliance.contains(notScoutedTeam)
                       ? Colors.red
                       : Colors.blue,
@@ -165,7 +157,7 @@ Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
 
 String getSubscription(final bool isSpecific, final bool isPreScouting) => """
 subscription Status {
-   _2023_${isSpecific ? "specific" : "new_technical_match"}
+   _2023_${isSpecific ? "specific" : "technical_match_v3"}
   (order_by: {match: {match_type: {order: asc}, match_number: asc}, is_rematch: asc},
    where: {match: {match_type: {title: {${isPreScouting ? "_eq" : "_neq"}: "Pre scouting"}}}}) {
     team {
@@ -176,24 +168,7 @@ subscription Status {
     }
     scouter_name
     is_rematch
-     ${!isSpecific ? """tele_cones_low
-    tele_cones_mid
-    tele_cones_top
-    tele_cubes_low
-    tele_cubes_mid
-    tele_cubes_top
-    auto_cones_low
-    auto_cones_mid
-    auto_cones_top
-    auto_cubes_low
-    auto_cubes_mid
-    auto_cubes_top
-    auto_balance {
-      auto_points
-    }
-    endgame_balance {
-      endgame_points
-    } """ : ""}
+
     match {
       match_number
       match_type {

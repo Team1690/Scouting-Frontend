@@ -162,20 +162,6 @@ class RegularStatus extends StatelessWidget {
                 Text(
                   "${statusItem.identifier.isRematch ? "Re " : ""}${statusItem.identifier.type} ${statusItem.identifier.number}",
                 ),
-                if (!isSpecific)
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        style: const TextStyle(color: Colors.blue),
-                        "${statusItem.values.where((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.allianceColor == Colors.blue).map((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.points).fold<int>(0, (final int previousValue, final int currentValue) => previousValue + currentValue)}",
-                      ),
-                      const Text(" - "),
-                      Text(
-                        style: const TextStyle(color: Colors.red),
-                        "${statusItem.values.where((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.allianceColor == Colors.red).map((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.points).fold<int>(0, (final int sumUntilNow, final int currentValue) => sumUntilNow + currentValue)}",
-                      )
-                    ],
-                  )
               ],
             ),
             getValueBox: (
@@ -201,11 +187,6 @@ class RegularStatus extends StatelessWidget {
                     match: scoutedMatch,
                     text: scoutedMatch.scouter,
                   ),
-                  if (!isSpecific)
-                    TextByTeam(
-                      match: scoutedMatch,
-                      text: scoutedMatch.scoutedTeam.points.toString(),
-                    ),
                 ],
               ),
             ),
@@ -370,13 +351,11 @@ class StatusBox extends StatelessWidget {
 
 class StatusLightTeam {
   const StatusLightTeam(
-    this.points,
     this.allianceColor,
     this.team,
     this.alliancePos,
   );
   final LightTeam team;
-  final int points;
   final Color allianceColor;
   final int alliancePos;
 }
