@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
+
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -65,30 +66,44 @@ class _UserInput2State extends State<UserInput2> {
         .nameToId["Didn't come to field"]!,
     1: IdProvider.of(context).robotMatchStatus.nameToId["Didn't work on field"]!
   };
+  //TODO prettify with an enum
+  final Map<String, int> startingGamepiecesIndexes = <String, int>{
+    "Cone": 0,
+    "Cube": 1
+  };
+  int startedWith = -1;
   @override
   Widget build(final BuildContext context) {
     final Map<int, String> balanceProvider =
         IdProvider.of(context).balance.idToName;
-    final Map<int, String> startingPosProvider =
-        IdProvider.of(context).startingPosIds.idToName;
     final Map<String, int> robotActionsProvider =
         IdProvider.of(context).robotActionIds.nameToId;
     final int notOnFieldId = IdProvider.of(context)
         .robotMatchStatus
         .nameToId["Didn't come to field"] as int;
     void actionByGamepiece(final String event) {
-      if (events.last.eventTypeId == robotActionsProvider["Intaked Cone"]) {
+      if (events.isNotEmpty) {
+        if (events.last.eventTypeId == robotActionsProvider["Intaked Cone"]) {
+          events.add(
+            MatchEvent(
+              eventTypeId: robotActionsProvider["$event Cone"]!,
+              timestamp: time,
+            ),
+          );
+        } else if (events.last.eventTypeId ==
+            robotActionsProvider["Intaked Cube"]) {
+          events.add(
+            MatchEvent(
+              eventTypeId: robotActionsProvider["$event Cube"]!,
+              timestamp: time,
+            ),
+          );
+        }
+      } else {
         events.add(
           MatchEvent(
-            eventTypeId: robotActionsProvider["$event Cone"]!,
-            timestamp: time,
-          ),
-        );
-      } else if (events.last.eventTypeId ==
-          robotActionsProvider["Intaked Cube"]) {
-        events.add(
-          MatchEvent(
-            eventTypeId: robotActionsProvider["$event Cube"]!,
+            eventTypeId: robotActionsProvider[
+                "$event ${startedWith == 0 ? "Cone" : "Cube"}"]!,
             timestamp: time,
           ),
         );
@@ -102,7 +117,6 @@ class _UserInput2State extends State<UserInput2> {
       if (match.robotMatchStatusId == notOnFieldId) {
         match.autoBalanceStatus = null;
         match.endgameBalanceStatus = null;
-        match.startingPosId = null;
       }
       match.autoConesScored = events
           .where(
@@ -286,19 +300,23 @@ class _UserInput2State extends State<UserInput2> {
                       ),
                       Visibility(
                         visible: notOnFieldId != match.robotMatchStatusId,
-                        child: Selector<int>(
-                          options: startingPosProvider.keys.toList(),
-                          placeholder: "Choose a starting position",
-                          value: match.startingPosId,
-                          makeItem: (final int index) =>
-                              startingPosProvider[index]!,
-                          onChange: ((final int currentValue) =>
-                              match.startingPosId = currentValue),
-                          validate: (final int? submmission) =>
-                              notOnFieldId != match.robotMatchStatusId
-                                  ? submmission
-                                      .onNull("Please pick a starting position")
-                                  : null,
+                        child: Switcher(
+                          colors: const <Color>[
+                            Colors.amber,
+                            Colors.deepPurple
+                          ],
+                          labels: startingGamepiecesIndexes.keys.toList(),
+                          onChange: (final int pieceIndex) {
+                            setState(() {
+                              startedWith = pieceIndex == -1
+                                  ? -1
+                                  : startingGamepiecesIndexes["Cone"] ==
+                                          pieceIndex
+                                      ? startingGamepiecesIndexes["Cone"]!
+                                      : startingGamepiecesIndexes["Cube"]!;
+                            });
+                          },
+                          selected: startedWith,
                         ),
                       ),
                       const SizedBox(
@@ -309,13 +327,15 @@ class _UserInput2State extends State<UserInput2> {
                         width: 150,
                         child: ElevatedButton(
                           onPressed: () {
-                            timer = Timer.periodic(
-                                const Duration(milliseconds: 100),
-                                (final Timer timer) {
-                              setState(() {
-                                time = 100 * timer.tick;
+                            if (startedWith != -1) {
+                              timer = Timer.periodic(
+                                  const Duration(milliseconds: 100),
+                                  (final Timer timer) {
+                                setState(() {
+                                  time = 100 * timer.tick;
+                                });
                               });
-                            });
+                            }
                           },
                           child: const Text("Start Game"),
                           style: ElevatedButton.styleFrom(
@@ -361,7 +381,9 @@ class _UserInput2State extends State<UserInput2> {
                           ? <Align>[
                               const Align(
                                 alignment: Alignment.center,
-                                child: Text("Please Start The Match Timer"),
+                                child: Text(
+                                  "Please Select Gamepiece And Start The Match Timer",
+                                ),
                               )
                             ]
                           : <Widget>[
@@ -629,7 +651,6 @@ class _UserInput2State extends State<UserInput2> {
                       const SizedBox(
                         height: 20,
                       ),
-                      //TODO resolve bug that may accur if a balance position is selected before "not on field"
                       Switcher(
                         labels: const <String>[
                           "Not on field",
@@ -664,6 +685,7 @@ class _UserInput2State extends State<UserInput2> {
                             teamNumberController.clear();
                             matchController.clear();
                             events = <MatchEvent>[];
+                            startedWith = -1;
                           });
                         },
                         validate: () => formKey.currentState!.validate(),
@@ -687,8 +709,8 @@ class _UserInput2State extends State<UserInput2> {
 }
 
 const String mutation = r"""
-mutation InsertTechnicalMatch($auto_cones_delivered: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_scored: Int, $auto_cubes_failed: Int, $auto_cubes_delivered: Int, $auto_cubes_scored: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cubes_scored: Int, $tele_cubes_delivered: Int, $tele_cubes_failed: Int, $tele_cones_scored: Int, $tele_cones_delivered: Int, $is_rematch: Boolean, $schedule_match_id: Int, $starting_position_id: Int) {
-  insert__2023_technical_match_v3(objects: {auto_balance_id: $auto_balance_id, auto_cones_failed: $auto_cones_failed, auto_cones_delivered: $auto_cones_delivered, auto_cones_scored: $auto_cones_scored, auto_cubes_failed: $auto_cubes_failed, auto_cubes_delivered: $auto_cubes_delivered, auto_cubes_scored: $auto_cubes_scored, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_delivered: $tele_cones_delivered, tele_cones_scored: $tele_cones_scored, tele_cubes_failed: $tele_cubes_failed, tele_cubes_scored: $tele_cubes_scored, tele_cubes_delivered: $tele_cubes_delivered, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id, starting_position_id: $starting_position_id}) {
+mutation InsertTechnicalMatch($auto_cones_delivered: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_scored: Int, $auto_cubes_failed: Int, $auto_cubes_delivered: Int, $auto_cubes_scored: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cubes_scored: Int, $tele_cubes_delivered: Int, $tele_cubes_failed: Int, $tele_cones_scored: Int, $tele_cones_delivered: Int, $is_rematch: Boolean, $schedule_match_id: Int,) {
+  insert__2023_technical_match_v3(objects: {auto_balance_id: $auto_balance_id, auto_cones_failed: $auto_cones_failed, auto_cones_delivered: $auto_cones_delivered, auto_cones_scored: $auto_cones_scored, auto_cubes_failed: $auto_cubes_failed, auto_cubes_delivered: $auto_cubes_delivered, auto_cubes_scored: $auto_cubes_scored, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_delivered: $tele_cones_delivered, tele_cones_scored: $tele_cones_scored, tele_cubes_failed: $tele_cubes_failed, tele_cubes_scored: $tele_cubes_scored, tele_cubes_delivered: $tele_cubes_delivered, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
     returning {
     id
 }

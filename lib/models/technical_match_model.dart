@@ -23,7 +23,6 @@ class TechnicalMatch implements HasuraVars {
     this.scoutedTeam,
     required this.robotMatchStatusId,
     this.isRematch = false,
-    this.startingPosId,
   });
 
   void clear(final BuildContext context) {
@@ -46,7 +45,6 @@ class TechnicalMatch implements HasuraVars {
     isRematch = false;
     robotMatchStatusId =
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
-    startingPosId = null;
   }
 
   bool preScouting = false;
@@ -68,7 +66,6 @@ class TechnicalMatch implements HasuraVars {
   int? autoBalanceStatus;
   int? endgameBalanceStatus;
   int robotMatchStatusId;
-  int? startingPosId;
 
   LightTeam? scoutedTeam;
   @override
@@ -92,7 +89,6 @@ class TechnicalMatch implements HasuraVars {
         "schedule_match_id": scheduleMatch?.id,
         "robot_match_status_id": robotMatchStatusId,
         "is_rematch": isRematch,
-        "starting_position_id": startingPosId,
       };
 }
 
