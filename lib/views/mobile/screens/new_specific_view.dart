@@ -12,6 +12,7 @@ import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
+import "package:scouting_frontend/views/mobile/switcher.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/mobile/screens/locations_vars.dart";
@@ -120,6 +121,9 @@ class _SecondaryTechnicalState extends State<SecondaryTechnical> {
                           });
                         },
                       ),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       ToggleButtons(
                         fillColor: const Color.fromARGB(10, 244, 67, 54),
                         selectedColor: Colors.red,
@@ -137,6 +141,9 @@ class _SecondaryTechnicalState extends State<SecondaryTechnical> {
                           });
                         },
                       ),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       Visibility(
                         visible: notOnFieldId != vars.robotMatchStatusId,
                         child: Selector<int>(
@@ -145,8 +152,11 @@ class _SecondaryTechnicalState extends State<SecondaryTechnical> {
                           value: vars.startingLocationId,
                           makeItem: (final int index) =>
                               startingPosProvider[index]!,
-                          onChange: ((final int currentValue) =>
-                              vars.startingLocationId = currentValue),
+                          onChange: ((final int currentValue) {
+                            setState(() {
+                              vars.startingLocationId = currentValue;
+                            });
+                          }),
                           validate: (final int? submmission) =>
                               notOnFieldId != vars.robotMatchStatusId
                                   ? submmission
@@ -163,18 +173,18 @@ class _SecondaryTechnicalState extends State<SecondaryTechnical> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
+                              events.add(
+                                MatchEvent(
+                                  eventTypeId:
+                                      locationsProvider["Entered Community"]!,
+                                  timestamp: 0,
+                                ),
+                              );
                               timer = Timer.periodic(
                                   const Duration(milliseconds: 100),
                                   (final Timer timer) {
                                 setState(() {
                                   time = 100 * timer.tick;
-                                  events.add(
-                                    MatchEvent(
-                                      eventTypeId: locationsProvider[
-                                          "Entered Community"]!,
-                                      timestamp: 0,
-                                    ),
-                                  );
                                 });
                               });
                             });
@@ -336,10 +346,34 @@ class _SecondaryTechnicalState extends State<SecondaryTechnical> {
                     children: <Widget>[
                       SectionDivider(label: "Post-match"),
                       const SizedBox(
-                        height: 5,
+                        height: 15,
                       ),
-                      Divider(
-                        color: Colors.black.withOpacity(0.4),
+                      Switcher(
+                        labels: const <String>[
+                          "Not on field",
+                          "Didn't work on field"
+                        ],
+                        colors: const <Color>[
+                          Colors.red,
+                          Color.fromARGB(255, 198, 29, 228)
+                        ],
+                        onChange: (final int i) {
+                          setState(() {
+                            vars.robotMatchStatusId =
+                                robotMatchStatusIndexToId[i]!;
+                            if (vars.robotMatchStatusId == notOnFieldId) {
+                              vars.startingLocationId = null;
+                            }
+                          });
+                        },
+                        selected: <int, int>{
+                          for (final MapEntry<int, int> i
+                              in robotMatchStatusIndexToId.entries)
+                            i.value: i.key
+                        }[vars.robotMatchStatusId]!,
+                      ),
+                      const SizedBox(
+                        height: 20,
                       ),
                     ],
                   ),
@@ -355,7 +389,7 @@ class _SecondaryTechnicalState extends State<SecondaryTechnical> {
                       resetForm: () {
                         setState(() {
                           timer = null;
-                          vars.clear;
+                          vars.clear(context);
                           matchController.clear();
                           teamContorller.clear();
                           events = <MatchEvent>[];
