@@ -1,6 +1,8 @@
 import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/cycle_model.dart";
+import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -128,7 +130,7 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
         ),
       ],
     );
-
+//TODO try add other team's climb
 final String query = """
 query FetchCoach {
   matches(order_by: {match_type: {order: asc}, match_number: asc}) {
@@ -137,53 +139,80 @@ query FetchCoach {
     match_type {
       title
     }
-    ${teamValues.map(
-          (final String e) => """$e{
+        ${teamValues.map(
+          (final String e) => """$e {
       colors_index
       id
       name
       number
-      new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
-        aggregate {
-          avg {
-            auto_cones_low
-            auto_cones_mid
-            auto_cones_top
-            auto_cones_failed
-            auto_cubes_low
-            auto_cubes_mid
-            auto_cubes_top
-            auto_cubes_failed
-            tele_cones_low
-            tele_cones_mid
-            tele_cones_top
-            tele_cones_failed
-            tele_cubes_low
-            tele_cubes_mid
-            tele_cubes_top
-            tele_cubes_failed
-
-          }
+      secondary_technicals(where: {ignored: {_eq: false}}, order_by: {match: {id: asc, match_number: asc}, is_rematch: asc}) {
+        _2023_secondary_technical_events(order_by: {match_id: asc, timestamp: asc}) {
+          event_type_id
+          match_id
+          timestamp
         }
-        nodes {
-          auto_balance{
+        schedule_match_id
+        scouter_name
+        starting_position_id
+        team_id
+        robot_match_status {
+          title
+        }
+      }
+      technical_matches_v3(where: {ignored: {_eq: false}}, order_by: {match: {id: asc, match_number: asc}, is_rematch: asc}) {
+        auto_balance {
           title
           auto_points
+        }
+        auto_cones_delivered
+        auto_cones_failed
+        auto_cones_scored
+        auto_cubes_delivered
+        auto_cubes_failed
+        auto_cubes_scored
+        endgame_balance {
+          title
+          endgame_points
+        }
+        robot_match_status {
+          title
+        }
+        schedule_match_id
+        scouter_name
+        tele_cones_delivered
+        tele_cones_failed
+        tele_cones_scored
+        tele_cubes_delivered
+        tele_cubes_failed
+        tele_cubes_scored
+        _2023_technical_events(order_by: {match_id: asc, timestamp: asc}) {
+          match_id
+          event_type_id
+          timestamp
+        }
+      }
+      technical_matches_v3_aggregate {
+        aggregate {
+          avg {
+            auto_cones_delivered
+            auto_cones_failed
+            auto_cones_scored
+            auto_cubes_delivered
+            auto_cubes_failed
+            auto_cubes_scored
+            tele_cones_delivered
+            tele_cones_failed
+            tele_cones_scored
+            tele_cubes_delivered
+            tele_cubes_failed
+            tele_cubes_scored
           }
-          endgame_balance{
-            title
-            endgame_points
-          }
-
         }
       }
     }""",
         ).join(" ")}
-  }
-}
+}}""";
 
-
-""";
 Future<List<CoachData>> fetchMatches(final BuildContext context) async {
   final GraphQLClient client = getClient();
   final QueryResult<List<CoachData>> result = await client.query(
@@ -207,11 +236,30 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   return null;
                 }
                 final LightTeam team = LightTeam.fromJson(match[e]);
-                final dynamic avg = match[e]["new_technical_matches_aggregate"]
+                final dynamic avg = match[e]["technical_matches_v3_aggregate"]
                     ["aggregate"]["avg"];
-                final bool nullValidator = avg["auto_cones_top"] == null;
+                final bool nullValidator = avg["auto_cones_scored"] == null;
                 final double avgGamepiecePoints =
                     nullValidator ? double.nan : getPoints(parseMatch(avg));
+                final List<MatchEvent> locations = getEvents(
+                  match[e]["secondary_technicals"]
+                      as List<Map<String, dynamic>>,
+                  "_2023_secondary_technical_events",
+                );
+
+                final List<MatchEvent> robotEvents = getEvents(
+                  match[e]["technical_matches_v3"]
+                      as List<Map<String, dynamic>>,
+                  "_2023_technical_events",
+                );
+                final List<Cycle> cycles =
+                    getCycles(robotEvents, locations, context);
+                final double avgAutoConesScored = nullValidator
+                    ? double.nan
+                    : avg["auto_cones_scored"] as double;
+                final double avgAutoCubesScored = nullValidator
+                    ? double.nan
+                    : avg["auto_cubes_scored"] as double;
                 final double avgAutoGamepiece = nullValidator
                     ? double.nan
                     : getPieces(parseByMode(MatchMode.auto, avg));

@@ -1,4 +1,7 @@
+import "package:collection/collection.dart";
 import "package:flutter/cupertino.dart";
+import "package:scouting_frontend/models/cycle_model.dart";
+import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -192,6 +195,80 @@ final Map<EffectiveScore, int> score = <EffectiveScore, int>{
         ),
       )
 };
+
+List<MatchEvent> getEvents(
+  final List<Map<String, dynamic>> data,
+  final String title,
+) {
+  final List<MatchEvent> events = <MatchEvent>[];
+  for (int i = 0; i >= data.length; i++) {
+    for (int j = 0;
+        j >= (data[i][title] as List<Map<String, dynamic>>).length;
+        j++) {
+      events.add(
+        MatchEvent(
+          eventTypeId: data[i][title][j]["event_type_id"] as int,
+          timestamp: data[i][title][j]["timestamp"] as int,
+          matchId: data[i][title]["schedule_match_id"] as int,
+        ),
+      );
+    }
+  }
+  return events;
+}
+
+//TODO there is a bug when the cycleEnder ends before the other one, probably just check in the while loop if both are returning null to fix and this is really fucking bad but its the best i got rn
+List<Cycle> getCycles(
+  final List<MatchEvent> robotEvents,
+  final List<MatchEvent> locations,
+  final BuildContext context,
+) {
+  final List<Cycle> cycles = <Cycle>[];
+  final Map<String, int> provider =
+      IdProvider.of(context).robotActionIds.nameToId;
+  final List<int> endingCycles = <int>[
+    provider["Delivered Cone"]!,
+    provider["Delivered Cube"]!,
+    provider["Scored Cube"]!,
+    provider["Scored Cone"]!,
+    provider["Scored Cube"]!,
+    provider["Scored Cone"]!
+  ];
+  while (robotEvents.firstWhereOrNull(
+        (final MatchEvent robotEvent) =>
+            provider["Intaked Cone"] == robotEvent.eventTypeId ||
+            provider["Intaked Cube"] == robotEvent.eventTypeId,
+      ) ==
+      null) {
+    final MatchEvent currentIntake = robotEvents.firstWhere(
+      (final MatchEvent robotEvent) =>
+          provider["Intaked Cone"] == robotEvent.eventTypeId ||
+          provider["Intaked Cube"] == robotEvent.eventTypeId,
+    );
+    final MatchEvent currentCycleEnder = robotEvents.firstWhere(
+      (final MatchEvent locations) =>
+          endingCycles.contains(locations.eventTypeId),
+    );
+    cycles.add(
+      Cycle(
+        endTime: currentCycleEnder.timestamp,
+        startingTime: locations
+            .where(
+              (final MatchEvent location) =>
+                  location.timestamp < currentIntake.timestamp,
+            )
+            .reduce(
+              (final MatchEvent value, final MatchEvent element) =>
+                  value.timestamp < element.timestamp ? element : value,
+            )
+            .timestamp,
+      ),
+    );
+    robotEvents.remove(currentCycleEnder);
+    robotEvents.remove(currentIntake);
+  }
+  return cycles;
+}
 
 double getPoints(final Map<EffectiveScore, double> countedValues) =>
     countedValues.keys.fold(
