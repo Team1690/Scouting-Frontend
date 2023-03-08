@@ -107,10 +107,8 @@ class _SecondaryTechnicalState extends State<SecondaryTechnical> {
                         height: 15,
                       ),
                       TeamAndMatchSelection(
-                        matchController:
-                            matchController, //index of matchController
-                        teamNumberController:
-                            teamContorller, //index of teamNumberController
+                        matchController: matchController,
+                        teamNumberController: teamContorller,
                         onChange: (
                           final ScheduleMatch selectedMatch,
                           final LightTeam? selectedTeam,
@@ -396,8 +394,8 @@ class _SecondaryTechnicalState extends State<SecondaryTechnical> {
                         });
                       },
                       mutation: r"""
-                        mutation A($scouter_name :String, $schedule_match_id: Int,$is_rematch: Boolean,$starting_position_id: Int,$robot_match_status_id:Int, ){
-  insert__2023_secondary_technical(objects:{scouter_name:$scouter_name,schedule_match_id:$schedule_match_id,starting_position_id:$starting_position_id,robot_match_status_id:$robot_match_status_id,is_rematch:$is_rematch}){
+                        mutation A($scouter_name :String, $schedule_match_id: Int,$is_rematch: Boolean,$starting_position_id: Int,$robot_match_status_id:Int,$team_id: Int, ){
+  insert__2023_secondary_technical(objects:{scouter_name:$scouter_name,schedule_match_id:$schedule_match_id,starting_position_id:$starting_position_id,robot_match_status_id:$robot_match_status_id,is_rematch:$is_rematch,team_id:$team_id}){
     affected_rows
      returning{
       id

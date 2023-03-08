@@ -35,5 +35,6 @@ class LocationVars implements HasuraVars {
         "starting_position_id": startingLocationId,
         "robot_match_status_id": robotMatchStatusId,
         "schedule_match_id": scheduleMatch?.id,
+        "team_id": team?.id,
       };
 }
