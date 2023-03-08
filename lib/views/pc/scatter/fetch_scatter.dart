@@ -12,7 +12,7 @@ query Scatter {
     number
     id
     name
-    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+    new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
     aggregate {
       avg {
         auto_cones_low
@@ -30,7 +30,7 @@ query Scatter {
       }
     }
   }
-    technical_matches(where: {ignored: {_eq: false}}) {
+    new_technical_matches(where: {ignored: {_eq: false}}) {
     auto_cones_low
     auto_cones_mid
     auto_cones_top
@@ -62,10 +62,11 @@ Future<List<ScatterData>> fetchScatterData() async {
                   scatterTeam["name"] as String,
                   scatterTeam["colors_index"] as int,
                 );
-                final dynamic avg = scatterTeam["technical_matches_aggregate"]
-                    ["aggregate"]["avg"];
+                final dynamic avg =
+                    scatterTeam["new_technical_matches_aggregate"]["aggregate"]
+                        ["avg"];
                 final List<dynamic> matches =
-                    scatterTeam["technical_matches"] as List<dynamic>;
+                    scatterTeam["new_technical_matches"] as List<dynamic>;
                 if (avg["auto_cones_top"] == null) {
                   //if one of these is null, the team's match data doesnt exist so we return null
                   return null;

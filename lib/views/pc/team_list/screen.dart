@@ -239,7 +239,8 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
           final List<dynamic> teams = data["team"] as List<dynamic>;
           return teams.map<_Team>((final dynamic team) {
             final List<int> autoBalancePoints =
-                (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+                (team["new_technical_matches_aggregate"]["nodes"]
+                        as List<dynamic>)
                     .where(
                       (final dynamic node) =>
                           node["auto_balance"]["title"] != "No attempt",
@@ -250,7 +251,8 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                     )
                     .toList();
             final List<int> endgameBalancePoints =
-                (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+                (team["new_technical_matches_aggregate"]["nodes"]
+                        as List<dynamic>)
                     .where(
                       (final dynamic node) =>
                           node["endgame_balance"]["title"] != "No attempt",
@@ -261,7 +263,8 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                     )
                     .toList();
             final List<RobotMatchStatus> robotMatchStatuses =
-                (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+                (team["new_technical_matches_aggregate"]["nodes"]
+                        as List<dynamic>)
                     .map(
                       (final dynamic node) => titleToEnum(
                         node["robot_match_status"]["title"] as String,
@@ -269,7 +272,8 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                     )
                     .toList();
             final List<String> autoBalance =
-                (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
+                (team["new_technical_matches_aggregate"]["nodes"]
+                        as List<dynamic>)
                     .map(
                       (final dynamic node) =>
                           node["auto_balance"]["title"] as String,
@@ -284,7 +288,7 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                     autoBalance.length) *
                 100;
             final dynamic avg =
-                team["technical_matches_aggregate"]["aggregate"]["avg"];
+                team["new_technical_matches_aggregate"]["aggregate"]["avg"];
             final double gamepiecePointsAvg = avg["auto_cones_top"] == null
                 ? double.nan
                 : getPoints(parseMatch(avg));
@@ -313,10 +317,10 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                 endgameBalancePoints.averageOrNull ?? double.nan;
             endgameBalancePoints.averageOrNull ?? double.nan;
             return _Team(
-              amountOfMatches: (team["technical_matches_aggregate"]["nodes"]
+              amountOfMatches: (team["new_technical_matches_aggregate"]["nodes"]
                       as List<dynamic>)
                   .length,
-              matchesBalanced: (team["technical_matches_aggregate"]["nodes"]
+              matchesBalanced: (team["new_technical_matches_aggregate"]["nodes"]
                       as List<dynamic>)
                   .map(
                     (final dynamic node) =>
@@ -357,7 +361,7 @@ subscription MySubscription {
     name
     number
     colors_index
-    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+    new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
           auto_cones_low

@@ -7,6 +7,7 @@ class CarouselWithIndicator extends StatefulWidget {
     this.direction = Axis.horizontal,
     this.initialPage = 0,
     this.enableInfininteScroll = true,
+    this.controller,
   });
   @override
   State<StatefulWidget> createState() => _CarouselWithIndicatorState();
@@ -15,6 +16,7 @@ class CarouselWithIndicator extends StatefulWidget {
   final int initialPage;
   final Axis direction;
   final List<Widget> widgets;
+  final CarouselController? controller;
 }
 
 class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
@@ -29,7 +31,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
           Expanded(
             child: CarouselSlider(
               items: widget.widgets,
-              carouselController: _controller,
+              carouselController: widget.controller ?? _controller,
               options: CarouselOptions(
                 enableInfiniteScroll: widget.enableInfininteScroll,
                 initialPage: widget.initialPage,
@@ -52,7 +54,9 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
             children: List<Widget>.generate(
               widget.widgets.length,
               (final int index) => GestureDetector(
-                onTap: () => _controller.animateToPage(index),
+                onTap: () => widget.controller != null
+                    ? widget.controller!.animateToPage(index)
+                    : _controller.animateToPage(index),
                 child: Container(
                   width: 12.0,
                   height: 12.0,

@@ -33,6 +33,8 @@ query TeamInfo(\$id: Int!) {
       drivemotor {
         title
       }
+      has_ground_intake
+      can_score_top
     }
     _2023_specifics{
       defense
@@ -47,7 +49,7 @@ query TeamInfo(\$id: Int!) {
         match_number
       }
     }
-    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+    new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
           auto_cones_low
@@ -69,7 +71,7 @@ query TeamInfo(\$id: Int!) {
         }
       }
     }
-    technical_matches(
+    new_technical_matches(
       where: {ignored: {_eq: false}}
       order_by: [{match: {match_type: {order: asc}}}, {match: {match_number: asc}}, {is_rematch: asc}]
     ) {
@@ -149,11 +151,13 @@ Future<Team> fetchTeamInfo(
             driveTrainType: pitTable["drivetrain"]["title"] as String,
             driveMotorType: pitTable["drivemotor"]["title"] as String,
             faultMessages: faultMessages,
+            hasGroundIntake: pitTable["has_ground_intake"] as bool,
+            canScoreTop: pitTable["can_score_top"] as bool,
           ),
         );
 
         final dynamic avg =
-            teamByPk["technical_matches_aggregate"]["aggregate"]["avg"];
+            teamByPk["new_technical_matches_aggregate"]["aggregate"]["avg"];
         double avgNullToZero(
           final MatchMode mode,
           final Gamepiece piece, [
@@ -226,7 +230,7 @@ Future<Team> fetchTeamInfo(
         );
 
         final List<dynamic> matches =
-            (teamByPk["technical_matches"] as List<dynamic>);
+            (teamByPk["new_technical_matches"] as List<dynamic>);
 
         List<int> balancePoints(final MatchMode mode) => matches
             .where(
@@ -363,7 +367,7 @@ Future<Team> fetchTeamInfo(
               title: "${isAuto ? "Auto" : "Endgame"} Balance",
               robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
                 1,
-                (teamByPk["technical_matches"] as List<dynamic>)
+                (teamByPk["new_technical_matches"] as List<dynamic>)
                     .map(
                       (final dynamic match) => titleToEnum(
                         match["robot_match_status"]["title"] as String,
@@ -411,7 +415,7 @@ Future<Team> fetchTeamInfo(
                   "${mode == MatchMode.auto ? "Autonomous" : "Teleoperated"} ${piece.title}",
               robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
                 4,
-                (teamByPk["technical_matches"] as List<dynamic>)
+                (teamByPk["new_technical_matches"] as List<dynamic>)
                     .map(
                       (final dynamic match) => titleToEnum(
                         match["robot_match_status"]["title"] as String,
@@ -475,7 +479,7 @@ Future<Team> fetchTeamInfo(
             title: gamepiece == Gamepiece.cone ? "Cones" : "Cubes",
             robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
               4,
-              (teamByPk["technical_matches"] as List<dynamic>)
+              (teamByPk["new_technical_matches"] as List<dynamic>)
                   .map(
                     (final dynamic e) => titleToEnum(
                       e["robot_match_status"]["title"] as String,
@@ -512,7 +516,7 @@ Future<Team> fetchTeamInfo(
           title: "Gamepieces",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
             4,
-            (teamByPk["technical_matches"] as List<dynamic>)
+            (teamByPk["new_technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic match) => titleToEnum(
                     match["robot_match_status"]["title"] as String,
@@ -533,7 +537,7 @@ Future<Team> fetchTeamInfo(
           title: "Points",
           gameNumbers: matchNumbers,
           robotMatchStatuses: <List<RobotMatchStatus>>[
-            (teamByPk["technical_matches"] as List<dynamic>)
+            (teamByPk["new_technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic match) => titleToEnum(
                     match["robot_match_status"]["title"] as String,

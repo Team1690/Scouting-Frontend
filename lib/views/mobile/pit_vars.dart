@@ -12,6 +12,8 @@ class PitVars implements HasuraVars {
   String length = "";
   String width = "";
   String weight = "";
+  bool hasGroundIntake = false;
+  bool canScoreTop = false;
   @override
   Map<String, dynamic> toHasuraVars() => <String, dynamic>{
         "drivetrain_id": driveTrainType,
@@ -25,6 +27,8 @@ class PitVars implements HasuraVars {
         "width": int.parse(width),
         "length": int.parse(length),
         "weight": int.parse(weight),
+        "has_ground_intake": hasGroundIntake,
+        "can_score_top": canScoreTop,
       };
 
   void reset() {
@@ -39,5 +43,7 @@ class PitVars implements HasuraVars {
     weight = "";
     width = "";
     length = "";
+    hasGroundIntake = false;
+    canScoreTop = false;
   }
 }

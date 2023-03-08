@@ -12,7 +12,7 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 const String query = """
 query FetchCompare(\$ids: [Int!]) {
   team(where: {id: {_in: \$ids}}) {
-    technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+    new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
           auto_cones_low
@@ -30,7 +30,7 @@ query FetchCompare(\$ids: [Int!]) {
         }
       }
     }
-    technical_matches(where: {ignored: {_eq: false}},order_by:[ {match: {match_type: {order: asc}}},{ match:{match_number:asc}},{is_rematch: asc}]) {
+    new_technical_matches(where: {ignored: {_eq: false}},order_by:[ {match: {match_type: {order: asc}}},{ match:{match_number:asc}},{is_rematch: asc}]) {
       auto_balance{
         auto_points
         title
@@ -79,7 +79,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
             .map<CompareTeam>((final dynamic teamsTable) {
           final LightTeam team = LightTeam.fromJson(teamsTable);
           final List<dynamic> matches =
-              teamsTable["technical_matches"] as List<dynamic>;
+              teamsTable["new_technical_matches"] as List<dynamic>;
           final List<int> autoGamepieces = matches
               .map(
                 (final dynamic technicalMatch) => (getPieces(
@@ -159,7 +159,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
               )
               .toList();
           final dynamic avg =
-              teamsTable["technical_matches_aggregate"]["aggregate"]["avg"];
+              teamsTable["new_technical_matches_aggregate"]["aggregate"]["avg"];
           final bool avgNullValidator = avg["auto_cones_top"] == null;
           final double avgTeleGamepiecesPoints = avgNullValidator
               ? double.nan
