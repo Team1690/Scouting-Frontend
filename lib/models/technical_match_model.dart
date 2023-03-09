@@ -239,47 +239,118 @@ List<Cycle> getCycles(
     provider["Scored Cube"]!,
     provider["Scored Cone"]!,
     provider["Failed Cube"]!,
-    provider["Failed Cone"]!
+    provider["Failed Cone"]!,
   ];
-  while (locations.isNotEmpty &&
-      robotEvents.firstWhereOrNull(
+  //a list of all match ids, toSet() removes the duplicated ones
+  final List<int> matchIds = robotEvents.isNotEmpty
+      ? robotEvents
+          .map((final MatchEvent event) => event.matchId!)
+          .toSet()
+          .toList()
+      : <int>[];
+  for (final int matchId in matchIds) {
+    while (locations.isNotEmpty &&
+        robotEvents
+                .where(
+                  (final MatchEvent robotEvent) =>
+                      robotEvent.matchId == matchId,
+                )
+                .firstWhereOrNull(
+                  (final MatchEvent robotEvent) =>
+                      (provider["Intaked Cone"] == robotEvent.eventTypeId ||
+                          provider["Intaked Cube"] == robotEvent.eventTypeId) &&
+                      locations
+                              .where(
+                                (final MatchEvent location) =>
+                                    location.timestamp < robotEvent.timestamp,
+                              )
+                              .reduce(
+                                (
+                                  final MatchEvent value,
+                                  final MatchEvent element,
+                                ) =>
+                                    value.timestamp < element.timestamp
+                                        ? element
+                                        : value,
+                              )
+                              .eventTypeId !=
+                          IdProvider.of(context)
+                              .locationIds
+                              .nameToId["Entered Community"],
+                ) !=
+            null) {
+      final MatchEvent currentIntake = robotEvents
+          .where((final MatchEvent robotEvent) => robotEvent.matchId == matchId)
+          .firstWhere(
             (final MatchEvent robotEvent) =>
-                provider["Intaked Cone"] == robotEvent.eventTypeId ||
-                provider["Intaked Cube"] == robotEvent.eventTypeId,
+                (provider["Intaked Cone"] == robotEvent.eventTypeId ||
+                    provider["Intaked Cube"] == robotEvent.eventTypeId) &&
+                locations
+                        .where(
+                          (final MatchEvent location) =>
+                              location.timestamp < robotEvent.timestamp,
+                        )
+                        .reduce(
+                          (final MatchEvent value, final MatchEvent element) =>
+                              value.timestamp < element.timestamp
+                                  ? element
+                                  : value,
+                        )
+                        .eventTypeId !=
+                    IdProvider.of(context)
+                        .locationIds
+                        .nameToId["Entered Community"],
+          );
+      if (robotEvents.firstWhereOrNull(
+            (final MatchEvent locations) =>
+                endingCycles.contains(locations.eventTypeId),
           ) !=
           null) {
-    final MatchEvent currentIntake = robotEvents.firstWhere(
-      (final MatchEvent robotEvent) =>
-          provider["Intaked Cone"] == robotEvent.eventTypeId ||
-          provider["Intaked Cube"] == robotEvent.eventTypeId,
-    );
-    if (robotEvents.firstWhereOrNull(
-          (final MatchEvent locations) =>
-              endingCycles.contains(locations.eventTypeId),
-        ) !=
-        null) {
-      final MatchEvent currentCycleEnder = robotEvents.firstWhere(
-        (final MatchEvent locations) =>
-            endingCycles.contains(locations.eventTypeId),
-      );
-      cycles.add(
-        Cycle(
-          endTime: currentCycleEnder.timestamp,
-          startingTime: locations
-              .where(
-                (final MatchEvent location) =>
-                    location.timestamp < currentIntake.timestamp,
-              )
-              .reduce(
-                (final MatchEvent value, final MatchEvent element) =>
-                    value.timestamp < element.timestamp ? element : value,
-              )
-              .timestamp,
-        ),
-      );
-      robotEvents.remove(currentCycleEnder);
+        final MatchEvent currentCycleEnder = robotEvents
+            .where(
+                (final MatchEvent robotEvent) => robotEvent.matchId == matchId)
+            .firstWhere(
+              (final MatchEvent locations) =>
+                  endingCycles.contains(locations.eventTypeId),
+            );
+
+        //Naumann, this is the starting time but with the match seperated. as you can see by the print, something is very wrong here. (not enough times for all teams, shouldnt be the same time)
+        print(locations
+                .where(
+                    (final MatchEvent location) => location.matchId == matchId)
+                .isNotEmpty
+            ? locations
+                .where(
+                    (final MatchEvent location) => location.matchId == matchId)
+                .where(
+                  (final MatchEvent location) =>
+                      location.timestamp < currentIntake.timestamp,
+                )
+                .reduce(
+                  (final MatchEvent value, final MatchEvent element) =>
+                      value.timestamp < element.timestamp ? element : value,
+                )
+                .timestamp
+            : "empty");
+        cycles.add(
+          Cycle(
+            endTime: currentCycleEnder.timestamp,
+            startingTime: locations
+                .where(
+                  (final MatchEvent location) =>
+                      location.timestamp < currentIntake.timestamp,
+                )
+                .reduce(
+                  (final MatchEvent value, final MatchEvent element) =>
+                      value.timestamp < element.timestamp ? element : value,
+                )
+                .timestamp,
+          ),
+        );
+        robotEvents.remove(currentCycleEnder);
+      }
+      robotEvents.remove(currentIntake);
     }
-    robotEvents.remove(currentIntake);
   }
   return cycles;
 }
