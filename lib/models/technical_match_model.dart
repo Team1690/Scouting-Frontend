@@ -198,21 +198,27 @@ Map<GamepieceAction, double> parseMatch(
     };
 
 List<MatchEvent> getEvents(
-  final List<Map<String, dynamic>> data,
+  final List<dynamic> data,
   final String title,
 ) {
   final List<MatchEvent> events = <MatchEvent>[];
-  for (int i = 0; i >= data.length; i++) {
-    for (int j = 0;
-        j >= (data[i][title] as List<Map<String, dynamic>>).length;
-        j++) {
-      events.add(
-        MatchEvent(
-          eventTypeId: data[i][title][j]["event_type_id"] as int,
-          timestamp: data[i][title][j]["timestamp"] as int,
-          matchId: data[i][title]["schedule_match_id"] as int,
-        ),
-      );
+  if (data.isNotEmpty) {
+    if ((data[0][title] as List<dynamic>).isNotEmpty) {
+      for (int i = 0; i < data.length; i++) {
+        for (int j = 0; j < (data[i][title] as List<dynamic>).length; j++) {
+          if ((data[i][title] as List<dynamic>).isNotEmpty) {
+            if ((data[i][title][0] as Map<String, dynamic>).isNotEmpty) {
+              events.add(
+                MatchEvent(
+                  eventTypeId: data[i][title][j]["event_type_id"] as int,
+                  timestamp: data[i][title][j]["timestamp"] as int,
+                  matchId: data[i][title][j]["match_id"] as int,
+                ),
+              );
+            }
+          }
+        }
+      }
     }
   }
   return events;
@@ -235,37 +241,44 @@ List<Cycle> getCycles(
     provider["Failed Cube"]!,
     provider["Failed Cone"]!
   ];
-  while (robotEvents.firstWhereOrNull(
-        (final MatchEvent robotEvent) =>
-            provider["Intaked Cone"] == robotEvent.eventTypeId ||
-            provider["Intaked Cube"] == robotEvent.eventTypeId,
-      ) ==
-      null) {
+  while (locations.isNotEmpty &&
+      robotEvents.firstWhereOrNull(
+            (final MatchEvent robotEvent) =>
+                provider["Intaked Cone"] == robotEvent.eventTypeId ||
+                provider["Intaked Cube"] == robotEvent.eventTypeId,
+          ) !=
+          null) {
     final MatchEvent currentIntake = robotEvents.firstWhere(
       (final MatchEvent robotEvent) =>
           provider["Intaked Cone"] == robotEvent.eventTypeId ||
           provider["Intaked Cube"] == robotEvent.eventTypeId,
     );
-    final MatchEvent currentCycleEnder = robotEvents.firstWhere(
-      (final MatchEvent locations) =>
-          endingCycles.contains(locations.eventTypeId),
-    );
-    cycles.add(
-      Cycle(
-        endTime: currentCycleEnder.timestamp,
-        startingTime: locations
-            .where(
-              (final MatchEvent location) =>
-                  location.timestamp < currentIntake.timestamp,
-            )
-            .reduce(
-              (final MatchEvent value, final MatchEvent element) =>
-                  value.timestamp < element.timestamp ? element : value,
-            )
-            .timestamp,
-      ),
-    );
-    robotEvents.remove(currentCycleEnder);
+    if (robotEvents.firstWhereOrNull(
+          (final MatchEvent locations) =>
+              endingCycles.contains(locations.eventTypeId),
+        ) !=
+        null) {
+      final MatchEvent currentCycleEnder = robotEvents.firstWhere(
+        (final MatchEvent locations) =>
+            endingCycles.contains(locations.eventTypeId),
+      );
+      cycles.add(
+        Cycle(
+          endTime: currentCycleEnder.timestamp,
+          startingTime: locations
+              .where(
+                (final MatchEvent location) =>
+                    location.timestamp < currentIntake.timestamp,
+              )
+              .reduce(
+                (final MatchEvent value, final MatchEvent element) =>
+                    value.timestamp < element.timestamp ? element : value,
+              )
+              .timestamp,
+        ),
+      );
+      robotEvents.remove(currentCycleEnder);
+    }
     robotEvents.remove(currentIntake);
   }
   return cycles;

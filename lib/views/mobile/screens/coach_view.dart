@@ -1,4 +1,5 @@
 import "package:carousel_slider/carousel_slider.dart";
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/cycle_model.dart";
@@ -240,19 +241,21 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                     ["aggregate"]["avg"];
                 final bool nullValidator = avg["auto_cones_scored"] == null;
                 //TODO change everything from here on
-                // final List<MatchEvent> locations = getEvents(
-                //   match[e]["secondary_technicals"]
-                //       as List<Map<String, dynamic>>,
-                //   "_2023_secondary_technical_events",
-                // );
-
-                // final List<MatchEvent> robotEvents = getEvents(
-                //   match[e]["technical_matches_v3"]
-                //       as List<Map<String, dynamic>>,
-                //   "_2023_technical_events",
-                // );
-                // final List<Cycle> cycles =
-                //     getCycles(robotEvents, locations, context);
+                final List<MatchEvent> locations = getEvents(
+                  match[e]["secondary_technicals"] as List<dynamic>,
+                  "_2023_secondary_technical_events",
+                );
+                final List<MatchEvent> robotEvents = getEvents(
+                  match[e]["technical_matches_v3"] as List<dynamic>,
+                  "_2023_technical_events",
+                );
+                final List<Cycle> cycles =
+                    getCycles(robotEvents, locations, context);
+                final double avgCycleTime = cycles.isNotEmpty
+                    ? cycles
+                        .map((final Cycle cycle) => cycle.getLength())
+                        .average
+                    : double.nan;
                 final double avgAutoConesScored = nullValidator
                     ? double.nan
                     : avg["auto_cones_scored"] as double;
