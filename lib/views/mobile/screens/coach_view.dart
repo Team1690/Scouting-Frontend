@@ -1,5 +1,4 @@
 import "package:carousel_slider/carousel_slider.dart";
-import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/cycle_model.dart";
@@ -209,6 +208,19 @@ query FetchCoach {
             tele_cubes_scored
           }
         }
+        nodes {
+         auto_balance{
+          title
+          auto_points
+        }
+        endgame_balance{
+          title
+          endgame_points
+        }
+        robot_match_status{
+          title
+        }
+      }
       }
     }""",
         ).join(" ")}
@@ -241,6 +253,10 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                     ["aggregate"]["avg"];
                 final bool nullValidator = avg["auto_cones_scored"] == null;
                 //TODO change everything from here on
+                final int amountOfMatches = (match[e]
+                            ["technical_matches_v3_aggregate"]["nodes"]
+                        as List<dynamic>)
+                    .length;
                 final List<MatchEvent> locations = getEvents(
                   match[e]["secondary_technicals"] as List<dynamic>,
                   "_2023_secondary_technical_events",
@@ -249,12 +265,11 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   match[e]["technical_matches_v3"] as List<dynamic>,
                   "_2023_technical_events",
                 );
+
                 final List<Cycle> cycles =
                     getCycles(robotEvents, locations, context);
-                final double avgCycleTime = cycles.isNotEmpty
-                    ? cycles
-                        .map((final Cycle cycle) => cycle.getLength())
-                        .average
+                final double avgCycles = cycles.isNotEmpty
+                    ? cycles.length / amountOfMatches
                     : double.nan;
                 final double avgAutoConesScored = nullValidator
                     ? double.nan
@@ -279,6 +294,8 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                 return CoachViewLightTeam(
                   team: team,
                   isBlue: e.startsWith("blue"),
+                  avgCycles: avgCycles,
+                  amountOfMatches: amountOfMatches,
                 );
               })
               .whereType<CoachViewLightTeam>()
@@ -317,9 +334,13 @@ class CoachViewLightTeam {
   const CoachViewLightTeam({
     required this.team,
     required this.isBlue,
+    required this.avgCycles,
+    required this.amountOfMatches,
   });
   final LightTeam team;
   final bool isBlue;
+  final int amountOfMatches;
+  final double avgCycles;
 }
 
 class CoachData {
@@ -377,6 +398,37 @@ Widget teamData(
                 ),
               ),
             ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Column(
+                  children: <Widget>[
+                    if (team.amountOfMatches == 0)
+                      ...List<Spacer>.filled(7, const Spacer())
+                    else ...<Widget>[
+                      const Spacer(),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Avg Cycles: ${team.avgCycles.toStringAsFixed(1)}",
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Matches Played: ${team.amountOfMatches}",
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
