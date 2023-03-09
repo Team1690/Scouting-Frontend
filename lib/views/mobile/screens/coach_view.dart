@@ -4,7 +4,7 @@ import "package:graphql/client.dart";
 import "package:scouting_frontend/models/cycle_model.dart";
 import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
-import "package:scouting_frontend/models/match_model.dart";
+import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
@@ -239,8 +239,9 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                 final dynamic avg = match[e]["technical_matches_v3_aggregate"]
                     ["aggregate"]["avg"];
                 final bool nullValidator = avg["auto_cones_scored"] == null;
+                //TODO change everything from here on
                 final double avgGamepiecePoints =
-                    nullValidator ? double.nan : getPoints(parseMatch(avg));
+                    nullValidator ? double.nan : double.nan;
                 final List<MatchEvent> locations = getEvents(
                   match[e]["secondary_technicals"]
                       as List<Map<String, dynamic>>,
