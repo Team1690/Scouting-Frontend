@@ -313,11 +313,11 @@ double getPlacingTime(
                       element.eventTypeId ==
                           IdProvider.of(context)
                               .robotActionIds
-                              .nameToId["Intake Cone"] ||
+                              .nameToId["Intaked Cone"] ||
                       element.eventTypeId ==
                           IdProvider.of(context)
                               .robotActionIds
-                              .nameToId["Intake Cube"],
+                              .nameToId["Intaked Cube"],
                 )
                 .where(
                   (final MatchEvent element) =>
