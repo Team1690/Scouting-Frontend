@@ -203,19 +203,17 @@ List<MatchEvent> getEvents(
 ) {
   final List<MatchEvent> events = <MatchEvent>[];
   if (data.isNotEmpty) {
-    if ((data[0][title] as List<dynamic>).isNotEmpty) {
-      for (int i = 0; i < data.length; i++) {
-        for (int j = 0; j < (data[i][title] as List<dynamic>).length; j++) {
-          if ((data[i][title] as List<dynamic>).isNotEmpty) {
-            if ((data[i][title][j] as Map<String, dynamic>).isNotEmpty) {
-              events.add(
-                MatchEvent(
-                  eventTypeId: data[i][title][j]["event_type_id"] as int,
-                  timestamp: data[i][title][j]["timestamp"] as int,
-                  matchId: data[i]["schedule_match_id"] as int,
-                ),
-              );
-            }
+    for (int i = 0; i < data.length; i++) {
+      for (int j = 0; j < (data[i][title] as List<dynamic>).length; j++) {
+        if ((data[i][title] as List<dynamic>).isNotEmpty) {
+          if ((data[i][title][j] as Map<String, dynamic>).isNotEmpty) {
+            events.add(
+              MatchEvent(
+                eventTypeId: data[i][title][j]["event_type_id"] as int,
+                timestamp: data[i][title][j]["timestamp"] as int,
+                matchId: data[i]["schedule_match_id"] as int,
+              ),
+            );
           }
         }
       }
