@@ -207,7 +207,7 @@ List<MatchEvent> getEvents(
       for (int i = 0; i < data.length; i++) {
         for (int j = 0; j < (data[i][title] as List<dynamic>).length; j++) {
           if ((data[i][title] as List<dynamic>).isNotEmpty) {
-            if ((data[i][title][0] as Map<String, dynamic>).isNotEmpty) {
+            if ((data[i][title][j] as Map<String, dynamic>).isNotEmpty) {
               events.add(
                 MatchEvent(
                   eventTypeId: data[i][title][j]["event_type_id"] as int,
