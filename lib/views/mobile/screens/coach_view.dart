@@ -416,9 +416,6 @@ Widget teamData(
                     if (team.amountOfMatches == 0)
                       ...List<Spacer>.filled(7, const Spacer())
                     else ...<Widget>[
-                      const SizedBox(
-                        height: 20,
-                      ),
                       Expanded(
                         child: FittedBox(
                           fit: BoxFit.fill,
