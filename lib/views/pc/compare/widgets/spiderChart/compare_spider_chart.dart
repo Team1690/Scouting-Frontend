@@ -25,6 +25,10 @@ class CompareSpiderChart extends StatelessWidget {
                       .map(
                         (final CompareTeam team) => team.avgAutoBalancePoints,
                       )
+                      .where(
+                        (final double avgFeederTime) =>
+                            avgFeederTime != double.nan,
+                      )
                       .reduce(max);
               final double endgameBalanceRatio = 100 /
                   data
@@ -32,18 +36,35 @@ class CompareSpiderChart extends StatelessWidget {
                         (final CompareTeam team) =>
                             team.avgEndgameBalancePoints,
                       )
-                      .reduce(max);
-              final double teleGamepiecePointRatio = 100 /
-                  data
-                      .map(
-                        (final CompareTeam team) =>
-                            team.avgTeleGamepiecesPoints,
+                      .where(
+                        (final double avgFeederTime) =>
+                            avgFeederTime != double.nan,
                       )
                       .reduce(max);
-              final double autoGamepiecePointRatio = 100 /
+              final double cycleTimeRatio = 100 /
                   data
                       .map(
-                        (final CompareTeam team) => team.avgAutoGamepiecePoints,
+                        (final CompareTeam team) => team.avgCycleTime,
+                      )
+                      .where(
+                        (final double avgFeederTime) =>
+                            avgFeederTime != double.nan,
+                      )
+                      .reduce(max);
+              final double feederTimeRatio = 100 /
+                  data
+                      .map(
+                        (final CompareTeam team) => team.avgFeederTime,
+                      )
+                      .where(
+                        (final double avgFeederTime) =>
+                            avgFeederTime != double.nan,
+                      )
+                      .reduce(max);
+              final double placingTimeRatio = 100 /
+                  data
+                      .map(
+                        (final CompareTeam team) => team.avgPlacingTime,
                       )
                       .reduce(max);
               return SpiderChart(
@@ -52,7 +73,7 @@ class CompareSpiderChart extends StatelessWidget {
                       (final CompareTeam team) => team.team.color,
                     )
                     .toList(),
-                numberOfFeatures: 6,
+                numberOfFeatures: 7,
                 data: data
                     .map<List<int>>(
                       (final CompareTeam team) => <double>[
@@ -60,8 +81,9 @@ class CompareSpiderChart extends StatelessWidget {
                         team.autoBalanceSuccessPercentage,
                         team.avgEndgameBalancePoints * endgameBalanceRatio,
                         team.avgAutoBalancePoints * autoBalanceRatio,
-                        team.avgTeleGamepiecesPoints * teleGamepiecePointRatio,
-                        team.avgAutoGamepiecePoints * autoGamepiecePointRatio,
+                        team.avgCycleTime * cycleTimeRatio,
+                        team.avgFeederTime * feederTimeRatio,
+                        team.avgPlacingTime * placingTimeRatio,
                       ]
                           .map<int>(
                             (final double e) =>
@@ -76,8 +98,9 @@ class CompareSpiderChart extends StatelessWidget {
                   "Auto Balance%",
                   "Endgame Balance Score%",
                   "Auto Balance Score%",
-                  "Tele Gamepieces",
-                  "Auto Gamepieces"
+                  "Cycle Time%",
+                  "Feeder Time%",
+                  "Placing Time%",
                 ],
               );
             },
