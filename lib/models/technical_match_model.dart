@@ -390,8 +390,6 @@ List<Cycle> getCycles(
     provider["Delivered Cube"]!,
     provider["Scored Cube"]!,
     provider["Scored Cone"]!,
-    provider["Failed Cube"]!,
-    provider["Failed Cone"]!,
   ];
   //a list of all match ids, toSet() removes the duplicated ones
   final List<int> matchIds = robotEvents.isNotEmpty
