@@ -114,6 +114,7 @@ class _CompareScreenState extends State<CompareScreen> {
                       )
                     : fetchData(
                         teams.map((final LightTeam e) => e.id).toList(),
+                        context,
                       ),
                 builder: (
                   final BuildContext context,
