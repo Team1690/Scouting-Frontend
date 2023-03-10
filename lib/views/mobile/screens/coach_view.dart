@@ -286,18 +286,90 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                     ? double.nan
                     : getFailedInCommunity(locations, robotEvents, context) /
                         amountOfMatches;
+                print(1);
+                final Iterable<int> autoBalance = (match[e]
+                            ["technical_matches_v3_aggregate"]["nodes"]
+                        as List<dynamic>)
+                    .where(
+                      (final dynamic element) =>
+                          element["auto_balance"] != null &&
+                          element["auto_balance"]["title"] != "No Attempt",
+                    )
+                    .map<int>(
+                      (final dynamic e) =>
+                          e["auto_balance"]["auto_points"] as int,
+                    );
+                print(2);
+                final Iterable<int> endgameBalance = (match[e]
+                            ["technical_matches_v3_aggregate"]["nodes"]
+                        as List<dynamic>)
+                    .where(
+                      (final dynamic element) =>
+                          element["endgame_balance"] != null &&
+                          element["endgame_balance"]["title"] != "No Attempt",
+                    )
+                    .map<int>(
+                      (final dynamic e) =>
+                          e["endgame_balance"]["endgame_points"] as int,
+                    );
+                print(3);
+                final double autoBalanceAvg = autoBalance.isEmpty
+                    ? 0
+                    : autoBalance.length == 1
+                        ? autoBalance.first.toDouble()
+                        : autoBalance.reduce(
+                              (final int value, final int element) =>
+                                  value + element,
+                            ) /
+                            autoBalance.length;
+                print(4);
+                final double endgameBalanceAvg = endgameBalance.isEmpty
+                    ? 0
+                    : endgameBalance.length == 1
+                        ? endgameBalance.first.toDouble()
+                        : endgameBalance.reduce(
+                              (final int value, final int element) =>
+                                  value + element,
+                            ) /
+                            endgameBalance.length;
                 return CoachViewLightTeam(
-                  team: team,
-                  isBlue: e.startsWith("blue"),
-                  avgCycles: avgCycles,
-                  amountOfMatches: amountOfMatches,
-                  avgCycleTime: avgCycleTime,
-                  avgGamepiecesPlaced: avgTeleGamepiece +
-                      avgAutoGamepiece +
-                      avgFailedInCommunity,
-                  avgFeederTime: avgFeederTime,
-                  avgPlacingTime: avgPlacingTime,
-                );
+                    team: team,
+                    isBlue: e.startsWith("blue"),
+                    avgCycles: avgCycles,
+                    amountOfMatches: amountOfMatches,
+                    avgCycleTime: avgCycleTime,
+                    avgGamepiecesPlaced: avgTeleGamepiece +
+                        avgAutoGamepiece +
+                        avgFailedInCommunity,
+                    avgFeederTime: avgFeederTime,
+                    avgPlacingTime: avgPlacingTime,
+                    avgAutoBalancePoints: autoBalanceAvg,
+                    avgEndgameBalancePoints: endgameBalanceAvg,
+                    autoBalancePercentage: (match[e]
+                                    ["technical_matches_v3_aggregate"]["nodes"]
+                                as List<dynamic>)
+                            .where(
+                              (final dynamic element) =>
+                                  element["auto_balance"] != null &&
+                                  element["auto_balance"]["title"] !=
+                                      "No Attempt" &&
+                                  element["auto_balance"]["title"] != "Failed",
+                            )
+                            .length /
+                        amountOfMatches,
+                    endgameBalancePercentage: (match[e]
+                                    ["technical_matches_v3_aggregate"]["nodes"]
+                                as List<dynamic>)
+                            .where(
+                              (final dynamic element) =>
+                                  element["endgame_balance"] != null &&
+                                  element["endgame_balance"]["title"] !=
+                                      "No Attempt" &&
+                                  element["endgame_balance"]["title"] !=
+                                      "Failed",
+                            )
+                            .length /
+                        amountOfMatches);
               })
               .whereType<CoachViewLightTeam>()
               .toList();
@@ -341,6 +413,10 @@ class CoachViewLightTeam {
     required this.avgGamepiecesPlaced,
     required this.avgFeederTime,
     required this.avgPlacingTime,
+    required this.avgAutoBalancePoints,
+    required this.avgEndgameBalancePoints,
+    required this.autoBalancePercentage,
+    required this.endgameBalancePercentage,
   });
   final LightTeam team;
   final bool isBlue;
@@ -350,6 +426,10 @@ class CoachViewLightTeam {
   final double avgGamepiecesPlaced;
   final double avgFeederTime;
   final double avgPlacingTime;
+  final double avgAutoBalancePoints;
+  final double avgEndgameBalancePoints;
+  final double autoBalancePercentage;
+  final double endgameBalancePercentage;
 }
 
 class CoachData {
@@ -460,7 +540,7 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Matches Played: ${team.amountOfMatches}",
+                            "Avg Balance: ${team.avgAutoBalancePoints.toStringAsFixed(1)} / ${(team.autoBalancePercentage * 100).toStringAsFixed(1)}% / ${team.avgEndgameBalancePoints.toStringAsFixed(1)} / ${(team.endgameBalancePercentage * 100).toStringAsFixed(1)}%",
                           ),
                         ),
                       ),
