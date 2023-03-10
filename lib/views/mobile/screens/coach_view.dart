@@ -263,7 +263,9 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   match[e]["technical_matches_v3"] as List<dynamic>,
                   "_2023_technical_events",
                 );
-
+                final double avgPlacingTime =
+                    getPlacingTime(locations, robotEvents, context);
+                final double avgFeederTime = getFeederTime(locations, context);
                 final List<Cycle> cycles =
                     getCycles(robotEvents, locations, context);
                 final double avgCycles = cycles.isNotEmpty
@@ -274,32 +276,27 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                         .toList()
                         .averageOrNull ??
                     double.nan;
-                final double avgAutoConesScored = nullValidator
-                    ? double.nan
-                    : avg["auto_cones_scored"] as double;
-                final double avgAutoCubesScored = nullValidator
-                    ? double.nan
-                    : avg["auto_cubes_scored"] as double;
                 final double avgAutoGamepiece = nullValidator
                     ? double.nan
                     : getPieces(parseByMode(MatchMode.auto, avg));
-                final double avgAutoFailed = nullValidator
-                    ? double.nan
-                    : (avg["auto_cubes_failed"] as double) +
-                        (avg["auto_cones_failed"] as double);
                 final double avgTeleGamepiece = nullValidator
                     ? double.nan
                     : getPieces(parseByMode(MatchMode.tele, avg));
-                final double avgTeleFailed = nullValidator
+                final double avgFailedInCommunity = nullValidator
                     ? double.nan
-                    : (avg["tele_cubes_failed"] as double) +
-                        (avg["tele_cones_failed"] as double);
+                    : getFailedInCommunity(locations, robotEvents, context) /
+                        amountOfMatches;
                 return CoachViewLightTeam(
                   team: team,
                   isBlue: e.startsWith("blue"),
                   avgCycles: avgCycles,
                   amountOfMatches: amountOfMatches,
                   avgCycleTime: avgCycleTime,
+                  avgGamepiecesPlaced: avgTeleGamepiece +
+                      avgAutoGamepiece +
+                      avgFailedInCommunity,
+                  avgFeederTime: avgFeederTime,
+                  avgPlacingTime: avgPlacingTime,
                 );
               })
               .whereType<CoachViewLightTeam>()
@@ -341,12 +338,18 @@ class CoachViewLightTeam {
     required this.avgCycles,
     required this.amountOfMatches,
     required this.avgCycleTime,
+    required this.avgGamepiecesPlaced,
+    required this.avgFeederTime,
+    required this.avgPlacingTime,
   });
   final LightTeam team;
   final bool isBlue;
   final int amountOfMatches;
   final double avgCycles;
   final double avgCycleTime;
+  final double avgGamepiecesPlaced;
+  final double avgFeederTime;
+  final double avgPlacingTime;
 }
 
 class CoachData {
@@ -413,7 +416,33 @@ Widget teamData(
                     if (team.amountOfMatches == 0)
                       ...List<Spacer>.filled(7, const Spacer())
                     else ...<Widget>[
-                      const Spacer(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Avg Placement Time: ${(team.avgPlacingTime / 1000).toStringAsFixed(1)}",
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Avg Feeder Time: ${(team.avgFeederTime / 1000).toStringAsFixed(1)}",
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Avg Gamepiece Amount: ${(team.avgGamepiecesPlaced).toStringAsFixed(1)}",
+                          ),
+                        ),
+                      ),
                       Expanded(
                         child: FittedBox(
                           fit: BoxFit.fill,
