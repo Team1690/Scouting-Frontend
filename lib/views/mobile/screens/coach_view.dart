@@ -1,6 +1,7 @@
 import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/average_or_null.dart";
 import "package:scouting_frontend/models/cycle_model.dart";
 import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
@@ -148,7 +149,6 @@ query FetchCoach {
       secondary_technicals(where: {ignored: {_eq: false}}, order_by: {match: {id: asc, match_number: asc}, is_rematch: asc}) {
         _2023_secondary_technical_events(order_by: {match_id: asc, timestamp: asc}) {
           event_type_id
-          match_id
           timestamp
         }
         schedule_match_id
@@ -186,7 +186,6 @@ query FetchCoach {
         tele_cubes_failed
         tele_cubes_scored
         _2023_technical_events(order_by: {match_id: asc, timestamp: asc}) {
-          match_id
           event_type_id
           timestamp
         }
@@ -252,7 +251,6 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                 final dynamic avg = match[e]["technical_matches_v3_aggregate"]
                     ["aggregate"]["avg"];
                 final bool nullValidator = avg["auto_cones_scored"] == null;
-                //TODO change everything from here on
                 final int amountOfMatches = (match[e]
                             ["technical_matches_v3_aggregate"]["nodes"]
                         as List<dynamic>)
@@ -271,6 +269,11 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                 final double avgCycles = cycles.isNotEmpty
                     ? cycles.length / amountOfMatches
                     : double.nan;
+                final double avgCycleTime = cycles
+                        .map((final Cycle cycle) => cycle.getLength())
+                        .toList()
+                        .averageOrNull ??
+                    double.nan;
                 final double avgAutoConesScored = nullValidator
                     ? double.nan
                     : avg["auto_cones_scored"] as double;
@@ -296,6 +299,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   isBlue: e.startsWith("blue"),
                   avgCycles: avgCycles,
                   amountOfMatches: amountOfMatches,
+                  avgCycleTime: avgCycleTime,
                 );
               })
               .whereType<CoachViewLightTeam>()
@@ -336,11 +340,13 @@ class CoachViewLightTeam {
     required this.isBlue,
     required this.avgCycles,
     required this.amountOfMatches,
+    required this.avgCycleTime,
   });
   final LightTeam team;
   final bool isBlue;
   final int amountOfMatches;
   final double avgCycles;
+  final double avgCycleTime;
 }
 
 class CoachData {
@@ -412,7 +418,15 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Avg Cycles: ${team.avgCycles.toStringAsFixed(1)}",
+                            "Avg Cycle Time: ${(team.avgCycleTime / 1000).toStringAsFixed(2)}",
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Avg Cycles: ${(team.avgCycles).toStringAsFixed(2)}",
                           ),
                         ),
                       ),
