@@ -131,7 +131,6 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
         ),
       ],
     );
-//TODO try add other team's climb
 final String query = """
 query FetchCoach {
   matches(order_by: {match_type: {order: asc}, match_number: asc}) {
@@ -286,7 +285,6 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                     ? double.nan
                     : getFailedInCommunity(locations, robotEvents, context) /
                         amountOfMatches;
-                print(1);
                 final Iterable<int> autoBalance = (match[e]
                             ["technical_matches_v3_aggregate"]["nodes"]
                         as List<dynamic>)
@@ -299,7 +297,6 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                       (final dynamic e) =>
                           e["auto_balance"]["auto_points"] as int,
                     );
-                print(2);
                 final Iterable<int> endgameBalance = (match[e]
                             ["technical_matches_v3_aggregate"]["nodes"]
                         as List<dynamic>)
@@ -312,7 +309,6 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                       (final dynamic e) =>
                           e["endgame_balance"]["endgame_points"] as int,
                     );
-                print(3);
                 final double autoBalanceAvg = autoBalance.isEmpty
                     ? 0
                     : autoBalance.length == 1
@@ -322,7 +318,6 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                                   value + element,
                             ) /
                             autoBalance.length;
-                print(4);
                 final double endgameBalanceAvg = endgameBalance.isEmpty
                     ? 0
                     : endgameBalance.length == 1
@@ -333,43 +328,43 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                             ) /
                             endgameBalance.length;
                 return CoachViewLightTeam(
-                    team: team,
-                    isBlue: e.startsWith("blue"),
-                    avgCycles: avgCycles,
-                    amountOfMatches: amountOfMatches,
-                    avgCycleTime: avgCycleTime,
-                    avgGamepiecesPlaced: avgTeleGamepiece +
-                        avgAutoGamepiece +
-                        avgFailedInCommunity,
-                    avgFeederTime: avgFeederTime,
-                    avgPlacingTime: avgPlacingTime,
-                    avgAutoBalancePoints: autoBalanceAvg,
-                    avgEndgameBalancePoints: endgameBalanceAvg,
-                    autoBalancePercentage: (match[e]
-                                    ["technical_matches_v3_aggregate"]["nodes"]
-                                as List<dynamic>)
-                            .where(
-                              (final dynamic element) =>
-                                  element["auto_balance"] != null &&
-                                  element["auto_balance"]["title"] !=
-                                      "No Attempt" &&
-                                  element["auto_balance"]["title"] != "Failed",
-                            )
-                            .length /
-                        amountOfMatches,
-                    endgameBalancePercentage: (match[e]
-                                    ["technical_matches_v3_aggregate"]["nodes"]
-                                as List<dynamic>)
-                            .where(
-                              (final dynamic element) =>
-                                  element["endgame_balance"] != null &&
-                                  element["endgame_balance"]["title"] !=
-                                      "No Attempt" &&
-                                  element["endgame_balance"]["title"] !=
-                                      "Failed",
-                            )
-                            .length /
-                        amountOfMatches);
+                  team: team,
+                  isBlue: e.startsWith("blue"),
+                  avgCycles: avgCycles,
+                  amountOfMatches: amountOfMatches,
+                  avgCycleTime: avgCycleTime,
+                  avgGamepiecesPlaced: avgTeleGamepiece +
+                      avgAutoGamepiece +
+                      avgFailedInCommunity,
+                  avgFeederTime: avgFeederTime,
+                  avgPlacingTime: avgPlacingTime,
+                  avgAutoBalancePoints: autoBalanceAvg,
+                  avgEndgameBalancePoints: endgameBalanceAvg,
+                  autoBalancePercentage: (match[e]
+                                  ["technical_matches_v3_aggregate"]["nodes"]
+                              as List<dynamic>)
+                          .where(
+                            (final dynamic element) =>
+                                element["auto_balance"] != null &&
+                                element["auto_balance"]["title"] !=
+                                    "No Attempt" &&
+                                element["auto_balance"]["title"] != "Failed",
+                          )
+                          .length /
+                      amountOfMatches,
+                  endgameBalancePercentage: (match[e]
+                                  ["technical_matches_v3_aggregate"]["nodes"]
+                              as List<dynamic>)
+                          .where(
+                            (final dynamic element) =>
+                                element["endgame_balance"] != null &&
+                                element["endgame_balance"]["title"] !=
+                                    "No Attempt" &&
+                                element["endgame_balance"]["title"] != "Failed",
+                          )
+                          .length /
+                      amountOfMatches,
+                );
               })
               .whereType<CoachViewLightTeam>()
               .toList();
