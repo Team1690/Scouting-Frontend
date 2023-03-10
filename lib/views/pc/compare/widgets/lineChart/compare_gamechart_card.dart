@@ -42,15 +42,6 @@ class CompareGamechartCard extends StatelessWidget {
                       CompareLineChart(
                         data
                             .map(
-                              (final CompareTeam element) => element.points,
-                            )
-                            .toList(),
-                        colors,
-                        "Points",
-                      ),
-                      CompareLineChart(
-                        data
-                            .map(
                               (final CompareTeam element) => element.gamepieces,
                             )
                             .toList(),
