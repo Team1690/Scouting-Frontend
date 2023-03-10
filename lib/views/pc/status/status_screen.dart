@@ -16,7 +16,7 @@ class StatusScreen extends StatefulWidget {
 }
 
 class _StatusScreenState extends State<StatusScreen> {
-  bool isSpecific = false;
+  String title = "_2023_technical_match_v3";
   bool isPreScouting = false;
   @override
   Widget build(final BuildContext context) => DashboardScaffold(
@@ -29,6 +29,7 @@ class _StatusScreenState extends State<StatusScreen> {
                 child: ToggleButtons(
                   children: <Widget>[
                     const Text("Technic"),
+                    const Text("Locations"),
                     const Text("Specific"),
                     const Text("Pre")
                   ]
@@ -39,17 +40,26 @@ class _StatusScreenState extends State<StatusScreen> {
                         ),
                       )
                       .toList(),
-                  isSelected: <bool>[!isSpecific, isSpecific, isPreScouting],
+                  isSelected: <bool>[
+                    title == "_2023_technical_match_v3",
+                    title == "_2023_secondary_technical",
+                    title == "_2023_specific",
+                    isPreScouting
+                  ],
                   onPressed: (final int pressedIndex) {
                     if (pressedIndex == 0) {
                       setState(() {
-                        isSpecific = false;
+                        title = "_2023_technical_match_v3";
                       });
                     } else if (pressedIndex == 1) {
                       setState(() {
-                        isSpecific = true;
+                        title = "_2023_secondary_technical";
                       });
                     } else if (pressedIndex == 2) {
+                      setState(() {
+                        title = "_2023_specific";
+                      });
+                    } else if (pressedIndex == 3) {
                       setState(() {
                         isPreScouting = !isPreScouting;
                       });
@@ -59,21 +69,20 @@ class _StatusScreenState extends State<StatusScreen> {
               ),
             ],
             title: "",
-            body: isPreScouting
-                ? PreScoutingStatus(isSpecific)
-                : RegularStatus(isSpecific),
+            body:
+                isPreScouting ? PreScoutingStatus(title) : RegularStatus(title),
           ),
         ),
       );
 }
 
 class PreScoutingStatus extends StatelessWidget {
-  const PreScoutingStatus(this.isSpecific);
-  final bool isSpecific;
+  const PreScoutingStatus(this.title);
+  final String title;
   @override
   Widget build(final BuildContext context) =>
       StreamBuilder<List<StatusItem<LightTeam, String>>>(
-        stream: fetchPreScoutingStatus(isSpecific),
+        stream: fetchPreScoutingStatus(title),
         builder: (
           final BuildContext context,
           final AsyncSnapshot<List<StatusItem<LightTeam, String>>> snapshot,
@@ -129,14 +138,14 @@ class PreScoutingStatus extends StatelessWidget {
 }
 
 class RegularStatus extends StatelessWidget {
-  const RegularStatus(this.isSpecific);
+  const RegularStatus(this.title);
 
-  final bool isSpecific;
+  final String title;
 
   @override
   Widget build(final BuildContext context) =>
       StreamBuilder<List<StatusItem<MatchIdentifier, StatusMatch>>>(
-        stream: fetchStatus(isSpecific, context),
+        stream: fetchStatus(title, context),
         builder: (
           final BuildContext context,
           final AsyncSnapshot<List<StatusItem<MatchIdentifier, StatusMatch>>>
