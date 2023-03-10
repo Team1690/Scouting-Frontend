@@ -1,7 +1,4 @@
-import "package:collection/collection.dart";
 import "package:flutter/cupertino.dart";
-import "package:scouting_frontend/models/cycle_model.dart";
-import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
