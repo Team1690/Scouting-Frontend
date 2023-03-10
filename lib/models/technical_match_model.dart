@@ -249,7 +249,8 @@ int getFailedInCommunity(
                       (final MatchEvent element) =>
                           element.timestamp < fail.timestamp,
                     )
-                    .reduce(
+                    .fold(
+                      MatchEvent(eventTypeId: 1, timestamp: 0),
                       (final MatchEvent value, final MatchEvent element) =>
                           value.timestamp < element.timestamp ? element : value,
                     )
@@ -298,7 +299,8 @@ double getPlacingTime(
                           .locationIds
                           .nameToId["Entered Community"],
                 )
-                .reduce(
+                .fold(
+                  MatchEvent(eventTypeId: 1, timestamp: 0),
                   (final MatchEvent value, final MatchEvent element) =>
                       value.timestamp < element.timestamp ? element : value,
                 )
@@ -418,7 +420,8 @@ List<Cycle> getCycles(
                                 (final MatchEvent location) =>
                                     location.timestamp < robotEvent.timestamp,
                               )
-                              .reduce(
+                              .fold(
+                                MatchEvent(eventTypeId: 1, timestamp: 0),
                                 (
                                   final MatchEvent value,
                                   final MatchEvent element,
@@ -448,7 +451,8 @@ List<Cycle> getCycles(
                           (final MatchEvent location) =>
                               location.timestamp < robotEvent.timestamp,
                         )
-                        .reduce(
+                        .fold(
+                          MatchEvent(eventTypeId: 1, timestamp: 0),
                           (final MatchEvent value, final MatchEvent element) =>
                               value.timestamp < element.timestamp
                                   ? element
@@ -475,7 +479,8 @@ List<Cycle> getCycles(
               (final MatchEvent location) =>
                   location.timestamp < currentIntake.timestamp,
             )
-            .reduce(
+            .fold(
+              MatchEvent(eventTypeId: 1, timestamp: 0),
               (final MatchEvent value, final MatchEvent element) =>
                   value.timestamp < element.timestamp ? element : value,
             );
