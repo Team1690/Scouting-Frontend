@@ -1,9 +1,11 @@
 import "dart:collection";
-
+import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/average_or_null.dart";
+import "package:scouting_frontend/models/cycle_model.dart";
+import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/helpers.dart";
-import "package:scouting_frontend/models/match_model.dart";
+import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
@@ -12,62 +14,93 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 const String query = """
 query FetchCompare(\$ids: [Int!]) {
   team(where: {id: {_in: \$ids}}) {
-    new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
-      aggregate {
-        avg {
-          auto_cones_low
-          auto_cones_mid
-          auto_cones_top
-          auto_cubes_low
-          auto_cubes_mid
-          auto_cubes_top
-          tele_cones_low
-          tele_cones_mid
-          tele_cones_top
-          tele_cubes_low
-          tele_cubes_mid
-          tele_cubes_top
+      colors_index
+      id
+      name
+      number
+      secondary_technicals(where: {ignored: {_eq: false}}, order_by: {match: {id: asc, match_number: asc}, is_rematch: asc}) {
+        _2023_secondary_technical_events(order_by: {match_id: asc, timestamp: asc}) {
+          event_type_id
+          timestamp
+        }
+        schedule_match_id
+        scouter_name
+        starting_position_id
+        team_id
+        robot_match_status {
+          title
+        }
+      }
+      technical_matches_v3(where: {ignored: {_eq: false}}, order_by: {match: {id: asc, match_number: asc}, is_rematch: asc}) {
+        auto_balance {
+          title
+          auto_points
+        }
+        auto_cones_delivered
+        auto_cones_failed
+        auto_cones_scored
+        auto_cubes_delivered
+        auto_cubes_failed
+        auto_cubes_scored
+        endgame_balance {
+          title
+          endgame_points
+        }
+        robot_match_status {
+          title
+        }
+        schedule_match_id
+        scouter_name
+        tele_cones_delivered
+        tele_cones_failed
+        tele_cones_scored
+        tele_cubes_delivered
+        tele_cubes_failed
+        tele_cubes_scored
+        _2023_technical_events(order_by: {match_id: asc, timestamp: asc}) {
+          event_type_id
+          timestamp
+        }
+      }
+      technical_matches_v3_aggregate {
+        aggregate {
+          avg {
+            auto_cones_delivered
+            auto_cones_failed
+            auto_cones_scored
+            auto_cubes_delivered
+            auto_cubes_failed
+            auto_cubes_scored
+            tele_cones_delivered
+            tele_cones_failed
+            tele_cones_scored
+            tele_cubes_delivered
+            tele_cubes_failed
+            tele_cubes_scored
+          }
+        }
+        nodes {
+         auto_balance{
+          title
+          auto_points
+        }
+        endgame_balance{
+          title
+          endgame_points
+        }
+        robot_match_status{
+          title
         }
       }
     }
-    new_technical_matches(where: {ignored: {_eq: false}},order_by:[ {match: {match_type: {order: asc}}},{ match:{match_number:asc}},{is_rematch: asc}]) {
-      auto_balance{
-        auto_points
-        title
-      }
-      endgame_balance{
-        endgame_points
-        title
-      }
-      robot_match_status{
-        title
-      }
-      match{
-        match_number
-      }
-      auto_cones_low
-      auto_cones_mid
-      auto_cones_top
-      auto_cubes_low
-      auto_cubes_mid
-      auto_cubes_top
-      tele_cones_low
-      tele_cones_mid
-      tele_cones_top
-      tele_cubes_low
-      tele_cubes_mid
-      tele_cubes_top 
-    }
-    name
-    number
-    id
-    colors_index
   }
 }
+
 """;
 
 Future<SplayTreeSet<CompareTeam>> fetchData(
   final List<int> ids,
+  final BuildContext context,
 ) async {
   final GraphQLClient client = getClient();
 
@@ -79,7 +112,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
             .map<CompareTeam>((final dynamic teamsTable) {
           final LightTeam team = LightTeam.fromJson(teamsTable);
           final List<dynamic> matches =
-              teamsTable["new_technical_matches"] as List<dynamic>;
+              teamsTable["technical_matches_v3"] as List<dynamic>;
           final List<int> autoGamepieces = matches
               .map(
                 (final dynamic technicalMatch) => (getPieces(
@@ -101,23 +134,22 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                 ).toInt()),
               )
               .toList();
-          final List<int> points = matches
-              .map(
-                (final dynamic technicalMatch) => (getPoints(
-                  parseMatch(technicalMatch),
-                ).toInt()),
-              )
-              .toList();
           final List<String> autoBalanceVals = matches
               .map(
                 (final dynamic match) =>
-                    match["auto_balance"]["title"] as String,
+                    (match["robot_match_status"]["title"] as String) !=
+                            "Didn't come to field"
+                        ? match["auto_balance"]["title"] as String
+                        : "No Attempt",
               )
               .toList();
           final double avgAutoBalancePoints = matches
                   .map(
                     (final dynamic match) =>
-                        (match["auto_balance"]["auto_points"] as int),
+                        (match["robot_match_status"]["title"] as String) !=
+                                "Didn't come to field"
+                            ? (match["auto_balance"]["auto_points"] as int)
+                            : 0,
                   )
                   .toList()
                   .averageOrNull ??
@@ -125,13 +157,19 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
           final List<String> endgameBalanceVals = matches
               .map(
                 (final dynamic match) =>
-                    match["endgame_balance"]["title"] as String,
+                    (match["robot_match_status"]["title"] as String) !=
+                            "Didn't come to field"
+                        ? match["endgame_balance"]["title"] as String
+                        : "No Attempt",
               )
               .toList();
           final double avgEndgameBalancePoints = matches
                   .map(
-                    (final dynamic match) =>
-                        (match["endgame_balance"]["endgame_points"] as int),
+                    (final dynamic match) => (match["robot_match_status"]
+                                ["title"] as String) !=
+                            "Didn't come to field"
+                        ? (match["endgame_balance"]["endgame_points"] as int)
+                        : 0,
                   )
                   .toList()
                   .averageOrNull ??
@@ -139,41 +177,42 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
           final List<int> totalCones = matches
               .map(
                 (final dynamic match) =>
-                    (match["auto_cones_low"] as int) +
-                    (match["auto_cones_mid"] as int) +
-                    (match["auto_cones_top"] as int) +
-                    (match["tele_cones_low"] as int) +
-                    (match["tele_cones_mid"] as int) +
-                    (match["tele_cones_top"] as int),
+                    (match["auto_cones_delivered"] as int) +
+                    (match["tele_cones_delivered"] as int) +
+                    (match["auto_cones_scored"] as int) +
+                    (match["tele_cones_scored"] as int),
               )
               .toList();
           final List<int> totalCubes = matches
               .map(
                 (final dynamic match) =>
-                    (match["auto_cubes_low"] as int) +
-                    (match["auto_cubes_mid"] as int) +
-                    (match["auto_cubes_top"] as int) +
-                    (match["tele_cubes_low"] as int) +
-                    (match["tele_cubes_mid"] as int) +
-                    (match["tele_cubes_top"] as int),
+                    (match["auto_cubes_delivered"] as int) +
+                    (match["tele_cubes_delivered"] as int) +
+                    (match["auto_cubes_scored"] as int) +
+                    (match["tele_cubes_scored"] as int),
               )
               .toList();
-          final dynamic avg =
-              teamsTable["new_technical_matches_aggregate"]["aggregate"]["avg"];
-          final bool avgNullValidator = avg["auto_cones_top"] == null;
-          final double avgTeleGamepiecesPoints = avgNullValidator
-              ? double.nan
-              : getPieces(parseByMode(MatchMode.tele, avg));
-          final double avgAutoGamepiecePoints = avgNullValidator
-              ? double.nan
-              : getPoints(parseByMode(MatchMode.auto, avg));
+          final List<MatchEvent> locations =
+              getEvents(matches, "_2023_technical_events");
+          final List<MatchEvent> robotEvents = getEvents(
+            teamsTable["secondary_technicals"] as List<dynamic>,
+            "_2023_secondary_technical_events",
+          );
+          final List<Cycle> cycles = getCycles(robotEvents, locations, context);
+          final double avgCycleTime = cycles
+                  .map((final Cycle cycle) => cycle.getLength())
+                  .toList()
+                  .averageOrNull ??
+              double.nan;
           final int autoBalanceFailed = autoBalanceVals
               .where((final String title) => title == "Failed")
               .length;
-
+          final double avgPlacingTime =
+              getPlacingTime(locations, robotEvents, context);
+          final double avgFeederTime = getFeederTime(locations, context);
           final int autoBalanceSucceded = autoBalanceVals
                   .where(
-                    (final String element) => element != "No attempt",
+                    (final String element) => element != "No Attempt",
                   )
                   .length -
               autoBalanceFailed;
@@ -261,10 +300,6 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
             points: teleGamepieces,
             matchStatuses: matchStatuses,
           );
-          final CompareLineChartData pointLineChart = CompareLineChartData(
-            points: points,
-            matchStatuses: matchStatuses,
-          );
 
           return CompareTeam(
             autoBalanceSuccessPercentage: autoBalanceSuccessPercentage,
@@ -272,14 +307,14 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
             autoBalanceVals: autoBalanceLineChartVals,
             endgameBalanceVals: endgameBalanceLineChartVals,
             gamepieces: gamepiecesLine,
-            points: pointLineChart,
             team: team,
             totalCones: totalConesLineChart,
             totalCubes: totalCubesLineChart,
+            avgCycleTime: avgCycleTime,
+            avgFeederTime: avgFeederTime,
+            avgPlacingTime: avgPlacingTime,
             teleGamepieces: teleGamepiecesLineChart,
             autoGamepieces: autoGamepiecesLineChart,
-            avgAutoGamepiecePoints: avgAutoGamepiecePoints,
-            avgTeleGamepiecesPoints: avgTeleGamepiecesPoints,
             avgAutoBalancePoints: avgAutoBalancePoints,
             avgEndgameBalancePoints: avgEndgameBalancePoints,
           );
