@@ -3,6 +3,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
+import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/pc/team_info/models/fetch_team_info.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/balance_line_chart.dart";
@@ -43,6 +44,13 @@ class CoachTeamData extends StatelessWidget {
                       initialPage: 0,
                       widgets: <Widget>[
                         Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: DashboardCard(
+                            title: "Quick data",
+                            body: CoachQuickData(data.quickData),
+                          ),
+                        ),
+                        Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: DashboardCard(
                             title: "Line charts",
@@ -55,20 +63,16 @@ class CoachTeamData extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: DashboardCard(
-                            title: "Specific",
-                            body: data.specificData.msg.isEmpty
-                                ? const Center(
-                                    child: Text("No data :("),
-                                  )
-                                : SpecificCard(data.specificData),
-                          ),
+                          child: data.specificData.msg.isEmpty
+                              ? const Center(
+                                  child: Text("No data :("),
+                                )
+                              : SpecificCard(data.specificData),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: DashboardCard(
-                            title: "Quick data",
-                            body: CoachQuickData(data.quickData),
+                          padding: const EdgeInsets.all(10.0),
+                          child: CoachAutoData(
+                            data.autoData,
                           ),
                         ),
                         Padding(
@@ -122,13 +126,21 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
             "Gamepieces",
           ),
           CoachTeamInfoLineChart(
-              PointsLineChart(data.cyclesData), "Cycles Amount"),
+            PointsLineChart(data.cyclesData),
+            "Cycles Amount",
+          ),
           CoachTeamInfoLineChart(
-              PointsLineChart(data.cycleTimeData), "Cycle Time"),
+            PointsLineChart(data.cycleTimeData),
+            "Cycle Time",
+          ),
           CoachTeamInfoLineChart(
-              PointsLineChart(data.placementTimeData), "Placement Time"),
+            PointsLineChart(data.placementTimeData),
+            "Placement Time",
+          ),
           CoachTeamInfoLineChart(
-              PointsLineChart(data.feederTimeData), "Feeder Time"),
+            PointsLineChart(data.feederTimeData),
+            "Feeder Time",
+          ),
           CoachTeamInfoLineChart(
             BalanceLineChart(data.autoBalanceData),
             "Auto Balance",
@@ -187,18 +199,26 @@ class CoachQuickData extends StatelessWidget {
                     children: <Widget>[
                       const Padding(
                         padding: EdgeInsets.all(10.0),
-                        //TODO redo
                         child: Text(
                           "Auto",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
-                      gamepieceRow("Scored", data.avgAutoConesScored,
-                          data.avgAutoCubesScored),
-                      gamepieceRow("Delivered", data.avgAutoConesDelivered,
-                          data.avgAutoCubesDelivered),
-                      gamepieceRow("Failed", data.avgAutoConesFailed,
-                          data.avgAutoCubesFailed),
+                      gamepieceRow(
+                        "Scored",
+                        data.avgAutoConesScored,
+                        data.avgAutoCubesScored,
+                      ),
+                      gamepieceRow(
+                        "Delivered",
+                        data.avgAutoConesDelivered,
+                        data.avgAutoCubesDelivered,
+                      ),
+                      gamepieceRow(
+                        "Failed",
+                        data.avgAutoConesFailed,
+                        data.avgAutoCubesFailed,
+                      ),
                       const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: Text(
@@ -207,11 +227,14 @@ class CoachQuickData extends StatelessWidget {
                         ),
                       ),
                       Text(
-                          "Cycle Time: ${(data.avgCycleTime / 1000).toStringAsFixed(1)}s"),
+                        "Cycle Time: ${(data.avgCycleTime / 1000).toStringAsFixed(1)}s",
+                      ),
                       Text(
-                          "Placement Time: ${(data.avgPlacementTime / 1000).toStringAsFixed(1)}s"),
+                        "Placement Time: ${(data.avgPlacementTime / 1000).toStringAsFixed(1)}s",
+                      ),
                       Text(
-                          "Feeder Time: ${(data.avgFeederTime / 1000).toStringAsFixed(1)}s"),
+                        "Feeder Time: ${(data.avgFeederTime / 1000).toStringAsFixed(1)}s",
+                      ),
                       Text("Cycles: ${(data.avgCycles).toStringAsFixed(1)}"),
                       Text(
                         "Gamepieces: ${data.avgGamepieces.toStringAsFixed(1)}",
@@ -238,12 +261,21 @@ class CoachQuickData extends StatelessWidget {
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
-                      gamepieceRow("Scored", data.avgTeleConesScored,
-                          data.avgTeleCubesScored),
-                      gamepieceRow("Delivered", data.avgTeleConesDelivered,
-                          data.avgTeleCubesDelivered),
-                      gamepieceRow("Failed", data.avgTeleConesFailed,
-                          data.avgTeleCubesFailed),
+                      gamepieceRow(
+                        "Scored",
+                        data.avgTeleConesScored,
+                        data.avgTeleCubesScored,
+                      ),
+                      gamepieceRow(
+                        "Delivered",
+                        data.avgTeleConesDelivered,
+                        data.avgTeleCubesDelivered,
+                      ),
+                      gamepieceRow(
+                        "Failed",
+                        data.avgTeleConesFailed,
+                        data.avgTeleCubesFailed,
+                      ),
                       const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: Text(
@@ -293,15 +325,98 @@ class CoachAutoData extends StatelessWidget {
   final AutoData data;
 
   @override
-  Widget build(final BuildContext context) =>
-      data.nearFeederData.amoutOfMatches == 0 //TODO in each one
-          ? const Center(child: Text("No data :("))
-          : Column(
-              children: <Widget>[
-                const Spacer(),
-                const Spacer(
-                  flex: 2,
-                )
-              ],
-            );
+  Widget build(final BuildContext context) => DashboardCard(
+        title: "Auto Data",
+        body: SingleChildScrollView(
+          primary: false,
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Spacer(),
+              data.nearFeederData.amoutOfMatches == 0
+                  ? const Center(child: Text("No near feeder data"))
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SectionDivider(label: "Near Feeder"),
+                        Text(
+                          "Amount Of Matches: ${data.nearFeederData.amoutOfMatches}",
+                        ),
+                        Text(
+                          "Avg Gamepieces Intaked: ${data.nearFeederData.avgAutoIntaked.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Scored: ${data.nearFeederData.avgAutoScored.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Matches Balanced: ${data.nearFeederData.matchesBalancedAuto}",
+                        ),
+                        Text(
+                          "Highest Balance: ${data.nearFeederData.highestBalanceTitleAuto}",
+                        ),
+                        Text(
+                          "Avg Times Left Feeder: ${data.nearFeederData.avgMobility.toStringAsFixed(2)}",
+                        ),
+                      ],
+                    ),
+              const Spacer(),
+              data.middleData.amoutOfMatches == 0
+                  ? const Center(child: Text("No middle data"))
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SectionDivider(label: "Middle"),
+                        Text(
+                          "Amount Of Matches: ${data.middleData.amoutOfMatches}",
+                        ),
+                        Text(
+                          "Avg Gamepieces Intaked: ${data.middleData.avgAutoIntaked.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Scored: ${data.middleData.avgAutoScored.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Matches Balanced: ${data.middleData.matchesBalancedAuto}",
+                        ),
+                        Text(
+                          "Highest Balance: ${data.middleData.highestBalanceTitleAuto}",
+                        ),
+                        Text(
+                          "Avg Times Left Feeder: ${data.middleData.avgMobility.toStringAsFixed(2)}",
+                        ),
+                      ],
+                    ),
+              const Spacer(),
+              data.dataNearGate.amoutOfMatches == 0
+                  ? const Center(child: Text("No near gate data"))
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SectionDivider(label: "Near Gate"),
+                        Text(
+                          "Amount Of Matches: ${data.dataNearGate.amoutOfMatches}",
+                        ),
+                        Text(
+                          "Avg Gamepieces Intaked: ${data.dataNearGate.avgAutoIntaked.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Scored: ${data.dataNearGate.avgAutoScored.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Matches Balanced: ${data.dataNearGate.matchesBalancedAuto}",
+                        ),
+                        Text(
+                          "Highest Balance: ${data.dataNearGate.highestBalanceTitleAuto}",
+                        ),
+                        Text(
+                          "Avg Times Left Feeder: ${data.dataNearGate.avgMobility.toStringAsFixed(2)}",
+                        ),
+                      ],
+                    ),
+            ],
+          ),
+        ),
+      );
 }
