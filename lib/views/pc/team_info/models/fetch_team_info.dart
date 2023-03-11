@@ -1,4 +1,3 @@
-import "package:collection/collection.dart";
 import "package:flutter/cupertino.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/average_or_null.dart";
@@ -49,7 +48,7 @@ query TeamInfo(\$id: Int!) {
       is_rematch
       scouter_name
       match{
-        match_type_id 
+        match_type_id
         match_number
       }
     }
@@ -173,7 +172,8 @@ Future<Team> fetchTeamInfo(
             canScoreTop: pitTable["can_score_top"] as bool,
           ),
         );
-
+        final List<dynamic> secondaries =
+            teamByPk["secondary_technicals"] as List<dynamic>;
         final dynamic avg =
             teamByPk["technical_matches_v3_aggregate"]["aggregate"]["avg"];
         double avgNullToZero(
@@ -248,13 +248,14 @@ Future<Team> fetchTeamInfo(
                   "${mode == MatchMode.auto ? mode.title : "endgame"}_points"] as int,
             )
             .toList();
-        List<Cycle> cycles = getCycles(
-            getEvents(matches, "_2023_technical_events"),
-            getEvents(
-              teamByPk["secondary_technicals"] as List<dynamic>,
-              "_2023_secondary_technical_events",
-            ),
-            context);
+        final List<Cycle> cycles = getCycles(
+          getEvents(matches, "_2023_technical_events"),
+          getEvents(
+            secondaries,
+            "_2023_secondary_technical_events",
+          ),
+          context,
+        );
 
         int matchesBalanced(final MatchMode mode) => matches
             .where(
@@ -299,15 +300,24 @@ Future<Team> fetchTeamInfo(
           highestBalanceTitleAuto: matches.isEmpty
               ? "highestLevelTitle QuickData: this isn't supposed to be shown because of amoutOfMatches check in ui"
               : matches
-                  .where((final dynamic match) => match["auto_balance"] != null)
-                  .map<dynamic>((final dynamic match) => match["auto_balance"])
-                  .reduceSafe(
-                    (final dynamic value, final dynamic element) =>
-                        (value["auto_points"] as int) >
-                                (element["auto_points"] as int)
-                            ? value
-                            : element,
-                  )["title"] as String,
+                  .where(
+                    (final dynamic match) => match["auto_balance"] != null,
+                  )
+                  .map<Map<String, dynamic>>(
+                    (final dynamic match) =>
+                        match["auto_balance"] as Map<String, dynamic>,
+                  )
+                  .fold(
+                  <String, dynamic>{"auto_points": 0, "title": "No Attempt"},
+                  (
+                    final Map<String, dynamic> value,
+                    final Map<String, dynamic> element,
+                  ) =>
+                      (value["auto_points"] as int) >
+                              (element["auto_points"] as int)
+                          ? value
+                          : element,
+                )["title"] as String,
           amoutOfMatches: matches.length,
           avgAutoBalancePoints: autoBalancePoints.averageOrNull ?? 0,
           avgEndgameBalancePoints: endgameBalancePoints.averageOrNull ?? 0,
@@ -324,7 +334,7 @@ Future<Team> fetchTeamInfo(
           avgCycleTime: nullValidator
               ? 0
               : cycles
-                      .map((cycle) => cycle.getLength())
+                      .map((final Cycle cycle) => cycle.getLength())
                       .toList()
                       .averageOrNull ??
                   0,
@@ -332,19 +342,21 @@ Future<Team> fetchTeamInfo(
               ? 0
               : getFeederTime(
                   getEvents(
-                    teamByPk["secondary_technicals"] as List<dynamic>,
+                    secondaries,
                     "_2023_secondary_technical_events",
                   ),
-                  context),
+                  context,
+                ),
           avgPlacementTime: nullValidator
               ? 0
               : getPlacingTime(
                   getEvents(
-                    teamByPk["secondary_technicals"] as List<dynamic>,
+                    secondaries,
                     "_2023_secondary_technical_events",
                   ),
                   getEvents(matches, "_2023_technical_events"),
-                  context),
+                  context,
+                ),
           avgAutoConesScored: nullValidator ? 0 : autoConesScored,
           avgAutoConesDelivered: nullValidator ? 0 : autoConesDelivered,
           avgAutoConesFailed: nullValidator ? 0 : autoConesFailed,
@@ -555,20 +567,26 @@ Future<Team> fetchTeamInfo(
         final LineChartData cyclesData = LineChartData(
           points: <List<int>>[
             matches
-                .map((final dynamic match) => getCycles(
-                        getEvents(matches, "_2023_technical_events")
-                            .where((element) =>
-                                element.matchId == match["schedule_match_id"])
-                            .toList(),
-                        getEvents(
-                          teamByPk["secondary_technicals"] as List<dynamic>,
-                          "_2023_secondary_technical_events",
+                .map(
+                  (final dynamic match) => getCycles(
+                    getEvents(matches, "_2023_technical_events")
+                        .where(
+                          (final MatchEvent robotEvent) =>
+                              robotEvent.matchId == match["schedule_match_id"],
                         )
-                            .where((element) =>
-                                element.matchId == match["schedule_match_id"])
-                            .toList(),
-                        context)
-                    .length)
+                        .toList(),
+                    getEvents(
+                      secondaries,
+                      "_2023_secondary_technical_events",
+                    )
+                        .where(
+                          (final MatchEvent location) =>
+                              location.matchId == match["schedule_match_id"],
+                        )
+                        .toList(),
+                    context,
+                  ).length,
+                )
                 .toList()
           ],
           title: "Cycles",
@@ -586,31 +604,41 @@ Future<Team> fetchTeamInfo(
         final LineChartData cycleTimeData = LineChartData(
           points: <List<int>>[
             matches
-                .map((final dynamic match) =>
-                    getCycles(
-                            getEvents(matches, "_2023_technical_events")
-                                .where((element) =>
-                                    element.matchId ==
-                                    match["schedule_match_id"])
-                                .toList(),
-                            getEvents(
-                              teamByPk["secondary_technicals"] as List<dynamic>,
-                              "_2023_secondary_technical_events",
+                .map(
+                  (final dynamic match) =>
+                      getCycles(
+                        getEvents(matches, "_2023_technical_events")
+                            .where(
+                              (final MatchEvent robotEvent) =>
+                                  robotEvent.matchId ==
+                                  match["schedule_match_id"],
                             )
-                                .where((element) =>
-                                    element.matchId ==
-                                    match["schedule_match_id"])
-                                .toList(),
-                            context)
-                        .toList()
-                        .map((e) => (e.endTime == double.nan ||
-                                e.startingTime == double.nan
-                            ? 0
-                            : e.getLength() / 1000))
-                        .toList()
-                        .averageOrNull ??
-                    0)
-                .map((e) => e.isNaN ? 0 : e.round())
+                            .toList(),
+                        getEvents(
+                          secondaries,
+                          "_2023_secondary_technical_events",
+                        )
+                            .where(
+                              (final MatchEvent location) =>
+                                  location.matchId ==
+                                  match["schedule_match_id"],
+                            )
+                            .toList(),
+                        context,
+                      )
+                          .toList()
+                          .map(
+                            (final Cycle cycle) =>
+                                (cycle.endTime == double.nan ||
+                                        cycle.startingTime == double.nan
+                                    ? 0
+                                    : cycle.getLength() / 1000),
+                          )
+                          .toList()
+                          .averageOrNull ??
+                      0,
+                )
+                .map((final double e) => e.isNaN ? 0 : e.round())
                 .toList(),
           ],
           title: "Cycle Time",
@@ -625,23 +653,165 @@ Future<Team> fetchTeamInfo(
                 .toList()
           ],
         );
+        final List<int> scheduleMatchesIdByGate = secondaries
+            .where(
+              (final dynamic secondaryTechnical) =>
+                  (secondaryTechnical["starting_position_id"] as int?) ==
+                  IdProvider.of(context).startingPosIds.nameToId["Near Gate"],
+            )
+            .map(
+              (final dynamic secondaryTechnical) =>
+                  secondaryTechnical["schedule_match_id"] as int,
+            )
+            .toList();
+        final List<int> scheduleMatchesIdByFeeder = secondaries
+            .where(
+              (final dynamic secondaryTechnical) =>
+                  (secondaryTechnical["starting_position_id"] as int?) ==
+                  IdProvider.of(context).startingPosIds.nameToId["Near Feeder"],
+            )
+            .map(
+              (final dynamic secondaryTechnical) =>
+                  secondaryTechnical["schedule_match_id"] as int,
+            )
+            .toList();
+        final List<int> scheduleMatchesIdByMiddle = secondaries
+            .where(
+              (final dynamic secondaryTechnical) =>
+                  (secondaryTechnical["starting_position_id"] as int?) ==
+                  IdProvider.of(context).startingPosIds.nameToId["Middle"],
+            )
+            .map(
+              (final dynamic secondaryTechnical) =>
+                  secondaryTechnical["schedule_match_id"] as int,
+            )
+            .toList();
+        AutoByPosData getAutoDataByStartingPos(
+          final List<int> scheduleMatchesIdByPos,
+        ) =>
+            AutoByPosData(
+              matchesBalancedAuto: matches
+                  .where(
+                    (final dynamic match) => scheduleMatchesIdByPos
+                        .contains(match["schedule_match_id"] as int),
+                  )
+                  .where(
+                    (final dynamic match) => match["auto_balance"] != null,
+                  )
+                  .where(
+                    (final dynamic match) =>
+                        (match["auto_balance"]["title"] as String) ==
+                        "Balanced",
+                  )
+                  .length,
+              highestBalanceTitleAuto: matches
+                  .where(
+                    (final dynamic match) => scheduleMatchesIdByPos
+                        .contains(match["schedule_match_id"] as int),
+                  )
+                  .where(
+                    (final dynamic match) => match["auto_balance"] != null,
+                  )
+                  .map<Map<String, dynamic>>(
+                    (final dynamic match) =>
+                        match["auto_balance"] as Map<String, dynamic>,
+                  )
+                  .fold(
+                <String, dynamic>{"auto_points": 0, "title": "No Attempt"},
+                (
+                  final Map<String, dynamic> value,
+                  final Map<String, dynamic> element,
+                ) =>
+                    (value["auto_points"] as int) >
+                            (element["auto_points"] as int)
+                        ? value
+                        : element,
+              )["title"] as String,
+              amoutOfMatches: scheduleMatchesIdByPos.length,
+              avgAutoScored: matches
+                      .where(
+                        (final dynamic match) => scheduleMatchesIdByPos
+                            .contains(match["schedule_match_id"] as int),
+                      )
+                      .map(
+                        (final dynamic match) =>
+                            (match["auto_cones_scored"] as int) +
+                            (match["auto_cubes_scored"] as int),
+                      )
+                      .length /
+                  scheduleMatchesIdByPos.length,
+              avgAutoIntaked: getEvents(matches, "_2023_technical_events")
+                      .where(
+                        (final MatchEvent robotAction) =>
+                            scheduleMatchesIdByPos
+                                .contains(robotAction.matchId) &&
+                            robotAction.timestamp < 18000,
+                      )
+                      .where(
+                        (final MatchEvent roobtAction) =>
+                            roobtAction.eventTypeId ==
+                                IdProvider.of(context)
+                                    .robotActionIds
+                                    .nameToId["Intaked Cone"] ||
+                            roobtAction.eventTypeId ==
+                                IdProvider.of(context)
+                                    .robotActionIds
+                                    .nameToId["Intaked Cube"],
+                      )
+                      .length /
+                  scheduleMatchesIdByPos.length,
+              avgMobility:
+                  getEvents(secondaries, "_2023_secondary_technical_events")
+                          .where(
+                            (final MatchEvent location) =>
+                                scheduleMatchesIdByPos
+                                    .contains(location.matchId) &&
+                                location.timestamp < 18000,
+                          )
+                          .where(
+                            (final MatchEvent element) =>
+                                element.eventTypeId ==
+                                    IdProvider.of(context)
+                                        .robotActionIds
+                                        .nameToId["Intaked Cone"] ||
+                                element.eventTypeId ==
+                                    IdProvider.of(context)
+                                        .robotActionIds
+                                        .nameToId["Intaked Cube"],
+                          )
+                          .length /
+                      scheduleMatchesIdByPos.length,
+            );
         final LineChartData placementTimeData = LineChartData(
           points: <List<int>>[
             matches
-                .map((final dynamic match) => getPlacingTime(
+                .map(
+                  (final dynamic match) => getPlacingTime(
                     getEvents(
-                      teamByPk["secondary_technicals"] as List<dynamic>,
+                      secondaries,
                       "_2023_secondary_technical_events",
                     )
-                        .where((element) =>
-                            element.matchId == match["schedule_match_id"])
+                        .where(
+                          (final MatchEvent location) =>
+                              location.matchId == match["schedule_match_id"] &&
+                              location.timestamp < 18000,
+                        )
                         .toList(),
                     getEvents(matches, "_2023_technical_events")
-                        .where((element) =>
-                            element.matchId == match["schedule_match_id"])
+                        .where(
+                          (final MatchEvent robotEvent) =>
+                              robotEvent.matchId ==
+                                  match["schedule_match_id"] &&
+                              robotEvent.timestamp < 18000,
+                        )
                         .toList(),
-                    context))
-                .map((e) => e.isNaN ? 0 : (e / 1000).round())
+                    context,
+                  ),
+                )
+                .map(
+                  (final double avgCycleTime) =>
+                      avgCycleTime.isNaN ? 0 : (avgCycleTime / 1000).round(),
+                )
                 .toList(),
           ],
           title: "Placement Time",
@@ -661,16 +831,22 @@ Future<Team> fetchTeamInfo(
             matches
                 .map(
                   (final dynamic match) => (getFeederTime(
-                      getEvents(
-                        teamByPk["secondary_technicals"] as List<dynamic>,
-                        "_2023_secondary_technical_events",
-                      )
-                          .where((element) =>
-                              element.matchId == match["schedule_match_id"])
-                          .toList(),
-                      context)),
+                    getEvents(
+                      secondaries,
+                      "_2023_secondary_technical_events",
+                    )
+                        .where(
+                          (final MatchEvent location) =>
+                              location.matchId == match["schedule_match_id"],
+                        )
+                        .toList(),
+                    context,
+                  )),
                 )
-                .map((e) => e.isNaN ? 0 : (e / 1000).round())
+                .map(
+                  (final double feederTime) =>
+                      feederTime.isNaN ? 0 : (feederTime / 1000).round(),
+                )
                 .toList(),
           ],
           title: "Feeder Time",
@@ -703,6 +879,11 @@ Future<Team> fetchTeamInfo(
           cycleTimeData: cycleTimeData,
           placementTimeData: placementTimeData,
           feederTimeData: feederTimeData,
+          autoData: AutoData(
+            dataNearGate: getAutoDataByStartingPos(scheduleMatchesIdByGate),
+            middleData: getAutoDataByStartingPos(scheduleMatchesIdByMiddle),
+            nearFeederData: getAutoDataByStartingPos(scheduleMatchesIdByFeeder),
+          ),
         );
       },
       document: gql(teamInfoQuery),

@@ -67,12 +67,10 @@ class AutoByPosData {
     required this.avgAutoScored,
     required this.avgAutoIntaked,
     required this.avgMobility,
-    required this.matchesBalancedInAuto,
   });
   final int amoutOfMatches;
   final String highestBalanceTitleAuto;
   final int matchesBalancedAuto;
-  final int matchesBalancedInAuto;
   final double avgMobility;
   final double avgAutoIntaked;
   final double avgAutoScored;
@@ -257,6 +255,7 @@ class Team {
     required this.cycleTimeData,
     required this.placementTimeData,
     required this.feederTimeData,
+    required this.autoData,
   });
   final LightTeam team;
   final SpecificData specificData;
@@ -275,4 +274,5 @@ class Team {
   final LineChartData cycleTimeData;
   final LineChartData placementTimeData;
   final LineChartData feederTimeData;
+  final AutoData autoData;
 }
