@@ -10,11 +10,11 @@ import "package:collection/collection.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 Stream<List<StatusItem<LightTeam, String>>> fetchPreScoutingStatus(
-  final bool isSpecific,
+  final String title,
 ) =>
     fetchBase(
-      getSubscription(isSpecific, true),
-      isSpecific,
+      getSubscription(title, true),
+      title,
       (final dynamic scoutedMatchTable) =>
           LightTeam.fromJson(scoutedMatchTable["team"]),
       (final dynamic scoutedMatchTable) =>
@@ -24,7 +24,7 @@ Stream<List<StatusItem<LightTeam, String>>> fetchPreScoutingStatus(
 
 Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
   final String subscription,
-  final bool isSpecific,
+  final String title,
   final I Function(dynamic) parseI,
   final V Function(dynamic) parseV,
   final List<V> Function(I identifier, List<V> currentValues) getMissing,
@@ -34,9 +34,7 @@ Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
           SubscriptionOptions<List<StatusItem<I, V>>>(
             document: gql(subscription),
             parserFn: (final Map<String, dynamic> data) {
-              final List<dynamic> matches = data[isSpecific
-                  ? "_2023_specific"
-                  : "_2023_technical_match_v3"] as List<dynamic>;
+              final List<dynamic> matches = data[title] as List<dynamic>;
               final Map<I, List<dynamic>> identifierToMatch =
                   matches.groupListsBy(
                 parseI,
@@ -70,12 +68,12 @@ Stream<List<StatusItem<I, V>>> fetchBase<I, V>(
         );
 
 Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
-  final bool isSpecific,
+  final String title,
   final BuildContext context,
 ) =>
     fetchBase(
-      getSubscription(isSpecific, false),
-      isSpecific,
+      getSubscription(title, false),
+      title,
       (final dynamic matchTable) => MatchIdentifier(
         number: matchTable["match"]["match_number"] as int,
         type: matchTable["match"]["match_type"]["title"] as String,
@@ -155,9 +153,9 @@ Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
       },
     );
 
-String getSubscription(final bool isSpecific, final bool isPreScouting) => """
+String getSubscription(final String title, final bool isPreScouting) => """
 subscription Status {
-   _2023_${isSpecific ? "specific" : "technical_match_v3"}
+   $title
   (order_by: {match: {match_type: {order: asc}, match_number: asc}, is_rematch: asc},
    where: {match: {match_type: {title: {${isPreScouting ? "_eq" : "_neq"}: "Pre scouting"}}}}) {
     team {
