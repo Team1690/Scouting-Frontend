@@ -106,6 +106,43 @@ class CompareGamechartCard extends StatelessWidget {
                         colors,
                         "Endgame Balance Values",
                       ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) =>
+                                  element.cycleAmount,
+                            )
+                            .toList(),
+                        colors,
+                        "Cycle Amount",
+                      ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) => element.cycleTime,
+                            )
+                            .toList(),
+                        colors,
+                        "Avg Cycle Time",
+                      ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) => element.feederTime,
+                            )
+                            .toList(),
+                        colors,
+                        "Avg Feeder Time",
+                      ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) => element.placeTime,
+                            )
+                            .toList(),
+                        colors,
+                        "Avg Placing Time",
+                      )
                     ],
                   ),
                 ),
