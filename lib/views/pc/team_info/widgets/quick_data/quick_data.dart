@@ -21,12 +21,21 @@ class QuickDataCard extends StatelessWidget {
                           style: TextStyle(fontSize: 18),
                         ),
                         const Spacer(),
-                        gamepieceRow("Scored", data.avgAutoConesScored,
-                            data.avgAutoCubesScored),
-                        gamepieceRow("Delivered", data.avgAutoConesDelivered,
-                            data.avgAutoCubesDelivered),
-                        gamepieceRow("Failed", data.avgAutoConesFailed,
-                            data.avgAutoCubesFailed),
+                        gamepieceRow(
+                          "Scored",
+                          data.avgAutoConesScored,
+                          data.avgAutoCubesScored,
+                        ),
+                        gamepieceRow(
+                          "Delivered",
+                          data.avgAutoConesDelivered,
+                          data.avgAutoCubesDelivered,
+                        ),
+                        gamepieceRow(
+                          "Failed",
+                          data.avgAutoConesFailed,
+                          data.avgAutoCubesFailed,
+                        ),
                         const Spacer()
                       ],
                     ),
@@ -37,12 +46,21 @@ class QuickDataCard extends StatelessWidget {
                           style: TextStyle(fontSize: 18),
                         ),
                         const Spacer(),
-                        gamepieceRow("Scored", data.avgTeleConesScored,
-                            data.avgTeleCubesScored),
-                        gamepieceRow("Delivered", data.avgTeleConesDelivered,
-                            data.avgTeleCubesDelivered),
-                        gamepieceRow("Failed", data.avgTeleConesFailed,
-                            data.avgTeleCubesFailed),
+                        gamepieceRow(
+                          "Scored",
+                          data.avgTeleConesScored,
+                          data.avgTeleCubesScored,
+                        ),
+                        gamepieceRow(
+                          "Delivered",
+                          data.avgTeleConesDelivered,
+                          data.avgTeleCubesDelivered,
+                        ),
+                        gamepieceRow(
+                          "Failed",
+                          data.avgTeleConesFailed,
+                          data.avgTeleCubesFailed,
+                        ),
                         const Spacer()
                       ],
                     ),
@@ -54,11 +72,14 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                            "Cycle Time: ${(data.avgCycleTime / 1000).toStringAsFixed(1)}s"),
+                          "Cycle Time: ${(data.avgCycleTime / 1000).toStringAsFixed(1)}s",
+                        ),
                         Text(
-                            "Placement Time: ${(data.avgPlacementTime / 1000).toStringAsFixed(1)}s"),
+                          "Placement Time: ${(data.avgPlacementTime / 1000).toStringAsFixed(1)}s",
+                        ),
                         Text(
-                            "Feeder Time: ${(data.avgFeederTime / 1000).toStringAsFixed(1)}s"),
+                          "Feeder Time: ${(data.avgFeederTime / 1000).toStringAsFixed(1)}s",
+                        ),
                         Text("Cycles: ${(data.avgCycles).toStringAsFixed(1)}"),
                         Text(
                           "Gamepieces: ${data.avgGamepieces.toStringAsFixed(1)}",
