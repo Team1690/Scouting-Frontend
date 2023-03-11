@@ -192,9 +192,9 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                     (match["tele_cubes_scored"] as int),
               )
               .toList();
-          final List<MatchEvent> locations =
+          final List<MatchEvent> robotEvents =
               getEvents(matches, "_2023_technical_events");
-          final List<MatchEvent> robotEvents = getEvents(
+          final List<MatchEvent> locations = getEvents(
             teamsTable["secondary_technicals"] as List<dynamic>,
             "_2023_secondary_technical_events",
           );
@@ -239,7 +239,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
 
           final int endgameBalanceSucceded = endgameBalanceVals
                   .where(
-                    (final String element) => element != "No attempt",
+                    (final String element) => element != "No Attempt",
                   )
                   .length -
               endgameBalanceFailed;
