@@ -1,4 +1,8 @@
+import "package:collection/collection.dart";
 import "package:flutter/cupertino.dart";
+import "package:scouting_frontend/models/average_or_null.dart";
+import "package:scouting_frontend/models/cycle_model.dart";
+import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -110,8 +114,7 @@ enum Gamepiece {
 
 enum ActionType {
   scored("scored"),
-  delivered("delivered"),
-  failed("failed");
+  delivered("delivered");
 
   const ActionType(this.title);
   final String title;
@@ -193,3 +196,312 @@ Map<GamepieceAction, double> parseMatch(
       ...parseByMode(MatchMode.auto, data),
       ...parseByMode(MatchMode.tele, data)
     };
+
+List<MatchEvent> getEvents(
+  final List<dynamic> data,
+  final String title,
+) {
+  final List<MatchEvent> events = <MatchEvent>[];
+  if (data.isNotEmpty) {
+    for (int i = 0; i < data.length; i++) {
+      for (int j = 0; j < (data[i][title] as List<dynamic>).length; j++) {
+        if ((data[i][title] as List<dynamic>).isNotEmpty) {
+          if ((data[i][title][j] as Map<String, dynamic>).isNotEmpty) {
+            events.add(
+              MatchEvent(
+                eventTypeId: data[i][title][j]["event_type_id"] as int,
+                timestamp: data[i][title][j]["timestamp"] as int,
+                matchId: data[i]["schedule_match_id"] as int,
+              ),
+            );
+          }
+        }
+      }
+    }
+  }
+  return events;
+}
+
+int getFailedInCommunity(
+  final List<MatchEvent> locations,
+  final List<MatchEvent> robotEvents,
+  final BuildContext context,
+) {
+  final List<MatchEvent> failed = robotEvents
+      .where(
+        (final MatchEvent robotEvent) =>
+            robotEvent.eventTypeId ==
+                IdProvider.of(context).robotActionIds.nameToId["Failed Cone"] ||
+            robotEvent.eventTypeId ==
+                IdProvider.of(context).robotActionIds.nameToId["Failed Cube"],
+      )
+      .toList();
+  final List<MatchEvent> failedInCommunity = failed
+      .map(
+        (final MatchEvent fail) => locations
+                    .where(
+                      (final MatchEvent element) =>
+                          fail.matchId == element.matchId,
+                    )
+                    .where(
+                      (final MatchEvent element) =>
+                          element.timestamp < fail.timestamp,
+                    )
+                    .fold(
+                      MatchEvent(eventTypeId: 1, timestamp: 0),
+                      (final MatchEvent value, final MatchEvent element) =>
+                          value.timestamp < element.timestamp ? element : value,
+                    )
+                    .eventTypeId ==
+                IdProvider.of(context).locationIds.nameToId["Entered Community"]
+            ? fail
+            : null,
+      )
+      .whereType<MatchEvent>()
+      .toList();
+  return failedInCommunity.length;
+}
+
+double getPlacingTime(
+  final List<MatchEvent> locations,
+  final List<MatchEvent> robotEvents,
+  final BuildContext context,
+) {
+  final List<MatchEvent> placingEvents = robotEvents
+      .where(
+        (final MatchEvent element) =>
+            element.eventTypeId ==
+                IdProvider.of(context).robotActionIds.nameToId["Scored Cone"] ||
+            element.eventTypeId ==
+                IdProvider.of(context).robotActionIds.nameToId["Scored Cube"],
+      )
+      .toList();
+  final List<int> placeTime = placingEvents
+      .map(
+        (final MatchEvent placeEvent) => Cycle(
+          endTime: placeEvent.timestamp,
+          startingTime: <int>[
+            locations
+                .where(
+                  (final MatchEvent element) =>
+                      element.matchId == placeEvent.matchId,
+                )
+                .where(
+                  (final MatchEvent element) =>
+                      element.timestamp < placeEvent.timestamp,
+                )
+                .where(
+                  (final MatchEvent element) =>
+                      element.eventTypeId ==
+                      IdProvider.of(context)
+                          .locationIds
+                          .nameToId["Entered Community"],
+                )
+                .fold(
+                  MatchEvent(eventTypeId: 1, timestamp: 0),
+                  (final MatchEvent value, final MatchEvent element) =>
+                      value.timestamp < element.timestamp ? element : value,
+                )
+                .timestamp,
+            robotEvents
+                .where(
+                  (final MatchEvent element) =>
+                      element.matchId == placeEvent.matchId,
+                )
+                .where(
+                  (final MatchEvent element) =>
+                      element.eventTypeId ==
+                          IdProvider.of(context)
+                              .robotActionIds
+                              .nameToId["Intaked Cone"] ||
+                      element.eventTypeId ==
+                          IdProvider.of(context)
+                              .robotActionIds
+                              .nameToId["Intaked Cube"],
+                )
+                .where(
+                  (final MatchEvent element) =>
+                      element.timestamp < placeEvent.timestamp,
+                )
+                .fold(
+                  MatchEvent(eventTypeId: 1, timestamp: 0),
+                  (final MatchEvent value, final MatchEvent element) =>
+                      value.timestamp < element.timestamp ? element : value,
+                )
+                .timestamp
+          ].max,
+        ).getLength(),
+      )
+      .toList();
+  return placeTime.averageOrNull ?? double.nan;
+}
+
+double getFeederTime(
+  final List<MatchEvent> locations,
+  final BuildContext context,
+) {
+  final List<MatchEvent> feederEntries = locations
+      .where(
+        (final MatchEvent location) =>
+            location.eventTypeId ==
+            IdProvider.of(context).locationIds.nameToId["Entered Feeder"],
+      )
+      .toList();
+  final List<int> feederTime =
+      feederEntries.map((final MatchEvent feederEntry) {
+    final MatchEvent nextLocation = locations
+        .where(
+          (final MatchEvent location) =>
+              location.matchId == feederEntry.matchId,
+        )
+        .where(
+          (final MatchEvent location) =>
+              location.eventTypeId !=
+              IdProvider.of(context).locationIds.nameToId["Entered Feeder"],
+        )
+        .where(
+          (final MatchEvent location) =>
+              location.timestamp > feederEntry.timestamp,
+        )
+        .fold(
+          feederEntry,
+          (final MatchEvent value, final MatchEvent element) =>
+              value.timestamp != feederEntry.timestamp &&
+                      value.timestamp < element.timestamp
+                  ? value
+                  : element,
+        );
+    locations.remove(nextLocation);
+    return nextLocation.timestamp - feederEntry.timestamp;
+  }).toList();
+  return feederTime.averageOrNull ?? double.nan;
+}
+
+List<Cycle> getCycles(
+  final List<MatchEvent> robotEvents,
+  final List<MatchEvent> locations,
+  final BuildContext context,
+) {
+  final List<Cycle> cycles = <Cycle>[];
+  final Map<String, int> provider =
+      IdProvider.of(context).robotActionIds.nameToId;
+  final List<int> endingCycles = <int>[
+    provider["Delivered Cone"]!,
+    provider["Delivered Cube"]!,
+    provider["Scored Cube"]!,
+    provider["Scored Cone"]!,
+  ];
+  //a list of all match ids, toSet() removes the duplicated ones
+  final List<int> matchIds = robotEvents.isNotEmpty
+      ? robotEvents
+          .map((final MatchEvent event) => event.matchId!)
+          .toSet()
+          .toList()
+      : <int>[];
+  for (final int matchId in matchIds) {
+    while (locations.isNotEmpty &&
+        robotEvents
+                .where(
+                  (final MatchEvent robotEvent) =>
+                      robotEvent.matchId == matchId,
+                )
+                .firstWhereOrNull(
+                  (final MatchEvent robotEvent) =>
+                      (provider["Intaked Cone"] == robotEvent.eventTypeId ||
+                          provider["Intaked Cube"] == robotEvent.eventTypeId) &&
+                      locations
+                              .where(
+                                (final MatchEvent location) =>
+                                    location.matchId == matchId,
+                              )
+                              .where(
+                                (final MatchEvent location) =>
+                                    location.timestamp < robotEvent.timestamp,
+                              )
+                              .fold(
+                                MatchEvent(eventTypeId: 1, timestamp: 0),
+                                (
+                                  final MatchEvent value,
+                                  final MatchEvent element,
+                                ) =>
+                                    value.timestamp < element.timestamp
+                                        ? element
+                                        : value,
+                              )
+                              .eventTypeId !=
+                          IdProvider.of(context)
+                              .locationIds
+                              .nameToId["Entered Community"],
+                ) !=
+            null) {
+      final MatchEvent currentIntake = robotEvents
+          .where((final MatchEvent robotEvent) => robotEvent.matchId == matchId)
+          .firstWhere(
+            (final MatchEvent robotEvent) =>
+                (provider["Intaked Cone"] == robotEvent.eventTypeId ||
+                    provider["Intaked Cube"] == robotEvent.eventTypeId) &&
+                locations
+                        .where(
+                          (final MatchEvent location) =>
+                              location.matchId == matchId,
+                        )
+                        .where(
+                          (final MatchEvent location) =>
+                              location.timestamp < robotEvent.timestamp,
+                        )
+                        .fold(
+                          MatchEvent(eventTypeId: 1, timestamp: 0),
+                          (final MatchEvent value, final MatchEvent element) =>
+                              value.timestamp < element.timestamp
+                                  ? element
+                                  : value,
+                        )
+                        .eventTypeId !=
+                    IdProvider.of(context)
+                        .locationIds
+                        .nameToId["Entered Community"],
+          );
+      if (robotEvents
+              .where(
+                (final MatchEvent robotEvent) => robotEvent.matchId == matchId,
+              )
+              .firstWhereOrNull(
+                (final MatchEvent robotEvent) =>
+                    endingCycles.contains(robotEvent.eventTypeId) &&
+                    currentIntake.timestamp < robotEvent.timestamp,
+              ) !=
+          null) {
+        final MatchEvent startingLocation = locations
+            .where((final MatchEvent element) => element.matchId == matchId)
+            .where(
+              (final MatchEvent location) =>
+                  location.timestamp < currentIntake.timestamp,
+            )
+            .fold(
+              MatchEvent(eventTypeId: 1, timestamp: 0),
+              (final MatchEvent value, final MatchEvent element) =>
+                  value.timestamp < element.timestamp ? element : value,
+            );
+        final MatchEvent currentCycleEnder = robotEvents
+            .where(
+              (final MatchEvent robotEvent) => robotEvent.matchId == matchId,
+            )
+            .firstWhere(
+              (final MatchEvent robotEvent) =>
+                  endingCycles.contains(robotEvent.eventTypeId) &&
+                  currentIntake.timestamp < robotEvent.timestamp,
+            );
+        cycles.add(
+          Cycle(
+            endTime: currentCycleEnder.timestamp,
+            startingTime: startingLocation.timestamp,
+          ),
+        );
+        locations.remove(startingLocation);
+        robotEvents.remove(currentCycleEnder);
+      }
+      robotEvents.remove(currentIntake);
+    }
+  }
+  return cycles;
+}
