@@ -5,6 +5,7 @@ import "package:scouting_frontend/models/average_or_null.dart";
 import "package:scouting_frontend/models/cycle_model.dart";
 import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/helpers.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -268,6 +269,109 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                 ),
               )
               .toList();
+          final List<int> placeTime = matches
+              .map(
+                (final dynamic match) => getPlacingTime(
+                  getEvents(
+                    teamsTable["secondary_technicals"] as List<dynamic>,
+                    "_2023_secondary_technical_events",
+                  )
+                      .where(
+                        (final MatchEvent location) =>
+                            location.matchId == match["schedule_match_id"],
+                      )
+                      .toList(),
+                  getEvents(matches, "_2023_technical_events")
+                      .where(
+                        (final MatchEvent robotEvent) =>
+                            robotEvent.matchId == match["schedule_match_id"],
+                      )
+                      .toList(),
+                  context,
+                ),
+              )
+              .map((final double e) => e.isNaN ? 0 : (e / 100).round())
+              .toList();
+          final List<int> feederTime = matches
+              .map(
+                (final dynamic match) => getFeederTime(
+                  getEvents(
+                    teamsTable["secondary_technicals"] as List<dynamic>,
+                    "_2023_secondary_technical_events",
+                  )
+                      .where(
+                        (final MatchEvent location) =>
+                            location.matchId ==
+                            (match["schedule_match_id"] as int),
+                      )
+                      .toList(),
+                  context,
+                ),
+              )
+              .map((final double e) => e.isNaN ? 0 : (e / 100).round())
+              .toList();
+          final List<List<Cycle>> cyclesForEachMatch = matches
+              .map(
+                (final dynamic match) => getCycles(
+                  getEvents(matches, "_2023_technical_events")
+                      .where(
+                        (final MatchEvent robotEvent) =>
+                            (match["schedule_match_id"] as int) ==
+                            robotEvent.matchId,
+                      )
+                      .toList(),
+                  getEvents(
+                    teamsTable["secondary_technicals"] as List<dynamic>,
+                    "_2023_secondary_technical_events",
+                  )
+                      .where(
+                        (final MatchEvent location) =>
+                            (match["schedule_match_id"] as int) ==
+                            location.matchId,
+                      )
+                      .toList(),
+                  context,
+                ),
+              )
+              .toList();
+          final CompareLineChartData avgPlacingTimeLineChart =
+              CompareLineChartData(
+            points: placeTime,
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData avgFeederTimeLineChart =
+              CompareLineChartData(
+            points: feederTime,
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData avgCycleTimeLineChart =
+              CompareLineChartData(
+            points: cyclesForEachMatch
+                .map(
+                  (final List<Cycle> matchCycles) =>
+                      matchCycles
+                          .map(
+                            (final Cycle cycle) => cycle.getLength() / 1000,
+                          )
+                          .toList()
+                          .averageOrNull
+                          .mapNullable(
+                            (final double average) => average.round(),
+                          ) ??
+                      0,
+                )
+                .toList(),
+            matchStatuses: matchStatuses,
+          );
+          final CompareLineChartData cycleAmountLineChart =
+              CompareLineChartData(
+            points: cyclesForEachMatch
+                .map(
+                  (final List<Cycle> matchCycles) => matchCycles.length,
+                )
+                .toList(),
+            matchStatuses: matchStatuses,
+          );
           final CompareLineChartData endgameBalanceLineChartVals =
               CompareLineChartData(
             points: endgameBalanceLineChartPoints,
@@ -317,6 +421,10 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
             autoGamepieces: autoGamepiecesLineChart,
             avgAutoBalancePoints: avgAutoBalancePoints,
             avgEndgameBalancePoints: avgEndgameBalancePoints,
+            cycleAmount: cycleAmountLineChart,
+            cycleTime: avgCycleTimeLineChart,
+            feederTime: avgFeederTimeLineChart,
+            placeTime: avgPlacingTimeLineChart,
           );
         }),
         (final CompareTeam team1, final CompareTeam team2) =>
