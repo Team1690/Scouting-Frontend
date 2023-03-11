@@ -1,9 +1,13 @@
+import "package:collection/collection.dart";
 import "package:flutter/cupertino.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/average_or_null.dart";
+import "package:scouting_frontend/models/cycle_model.dart";
+import "package:scouting_frontend/models/event_model.dart";
 import "package:scouting_frontend/models/helpers.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
-import "package:scouting_frontend/models/match_model.dart";
+import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
@@ -49,40 +53,38 @@ query TeamInfo(\$id: Int!) {
         match_number
       }
     }
-    new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
-      aggregate {
-        avg {
-          auto_cones_low
-          auto_cones_mid
-          auto_cones_top
-          auto_cones_failed
-          auto_cubes_low
-          auto_cubes_mid
-          auto_cubes_top
-          auto_cubes_failed
-          tele_cones_low
-          tele_cones_mid
-          tele_cones_top
-          tele_cones_failed
-          tele_cubes_low
-          tele_cubes_mid
-          tele_cubes_top
-          tele_cubes_failed
-        }
+    secondary_technicals {
+      _2023_secondary_technical_events(order_by: {match_id: asc, timestamp: asc}) {
+        event_type_id
+        match_id
+        timestamp
       }
+      robot_match_status_id
+      schedule_match_id
+      scouter_name
+      starting_position_id
+      team_id
+      id
     }
-    new_technical_matches(
+    technical_matches_v3(
       where: {ignored: {_eq: false}}
       order_by: [{match: {match_type: {order: asc}}}, {match: {match_number: asc}}, {is_rematch: asc}]
     ) {
-      auto_balance {
-        auto_points
-        title
-      }
-      endgame_balance {
-        endgame_points
-        title
-      }
+      auto_cones_delivered
+      auto_cones_failed
+      auto_cones_scored
+      auto_cubes_delivered
+      auto_cubes_failed
+      auto_cubes_scored
+      tele_cones_delivered
+      tele_cones_failed
+      tele_cubes_delivered
+      tele_cones_scored
+      tele_cubes_failed
+      tele_cubes_scored
+      schedule_match_id
+      scouter_name
+      is_rematch
       match {
         match_type {
           title
@@ -91,31 +93,47 @@ query TeamInfo(\$id: Int!) {
       robot_match_status {
         title
       }
-      is_rematch
-      auto_cones_low
-      auto_cones_mid
-      auto_cones_top
-      auto_cones_failed
-      auto_cubes_low
-      auto_cubes_mid
-      auto_cubes_top
-      auto_cubes_failed
+      auto_balance {
+        title
+        auto_points
+      }
+      endgame_balance {
+        title
+        endgame_points
+      }
       match {
         match_number
       }
-      tele_cones_low
-      tele_cones_mid
-      tele_cones_top
-      tele_cones_failed
-      tele_cubes_low
-      tele_cubes_mid
-      tele_cubes_top
-      tele_cubes_failed
+      _2023_technical_events(order_by: {match_id: asc, timestamp: asc}) {
+        match_id
+        timestamp
+        event_type_id
+      }
     }
+    technical_matches_v3_aggregate(where: {ignored: {_eq: false}}) {
+      aggregate {
+        avg {
+          auto_cones_delivered
+          auto_cones_failed
+          auto_cones_scored
+          auto_cubes_delivered
+          auto_cubes_failed
+          auto_cubes_scored
+          tele_cones_delivered
+          tele_cones_failed
+          tele_cones_scored
+          tele_cubes_delivered
+          tele_cubes_failed
+          tele_cubes_scored
+        }
+      }
+    }
+    id
+    name
+    number
+    colors_index
   }
 }
-
-
 """;
 
 Future<Team> fetchTeamInfo(
@@ -157,87 +175,71 @@ Future<Team> fetchTeamInfo(
         );
 
         final dynamic avg =
-            teamByPk["new_technical_matches_aggregate"]["aggregate"]["avg"];
+            teamByPk["technical_matches_v3_aggregate"]["aggregate"]["avg"];
         double avgNullToZero(
           final MatchMode mode,
           final Gamepiece piece, [
-          final GridLevel? level,
+          final ActionType? action,
         ]) =>
-            avg["${mode.title}_${piece.title}_${level?.title ?? "failed"}"]
+            avg["${mode.title}_${piece.title}_${action?.title ?? "failed"}"]
                 as double? ??
             0;
 
-        final double autoConesTop = avgNullToZero(
+        final double autoConesScored = avgNullToZero(
           MatchMode.auto,
           Gamepiece.cone,
-          GridLevel.top,
+          ActionType.scored,
         );
-        final double autoConesMid = avgNullToZero(
+        final double autoConesDelivered = avgNullToZero(
           MatchMode.auto,
           Gamepiece.cone,
-          GridLevel.mid,
-        );
-        final double autoConesLow = avgNullToZero(
-          MatchMode.auto,
-          Gamepiece.cone,
-          GridLevel.low,
+          ActionType.delivered,
         );
         final double autoConesFailed =
             avgNullToZero(MatchMode.auto, Gamepiece.cone);
-        final double teleConesTop = avgNullToZero(
+        final double teleConesScored = avgNullToZero(
           MatchMode.tele,
           Gamepiece.cone,
-          GridLevel.top,
+          ActionType.scored,
         );
-        final double teleConesMid = avgNullToZero(
+        final double teleConesDelivered = avgNullToZero(
           MatchMode.tele,
           Gamepiece.cone,
-          GridLevel.mid,
-        );
-        final double teleConesLow = avgNullToZero(
-          MatchMode.tele,
-          Gamepiece.cone,
-          GridLevel.low,
+          ActionType.delivered,
         );
         final double teleConesFailed =
             avgNullToZero(MatchMode.tele, Gamepiece.cone);
-        final double autoCubesTop = avgNullToZero(
+        final double autoCubesScored = avgNullToZero(
           MatchMode.auto,
           Gamepiece.cube,
-          GridLevel.top,
+          ActionType.scored,
         );
-        final double autoCubesMid = avgNullToZero(
+        final double autoCubesDelivered = avgNullToZero(
           MatchMode.auto,
           Gamepiece.cube,
-          GridLevel.mid,
-        );
-        final double autoCubesLow = avgNullToZero(
-          MatchMode.auto,
-          Gamepiece.cube,
-          GridLevel.low,
+          ActionType.delivered,
         );
         final double autoCubesFailed =
             avgNullToZero(MatchMode.auto, Gamepiece.cube);
-        final double teleCubesTop =
-            avgNullToZero(MatchMode.tele, Gamepiece.cube, GridLevel.top);
-        final double teleCubesMid =
-            avgNullToZero(MatchMode.tele, Gamepiece.cube, GridLevel.mid);
-        final double teleCubesLow =
-            avgNullToZero(MatchMode.tele, Gamepiece.cube, GridLevel.low);
+        final double teleCubesScored =
+            avgNullToZero(MatchMode.tele, Gamepiece.cube, ActionType.scored);
+        final double teleCubesDelivered =
+            avgNullToZero(MatchMode.tele, Gamepiece.cube, ActionType.delivered);
         final double teleCubesFailed = avgNullToZero(
           MatchMode.tele,
           Gamepiece.cube,
         );
-
         final List<dynamic> matches =
-            (teamByPk["new_technical_matches"] as List<dynamic>);
+            (teamByPk["technical_matches_v3"] as List<dynamic>);
 
         List<int> balancePoints(final MatchMode mode) => matches
             .where(
               (final dynamic match) =>
+                  match["robot_match_status"]["title"] as String !=
+                      "Didn't come to field" &&
                   match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
-                      ["title"] !=
-                  "No attempt",
+                          ["title"] !=
+                      "No Attempt",
             )
             .map(
               (final dynamic match) => match[
@@ -246,13 +248,22 @@ Future<Team> fetchTeamInfo(
                   "${mode == MatchMode.auto ? mode.title : "endgame"}_points"] as int,
             )
             .toList();
+        List<Cycle> cycles = getCycles(
+            getEvents(matches, "_2023_technical_events"),
+            getEvents(
+              teamByPk["secondary_technicals"] as List<dynamic>,
+              "_2023_secondary_technical_events",
+            ),
+            context);
 
         int matchesBalanced(final MatchMode mode) => matches
             .where(
               (final dynamic match) =>
+                  match["robot_match_status"]["title"] as String !=
+                      "Didn't come to field" &&
                   match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
                           ["title"] !=
-                      "No attempt" &&
+                      "No Attempt" &&
                   match["${mode.title == MatchMode.auto.title ? mode.title : "endgame"}_balance"]
                           ["title"] !=
                       "Failed",
@@ -278,7 +289,7 @@ Future<Team> fetchTeamInfo(
               )
               .toList(),
         );
-        final bool nullValidator = avg["auto_cones_top"] == null;
+        final bool nullValidator = avg["auto_cones_scored"] == null;
         final QuickData quickData = QuickData(
           matchesBalancedAuto: matchesBalanced(MatchMode.auto),
           matchesBalancedEndgame: matchesBalanced(MatchMode.tele),
@@ -288,6 +299,7 @@ Future<Team> fetchTeamInfo(
           highestBalanceTitleAuto: matches.isEmpty
               ? "highestLevelTitle QuickData: this isn't supposed to be shown because of amoutOfMatches check in ui"
               : matches
+                  .where((final dynamic match) => match["auto_balance"] != null)
                   .map<dynamic>((final dynamic match) => match["auto_balance"])
                   .reduceSafe(
                     (final dynamic value, final dynamic element) =>
@@ -300,33 +312,60 @@ Future<Team> fetchTeamInfo(
           avgAutoBalancePoints: autoBalancePoints.averageOrNull ?? 0,
           avgEndgameBalancePoints: endgameBalancePoints.averageOrNull ?? 0,
           avgGamepieces: nullValidator ? 0 : getPieces(parseMatch(avg)),
-          avgGamepiecePoints: nullValidator ? 0 : getPoints(parseMatch(avg)),
           avgAutoGamepieces:
               nullValidator ? 0 : getPieces(parseByMode(MatchMode.auto, avg)),
           avgTeleGamepieces:
               nullValidator ? 0 : getPieces(parseByMode(MatchMode.tele, avg)),
-          avgAutoConesFailed: autoConesFailed,
-          avgAutoConesLow: autoConesLow,
-          avgAutoConesMid: autoConesMid,
-          avgAutoConesTop: autoConesTop,
-          avgAutoCubesFailed: autoCubesFailed,
-          avgAutoCubesLow: autoCubesLow,
-          avgAutoCubesMid: autoCubesMid,
-          avgAutoCubesTop: autoCubesTop,
-          avgTeleConesFailed: teleConesFailed,
-          avgTeleConesLow: teleConesLow,
-          avgTeleConesMid: teleConesMid,
-          avgTeleConesTop: teleConesTop,
-          avgTeleCubesFailed: teleCubesFailed,
-          avgTeleCubesLow: teleCubesLow,
-          avgTeleCubesMid: teleCubesMid,
-          avgTeleCubesTop: teleCubesTop,
+          avgCycles: nullValidator
+              ? 0
+              : cycles.isEmpty
+                  ? 0
+                  : cycles.length / matches.length,
+          avgCycleTime: nullValidator
+              ? 0
+              : cycles
+                      .map((cycle) => cycle.getLength())
+                      .toList()
+                      .averageOrNull ??
+                  0,
+          avgFeederTime: nullValidator
+              ? 0
+              : getFeederTime(
+                  getEvents(
+                    teamByPk["secondary_technicals"] as List<dynamic>,
+                    "_2023_secondary_technical_events",
+                  ),
+                  context),
+          avgPlacementTime: nullValidator
+              ? 0
+              : getPlacingTime(
+                  getEvents(
+                    teamByPk["secondary_technicals"] as List<dynamic>,
+                    "_2023_secondary_technical_events",
+                  ),
+                  getEvents(matches, "_2023_technical_events"),
+                  context),
+          avgAutoConesScored: nullValidator ? 0 : autoConesScored,
+          avgAutoConesDelivered: nullValidator ? 0 : autoConesDelivered,
+          avgAutoConesFailed: nullValidator ? 0 : autoConesFailed,
+          avgTeleConesScored: nullValidator ? 0 : teleConesScored,
+          avgTeleConesDelivered: nullValidator ? 0 : teleConesDelivered,
+          avgTeleConesFailed: nullValidator ? 0 : teleConesFailed,
+          avgAutoCubesScored: nullValidator ? 0 : autoCubesScored,
+          avgAutoCubesDelivered: nullValidator ? 0 : autoCubesDelivered,
+          avgAutoCubesFailed: nullValidator ? 0 : autoCubesFailed,
+          avgTeleCubesScored: nullValidator ? 0 : teleCubesScored,
+          avgTeleCubesDelivered: nullValidator ? 0 : teleCubesDelivered,
+          avgTeleCubesFailed: nullValidator ? 0 : teleCubesFailed,
         );
         List<int> getBalanceLineChart(final MatchMode mode) => matches
                 .map(
-                  (final dynamic match) => match[
-                          "${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
-                      ["title"] as String,
+                  (final dynamic match) => match["robot_match_status"]["title"]
+                              as String !=
+                          "Didn't come to field"
+                      ? match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
+                          ["title"] as String
+                      : "No Attempt",
                 )
                 .toList()
                 .map<int>((final String title) {
@@ -356,7 +395,6 @@ Future<Team> fetchTeamInfo(
               ),
             )
             .toList();
-
         LineChartData getBalanceChartData(final bool isAuto) => LineChartData(
               gameNumbers: matchNumbers,
               points: <List<int>>[
@@ -367,7 +405,7 @@ Future<Team> fetchTeamInfo(
               title: "${isAuto ? "Auto" : "Endgame"} Balance",
               robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
                 1,
-                (teamByPk["new_technical_matches"] as List<dynamic>)
+                (teamByPk["technical_matches_v3"] as List<dynamic>)
                     .map(
                       (final dynamic match) => titleToEnum(
                         match["robot_match_status"]["title"] as String,
@@ -389,19 +427,14 @@ Future<Team> fetchTeamInfo(
                 matches
                     .map(
                       (final dynamic match) =>
-                          match["${mode.title}_${piece.title}_top"] as int,
+                          match["${mode.title}_${piece.title}_scored"] as int,
                     )
                     .toList(),
                 matches
                     .map(
                       (final dynamic match) =>
-                          match["${mode.title}_${piece.title}_mid"] as int,
-                    )
-                    .toList(),
-                matches
-                    .map(
-                      (final dynamic match) =>
-                          match["${mode.title}_${piece.title}_low"] as int,
+                          match["${mode.title}_${piece.title}_delivered"]
+                              as int,
                     )
                     .toList(),
                 matches
@@ -414,8 +447,8 @@ Future<Team> fetchTeamInfo(
               title:
                   "${mode == MatchMode.auto ? "Autonomous" : "Teleoperated"} ${piece.title}",
               robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-                4,
-                (teamByPk["new_technical_matches"] as List<dynamic>)
+                3,
+                (teamByPk["technical_matches_v3"] as List<dynamic>)
                     .map(
                       (final dynamic match) => titleToEnum(
                         match["robot_match_status"]["title"] as String,
@@ -424,7 +457,6 @@ Future<Team> fetchTeamInfo(
                     .toList(),
               ),
             );
-
         final LineChartData dataTeleCones = getGamepieceChartData(
           MatchMode.tele,
           Gamepiece.cone,
@@ -450,19 +482,19 @@ Future<Team> fetchTeamInfo(
         List<int> getPiecesData(
           final MatchMode mode,
           final Gamepiece piece, [
-          final GridLevel? level,
+          final ActionType? action,
         ]) =>
             matches
                 .map(
                   (final dynamic match) => match[
-                          "${mode.title}_${piece.title}_${level?.title ?? "failed"}"]
+                          "${mode.title}_${piece.title}_${action?.title ?? "failed"}"]
                       as int,
                 )
                 .toList();
         LineChartData getScoredMissedData(final Gamepiece gamepiece) {
-          List<int> gamepieceLevelData(
+          List<int> gamepieceActionData(
             final Gamepiece piece, [
-            final GridLevel? level,
+            final ActionType? level,
           ]) =>
               combineLists(
                 getPiecesData(MatchMode.auto, piece, level),
@@ -471,15 +503,14 @@ Future<Team> fetchTeamInfo(
           return LineChartData(
             gameNumbers: matchNumbers,
             points: <List<int>>[
-              gamepieceLevelData(gamepiece, GridLevel.top),
-              gamepieceLevelData(gamepiece, GridLevel.mid),
-              gamepieceLevelData(gamepiece, GridLevel.low),
-              gamepieceLevelData(gamepiece),
+              gamepieceActionData(gamepiece, ActionType.scored),
+              gamepieceActionData(gamepiece, ActionType.delivered),
+              gamepieceActionData(gamepiece),
             ],
             title: gamepiece == Gamepiece.cone ? "Cones" : "Cubes",
             robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-              4,
-              (teamByPk["new_technical_matches"] as List<dynamic>)
+              3,
+              (teamByPk["technical_matches_v3"] as List<dynamic>)
                   .map(
                     (final dynamic e) => titleToEnum(
                       e["robot_match_status"]["title"] as String,
@@ -508,15 +539,11 @@ Future<Team> fetchTeamInfo(
               dataAllCones.points[2],
               dataAllCubes.points[2],
             ),
-            combineLists(
-              dataAllCones.points[3],
-              dataAllCubes.points[3],
-            ),
           ],
           title: "Gamepieces",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            4,
-            (teamByPk["new_technical_matches"] as List<dynamic>)
+            3,
+            (teamByPk["technical_matches_v3"] as List<dynamic>)
                 .map(
                   (final dynamic match) => titleToEnum(
                     match["robot_match_status"]["title"] as String,
@@ -525,19 +552,131 @@ Future<Team> fetchTeamInfo(
                 .toList(),
           ),
         );
-
-        final LineChartData pointsData = LineChartData(
+        final LineChartData cyclesData = LineChartData(
           points: <List<int>>[
             matches
+                .map((final dynamic match) => getCycles(
+                        getEvents(matches, "_2023_technical_events")
+                            .where((element) =>
+                                element.matchId == match["schedule_match_id"])
+                            .toList(),
+                        getEvents(
+                          teamByPk["secondary_technicals"] as List<dynamic>,
+                          "_2023_secondary_technical_events",
+                        )
+                            .where((element) =>
+                                element.matchId == match["schedule_match_id"])
+                            .toList(),
+                        context)
+                    .length)
+                .toList()
+          ],
+          title: "Cycles",
+          gameNumbers: matchNumbers,
+          robotMatchStatuses: <List<RobotMatchStatus>>[
+            (teamByPk["technical_matches_v3"] as List<dynamic>)
                 .map(
-                  (final dynamic match) => getPoints(parseMatch(match)) as int,
+                  (final dynamic match) => titleToEnum(
+                    match["robot_match_status"]["title"] as String,
+                  ),
                 )
                 .toList()
           ],
-          title: "Points",
+        );
+        final LineChartData cycleTimeData = LineChartData(
+          points: <List<int>>[
+            matches
+                .map((final dynamic match) =>
+                    getCycles(
+                            getEvents(matches, "_2023_technical_events")
+                                .where((element) =>
+                                    element.matchId ==
+                                    match["schedule_match_id"])
+                                .toList(),
+                            getEvents(
+                              teamByPk["secondary_technicals"] as List<dynamic>,
+                              "_2023_secondary_technical_events",
+                            )
+                                .where((element) =>
+                                    element.matchId ==
+                                    match["schedule_match_id"])
+                                .toList(),
+                            context)
+                        .toList()
+                        .map((e) => (e.endTime == double.nan ||
+                                e.startingTime == double.nan
+                            ? 0
+                            : e.getLength() / 1000))
+                        .toList()
+                        .averageOrNull ??
+                    0)
+                .map((e) => e.isNaN ? 0 : e.round())
+                .toList(),
+          ],
+          title: "Cycle Time",
           gameNumbers: matchNumbers,
           robotMatchStatuses: <List<RobotMatchStatus>>[
-            (teamByPk["new_technical_matches"] as List<dynamic>)
+            (teamByPk["technical_matches_v3"] as List<dynamic>)
+                .map(
+                  (final dynamic match) => titleToEnum(
+                    match["robot_match_status"]["title"] as String,
+                  ),
+                )
+                .toList()
+          ],
+        );
+        final LineChartData placementTimeData = LineChartData(
+          points: <List<int>>[
+            matches
+                .map((final dynamic match) => getPlacingTime(
+                    getEvents(
+                      teamByPk["secondary_technicals"] as List<dynamic>,
+                      "_2023_secondary_technical_events",
+                    )
+                        .where((element) =>
+                            element.matchId == match["schedule_match_id"])
+                        .toList(),
+                    getEvents(matches, "_2023_technical_events")
+                        .where((element) =>
+                            element.matchId == match["schedule_match_id"])
+                        .toList(),
+                    context))
+                .map((e) => e.isNaN ? 0 : (e / 1000).round())
+                .toList(),
+          ],
+          title: "Placement Time",
+          gameNumbers: matchNumbers,
+          robotMatchStatuses: <List<RobotMatchStatus>>[
+            (teamByPk["technical_matches_v3"] as List<dynamic>)
+                .map(
+                  (final dynamic match) => titleToEnum(
+                    match["robot_match_status"]["title"] as String,
+                  ),
+                )
+                .toList()
+          ],
+        );
+        final LineChartData feederTimeData = LineChartData(
+          points: <List<int>>[
+            matches
+                .map(
+                  (final dynamic match) => (getFeederTime(
+                      getEvents(
+                        teamByPk["secondary_technicals"] as List<dynamic>,
+                        "_2023_secondary_technical_events",
+                      )
+                          .where((element) =>
+                              element.matchId == match["schedule_match_id"])
+                          .toList(),
+                      context)),
+                )
+                .map((e) => e.isNaN ? 0 : (e / 1000).round())
+                .toList(),
+          ],
+          title: "Feeder Time",
+          gameNumbers: matchNumbers,
+          robotMatchStatuses: <List<RobotMatchStatus>>[
+            (teamByPk["technical_matches_v3"] as List<dynamic>)
                 .map(
                   (final dynamic match) => titleToEnum(
                     match["robot_match_status"]["title"] as String,
@@ -547,7 +686,6 @@ Future<Team> fetchTeamInfo(
           ],
         );
         return Team(
-          pointsData: pointsData,
           allConesData: dataAllCones,
           allCubesData: dataAllCubes,
           allData: scoredMissedDataAll,
@@ -561,6 +699,10 @@ Future<Team> fetchTeamInfo(
           autoConesData: dataAutoCones,
           teleCubesData: dataTeleCubes,
           autoCubesData: dataAutoCubes,
+          cyclesData: cyclesData,
+          cycleTimeData: cycleTimeData,
+          placementTimeData: placementTimeData,
+          feederTimeData: feederTimeData,
         );
       },
       document: gql(teamInfoQuery),
