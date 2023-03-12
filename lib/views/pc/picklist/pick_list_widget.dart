@@ -99,9 +99,22 @@ class PickList extends StatelessWidget {
                                     if (pickListTeam.amountOfMatches !=
                                         0) ...<Expanded>[
                                       Expanded(
-                                        flex: 2,
                                         child: Text(
-                                          "Gamepiece points avg: ${pickListTeam.avgGamepiecePoints.toStringAsFixed(1)}",
+                                          "Avg Feeder Time: ${pickListTeam.avgFeederTime.toStringAsFixed(1)}",
+                                        ),
+                                      ),
+                                    ] else
+                                      ...List<Spacer>.filled(
+                                        4,
+                                        const Spacer(
+                                          flex: 2,
+                                        ),
+                                      ),
+                                    if (pickListTeam.amountOfMatches !=
+                                        0) ...<Expanded>[
+                                      Expanded(
+                                        child: Text(
+                                          "Avg Placement Time: ${pickListTeam.avgPlacementTime.toStringAsFixed(1)}",
                                         ),
                                       ),
                                     ] else
@@ -198,11 +211,6 @@ class PickList extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       "Avg Cycle Time: ${pickListTeam.avgCycleTime.toStringAsFixed(1)}",
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      "Avg Feeder Time: ${pickListTeam.avgFeederTime.toStringAsFixed(1)}",
                                     ),
                                   ),
                                   Expanded(
@@ -330,6 +338,7 @@ class PickListTeam {
     required this.maxBalanceTitle,
     required this.drivetrain,
     required this.avgFeederTime,
+    required this.avgPlacementTime,
     required this.avgCycleTime,
     required this.avgCycles,
   });
@@ -339,6 +348,7 @@ class PickListTeam {
   final double avgAutoBalancePoints;
   final double avgGamepieces;
   final double avgFeederTime;
+  final double avgPlacementTime;
   final double avgCycles;
   final double avgCycleTime;
 
