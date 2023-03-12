@@ -26,7 +26,7 @@ class PickListScreen extends StatelessWidget {
   Padding pickList(final BuildContext context) => Padding(
         padding: const EdgeInsets.all(defaultPadding),
         child: StreamBuilder<List<PickListTeam>>(
-          stream: fetchPicklist(),
+          stream: fetchPicklist(context),
           builder: (
             final BuildContext context,
             final AsyncSnapshot<List<PickListTeam>> snapshot,

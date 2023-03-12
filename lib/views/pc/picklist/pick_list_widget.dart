@@ -99,9 +99,22 @@ class PickList extends StatelessWidget {
                                     if (pickListTeam.amountOfMatches !=
                                         0) ...<Expanded>[
                                       Expanded(
-                                        flex: 2,
                                         child: Text(
-                                          "Gamepiece points avg: ${pickListTeam.avgGamepiecePoints.toStringAsFixed(1)}",
+                                          "Avg Feeder Time: ${pickListTeam.avgFeederTime.toStringAsFixed(1)}",
+                                        ),
+                                      ),
+                                    ] else
+                                      ...List<Spacer>.filled(
+                                        4,
+                                        const Spacer(
+                                          flex: 2,
+                                        ),
+                                      ),
+                                    if (pickListTeam.amountOfMatches !=
+                                        0) ...<Expanded>[
+                                      Expanded(
+                                        child: Text(
+                                          "Avg Placement Time: ${pickListTeam.avgPlacementTime.toStringAsFixed(1)}",
                                         ),
                                       ),
                                     ] else
@@ -192,7 +205,12 @@ class PickList extends StatelessWidget {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "Auto Gamepieces: ${pickListTeam.autoGamepieceAvg.toStringAsFixed(1)}",
+                                      "Avg Cycles: ${pickListTeam.avgCycles.toStringAsFixed(1)}",
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      "Avg Cycle Time: ${pickListTeam.avgCycleTime.toStringAsFixed(1)}",
                                     ),
                                   ),
                                   Expanded(
@@ -310,25 +328,29 @@ class PickListTeam {
     required this.firstListIndex,
     required this.secondListIndex,
     required this.taken,
-    required this.avgGamepiecePoints,
     required this.avgAutoBalancePoints,
     required this.team,
     required this.faultMessages,
     required this.amountOfMatches,
     required this.robotMatchStatusToAmount,
-    required this.autoGamepieceAvg,
     required this.avgGamepieces,
     required this.matchesBalanced,
     required this.maxBalanceTitle,
     required this.drivetrain,
+    required this.avgFeederTime,
+    required this.avgPlacementTime,
+    required this.avgCycleTime,
+    required this.avgCycles,
   });
   final String? drivetrain;
   final String maxBalanceTitle;
   final int amountOfMatches;
-  final double avgGamepiecePoints;
   final double avgAutoBalancePoints;
-  final double autoGamepieceAvg;
   final double avgGamepieces;
+  final double avgFeederTime;
+  final double avgPlacementTime;
+  final double avgCycles;
+  final double avgCycleTime;
 
   final LightTeam team;
   final List<String>? faultMessages;
