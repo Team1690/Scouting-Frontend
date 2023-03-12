@@ -29,7 +29,7 @@ class PointsLineChart extends StatelessWidget {
               inputedColors: const <Color>[
                 Colors.green,
               ],
-              distanceFromHighest: 20,
+              distanceFromHighest: 5,
               dataSet: data.points,
               robotMatchStatuses: data.robotMatchStatuses,
             ),

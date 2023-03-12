@@ -4,51 +4,33 @@ class QuickData {
   QuickData({
     required this.avgAutoBalancePoints,
     required this.avgEndgameBalancePoints,
-    required this.avgAutoConesTop,
-    required this.avgAutoConesMid,
-    required this.avgAutoConesLow,
-    required this.avgAutoConesFailed,
-    required this.avgTeleConesTop,
-    required this.avgTeleConesMid,
-    required this.avgTeleConesLow,
-    required this.avgTeleConesFailed,
-    required this.avgAutoCubesTop,
-    required this.avgAutoCubesMid,
-    required this.avgAutoCubesLow,
-    required this.avgAutoCubesFailed,
-    required this.avgTeleCubesTop,
-    required this.avgTeleCubesMid,
-    required this.avgTeleCubesLow,
-    required this.avgTeleCubesFailed,
     required this.matchesBalancedAuto,
     required this.matchesBalancedEndgame,
     required this.highestBalanceTitleAuto,
     required this.firstPicklistIndex,
     required this.secondPicklistIndex,
     required this.amoutOfMatches,
-    required this.avgGamepiecePoints,
     required this.avgGamepieces,
     required this.avgAutoGamepieces,
     required this.avgTeleGamepieces,
+    required this.avgCycles,
+    required this.avgCycleTime,
+    required this.avgFeederTime,
+    required this.avgPlacementTime,
+    required this.avgAutoCubesScored,
+    required this.avgAutoCubesDelivered,
+    required this.avgAutoCubesFailed,
+    required this.avgTeleCubesScored,
+    required this.avgTeleCubesDelivered,
+    required this.avgTeleCubesFailed,
+    required this.avgAutoConesScored,
+    required this.avgAutoConesDelivered,
+    required this.avgAutoConesFailed,
+    required this.avgTeleConesScored,
+    required this.avgTeleConesDelivered,
+    required this.avgTeleConesFailed,
   });
   final int amoutOfMatches;
-  final double avgGamepiecePoints;
-  final double avgAutoConesTop;
-  final double avgAutoConesMid;
-  final double avgAutoConesLow;
-  final double avgAutoConesFailed;
-  final double avgTeleConesTop;
-  final double avgTeleConesMid;
-  final double avgTeleConesLow;
-  final double avgTeleConesFailed;
-  final double avgAutoCubesTop;
-  final double avgAutoCubesMid;
-  final double avgAutoCubesLow;
-  final double avgAutoCubesFailed;
-  final double avgTeleCubesTop;
-  final double avgTeleCubesMid;
-  final double avgTeleCubesLow;
-  final double avgTeleCubesFailed;
   final String highestBalanceTitleAuto;
   final int firstPicklistIndex;
   final int secondPicklistIndex;
@@ -59,6 +41,50 @@ class QuickData {
   final double avgGamepieces;
   final double avgAutoGamepieces;
   final double avgTeleGamepieces;
+  final double avgCycles;
+  final double avgCycleTime;
+  final double avgFeederTime;
+  final double avgPlacementTime;
+  final double avgAutoCubesScored;
+  final double avgAutoCubesDelivered;
+  final double avgAutoCubesFailed;
+  final double avgTeleCubesScored;
+  final double avgTeleCubesDelivered;
+  final double avgTeleCubesFailed;
+  final double avgAutoConesScored;
+  final double avgAutoConesDelivered;
+  final double avgAutoConesFailed;
+  final double avgTeleConesScored;
+  final double avgTeleConesDelivered;
+  final double avgTeleConesFailed;
+}
+
+class AutoByPosData {
+  AutoByPosData({
+    required this.matchesBalancedAuto,
+    required this.highestBalanceTitleAuto,
+    required this.amoutOfMatches,
+    required this.avgAutoScored,
+    required this.avgAutoIntaked,
+    required this.avgMobility,
+  });
+  final int amoutOfMatches;
+  final String highestBalanceTitleAuto;
+  final int matchesBalancedAuto;
+  final double avgMobility;
+  final double avgAutoIntaked;
+  final double avgAutoScored;
+}
+
+class AutoData {
+  AutoData({
+    required this.dataNearGate,
+    required this.middleData,
+    required this.nearFeederData,
+  });
+  final AutoByPosData nearFeederData;
+  final AutoByPosData middleData;
+  final AutoByPosData dataNearGate;
 }
 
 class SpecificData {
@@ -225,7 +251,11 @@ class Team {
     required this.autoCubesData,
     required this.allCubesData,
     required this.allData,
-    required this.pointsData,
+    required this.cyclesData,
+    required this.cycleTimeData,
+    required this.placementTimeData,
+    required this.feederTimeData,
+    required this.autoData,
   });
   final LightTeam team;
   final SpecificData specificData;
@@ -233,7 +263,6 @@ class Team {
   final QuickData quickData;
   final LineChartData autoBalanceData;
   final LineChartData endgameBalanceData;
-  final LineChartData pointsData;
   final LineChartData teleConesData;
   final LineChartData autoConesData;
   final LineChartData allConesData;
@@ -241,4 +270,9 @@ class Team {
   final LineChartData autoCubesData;
   final LineChartData allCubesData;
   final LineChartData allData;
+  final LineChartData cyclesData;
+  final LineChartData cycleTimeData;
+  final LineChartData placementTimeData;
+  final LineChartData feederTimeData;
+  final AutoData autoData;
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: require_trailing_commas
+
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -43,6 +45,13 @@ class CoachTeamData extends StatelessWidget {
                       initialPage: 0,
                       widgets: <Widget>[
                         Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: DashboardCard(
+                            title: "Quick data",
+                            body: CoachQuickData(data.quickData),
+                          ),
+                        ),
+                        Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: DashboardCard(
                             title: "Line charts",
@@ -55,20 +64,19 @@ class CoachTeamData extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: DashboardCard(
-                            title: "Specific",
-                            body: data.specificData.msg.isEmpty
-                                ? const Center(
-                                    child: Text("No data :("),
-                                  )
-                                : SpecificCard(data.specificData),
-                          ),
+                          child: data.specificData.msg.isEmpty
+                              ? const Center(
+                                  child: Text("No data :("),
+                                )
+                              : SpecificCard(data.specificData),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10.0),
                           child: DashboardCard(
-                            title: "Quick data",
-                            body: CoachQuickData(data.quickData),
+                            title: "Auto Data",
+                            body: CoachAutoData(
+                              data.autoData,
+                            ),
                           ),
                         ),
                         Padding(
@@ -122,8 +130,20 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
             "Gamepieces",
           ),
           CoachTeamInfoLineChart(
-            PointsLineChart(data.pointsData),
-            "Points",
+            PointsLineChart(data.cyclesData),
+            "Cycles Amount",
+          ),
+          CoachTeamInfoLineChart(
+            PointsLineChart(data.cycleTimeData),
+            "Cycle Time",
+          ),
+          CoachTeamInfoLineChart(
+            PointsLineChart(data.placementTimeData),
+            "Placement Time",
+          ),
+          CoachTeamInfoLineChart(
+            PointsLineChart(data.feederTimeData),
+            "Feeder Time",
           ),
           CoachTeamInfoLineChart(
             BalanceLineChart(data.autoBalanceData),
@@ -171,9 +191,8 @@ class CoachQuickData extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => data.amoutOfMatches == 0
       ? const Center(child: Text("No data :("))
-      : Column(
+      : ListView(
           children: <Widget>[
-            const Spacer(),
             Row(
               children: <Expanded>[
                 Expanded(
@@ -189,19 +208,14 @@ class CoachQuickData extends StatelessWidget {
                         ),
                       ),
                       gamepieceRow(
-                        "Top",
-                        data.avgAutoConesTop,
-                        data.avgAutoCubesTop,
+                        "Scored",
+                        data.avgAutoConesScored,
+                        data.avgAutoCubesScored,
                       ),
                       gamepieceRow(
-                        "Mid",
-                        data.avgAutoConesMid,
-                        data.avgAutoCubesMid,
-                      ),
-                      gamepieceRow(
-                        "Low",
-                        data.avgAutoConesLow,
-                        data.avgAutoCubesLow,
+                        "Delivered",
+                        data.avgAutoConesDelivered,
+                        data.avgAutoCubesDelivered,
                       ),
                       gamepieceRow(
                         "Failed",
@@ -211,18 +225,22 @@ class CoachQuickData extends StatelessWidget {
                       const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: Text(
-                          "Points",
+                          "Cycles",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
                       Text(
-                        "Gamepieces: ${data.avgGamepiecePoints.toStringAsFixed(1)}",
+                        "Cycle Time: ${(data.avgCycleTime / 1000).toStringAsFixed(1)}s",
                       ),
                       Text(
-                        "Auto Balance: ${data.avgAutoBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedAuto}/${data.amoutOfMatches}",
+                        "Placement Time: ${(data.avgPlacementTime / 1000).toStringAsFixed(1)}s",
                       ),
                       Text(
-                        "Endgame Balance: ${data.avgEndgameBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedEndgame}/${data.amoutOfMatches}",
+                        "Feeder Time: ${(data.avgFeederTime / 1000).toStringAsFixed(1)}s",
+                      ),
+                      Text("Cycles: ${(data.avgCycles).toStringAsFixed(1)}"),
+                      Text(
+                        "Gamepieces: ${data.avgGamepieces.toStringAsFixed(1)}",
                       ),
                       const Padding(
                         padding: EdgeInsets.all(10.0),
@@ -247,19 +265,14 @@ class CoachQuickData extends StatelessWidget {
                         ),
                       ),
                       gamepieceRow(
-                        "Top",
-                        data.avgTeleConesTop,
-                        data.avgTeleCubesTop,
+                        "Scored",
+                        data.avgTeleConesScored,
+                        data.avgTeleCubesScored,
                       ),
                       gamepieceRow(
-                        "Mid",
-                        data.avgTeleConesMid,
-                        data.avgTeleCubesMid,
-                      ),
-                      gamepieceRow(
-                        "Low",
-                        data.avgTeleConesLow,
-                        data.avgTeleCubesLow,
+                        "Delivered",
+                        data.avgTeleConesDelivered,
+                        data.avgTeleCubesDelivered,
                       ),
                       gamepieceRow(
                         "Failed",
@@ -274,19 +287,28 @@ class CoachQuickData extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Auto: ${data.avgAutoGamepieces.toStringAsFixed(1)}/${(data.avgAutoGamepieces + data.avgAutoConesFailed + data.avgAutoCubesFailed).toStringAsFixed(1)}",
+                        "Auto: ${(data.avgAutoGamepieces / (data.avgAutoGamepieces + data.avgAutoConesFailed + data.avgAutoCubesFailed) * 100).toStringAsFixed(1)}%",
                       ),
                       Text(
-                        "Teleop: ${data.avgTeleGamepieces.toStringAsFixed(1)}/${(data.avgTeleGamepieces + data.avgTeleConesFailed + data.avgTeleCubesFailed).toStringAsFixed(1)}",
+                        "Teleop: ${(data.avgTeleGamepieces / (data.avgTeleGamepieces + data.avgTeleConesFailed + data.avgTeleCubesFailed) * 100).toStringAsFixed(1)}%",
                       ),
-                      const Text(
-                        "Misc",
-                        style: TextStyle(fontSize: 18),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          "Balance",
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
                       Text(
-                        "Gamepiece sum: ${data.avgGamepieces.toStringAsFixed(1)}",
+                        textAlign: TextAlign.center,
+                        "Auto Balance: ${data.avgAutoBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedAuto}/${data.amoutOfMatches}",
                       ),
                       Text(
+                        textAlign: TextAlign.center,
+                        "Endgame Balance: ${data.avgEndgameBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedEndgame}/${data.amoutOfMatches}",
+                      ),
+                      Text(
+                        textAlign: TextAlign.center,
                         "Best Auto Balance: ${data.highestBalanceTitleAuto}",
                       ),
                     ],
@@ -294,9 +316,124 @@ class CoachQuickData extends StatelessWidget {
                 ),
               ],
             ),
-            const Spacer(
-              flex: 2,
-            )
           ],
         );
+}
+
+class CoachAutoData extends StatelessWidget {
+  const CoachAutoData(this.data);
+  final AutoData data;
+
+  @override
+  Widget build(final BuildContext context) => ListView(
+        children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              textAlign: TextAlign.center,
+              "Near Feeder",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          data.nearFeederData.amoutOfMatches == 0
+              ? const Center(child: Text("No near feeder data"))
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Avg Gamepieces Intaked: ${data.nearFeederData.avgAutoIntaked.toStringAsFixed(2)}",
+                    ),
+                    Text(
+                      "Avg Scored: ${data.nearFeederData.avgAutoScored.toStringAsFixed(2)}",
+                    ),
+                    Text(
+                      "Avg Times Left Community: ${data.nearFeederData.avgMobility.toStringAsFixed(2)}",
+                    ),
+                    Text(
+                      "Highest Balance: ${data.nearFeederData.highestBalanceTitleAuto}",
+                    ),
+                    Text(
+                      "Matches Balanced: ${data.nearFeederData.matchesBalancedAuto}",
+                    ),
+                    Text(
+                      "Amount Of Matches: ${data.nearFeederData.amoutOfMatches}",
+                    ),
+                  ],
+                ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              textAlign: TextAlign.center,
+              "Middle",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          data.middleData.amoutOfMatches == 0
+              ? const Center(child: Text("No middle data"))
+              : Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Avg Gamepieces Intaked: ${data.middleData.avgAutoIntaked.toStringAsFixed(2)}",
+                      ),
+                      Text(
+                        "Avg Scored: ${data.middleData.avgAutoScored.toStringAsFixed(2)}",
+                      ),
+                      Text(
+                        "Avg Times Left Community: ${data.middleData.avgMobility.toStringAsFixed(2)}",
+                      ),
+                      Text(
+                        "Highest Balance: ${data.middleData.highestBalanceTitleAuto}",
+                      ),
+                      Text(
+                        "Matches Balanced: ${data.middleData.matchesBalancedAuto}",
+                      ),
+                      Text(
+                        "Amount Of Matches: ${data.middleData.amoutOfMatches}",
+                      ),
+                    ],
+                  ),
+                ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              textAlign: TextAlign.center,
+              "Near Gate",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          data.dataNearGate.amoutOfMatches == 0
+              ? const Center(child: Text("No near gate data"))
+              : Expanded(
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Avg Gamepieces Intaked: ${data.dataNearGate.avgAutoIntaked.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Scored: ${data.dataNearGate.avgAutoScored.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Times Left Community: ${data.dataNearGate.avgMobility.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Highest Balance: ${data.dataNearGate.highestBalanceTitleAuto}",
+                        ),
+                        Text(
+                          "Matches Balanced: ${data.dataNearGate.matchesBalancedAuto}",
+                        ),
+                        Text(
+                          "Amount Of Matches: ${data.dataNearGate.amoutOfMatches}",
+                        ),
+                      ]),
+                )
+        ],
+      );
 }

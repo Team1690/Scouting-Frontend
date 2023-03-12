@@ -17,16 +17,12 @@ class GamepiecesLineChart extends StatelessWidget {
                   text: const TextSpan(
                     children: <InlineSpan>[
                       TextSpan(
-                        text: " Top ",
+                        text: " Scored ",
                         style: TextStyle(color: Colors.green),
                       ),
                       TextSpan(
-                        text: " Mid ",
-                        style: TextStyle(color: Colors.yellow),
-                      ),
-                      TextSpan(
-                        text: " Low ",
-                        style: TextStyle(color: Colors.orange),
+                        text: " Delivered ",
+                        style: TextStyle(color: Colors.blue),
                       ),
                       TextSpan(
                         text: " Failed ",
@@ -52,12 +48,11 @@ class GamepiecesLineChart extends StatelessWidget {
               top: 40,
             ),
             child: DashboardLineChart(
-              showShadow: false,
+              showShadow: true,
               gameNumbers: data.gameNumbers,
               inputedColors: const <Color>[
                 Colors.green,
-                Colors.yellow,
-                Colors.orange,
+                Colors.blue,
                 Colors.red,
               ],
               distanceFromHighest: 4,
