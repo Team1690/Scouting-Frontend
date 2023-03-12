@@ -288,7 +288,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                   context,
                 ),
               )
-              .map((final double e) => e.isNaN ? 0 : (e / 100).round())
+              .map((final double e) => e.isNaN ? 0 : (e / 1000).round())
               .toList();
           final List<int> feederTime = matches
               .map(
@@ -306,7 +306,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                   context,
                 ),
               )
-              .map((final double e) => e.isNaN ? 0 : (e / 100).round())
+              .map((final double e) => e.isNaN ? 0 : (e / 1000).round())
               .toList();
           final List<List<Cycle>> cyclesForEachMatch = matches
               .map(
