@@ -1,6 +1,4 @@
 import "dart:collection";
-import "dart:math";
-
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/radar_chart.dart";
@@ -23,36 +21,75 @@ class CompareSpiderChart extends StatelessWidget {
               final double autoBalanceRatio = 100 /
                   data
                       .map(
-                        (final CompareTeam team) => team.avgAutoBalancePoints,
+                        (final CompareTeam team) =>
+                            team.avgAutoBalancePoints == double.nan
+                                ? 0
+                                : team.avgAutoBalancePoints,
                       )
-                      .reduce(max);
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
               final double endgameBalanceRatio = 100 /
                   data
                       .map(
                         (final CompareTeam team) =>
-                            team.avgEndgameBalancePoints,
+                            team.avgEndgameBalancePoints == double.nan
+                                ? 0
+                                : team.avgEndgameBalancePoints,
                       )
-                      .reduce(max);
-              final double teleGamepiecePointRatio = 100 /
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
+              final double cycleTimeRatio = 100 /
                   data
                       .map(
                         (final CompareTeam team) =>
-                            team.avgTeleGamepiecesPoints,
+                            team.avgCycleTime == double.nan
+                                ? 0
+                                : team.avgCycleTime,
                       )
-                      .reduce(max);
-              final double autoGamepiecePointRatio = 100 /
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
+              final double feederTimeRatio = 100 /
                   data
                       .map(
-                        (final CompareTeam team) => team.avgAutoGamepiecePoints,
+                        (final CompareTeam team) =>
+                            team.avgFeederTime == double.nan
+                                ? 0
+                                : team.avgFeederTime,
                       )
-                      .reduce(max);
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
+              final double placingTimeRatio = 100 /
+                  data
+                      .map(
+                        (final CompareTeam team) =>
+                            team.avgPlacingTime == double.nan
+                                ? 0
+                                : team.avgPlacingTime,
+                      )
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
               return SpiderChart(
                 colors: data
                     .map(
                       (final CompareTeam team) => team.team.color,
                     )
                     .toList(),
-                numberOfFeatures: 6,
+                numberOfFeatures: 7,
                 data: data
                     .map<List<int>>(
                       (final CompareTeam team) => <double>[
@@ -60,8 +97,9 @@ class CompareSpiderChart extends StatelessWidget {
                         team.autoBalanceSuccessPercentage,
                         team.avgEndgameBalancePoints * endgameBalanceRatio,
                         team.avgAutoBalancePoints * autoBalanceRatio,
-                        team.avgTeleGamepiecesPoints * teleGamepiecePointRatio,
-                        team.avgAutoGamepiecePoints * autoGamepiecePointRatio,
+                        team.avgCycleTime * cycleTimeRatio,
+                        team.avgFeederTime * feederTimeRatio,
+                        team.avgPlacingTime * placingTimeRatio,
                       ]
                           .map<int>(
                             (final double e) =>
@@ -74,10 +112,11 @@ class CompareSpiderChart extends StatelessWidget {
                 features: const <String>[
                   "Endgame Balance%",
                   "Auto Balance%",
-                  "Endgame Balance Score%",
-                  "Auto Balance Score%",
-                  "Tele Gamepieces",
-                  "Auto Gamepieces"
+                  "Endgame Balance Score",
+                  "Auto Balance Score",
+                  "Cycle Time",
+                  "Feeder Time",
+                  "Placing Time",
                 ],
               );
             },

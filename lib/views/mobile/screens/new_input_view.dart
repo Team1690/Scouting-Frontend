@@ -719,5 +719,5 @@ mutation InsertTechnicalMatch($auto_cones_delivered: Int, $auto_balance_id: Int,
 """;
 
 List<MatchEvent> filterEvents(final List<MatchEvent> events) => events
-    .where((final MatchEvent event) => event.timestamp <= 153000)
+    .where((final MatchEvent event) => event.timestamp <= 158000)
     .toList();
