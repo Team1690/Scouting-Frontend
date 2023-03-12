@@ -41,6 +41,14 @@ class _PitViewState extends State<PitView> {
   final TextEditingController weightController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
   final TextEditingController lengthController = TextEditingController();
+  final List<String> driveWheelTypes = <String>[
+    "Tread",
+    "Colson",
+    "Hi-grip",
+    "Mecanum",
+    "Omni",
+    "Other"
+  ];
 
   FormFieldValidator<String> _numericValidator(final String error) =>
       (final String? text) => int.tryParse(text ?? "").onNull(error);
@@ -277,15 +285,17 @@ class _PitViewState extends State<PitView> {
                     const SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      controller: wheelTypeController,
-                      onChanged: (final String wheelType) {
-                        vars.driveWheelType = wheelType;
+                    Selector<String>(
+                      options: driveWheelTypes,
+                      placeholder: "Choose a drive wheel",
+                      value: vars.driveWheelType,
+                      makeItem: (final String wheelType) => wheelType,
+                      onChange: (final String newValue) {
+                        setState(() {
+                          vars.driveWheelType = newValue;
+                        });
                       },
-                      decoration: const InputDecoration(
-                        labelText: "Drive Wheel type",
-                      ),
-                      validator: (final String? wheelType) =>
+                      validate: (final String? wheelType) =>
                           wheelType == null || wheelType.isEmpty
                               ? "please enter the robot's wheel type"
                               : null,

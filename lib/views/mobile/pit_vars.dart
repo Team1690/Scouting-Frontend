@@ -7,7 +7,7 @@ class PitVars implements HasuraVars {
   bool? hasShifter;
   bool? gearboxPurchased;
   String notes = "";
-  String driveWheelType = "";
+  String? driveWheelType;
   int? teamId;
   String length = "";
   String width = "";
@@ -22,7 +22,7 @@ class PitVars implements HasuraVars {
         "has_shifter": hasShifter,
         "gearbox_purchased": gearboxPurchased,
         "notes": notes,
-        "drive_wheel_type": driveWheelType,
+        "drive_wheel_type": driveWheelType ?? "",
         "team_id": teamId,
         "width": int.parse(width),
         "length": int.parse(length),
@@ -38,7 +38,7 @@ class PitVars implements HasuraVars {
     hasShifter = null;
     gearboxPurchased = null;
     notes = "";
-    driveWheelType = "";
+    driveWheelType = null;
     teamId = null;
     weight = "";
     width = "";
