@@ -96,11 +96,11 @@ class CompareSpiderChart extends StatelessWidget {
                 features: const <String>[
                   "Endgame Balance%",
                   "Auto Balance%",
-                  "Endgame Balance Score%",
-                  "Auto Balance Score%",
-                  "Cycle Time%",
-                  "Feeder Time%",
-                  "Placing Time%",
+                  "Endgame Balance Score",
+                  "Auto Balance Score",
+                  "Cycle Time",
+                  "Feeder Time",
+                  "Placing Time",
                 ],
               );
             },

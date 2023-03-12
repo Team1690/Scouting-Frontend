@@ -156,7 +156,7 @@ class DashboardClimbLineChart extends StatelessWidget {
               (final LineBarSpot lineBarSpot) => LineTooltipItem(
                 <int, String>{
                       0: "Failed",
-                      -1: "No attempt",
+                      -1: "No Attempt",
                       1: "Unbalanced",
                       2: "Balanced",
                     }[lineBarSpot.y.toInt()] ??
@@ -173,7 +173,7 @@ class DashboardClimbLineChart extends StatelessWidget {
               () {
                 switch (value.toInt()) {
                   case -1:
-                    return "No attempt";
+                    return "No Attempt";
                   case 0:
                     return "Failed";
                   case 1:
