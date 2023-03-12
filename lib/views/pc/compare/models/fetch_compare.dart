@@ -212,11 +212,10 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
               getPlacingTime(locations, robotEvents, context);
           final double avgFeederTime = getFeederTime(locations, context);
           final int autoBalanceSucceded = autoBalanceVals
-                  .where(
-                    (final String element) => element != "No Attempt",
-                  )
-                  .length -
-              autoBalanceFailed;
+              .where(
+                (final String element) => element == "Balanced",
+              )
+              .length;
           final double autoBalanceSuccessPercentage = (autoBalanceSucceded) /
               (autoBalanceSucceded + autoBalanceFailed) *
               100;
@@ -239,11 +238,10 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
               .length;
 
           final int endgameBalanceSucceded = endgameBalanceVals
-                  .where(
-                    (final String element) => element != "No Attempt",
-                  )
-                  .length -
-              endgameBalanceFailed;
+              .where(
+                (final String element) => element == "Balanced",
+              )
+              .length;
           final double endgameBalanceSuccessPercentage =
               (endgameBalanceSucceded) /
                   (endgameBalanceSucceded + endgameBalanceFailed) *
