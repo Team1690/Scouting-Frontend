@@ -109,11 +109,16 @@ Stream<List<PickListTeam>> fetchPicklist(final BuildContext context) {
               team["technical_matches_v3_aggregate"]["aggregate"]["avg"];
           final bool nullValidator = avg["auto_cones_delivered"] == null;
           final List<Cycle> cycles = getCycles(
-              getEvents(team["technical_matches_v3"] as List<dynamic>,
-                  "_2023_technical_events"),
-              getEvents(team["secondary_technicals"] as List<dynamic>,
-                  "_2023_secondary_technical_events"),
-              context);
+            getEvents(
+              team["technical_matches_v3"] as List<dynamic>,
+              "_2023_technical_events",
+            ),
+            getEvents(
+              team["secondary_technicals"] as List<dynamic>,
+              "_2023_secondary_technical_events",
+            ),
+            context,
+          );
           final double avgCycles = nullValidator
               ? double.nan
               : cycles.length /
@@ -126,15 +131,23 @@ Stream<List<PickListTeam>> fetchPicklist(final BuildContext context) {
                   .averageOrNull ??
               double.nan;
           final double avgPlacementTime = getPlacingTime(
-              getEvents(team["secondary_technicals"] as List<dynamic>,
-                  "_2023_secondary_technical_events"),
-              getEvents(team["technical_matches_v3"] as List<dynamic>,
-                  "_2023_technical_events"),
-              context);
+            getEvents(
+              team["secondary_technicals"] as List<dynamic>,
+              "_2023_secondary_technical_events",
+            ),
+            getEvents(
+              team["technical_matches_v3"] as List<dynamic>,
+              "_2023_technical_events",
+            ),
+            context,
+          );
           final double avgFeederTime = getFeederTime(
-              getEvents(team["secondary_technicals"] as List<dynamic>,
-                  "_2023_secondary_technical_events"),
-              context);
+            getEvents(
+              team["secondary_technicals"] as List<dynamic>,
+              "_2023_secondary_technical_events",
+            ),
+            context,
+          );
           final List<int> autoBalance =
               (team["technical_matches_v3_aggregate"]["nodes"] as List<dynamic>)
                   .where(
