@@ -125,6 +125,12 @@ Stream<List<PickListTeam>> fetchPicklist(final BuildContext context) {
                   .toList()
                   .averageOrNull ??
               double.nan;
+          final double avgPlacementTime = getPlacingTime(
+              getEvents(team["secondary_technicals"] as List<dynamic>,
+                  "_2023_secondary_technical_events"),
+              getEvents(team["technical_matches_v3"] as List<dynamic>,
+                  "_2023_technical_events"),
+              context);
           final double avgFeederTime = getFeederTime(
               getEvents(team["secondary_technicals"] as List<dynamic>,
                   "_2023_secondary_technical_events"),
@@ -133,7 +139,8 @@ Stream<List<PickListTeam>> fetchPicklist(final BuildContext context) {
               (team["technical_matches_v3_aggregate"]["nodes"] as List<dynamic>)
                   .where(
                     (final dynamic node) =>
-                        node["auto_balance"]["title"] != "No attempt",
+                        node["auto_balance"] != null &&
+                        node["auto_balance"]["title"] != "No Attempt",
                   )
                   .map<int>(
                     (final dynamic node) =>
@@ -162,7 +169,8 @@ Stream<List<PickListTeam>> fetchPicklist(final BuildContext context) {
                     as List<dynamic>)
                 .where(
                   (final dynamic node) =>
-                      node["auto_balance"]["title"] != "No attempt" &&
+                      node["auto_balance"] != null &&
+                      node["auto_balance"]["title"] != "No Attempt" &&
                       node["auto_balance"]["title"] != "Failed",
                 )
                 .length,
@@ -178,15 +186,17 @@ Stream<List<PickListTeam>> fetchPicklist(final BuildContext context) {
             firstListIndex: team["first_picklist_index"] as int,
             secondListIndex: team["second_picklist_index"] as int,
             taken: team["taken"] as bool,
-            maxBalanceTitle: ((team["new_technical_matches_aggregate"]["nodes"]
+            maxBalanceTitle: ((team["technical_matches_v3_aggregate"]["nodes"]
                         as List<dynamic>)
+                    .where((final dynamic node) => node["auto_balance"] != null)
                     .reduceSafe(
-                  (final dynamic maxNode, final dynamic newNode) =>
-                      (maxNode["auto_balance"]["auto_points"] as int) >
-                              (newNode["auto_balance"]["auto_points"] as int)
-                          ? maxNode
-                          : newNode,
-                )?["auto_balance"]?["title"] as String?) ??
+                      (final dynamic maxNode, final dynamic newNode) =>
+                          (maxNode["auto_balance"]["auto_points"] as int) >
+                                  (newNode["auto_balance"]["auto_points"]
+                                      as int)
+                              ? maxNode
+                              : newNode,
+                    )?["auto_balance"]?["title"] as String?) ??
                 "No data",
             avgAutoBalancePoints: autoBalanceAvg,
             faultMessages: faultMessages.isEmpty ? null : faultMessages,
@@ -201,7 +211,8 @@ Stream<List<PickListTeam>> fetchPicklist(final BuildContext context) {
             },
             avgCycles: avgCycles,
             avgCycleTime: avgCycleTime,
-            avgFeederTime: avgFeederTime,
+            avgFeederTime: avgFeederTime / 1000,
+            avgPlacementTime: avgPlacementTime / 1000,
           );
         }).toList();
         return teams;
