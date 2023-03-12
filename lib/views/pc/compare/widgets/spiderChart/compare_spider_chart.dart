@@ -1,6 +1,4 @@
 import "dart:collection";
-import "dart:math";
-
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";
 import "package:scouting_frontend/views/pc/compare/widgets/spiderChart/radar_chart.dart";
@@ -23,50 +21,68 @@ class CompareSpiderChart extends StatelessWidget {
               final double autoBalanceRatio = 100 /
                   data
                       .map(
-                        (final CompareTeam team) => team.avgAutoBalancePoints,
+                        (final CompareTeam team) =>
+                            team.avgAutoBalancePoints == double.nan
+                                ? 0
+                                : team.avgAutoBalancePoints,
                       )
-                      .where(
-                        (final double avgFeederTime) =>
-                            avgFeederTime != double.nan,
-                      )
-                      .reduce(max);
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
               final double endgameBalanceRatio = 100 /
                   data
                       .map(
                         (final CompareTeam team) =>
-                            team.avgEndgameBalancePoints,
+                            team.avgEndgameBalancePoints == double.nan
+                                ? 0
+                                : team.avgEndgameBalancePoints,
                       )
-                      .where(
-                        (final double avgFeederTime) =>
-                            avgFeederTime != double.nan,
-                      )
-                      .reduce(max);
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
               final double cycleTimeRatio = 100 /
                   data
                       .map(
-                        (final CompareTeam team) => team.avgCycleTime,
+                        (final CompareTeam team) =>
+                            team.avgCycleTime == double.nan
+                                ? 0
+                                : team.avgCycleTime,
                       )
-                      .where(
-                        (final double avgFeederTime) =>
-                            avgFeederTime != double.nan,
-                      )
-                      .reduce(max);
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
               final double feederTimeRatio = 100 /
                   data
                       .map(
-                        (final CompareTeam team) => team.avgFeederTime,
+                        (final CompareTeam team) =>
+                            team.avgFeederTime == double.nan
+                                ? 0
+                                : team.avgFeederTime,
                       )
-                      .where(
-                        (final double avgFeederTime) =>
-                            avgFeederTime != double.nan,
-                      )
-                      .reduce(max);
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
               final double placingTimeRatio = 100 /
                   data
                       .map(
-                        (final CompareTeam team) => team.avgPlacingTime,
+                        (final CompareTeam team) =>
+                            team.avgPlacingTime == double.nan
+                                ? 0
+                                : team.avgPlacingTime,
                       )
-                      .reduce(max);
+                      .fold(
+                        0,
+                        (final num previousValue, final num element) =>
+                            previousValue < element ? element : previousValue,
+                      );
               return SpiderChart(
                 colors: data
                     .map(
