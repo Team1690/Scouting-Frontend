@@ -44,44 +44,50 @@ class CompareSpiderChart extends StatelessWidget {
                         (final num previousValue, final num element) =>
                             previousValue < element ? element : previousValue,
                       );
-              final double cycleTimeRatio = 100 /
+              final double cycleTimeRatio = 100 *
                   data
                       .map(
                         (final CompareTeam team) =>
                             team.avgCycleTime == double.nan
-                                ? 0
+                                ? 1000000
                                 : team.avgCycleTime,
                       )
                       .fold(
-                        0,
-                        (final num previousValue, final num element) =>
-                            previousValue < element ? element : previousValue,
+                        1000000,
+                        (final double previousValue, final num element) =>
+                            previousValue > element
+                                ? element as double
+                                : previousValue,
                       );
-              final double feederTimeRatio = 100 /
+              final double feederTimeRatio = 100 *
                   data
                       .map(
                         (final CompareTeam team) =>
                             team.avgFeederTime == double.nan
-                                ? 0
+                                ? 1000000
                                 : team.avgFeederTime,
                       )
                       .fold(
-                        0,
-                        (final num previousValue, final num element) =>
-                            previousValue < element ? element : previousValue,
+                        1000000,
+                        (final double previousValue, final num element) =>
+                            previousValue > element
+                                ? element as double
+                                : previousValue,
                       );
-              final double placingTimeRatio = 100 /
+              final double placingTimeRatio = 100 *
                   data
                       .map(
                         (final CompareTeam team) =>
                             team.avgPlacingTime == double.nan
-                                ? 0
+                                ? 1000000
                                 : team.avgPlacingTime,
                       )
                       .fold(
-                        0,
-                        (final num previousValue, final num element) =>
-                            previousValue < element ? element : previousValue,
+                        1000000,
+                        (final double previousValue, final num element) =>
+                            previousValue > element
+                                ? element as double
+                                : previousValue,
                       );
               return SpiderChart(
                 colors: data
@@ -97,9 +103,9 @@ class CompareSpiderChart extends StatelessWidget {
                         team.autoBalanceSuccessPercentage,
                         team.avgEndgameBalancePoints * endgameBalanceRatio,
                         team.avgAutoBalancePoints * autoBalanceRatio,
-                        team.avgCycleTime * cycleTimeRatio,
-                        team.avgFeederTime * feederTimeRatio,
-                        team.avgPlacingTime * placingTimeRatio,
+                        cycleTimeRatio / team.avgCycleTime,
+                        feederTimeRatio / team.avgFeederTime,
+                        placingTimeRatio / team.avgPlacingTime,
                       ]
                           .map<int>(
                             (final double e) =>
