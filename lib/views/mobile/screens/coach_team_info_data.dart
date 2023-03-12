@@ -1,9 +1,10 @@
+// ignore_for_file: require_trailing_commas
+
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
-import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/pc/team_info/models/fetch_team_info.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/balance_line_chart.dart";
@@ -71,8 +72,11 @@ class CoachTeamData extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: CoachAutoData(
-                            data.autoData,
+                          child: DashboardCard(
+                            title: "Auto Data",
+                            body: CoachAutoData(
+                              data.autoData,
+                            ),
                           ),
                         ),
                         Padding(
@@ -187,9 +191,8 @@ class CoachQuickData extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => data.amoutOfMatches == 0
       ? const Center(child: Text("No data :("))
-      : Column(
+      : ListView(
           children: <Widget>[
-            const Spacer(),
             Row(
               children: <Expanded>[
                 Expanded(
@@ -313,9 +316,6 @@ class CoachQuickData extends StatelessWidget {
                 ),
               ],
             ),
-            const Spacer(
-              flex: 2,
-            )
           ],
         );
 }
@@ -325,79 +325,95 @@ class CoachAutoData extends StatelessWidget {
   final AutoData data;
 
   @override
-  Widget build(final BuildContext context) => DashboardCard(
-        title: "Auto Data",
-        body: SingleChildScrollView(
-          primary: false,
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const Spacer(),
-              data.nearFeederData.amoutOfMatches == 0
-                  ? const Center(child: Text("No near feeder data"))
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SectionDivider(label: "Near Feeder"),
-                        Text(
-                          "Amount Of Matches: ${data.nearFeederData.amoutOfMatches}",
-                        ),
-                        Text(
-                          "Avg Gamepieces Intaked: ${data.nearFeederData.avgAutoIntaked.toStringAsFixed(2)}",
-                        ),
-                        Text(
-                          "Avg Scored: ${data.nearFeederData.avgAutoScored.toStringAsFixed(2)}",
-                        ),
-                        Text(
-                          "Matches Balanced: ${data.nearFeederData.matchesBalancedAuto}",
-                        ),
-                        Text(
-                          "Highest Balance: ${data.nearFeederData.highestBalanceTitleAuto}",
-                        ),
-                        Text(
-                          "Avg Times Left Feeder: ${data.nearFeederData.avgMobility.toStringAsFixed(2)}",
-                        ),
-                      ],
+  Widget build(final BuildContext context) => ListView(
+        children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              textAlign: TextAlign.center,
+              "Near Feeder",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          data.nearFeederData.amoutOfMatches == 0
+              ? const Center(child: Text("No near feeder data"))
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Avg Gamepieces Intaked: ${data.nearFeederData.avgAutoIntaked.toStringAsFixed(2)}",
                     ),
-              const Spacer(),
-              data.middleData.amoutOfMatches == 0
-                  ? const Center(child: Text("No middle data"))
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SectionDivider(label: "Middle"),
-                        Text(
-                          "Amount Of Matches: ${data.middleData.amoutOfMatches}",
-                        ),
-                        Text(
-                          "Avg Gamepieces Intaked: ${data.middleData.avgAutoIntaked.toStringAsFixed(2)}",
-                        ),
-                        Text(
-                          "Avg Scored: ${data.middleData.avgAutoScored.toStringAsFixed(2)}",
-                        ),
-                        Text(
-                          "Matches Balanced: ${data.middleData.matchesBalancedAuto}",
-                        ),
-                        Text(
-                          "Highest Balance: ${data.middleData.highestBalanceTitleAuto}",
-                        ),
-                        Text(
-                          "Avg Times Left Feeder: ${data.middleData.avgMobility.toStringAsFixed(2)}",
-                        ),
-                      ],
+                    Text(
+                      "Avg Scored: ${data.nearFeederData.avgAutoScored.toStringAsFixed(2)}",
                     ),
-              const Spacer(),
-              data.dataNearGate.amoutOfMatches == 0
-                  ? const Center(child: Text("No near gate data"))
-                  : Column(
+                    Text(
+                      "Avg Times Left Community: ${data.nearFeederData.avgMobility.toStringAsFixed(2)}",
+                    ),
+                    Text(
+                      "Highest Balance: ${data.nearFeederData.highestBalanceTitleAuto}",
+                    ),
+                    Text(
+                      "Matches Balanced: ${data.nearFeederData.matchesBalancedAuto}",
+                    ),
+                    Text(
+                      "Amount Of Matches: ${data.nearFeederData.amoutOfMatches}",
+                    ),
+                  ],
+                ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              textAlign: TextAlign.center,
+              "Middle",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          data.middleData.amoutOfMatches == 0
+              ? const Center(child: Text("No middle data"))
+              : Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Avg Gamepieces Intaked: ${data.middleData.avgAutoIntaked.toStringAsFixed(2)}",
+                      ),
+                      Text(
+                        "Avg Scored: ${data.middleData.avgAutoScored.toStringAsFixed(2)}",
+                      ),
+                      Text(
+                        "Avg Times Left Community: ${data.middleData.avgMobility.toStringAsFixed(2)}",
+                      ),
+                      Text(
+                        "Highest Balance: ${data.middleData.highestBalanceTitleAuto}",
+                      ),
+                      Text(
+                        "Matches Balanced: ${data.middleData.matchesBalancedAuto}",
+                      ),
+                      Text(
+                        "Amount Of Matches: ${data.middleData.amoutOfMatches}",
+                      ),
+                    ],
+                  ),
+                ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              textAlign: TextAlign.center,
+              "Near Gate",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          data.dataNearGate.amoutOfMatches == 0
+              ? const Center(child: Text("No near gate data"))
+              : Expanded(
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        SectionDivider(label: "Near Gate"),
-                        Text(
-                          "Amount Of Matches: ${data.dataNearGate.amoutOfMatches}",
-                        ),
                         Text(
                           "Avg Gamepieces Intaked: ${data.dataNearGate.avgAutoIntaked.toStringAsFixed(2)}",
                         ),
@@ -405,18 +421,19 @@ class CoachAutoData extends StatelessWidget {
                           "Avg Scored: ${data.dataNearGate.avgAutoScored.toStringAsFixed(2)}",
                         ),
                         Text(
-                          "Matches Balanced: ${data.dataNearGate.matchesBalancedAuto}",
+                          "Avg Times Left Community: ${data.dataNearGate.avgMobility.toStringAsFixed(2)}",
                         ),
                         Text(
                           "Highest Balance: ${data.dataNearGate.highestBalanceTitleAuto}",
                         ),
                         Text(
-                          "Avg Times Left Feeder: ${data.dataNearGate.avgMobility.toStringAsFixed(2)}",
+                          "Matches Balanced: ${data.dataNearGate.matchesBalancedAuto}",
                         ),
-                      ],
-                    ),
-            ],
-          ),
-        ),
+                        Text(
+                          "Amount Of Matches: ${data.dataNearGate.amoutOfMatches}",
+                        ),
+                      ]),
+                )
+        ],
       );
 }
