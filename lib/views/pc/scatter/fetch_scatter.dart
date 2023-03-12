@@ -1,6 +1,6 @@
 import "package:collection/collection.dart";
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/match_model.dart";
+import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/scatter/scatter.dart";
@@ -12,37 +12,37 @@ query Scatter {
     number
     id
     name
-    new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+    technical_matches_v3_aggregate(where: {ignored: {_eq: false}}) {
     aggregate {
       avg {
-        auto_cones_low
-        auto_cones_mid
-        auto_cones_top
-        auto_cubes_low
-        auto_cubes_mid
-        auto_cubes_top
-        tele_cones_low
-        tele_cones_mid
-        tele_cones_top
-        tele_cubes_low
-        tele_cubes_mid
-        tele_cubes_top
+        auto_cones_delivered
+        auto_cones_failed
+        auto_cones_scored
+        auto_cubes_delivered
+        auto_cubes_failed
+        auto_cubes_scored
+        tele_cones_delivered
+        tele_cones_failed
+        tele_cones_scored
+        tele_cubes_delivered
+        tele_cubes_failed
+        tele_cubes_scored
       }
     }
   }
-    new_technical_matches(where: {ignored: {_eq: false}}) {
-    auto_cones_low
-    auto_cones_mid
-    auto_cones_top
-    auto_cubes_low
-    auto_cubes_mid
-    auto_cubes_top
-    tele_cones_low
-    tele_cones_mid
-    tele_cones_top
-    tele_cubes_low
-    tele_cubes_mid
-    tele_cubes_top
+    technical_matches_v3(where: {ignored: {_eq: false}}) {
+    auto_cones_delivered
+    auto_cones_failed
+    auto_cones_scored
+    auto_cubes_delivered
+    auto_cubes_failed
+    auto_cubes_scored
+    tele_cones_delivered
+    tele_cones_failed
+    tele_cones_scored
+    tele_cubes_delivered
+    tele_cubes_failed
+    tele_cubes_scored
   }
   }
 }
@@ -63,26 +63,26 @@ Future<List<ScatterData>> fetchScatterData() async {
                   scatterTeam["colors_index"] as int,
                 );
                 final dynamic avg =
-                    scatterTeam["new_technical_matches_aggregate"]["aggregate"]
+                    scatterTeam["technical_matches_v3_aggregate"]["aggregate"]
                         ["avg"];
                 final List<dynamic> matches =
-                    scatterTeam["new_technical_matches"] as List<dynamic>;
-                if (avg["auto_cones_top"] == null) {
+                    scatterTeam["technical_matches_v3"] as List<dynamic>;
+                if (avg["auto_cones_scored"] == null) {
                   //if one of these is null, the team's match data doesnt exist so we return null
                   return null;
                 }
-                final double avgPoints = getPoints(parseMatch(avg));
-                final Iterable<double> matchesGamepiecePoints = matches
-                    .map((final dynamic match) => getPoints(parseMatch(match)));
-                final double yStddevGamepiecePoints = matchesGamepiecePoints
+                final double avgGamepieces = getPieces(parseMatch(avg));
+                final Iterable<double> matchesGamepieces = matches
+                    .map((final dynamic match) => getPieces(parseMatch(match)));
+                final double yStddevGamepieces = matchesGamepieces
                     .map(
-                      (final double matchPoints) =>
-                          (matchPoints - avgPoints).abs(),
+                      (final double matchGamepieces) =>
+                          (matchGamepieces - avgGamepieces).abs(),
                     )
                     .average;
                 return ScatterData(
-                  avgPoints,
-                  yStddevGamepiecePoints,
+                  avgGamepieces,
+                  yStddevGamepieces,
                   team,
                 );
               })

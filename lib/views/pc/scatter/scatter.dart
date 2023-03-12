@@ -48,8 +48,8 @@ class Scatter extends StatelessWidget {
                             scatterSpots: report
                                 .map(
                                   (final ScatterData e) => ScatterSpot(
-                                    e.gamepiecePointsAvg,
-                                    e.yGamepiecePointsStddev,
+                                    e.gamepiecesAvg,
+                                    e.yGamepiecesStddev,
                                     color: e.team.color,
                                   ),
                                 )
@@ -91,7 +91,7 @@ class Scatter extends StatelessWidget {
                               bottomTitles: AxisTitles(
                                 axisNameSize: 26,
                                 axisNameWidget: const Text(
-                                  "Average gamepiece points",
+                                  "Average gamepieces",
                                 ),
                                 sideTitles: SideTitles(
                                   getTitlesWidget: (
@@ -106,7 +106,7 @@ class Scatter extends StatelessWidget {
                               leftTitles: AxisTitles(
                                 axisNameSize: 26,
                                 axisNameWidget: const Text(
-                                  "Gamepiece points standard deviation",
+                                  "Gamepieces standard deviation",
                                 ),
                                 sideTitles: SideTitles(
                                   getTitlesWidget: (
@@ -142,14 +142,12 @@ class Scatter extends StatelessWidget {
                             minY: 0,
                             maxX: report
                                 .map(
-                                  (final ScatterData e) =>
-                                      (e.gamepiecePointsAvg),
+                                  (final ScatterData e) => (e.gamepiecesAvg),
                                 )
                                 .reduce(max),
                             maxY: report
                                 .map(
-                                  (final ScatterData e) =>
-                                      e.yGamepiecePointsStddev,
+                                  (final ScatterData e) => e.yGamepiecesStddev,
                                 )
                                 .fold<double>(25.0, max),
                           ),
@@ -168,11 +166,11 @@ class Scatter extends StatelessWidget {
 
 class ScatterData {
   const ScatterData(
-    this.gamepiecePointsAvg,
-    this.yGamepiecePointsStddev,
+    this.gamepiecesAvg,
+    this.yGamepiecesStddev,
     this.team,
   );
   final LightTeam team;
-  final double gamepiecePointsAvg;
-  final double yGamepiecePointsStddev;
+  final double gamepiecesAvg;
+  final double yGamepiecesStddev;
 }
