@@ -760,27 +760,24 @@ Future<Team> fetchTeamInfo(
                       )
                       .length /
                   scheduleMatchesIdByPos.length,
-              avgMobility:
-                  getEvents(secondaries, "_2023_secondary_technical_events")
-                          .where(
-                            (final MatchEvent location) =>
-                                scheduleMatchesIdByPos
-                                    .contains(location.matchId) &&
-                                location.timestamp < 18000,
-                          )
-                          .where(
-                            (final MatchEvent element) =>
-                                element.eventTypeId ==
-                                    IdProvider.of(context)
-                                        .robotActionIds
-                                        .nameToId["Intaked Cone"] ||
-                                element.eventTypeId ==
-                                    IdProvider.of(context)
-                                        .robotActionIds
-                                        .nameToId["Intaked Cube"],
-                          )
-                          .length /
-                      scheduleMatchesIdByPos.length,
+              avgMobility: getEvents(
+                    secondaries,
+                    "_2023_secondary_technical_events",
+                  )
+                      .where(
+                        (final MatchEvent location) =>
+                            scheduleMatchesIdByPos.contains(location.matchId) &&
+                            location.timestamp < 18000,
+                      )
+                      .where(
+                        (final MatchEvent element) =>
+                            element.eventTypeId ==
+                            IdProvider.of(context)
+                                .locationIds
+                                .nameToId["Entered Open Field"],
+                      )
+                      .length /
+                  scheduleMatchesIdByPos.length,
             );
         final LineChartData placementTimeData = LineChartData(
           points: <List<int>>[
