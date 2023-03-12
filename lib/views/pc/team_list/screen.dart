@@ -1,9 +1,10 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/average_or_null.dart";
+import "package:scouting_frontend/models/cycle_model.dart";
 import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
-import "package:scouting_frontend/models/match_model.dart";
+import "package:scouting_frontend/models/technical_match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
@@ -19,7 +20,7 @@ class TeamList extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.all(defaultPadding),
           child: StreamBuilder<List<_Team>>(
-            stream: _fetchTeamList(),
+            stream: _fetchTeamList(context),
             builder: (
               final BuildContext context,
               final AsyncSnapshot<List<_Team>> snapshot,
@@ -99,9 +100,20 @@ class TeamList extends StatelessWidget {
                                     (final _Team team) => team.gamepieceAvg,
                                   ),
                                   column(
-                                    "Gamepiece points",
-                                    (final _Team team) =>
-                                        team.gamepiecePointAvg,
+                                    "Cycles",
+                                    (final _Team team) => team.avgCycles,
+                                  ),
+                                  column(
+                                    "Cycle Time",
+                                    (final _Team team) => team.avgCycleTime,
+                                  ),
+                                  column(
+                                    "Placement Time",
+                                    (final _Team team) => team.avgPlacementTime,
+                                  ),
+                                  column(
+                                    "Feeder Time",
+                                    (final _Team team) => team.avgFeederTime,
                                   ),
                                   column(
                                     "Auto balance points",
@@ -160,7 +172,10 @@ class TeamList extends StatelessWidget {
                                           team.autoGamepieceAvg,
                                           team.teleGamepieceAvg,
                                           team.gamepieceAvg,
-                                          team.gamepiecePointAvg,
+                                          team.avgCycles,
+                                          team.avgCycleTime,
+                                          team.avgPlacementTime,
+                                          team.avgFeederTime,
                                         ].map(show),
                                         DataCell(
                                           Text(
@@ -213,25 +228,31 @@ class _Team {
     required this.team,
     required this.autoBalancePointsAvg,
     required this.endgameBalancePointsAvg,
-    required this.gamepiecePointAvg,
     required this.brokenMatches,
     required this.amountOfMatches,
     required this.matchesBalanced,
+    required this.avgCycles,
+    required this.avgCycleTime,
+    required this.avgPlacementTime,
+    required this.avgFeederTime,
   });
   final double autoGamepieceAvg;
   final double teleGamepieceAvg;
   final double gamepieceAvg;
   final LightTeam team;
-  final double gamepiecePointAvg;
   final double autoBalancePointsAvg;
   final double endgameBalancePointsAvg;
   final double autoBalancePercentage;
   final int brokenMatches;
   final int amountOfMatches;
   final int matchesBalanced;
+  final double avgCycles;
+  final double avgCycleTime;
+  final double avgPlacementTime;
+  final double avgFeederTime;
 }
 
-Stream<List<_Team>> _fetchTeamList() => getClient()
+Stream<List<_Team>> _fetchTeamList(final BuildContext context) => getClient()
     .subscribe(
       SubscriptionOptions<List<_Team>>(
         document: gql(query),
@@ -239,11 +260,12 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
           final List<dynamic> teams = data["team"] as List<dynamic>;
           return teams.map<_Team>((final dynamic team) {
             final List<int> autoBalancePoints =
-                (team["new_technical_matches_aggregate"]["nodes"]
+                (team["technical_matches_v3_aggregate"]["nodes"]
                         as List<dynamic>)
                     .where(
                       (final dynamic node) =>
-                          node["auto_balance"]["title"] != "No attempt",
+                          node["auto_balance"] != null &&
+                          node["auto_balance"]["title"] != "No Attempt",
                     )
                     .map(
                       (final dynamic node) =>
@@ -251,11 +273,12 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                     )
                     .toList();
             final List<int> endgameBalancePoints =
-                (team["new_technical_matches_aggregate"]["nodes"]
+                (team["technical_matches_v3_aggregate"]["nodes"]
                         as List<dynamic>)
                     .where(
                       (final dynamic node) =>
-                          node["endgame_balance"]["title"] != "No attempt",
+                          node["endgame_balance"] != null &&
+                          node["endgame_balance"]["title"] != "No Attempt",
                     )
                     .map(
                       (final dynamic node) =>
@@ -263,7 +286,7 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                     )
                     .toList();
             final List<RobotMatchStatus> robotMatchStatuses =
-                (team["new_technical_matches_aggregate"]["nodes"]
+                (team["technical_matches_v3_aggregate"]["nodes"]
                         as List<dynamic>)
                     .map(
                       (final dynamic node) => titleToEnum(
@@ -272,13 +295,16 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                     )
                     .toList();
             final List<String> autoBalance =
-                (team["new_technical_matches_aggregate"]["nodes"]
+                (team["technical_matches_v3_aggregate"]["nodes"]
                         as List<dynamic>)
+                    .where(
+                      (final dynamic node) => node["auto_balance"] != null,
+                    )
                     .map(
                       (final dynamic node) =>
                           node["auto_balance"]["title"] as String,
                     )
-                    .where((final String title) => title != "No attempt")
+                    .where((final String title) => title != "No Attempt")
                     .toList();
             final double autoBalancePercentage = (autoBalance
                         .where(
@@ -288,11 +314,20 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                     autoBalance.length) *
                 100;
             final dynamic avg =
-                team["new_technical_matches_aggregate"]["aggregate"]["avg"];
-            final double gamepiecePointsAvg = avg["auto_cones_top"] == null
-                ? double.nan
-                : getPoints(parseMatch(avg));
-            final double autoGamepieceAvg = avg["auto_cones_top"] == null
+                team["technical_matches_v3_aggregate"]["aggregate"]["avg"];
+            final List<dynamic> matches =
+                (team["technical_matches_v3"] as List<dynamic>);
+            final List<dynamic> secondaries =
+                team["secondary_technicals"] as List<dynamic>;
+            final List<Cycle> cycles = getCycles(
+              getEvents(matches, "_2023_technical_events"),
+              getEvents(
+                secondaries,
+                "_2023_secondary_technical_events",
+              ),
+              context,
+            );
+            final double autoGamepieceAvg = avg["auto_cones_scored"] == null
                 ? double.nan
                 : getPieces(
                     parseByMode(
@@ -300,7 +335,7 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                       avg,
                     ),
                   );
-            final double teleGamepieceAvg = avg["auto_cones_top"] == null
+            final double teleGamepieceAvg = avg["auto_cones_scored"] == null
                 ? double.nan
                 : getPieces(
                     parseByMode(
@@ -308,7 +343,7 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                       avg,
                     ),
                   );
-            final double gamepieceSum = avg["auto_cones_top"] == null
+            final double gamepieceSum = avg["auto_cones_scored"] == null
                 ? double.nan
                 : getPieces(parseMatch(avg));
             final double autoBalancePointAvg =
@@ -317,18 +352,21 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                 endgameBalancePoints.averageOrNull ?? double.nan;
             endgameBalancePoints.averageOrNull ?? double.nan;
             return _Team(
-              amountOfMatches: (team["new_technical_matches_aggregate"]["nodes"]
+              amountOfMatches: (team["technical_matches_v3_aggregate"]["nodes"]
                       as List<dynamic>)
                   .length,
-              matchesBalanced: (team["new_technical_matches_aggregate"]["nodes"]
+              matchesBalanced: (team["technical_matches_v3_aggregate"]["nodes"]
                       as List<dynamic>)
+                  .where(
+                    (final dynamic node) => node["auto_balance"] != null,
+                  )
                   .map(
                     (final dynamic node) =>
                         node["auto_balance"]["title"] as String,
                   )
                   .where(
                     (final String title) =>
-                        title != "No attempt" && title != "Failed",
+                        title != "No Attempt" && title != "Failed",
                   )
                   .length,
               autoBalancePercentage: autoBalancePercentage,
@@ -341,7 +379,41 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
               autoGamepieceAvg: autoGamepieceAvg,
               teleGamepieceAvg: teleGamepieceAvg,
               gamepieceAvg: gamepieceSum,
-              gamepiecePointAvg: gamepiecePointsAvg,
+              avgCycles: avg["auto_cones_scored"] == null
+                  ? double.nan
+                  : cycles.length /
+                      (team["technical_matches_v3_aggregate"]["nodes"]
+                              as List<dynamic>)
+                          .length,
+              avgCycleTime: avg["auto_cones_scored"] == null
+                  ? double.nan
+                  : (cycles
+                              .map((final Cycle cycle) => cycle.getLength())
+                              .toList()
+                              .averageOrNull ??
+                          double.nan) /
+                      1000,
+              avgPlacementTime: avg["auto_cones_scored"] == null
+                  ? double.nan
+                  : getPlacingTime(
+                        getEvents(
+                          secondaries,
+                          "_2023_secondary_technical_events",
+                        ),
+                        getEvents(matches, "_2023_technical_events"),
+                        context,
+                      ) /
+                      1000,
+              avgFeederTime: avg["auto_cones_scored"] == null
+                  ? double.nan
+                  : getFeederTime(
+                        getEvents(
+                          secondaries,
+                          "_2023_secondary_technical_events",
+                        ),
+                        context,
+                      ) /
+                      1000,
               team: LightTeam.fromJson(team),
               autoBalancePointsAvg: autoBalancePointAvg,
               endgameBalancePointsAvg: endgameBalancePointAvg,
@@ -361,21 +433,78 @@ subscription MySubscription {
     name
     number
     colors_index
-    new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+    secondary_technicals {
+      _2023_secondary_technical_events(order_by: {match_id: asc, timestamp: asc}) {
+        event_type_id
+        match_id
+        timestamp
+      }
+      robot_match_status_id
+      schedule_match_id
+      scouter_name
+      starting_position_id
+      team_id
+      id
+    }
+    technical_matches_v3(
+      where: {ignored: {_eq: false}}
+      order_by: [{match: {match_type: {order: asc}}}, {match: {match_number: asc}}, {is_rematch: asc}]
+    ) {
+      auto_cones_delivered
+      auto_cones_failed
+      auto_cones_scored
+      auto_cubes_delivered
+      auto_cubes_failed
+      auto_cubes_scored
+      tele_cones_delivered
+      tele_cones_failed
+      tele_cubes_delivered
+      tele_cones_scored
+      tele_cubes_failed
+      tele_cubes_scored
+      schedule_match_id
+      scouter_name
+      is_rematch
+      match {
+        match_type {
+          title
+        }
+      }
+      robot_match_status {
+        title
+      }
+      auto_balance {
+        title
+        auto_points
+      }
+      endgame_balance {
+        title
+        endgame_points
+      }
+      match {
+        match_number
+      }
+      _2023_technical_events(order_by: {match_id: asc, timestamp: asc}) {
+        match_id
+        timestamp
+        event_type_id
+      }
+    }
+    technical_matches_v3_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
-          auto_cones_low
-          auto_cones_mid
-          auto_cones_top
-          auto_cubes_low
-          auto_cubes_mid
-          auto_cubes_top
-          tele_cones_low
-          tele_cones_mid
-          tele_cones_top
-          tele_cubes_low
-          tele_cubes_mid
-          tele_cubes_top
+          auto_cones_delivered
+          auto_cones_failed
+          auto_cones_scored
+          auto_cubes_delivered
+          auto_cubes_failed
+          auto_cubes_scored
+          tele_cones_delivered
+          tele_cones_failed
+          tele_cones_scored
+          tele_cubes_delivered
+          tele_cubes_failed
+          tele_cubes_scored
         }
       }
       nodes {
