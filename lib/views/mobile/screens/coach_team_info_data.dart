@@ -325,92 +325,109 @@ class CoachAutoData extends StatelessWidget {
   final AutoData data;
 
   @override
-  Widget build(final BuildContext context) => ListView(
-        children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              textAlign: TextAlign.center,
-              "Near Feeder",
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          data.nearFeederData.amoutOfMatches == 0
-              ? const Center(child: Text("No near feeder data"))
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Avg Gamepieces Intaked: ${data.nearFeederData.avgAutoIntaked.toStringAsFixed(2)}",
-                    ),
-                    Text(
-                      "Avg Scored: ${data.nearFeederData.avgAutoScored.toStringAsFixed(2)}",
-                    ),
-                    Text(
-                      "Avg Times Left Community: ${data.nearFeederData.avgMobility.toStringAsFixed(2)}",
-                    ),
-                    Text(
-                      "Highest Balance: ${data.nearFeederData.highestBalanceTitleAuto}",
-                    ),
-                    Text(
-                      "Matches Balanced: ${data.nearFeederData.matchesBalancedAuto}",
-                    ),
-                    Text(
-                      "Amount Of Matches: ${data.nearFeederData.amoutOfMatches}",
-                    ),
-                  ],
+  Widget build(final BuildContext context) => CarouselWithIndicator(
+        direction: Axis.vertical,
+        enableInfininteScroll: true,
+        initialPage: 0,
+        widgets: <Widget>[
+          Column(
+            children: <Widget>[
+              const SizedBox(
+                height: 15,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  "Near Feeder",
+                  style: TextStyle(fontSize: 18),
                 ),
-          const Spacer(),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              textAlign: TextAlign.center,
-              "Middle",
-              style: TextStyle(fontSize: 18),
-            ),
+              ),
+              data.nearFeederData.amoutOfMatches == 0
+                  ? const Center(child: Text("No near feeder data"))
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Avg Gamepieces Intaked: ${data.nearFeederData.avgAutoIntaked.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Scored: ${data.nearFeederData.avgAutoScored.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Times Left Community: ${data.nearFeederData.avgMobility.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Highest Balance: ${data.nearFeederData.highestBalanceTitleAuto}",
+                        ),
+                        Text(
+                          "Matches Balanced: ${data.nearFeederData.matchesBalancedAuto}",
+                        ),
+                        Text(
+                          "Amount Of Matches: ${data.nearFeederData.amoutOfMatches}",
+                        ),
+                      ],
+                    ),
+            ],
           ),
-          data.middleData.amoutOfMatches == 0
-              ? const Center(child: Text("No middle data"))
-              : Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Avg Gamepieces Intaked: ${data.middleData.avgAutoIntaked.toStringAsFixed(2)}",
-                      ),
-                      Text(
-                        "Avg Scored: ${data.middleData.avgAutoScored.toStringAsFixed(2)}",
-                      ),
-                      Text(
-                        "Avg Times Left Community: ${data.middleData.avgMobility.toStringAsFixed(2)}",
-                      ),
-                      Text(
-                        "Highest Balance: ${data.middleData.highestBalanceTitleAuto}",
-                      ),
-                      Text(
-                        "Matches Balanced: ${data.middleData.matchesBalancedAuto}",
-                      ),
-                      Text(
-                        "Amount Of Matches: ${data.middleData.amoutOfMatches}",
-                      ),
-                    ],
-                  ),
+          Column(
+            children: <Widget>[
+              const SizedBox(
+                height: 15,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  "Middle",
+                  style: TextStyle(fontSize: 18),
                 ),
-          const Spacer(),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              textAlign: TextAlign.center,
-              "Near Gate",
-              style: TextStyle(fontSize: 18),
-            ),
+              ),
+              data.middleData.amoutOfMatches == 0
+                  ? const Center(child: Text("No middle data"))
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Avg Gamepieces Intaked: ${data.middleData.avgAutoIntaked.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Scored: ${data.middleData.avgAutoScored.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Times Left Community: ${data.middleData.avgMobility.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Highest Balance: ${data.middleData.highestBalanceTitleAuto}",
+                        ),
+                        Text(
+                          "Matches Balanced: ${data.middleData.matchesBalancedAuto}",
+                        ),
+                        Text(
+                          "Amount Of Matches: ${data.middleData.amoutOfMatches}",
+                        ),
+                      ],
+                    ),
+            ],
           ),
-          data.dataNearGate.amoutOfMatches == 0
-              ? const Center(child: Text("No near gate data"))
-              : Expanded(
-                  child: Column(
+          Column(
+            children: <Widget>[
+              const SizedBox(
+                height: 15,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  "Near Gate",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              data.dataNearGate.amoutOfMatches == 0
+                  ? const Center(child: Text("No near gate data"))
+                  : Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -432,8 +449,10 @@ class CoachAutoData extends StatelessWidget {
                         Text(
                           "Amount Of Matches: ${data.dataNearGate.amoutOfMatches}",
                         ),
-                      ]),
-                )
+                      ],
+                    ),
+            ],
+          ),
         ],
       );
 }
