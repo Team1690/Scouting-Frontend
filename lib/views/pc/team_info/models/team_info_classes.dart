@@ -114,26 +114,27 @@ class SpecificMatch {
   final String? placement;
   final String? defense;
   final String? generalNotes;
+  bool nullCheck(final String? val) => val == null || val.isEmpty;
 
   bool isNull(final String val) {
     switch (val) {
-      case "DriveTrain And Driving":
-        return drivetrainAndDriving == null;
+      case "Drivetrain And Driving":
+        return nullCheck(drivetrainAndDriving);
       case "Intake":
-        return intake == null;
+        return nullCheck(intake);
       case "Placement":
-        return placement == null;
+        return nullCheck(placement);
       case "Defense":
-        return defense == null;
+        return nullCheck(defense);
       case "General Notes":
-        return generalNotes == null;
+        return nullCheck(generalNotes);
       case "All":
       default:
-        return (drivetrainAndDriving == null &&
-                intake == null &&
-                placement == null &&
-                defense == null &&
-                generalNotes == null)
+        return (nullCheck(drivetrainAndDriving) &&
+                nullCheck(intake) &&
+                nullCheck(placement) &&
+                nullCheck(defense) &&
+                nullCheck(generalNotes))
             ? true
             : false;
     }

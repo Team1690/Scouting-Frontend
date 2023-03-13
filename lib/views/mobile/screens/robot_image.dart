@@ -74,7 +74,7 @@ Stream<QueryResult<Widget>> fetchRobotImageUrl(final int teamId) =>
         variables: <String, dynamic>{"id": teamId},
         parserFn: (final Map<String, dynamic> p0) {
           final Map<String, dynamic>? pit =
-              p0["team_by_pk"]["pit"] as Map<String, dynamic>?;
+              p0["team_by_pk"]["_2023_pit"] as Map<String, dynamic>?;
           return pit.mapNullable(
                 (final Map<String, dynamic> p0) => Center(
                   child: CachedNetworkImage(
@@ -94,7 +94,7 @@ Stream<QueryResult<Widget>> fetchRobotImageUrl(final int teamId) =>
           r"""
 query RobotImage($id: Int!) {
   team_by_pk(id: $id) {
-    pit {
+    _2023_pit {
       url
     }
   }
