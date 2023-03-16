@@ -204,6 +204,11 @@ class CoachQuickData extends StatelessWidget {
                         data.avgAutoCubesLow,
                       ),
                       gamepieceRow(
+                        "Delivered",
+                        data.avgAutoConesDelivered,
+                        data.avgAutoCubesDelivered,
+                      ),
+                      gamepieceRow(
                         "Failed",
                         data.avgAutoConesFailed,
                         data.avgAutoCubesFailed,
@@ -216,12 +221,15 @@ class CoachQuickData extends StatelessWidget {
                         ),
                       ),
                       Text(
+                        textAlign: TextAlign.center,
                         "Gamepieces: ${data.avgGamepiecePoints.toStringAsFixed(1)}",
                       ),
                       Text(
+                        textAlign: TextAlign.center,
                         "Auto Balance: ${data.avgAutoBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedAuto}/${data.amoutOfMatches}",
                       ),
                       Text(
+                        textAlign: TextAlign.center,
                         "Endgame Balance: ${data.avgEndgameBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedEndgame}/${data.amoutOfMatches}",
                       ),
                       const Padding(
@@ -231,8 +239,14 @@ class CoachQuickData extends StatelessWidget {
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
-                      Text("First: ${data.firstPicklistIndex + 1}"),
-                      Text("Second: ${data.secondPicklistIndex + 1}"),
+                      Text(
+                        textAlign: TextAlign.center,
+                        "First: ${data.firstPicklistIndex + 1}",
+                      ),
+                      Text(
+                        textAlign: TextAlign.center,
+                        "Second: ${data.secondPicklistIndex + 1}",
+                      ),
                     ],
                   ),
                 ),
@@ -262,6 +276,11 @@ class CoachQuickData extends StatelessWidget {
                         data.avgTeleCubesLow,
                       ),
                       gamepieceRow(
+                        "Delivered",
+                        data.avgTeleConesDelivered,
+                        data.avgTeleCubesDelivered,
+                      ),
+                      gamepieceRow(
                         "Failed",
                         data.avgTeleConesFailed,
                         data.avgTeleCubesFailed,
@@ -274,9 +293,11 @@ class CoachQuickData extends StatelessWidget {
                         ),
                       ),
                       Text(
+                        textAlign: TextAlign.center,
                         "Auto: ${data.avgAutoGamepieces.toStringAsFixed(1)}/${(data.avgAutoGamepieces + data.avgAutoConesFailed + data.avgAutoCubesFailed).toStringAsFixed(1)}",
                       ),
                       Text(
+                        textAlign: TextAlign.center,
                         "Teleop: ${data.avgTeleGamepieces.toStringAsFixed(1)}/${(data.avgTeleGamepieces + data.avgTeleConesFailed + data.avgTeleCubesFailed).toStringAsFixed(1)}",
                       ),
                       const Text(
@@ -284,9 +305,15 @@ class CoachQuickData extends StatelessWidget {
                         style: TextStyle(fontSize: 18),
                       ),
                       Text(
-                        "Gamepiece sum: ${data.avgGamepieces.toStringAsFixed(1)}",
+                        textAlign: TextAlign.center,
+                        "Gamepieces Scored: ${data.avgGamepieces.toStringAsFixed(1)}",
                       ),
                       Text(
+                        textAlign: TextAlign.center,
+                        "Gamepieces Delivered: ${data.avgDelivered.toStringAsFixed(1)}",
+                      ),
+                      Text(
+                        textAlign: TextAlign.center,
                         "Best Auto Balance: ${data.highestBalanceTitleAuto}",
                       ),
                     ],
