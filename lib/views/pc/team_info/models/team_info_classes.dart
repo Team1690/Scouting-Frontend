@@ -7,18 +7,22 @@ class QuickData {
     required this.avgAutoConesTop,
     required this.avgAutoConesMid,
     required this.avgAutoConesLow,
+    required this.avgAutoConesDelivered,
     required this.avgAutoConesFailed,
     required this.avgTeleConesTop,
     required this.avgTeleConesMid,
     required this.avgTeleConesLow,
+    required this.avgTeleConesDelivered,
     required this.avgTeleConesFailed,
     required this.avgAutoCubesTop,
     required this.avgAutoCubesMid,
     required this.avgAutoCubesLow,
+    required this.avgAutoCubesDelivered,
     required this.avgAutoCubesFailed,
     required this.avgTeleCubesTop,
     required this.avgTeleCubesMid,
     required this.avgTeleCubesLow,
+    required this.avgTeleCubesDelivered,
     required this.avgTeleCubesFailed,
     required this.matchesBalancedAuto,
     required this.matchesBalancedEndgame,
@@ -30,24 +34,29 @@ class QuickData {
     required this.avgGamepieces,
     required this.avgAutoGamepieces,
     required this.avgTeleGamepieces,
+    required this.avgDelivered,
   });
   final int amoutOfMatches;
   final double avgGamepiecePoints;
   final double avgAutoConesTop;
   final double avgAutoConesMid;
   final double avgAutoConesLow;
+  final double avgAutoConesDelivered;
   final double avgAutoConesFailed;
   final double avgTeleConesTop;
   final double avgTeleConesMid;
   final double avgTeleConesLow;
+  final double avgTeleConesDelivered;
   final double avgTeleConesFailed;
   final double avgAutoCubesTop;
   final double avgAutoCubesMid;
   final double avgAutoCubesLow;
+  final double avgAutoCubesDelivered;
   final double avgAutoCubesFailed;
   final double avgTeleCubesTop;
   final double avgTeleCubesMid;
   final double avgTeleCubesLow;
+  final double avgTeleCubesDelivered;
   final double avgTeleCubesFailed;
   final String highestBalanceTitleAuto;
   final int firstPicklistIndex;
@@ -57,6 +66,7 @@ class QuickData {
   final double avgAutoBalancePoints;
   final double avgEndgameBalancePoints;
   final double avgGamepieces;
+  final double avgDelivered;
   final double avgAutoGamepieces;
   final double avgTeleGamepieces;
 }

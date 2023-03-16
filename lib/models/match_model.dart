@@ -144,7 +144,8 @@ enum Gamepiece {
 enum GridLevel {
   top(5, "top"),
   mid(3, "mid"),
-  low(2, "low");
+  low(2, "low"),
+  none(0, "delivered");
 
   const GridLevel(this.points, this.title);
   final int points;
