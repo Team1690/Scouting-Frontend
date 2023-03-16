@@ -27,6 +27,10 @@ class Match implements HasuraVars {
     this.scoutedTeam,
     required this.robotMatchStatusId,
     this.isRematch = false,
+    this.autoConesDelivered = 0,
+    this.autoCubesDelivered = 0,
+    this.teleConesDelivered = 0,
+    this.teleCubesDelivered = 0,
   });
 
   void clear(final BuildContext context) {
@@ -46,6 +50,10 @@ class Match implements HasuraVars {
     teleCubesMid = 0;
     teleCubesLow = 0;
     teleCubesFailed = 0;
+    autoConesDelivered = 0;
+    autoCubesDelivered = 0;
+    teleConesDelivered = 0;
+    teleCubesDelivered = 0;
     autoBalanceStatus = null;
     endgameBalanceStatus = null;
     scoutedTeam = null;
@@ -61,18 +69,22 @@ class Match implements HasuraVars {
   int autoConesTop;
   int autoConesMid;
   int autoConesLow;
+  int autoConesDelivered;
   int autoConesFailed;
   int autoCubesTop;
   int autoCubesMid;
   int autoCubesLow;
+  int autoCubesDelivered;
   int autoCubesFailed;
   int teleConesTop;
   int teleConesMid;
   int teleConesLow;
+  int teleConesDelivered;
   int teleConesFailed;
   int teleCubesTop;
   int teleCubesMid;
   int teleCubesLow;
+  int teleCubesDelivered;
   int teleCubesFailed;
   String? name;
   int? autoBalanceStatus;
@@ -85,10 +97,12 @@ class Match implements HasuraVars {
         "auto_cones_mid": autoConesMid,
         "auto_cones_top": autoConesTop,
         "auto_cones_low": autoConesLow,
+        "auto_cones_delivered": autoConesDelivered,
         "auto_cones_failed": autoConesFailed,
         "auto_cubes_mid": autoCubesMid,
         "auto_cubes_top": autoCubesTop,
         "auto_cubes_low": autoCubesLow,
+        "auto_cubes_delivered": autoCubesDelivered,
         "auto_cubes_failed": autoCubesFailed,
         "auto_balance_id": autoBalanceStatus,
         "endgame_balance_id": endgameBalanceStatus,
@@ -96,10 +110,12 @@ class Match implements HasuraVars {
         "tele_cones_mid": teleConesMid,
         "tele_cones_top": teleConesTop,
         "tele_cones_low": teleConesLow,
+        "tele_cones_delivered": teleConesDelivered,
         "tele_cones_failed": teleConesFailed,
         "tele_cubes_mid": teleCubesMid,
         "tele_cubes_top": teleCubesTop,
         "tele_cubes_low": teleCubesLow,
+        "tele_cubes_delivered": teleCubesDelivered,
         "tele_cubes_failed": teleCubesFailed,
         "scouter_name": name,
         "schedule_match_id": scheduleMatch?.id,

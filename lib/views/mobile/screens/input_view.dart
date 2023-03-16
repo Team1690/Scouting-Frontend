@@ -162,6 +162,7 @@ class _UserInputState extends State<UserInput> {
                     const SizedBox(
                       height: 20,
                     ),
+                    //TODO add starting pos, gamepiece, and visibility by robotMatchStatus
                     SectionDivider(label: "Autonomous"),
                     IntrinsicHeight(
                       child: Row(
@@ -195,6 +196,13 @@ class _UserInputState extends State<UserInput> {
                                     () => match.autoConesLow,
                                     (final int score) =>
                                         match.autoConesLow = score,
+                                  ),
+                                  CounterSpec.amberColors(
+                                    "Delivered",
+                                    Icons.delivery_dining_rounded,
+                                    () => match.autoConesDelivered,
+                                    (final int score) =>
+                                        match.autoConesDelivered = score,
                                   ),
                                   CounterSpec.amberColors(
                                     "Failed",
@@ -252,6 +260,13 @@ class _UserInputState extends State<UserInput> {
                                         match.autoCubesLow = score,
                                   ),
                                   CounterSpec.purpleColors(
+                                    "Delivered",
+                                    Icons.delivery_dining_rounded,
+                                    () => match.autoCubesDelivered,
+                                    (final int score) =>
+                                        match.autoCubesDelivered = score,
+                                  ),
+                                  CounterSpec.purpleColors(
                                     "Failed",
                                     Icons.error_outline,
                                     () => match.autoCubesFailed,
@@ -280,10 +295,10 @@ class _UserInputState extends State<UserInput> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Selector<int>(
-                        validate: (final int? submission) =>
-                            submission.onNull("Please pick a balance result"),
+                        validate: (final int? submission) => submission
+                            .onNull("Please pick an auto balance result"),
                         options: provider.keys.toList(),
-                        placeholder: "Choose a balance result",
+                        placeholder: "Choose an auto balance result",
                         makeItem: (final int index) => provider[index]!,
                         onChange: (final int balance) {
                           setState(() {
@@ -329,6 +344,13 @@ class _UserInputState extends State<UserInput> {
                                     () => match.teleConesLow,
                                     (final int score) =>
                                         match.teleConesLow = score,
+                                  ),
+                                  CounterSpec.amberColors(
+                                    "Delivered",
+                                    Icons.delivery_dining_rounded,
+                                    () => match.teleConesDelivered,
+                                    (final int score) =>
+                                        match.teleConesDelivered = score,
                                   ),
                                   CounterSpec.amberColors(
                                     "Failed",
@@ -386,6 +408,13 @@ class _UserInputState extends State<UserInput> {
                                         match.teleCubesLow = score,
                                   ),
                                   CounterSpec.purpleColors(
+                                    "Delivered",
+                                    Icons.delivery_dining_rounded,
+                                    () => match.teleCubesDelivered,
+                                    (final int score) =>
+                                        match.teleCubesDelivered = score,
+                                  ),
+                                  CounterSpec.purpleColors(
                                     "Failed",
                                     Icons.error_outline,
                                     () => match.teleCubesFailed,
@@ -436,17 +465,13 @@ class _UserInputState extends State<UserInput> {
                     const SizedBox(
                       height: 20,
                     ),
-                    SectionDivider(label: "Endgame Balance"),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Selector<int>(
-                        validate: (final int? submission) =>
-                            submission.onNull("Please pick a balance result"),
+                        validate: (final int? submission) => submission
+                            .onNull("Please pick an endgame balance result"),
                         options: provider.keys.toList(),
-                        placeholder: "Choose a balance result",
+                        placeholder: "Choose an endgame balance result",
                         makeItem: (final int index) => provider[index]!,
                         onChange: (final int balance) {
                           setState(() {
@@ -487,8 +512,8 @@ class _UserInputState extends State<UserInput> {
 }
 
 const String mutation = r"""
-mutation InsertTechnicalMatch($auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int) {
-  insert__2023_technical_match(objects: {auto_balance_id: $auto_balance_id, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
+mutation InsertTechnicalMatch($tele_cubes_delivered: Int, $tele_cones_delivered: Int, $auto_cubes_delivered: Int, $auto_cones_delivered: Int, $auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int) {
+  insert__2023_technical_match(objects: {auto_balance_id: $auto_balance_id, tele_cubes_delivered: $tele_cubes_delivered, tele_cones_delivered: $tele_cones_delivered, auto_cubes_delivered: $auto_cubes_delivered, auto_cones_delivered: $auto_cones_delivered, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
     returning {
       id
     }
