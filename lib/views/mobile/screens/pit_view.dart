@@ -41,6 +41,14 @@ class _PitViewState extends State<PitView> {
   final TextEditingController weightController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
   final TextEditingController lengthController = TextEditingController();
+  final List<String> driveWheelTypes = <String>[
+    "Tread",
+    "Colson",
+    "Hi-grip",
+    "Mecanum",
+    "Omni",
+    "Other"
+  ];
 
   FormFieldValidator<String> _numericValidator(final String error) =>
       (final String? text) => int.tryParse(text ?? "").onNull(error);
@@ -277,18 +285,63 @@ class _PitViewState extends State<PitView> {
                     const SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      controller: wheelTypeController,
-                      onChanged: (final String wheelType) {
-                        vars.driveWheelType = wheelType;
+                    Selector<String>(
+                      options: driveWheelTypes,
+                      placeholder: "Choose a drive wheel",
+                      value: vars.driveWheelType,
+                      makeItem: (final String wheelType) => wheelType,
+                      onChange: (final String newValue) {
+                        setState(() {
+                          vars.driveWheelType = newValue;
+                        });
                       },
-                      decoration: const InputDecoration(
-                        labelText: "Drive Wheel type",
-                      ),
-                      validator: (final String? wheelType) =>
+                      validate: (final String? wheelType) =>
                           wheelType == null || wheelType.isEmpty
                               ? "please enter the robot's wheel type"
                               : null,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ToggleButtons(
+                      fillColor: const Color.fromARGB(10, 244, 67, 54),
+                      selectedColor: Colors.blue,
+                      selectedBorderColor: Colors.blue,
+                      children: const <Widget>[
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text("Tipped Cones Intake"),
+                        )
+                      ],
+                      isSelected: <bool>[vars.hasGroundIntake],
+                      onPressed: (final int i) {
+                        setState(() {
+                          vars.hasGroundIntake = !vars.hasGroundIntake;
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ToggleButtons(
+                      fillColor: const Color.fromARGB(10, 244, 67, 54),
+                      selectedColor: Colors.blue,
+                      selectedBorderColor: Colors.blue,
+                      children: const <Widget>[
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text("Top Cones Scoring"),
+                        )
+                      ],
+                      isSelected: <bool>[vars.canScoreTop],
+                      onPressed: (final int i) {
+                        setState(() {
+                          vars.canScoreTop = !vars.canScoreTop;
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     SectionDivider(label: "Robot Image"),
                     ImagePickerWidget(
@@ -342,6 +395,8 @@ class _PitViewState extends State<PitView> {
               \$weight:Int,
               \$width:Int,
               \$length:Int,
+              \$can_score_top:Boolean,
+              \$has_ground_intake:Boolean,
               ) {
           insert__2023_pit(objects: {
           url: \$url,
@@ -356,6 +411,8 @@ class _PitViewState extends State<PitView> {
           weight:  \$weight,
           width:  \$width,
           length:  \$length,
+          has_ground_intake: \$has_ground_intake,
+          can_score_top: \$can_score_top,
           }) {
               returning {
                 url

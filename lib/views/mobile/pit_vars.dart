@@ -7,11 +7,13 @@ class PitVars implements HasuraVars {
   bool? hasShifter;
   bool? gearboxPurchased;
   String notes = "";
-  String driveWheelType = "";
+  String? driveWheelType;
   int? teamId;
   String length = "";
   String width = "";
   String weight = "";
+  bool hasGroundIntake = false;
+  bool canScoreTop = false;
   @override
   Map<String, dynamic> toHasuraVars() => <String, dynamic>{
         "drivetrain_id": driveTrainType,
@@ -20,11 +22,13 @@ class PitVars implements HasuraVars {
         "has_shifter": hasShifter,
         "gearbox_purchased": gearboxPurchased,
         "notes": notes,
-        "drive_wheel_type": driveWheelType,
+        "drive_wheel_type": driveWheelType ?? "",
         "team_id": teamId,
         "width": int.parse(width),
         "length": int.parse(length),
         "weight": int.parse(weight),
+        "has_ground_intake": hasGroundIntake,
+        "can_score_top": canScoreTop,
       };
 
   void reset() {
@@ -34,10 +38,12 @@ class PitVars implements HasuraVars {
     hasShifter = null;
     gearboxPurchased = null;
     notes = "";
-    driveWheelType = "";
+    driveWheelType = null;
     teamId = null;
     weight = "";
     width = "";
     length = "";
+    hasGroundIntake = false;
+    canScoreTop = false;
   }
 }

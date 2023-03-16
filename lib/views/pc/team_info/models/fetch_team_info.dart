@@ -27,6 +27,8 @@ query TeamInfo(\$id: Int!) {
       notes
       has_shifter
       url
+      has_ground_intake
+      can_score_top
       drivetrain {
         title
       }
@@ -149,6 +151,8 @@ Future<Team> fetchTeamInfo(
             driveTrainType: pitTable["drivetrain"]["title"] as String,
             driveMotorType: pitTable["drivemotor"]["title"] as String,
             faultMessages: faultMessages,
+            hasGroundIntake: pitTable["has_ground_intake"] as bool,
+            canScoreTop: pitTable["can_score_top"] as bool,
           ),
         );
 

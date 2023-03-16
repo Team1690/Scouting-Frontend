@@ -90,8 +90,10 @@ class PitScoutingCard extends StatelessWidget {
                 "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
               ),
               Text("Weight: ${data.weight}Kg"),
-              Text("Width: ${data.width}m"),
-              Text("Length: ${data.length}m"),
+              Text("Width: ${data.width}cm"),
+              Text("Length: ${data.length}cm"),
+              Text("${data.hasGroundIntake ? "CAN" : "CAN'T"} intake ground"),
+              Text("${data.canScoreTop ? "CAN" : "CAN'T"} score top"),
               const Align(
                 alignment: Alignment.center,
                 child: Text(
