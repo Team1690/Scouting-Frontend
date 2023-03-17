@@ -95,8 +95,12 @@ class TeamList extends StatelessWidget {
                                     (final _Team team) => team.teleGamepieceAvg,
                                   ),
                                   column(
-                                    "Gamepiece sum",
+                                    "Gamepieces Scored",
                                     (final _Team team) => team.gamepieceAvg,
+                                  ),
+                                  column(
+                                    "Gamepieces Delivered",
+                                    (final _Team team) => team.deliveredAvg,
                                   ),
                                   column(
                                     "Gamepiece points",
@@ -160,6 +164,7 @@ class TeamList extends StatelessWidget {
                                           team.autoGamepieceAvg,
                                           team.teleGamepieceAvg,
                                           team.gamepieceAvg,
+                                          team.deliveredAvg,
                                           team.gamepiecePointAvg,
                                         ].map(show),
                                         DataCell(
@@ -217,10 +222,12 @@ class _Team {
     required this.brokenMatches,
     required this.amountOfMatches,
     required this.matchesBalanced,
+    required this.deliveredAvg,
   });
   final double autoGamepieceAvg;
   final double teleGamepieceAvg;
   final double gamepieceAvg;
+  final double deliveredAvg;
   final LightTeam team;
   final double gamepiecePointAvg;
   final double autoBalancePointsAvg;
@@ -285,6 +292,14 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                 100;
             final dynamic avg =
                 team["technical_matches_aggregate"]["aggregate"]["avg"];
+            final double autoGamepieceDelivered = avg["auto_cones_top"] == null
+                ? double.nan
+                : (avg["auto_cones_delivered"] as double) +
+                    (avg["auto_cubes_delivered"] as double);
+            final double teleGamepieceDelivered = avg["auto_cones_top"] == null
+                ? double.nan
+                : (avg["tele_cones_delivered"] as double) +
+                    (avg["tele_cubes_delivered"] as double);
             final double gamepiecePointsAvg = avg["auto_cones_top"] == null
                 ? double.nan
                 : getPoints(parseMatch(avg));
@@ -334,9 +349,12 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                         robotMatchStatus != RobotMatchStatus.worked,
                   )
                   .length,
-              autoGamepieceAvg: autoGamepieceAvg,
-              teleGamepieceAvg: teleGamepieceAvg,
-              gamepieceAvg: gamepieceSum,
+              autoGamepieceAvg: autoGamepieceAvg - autoGamepieceDelivered,
+              teleGamepieceAvg: teleGamepieceAvg - teleGamepieceDelivered,
+              gamepieceAvg: gamepieceSum -
+                  autoGamepieceDelivered -
+                  teleGamepieceDelivered,
+              deliveredAvg: autoGamepieceDelivered + teleGamepieceDelivered,
               gamepiecePointAvg: gamepiecePointsAvg,
               team: LightTeam.fromJson(team),
               autoBalancePointsAvg: autoBalancePointAvg,
@@ -372,6 +390,10 @@ subscription MySubscription {
           tele_cubes_low
           tele_cubes_mid
           tele_cubes_top
+          auto_cones_delivered
+          tele_cones_delivered
+          auto_cubes_delivered
+          tele_cubes_delivered
         }
       }
       nodes {
