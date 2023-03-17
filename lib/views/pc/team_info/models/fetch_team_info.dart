@@ -45,7 +45,7 @@ query TeamInfo(\$id: Int!) {
       is_rematch
       scouter_name
       match{
-        match_type_id 
+        match_type_id
         match_number
       }
     }
@@ -373,7 +373,7 @@ Future<Team> fetchTeamInfo(
               switch (title) {
                 case "Failed":
                   return 0;
-                case "No Attempt":
+                case "No attempt":
                   return -1;
                 case "Unbalanced":
                   return 1;
