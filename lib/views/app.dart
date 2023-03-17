@@ -17,6 +17,7 @@ class App extends StatelessWidget {
     required this.robotMatchStatusIds,
     required this.faultStatus,
     required this.matches,
+    required this.startingPositionIds,
   });
   final List<ScheduleMatch> matches;
   final Map<String, int> robotMatchStatusIds;
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
   final Map<String, int> driveMotorIds;
   final Map<String, int> matchTypeIds;
   final Map<String, int> faultStatus;
+  final Map<String, int> startingPositionIds;
   @override
   Widget build(final BuildContext context) => TeamProvider(
         teams: teams,
@@ -38,6 +40,7 @@ class App extends StatelessWidget {
             drivetrainIds: drivetrainIds,
             robotMatchStatusIds: robotMatchStatusIds,
             faultStatus: faultStatus,
+            startingPositionIds: startingPositionIds,
             child: MaterialApp(
               title: "Orbit Scouting",
               home: isPC(context) ? TeamInfoScreen() : UserInput(),

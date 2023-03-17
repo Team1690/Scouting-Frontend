@@ -31,9 +31,11 @@ class Match implements HasuraVars {
     this.autoCubesDelivered = 0,
     this.teleConesDelivered = 0,
     this.teleCubesDelivered = 0,
+    this.startingPositionId,
   });
 
   void clear(final BuildContext context) {
+    startingPositionId = null;
     autoConesTop = 0;
     autoConesMid = 0;
     autoConesLow = 0;
@@ -90,6 +92,7 @@ class Match implements HasuraVars {
   int? autoBalanceStatus;
   int? endgameBalanceStatus;
   int robotMatchStatusId;
+  int? startingPositionId;
 
   LightTeam? scoutedTeam;
   @override
@@ -121,6 +124,7 @@ class Match implements HasuraVars {
         "schedule_match_id": scheduleMatch?.id,
         "robot_match_status_id": robotMatchStatusId,
         "is_rematch": isRematch,
+        "starting_position_id": startingPositionId,
       };
 }
 
