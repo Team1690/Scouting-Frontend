@@ -27,6 +27,10 @@ query FetchCompare(\$ids: [Int!]) {
           tele_cubes_low
           tele_cubes_mid
           tele_cubes_top
+           auto_cones_delivered
+          auto_cubes_delivered
+          tele_cones_delivered
+         tele_cubes_delivered
         }
       }
     }
@@ -57,6 +61,10 @@ query FetchCompare(\$ids: [Int!]) {
       tele_cubes_low
       tele_cubes_mid
       tele_cubes_top
+       auto_cones_delivered
+      auto_cubes_delivered
+      tele_cones_delivered
+      tele_cubes_delivered
     }
     name
     number
@@ -83,22 +91,61 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
           final List<int> autoGamepieces = matches
               .map(
                 (final dynamic technicalMatch) => (getPieces(
-                  parseByMode(MatchMode.auto, technicalMatch),
-                ).toInt()),
+                      parseByMode(MatchMode.auto, technicalMatch),
+                    ).toInt() -
+                    ((technicalMatch[
+                                "${MatchMode.auto.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
+                            as int) +
+                        (technicalMatch[
+                                "${MatchMode.auto.title}_${Gamepiece.cube.title}_${GridLevel.none.title}"]
+                            as int))),
               )
               .toList();
           final List<int> teleGamepieces = matches
               .map(
                 (final dynamic technicalMatch) => (getPieces(
-                  parseByMode(MatchMode.tele, technicalMatch),
-                ).toInt()),
+                      parseByMode(MatchMode.tele, technicalMatch),
+                    ).toInt() -
+                    ((technicalMatch[
+                                "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
+                            as int) +
+                        (technicalMatch[
+                                "${MatchMode.tele.title}_${Gamepiece.cube.title}_${GridLevel.none.title}"]
+                            as int))),
+              )
+              .toList();
+          final List<int> totalDelivered = matches
+              .map(
+                (final dynamic technicalMatch) =>
+                    (technicalMatch["${MatchMode.auto.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"] as int) +
+                    (technicalMatch[
+                            "${MatchMode.auto.title}_${Gamepiece.cube.title}_${GridLevel.none.title}"]
+                        as int) +
+                    (technicalMatch[
+                            "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
+                        as int) +
+                    (technicalMatch[
+                            "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
+                        as int),
               )
               .toList();
           final List<int> gamepieces = matches
               .map(
                 (final dynamic technicalMatch) => (getPieces(
-                  parseMatch(technicalMatch),
-                ).toInt()),
+                      parseMatch(technicalMatch),
+                    ).toInt() -
+                    ((technicalMatch[
+                                "${MatchMode.auto.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
+                            as int) +
+                        (technicalMatch[
+                                "${MatchMode.auto.title}_${Gamepiece.cube.title}_${GridLevel.none.title}"]
+                            as int) +
+                        (technicalMatch[
+                                "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
+                            as int) +
+                        (technicalMatch[
+                                "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
+                            as int))),
               )
               .toList();
           final List<int> points = matches
@@ -111,13 +158,19 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
           final List<String> autoBalanceVals = matches
               .map(
                 (final dynamic match) =>
-                    match["auto_balance"]["title"] as String,
+                    (match["robot_match_status"]["title"] as String) !=
+                            "Didn't come to field"
+                        ? (match["auto_balance"]["title"] as String)
+                        : "No attempt",
               )
               .toList();
           final double avgAutoBalancePoints = matches
                   .map(
                     (final dynamic match) =>
-                        (match["auto_balance"]["auto_points"] as int),
+                        (match["robot_match_status"]["title"] as String) !=
+                                "Didn't come to field"
+                            ? (match["auto_balance"]["auto_points"] as int)
+                            : 0,
                   )
                   .toList()
                   .averageOrNull ??
@@ -125,13 +178,19 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
           final List<String> endgameBalanceVals = matches
               .map(
                 (final dynamic match) =>
-                    match["endgame_balance"]["title"] as String,
+                    (match["robot_match_status"]["title"] as String) !=
+                            "Didn't come to field"
+                        ? (match["endgame_balance"]["title"] as String)
+                        : "No attempt",
               )
               .toList();
           final double avgEndgameBalancePoints = matches
                   .map(
-                    (final dynamic match) =>
-                        (match["endgame_balance"]["endgame_points"] as int),
+                    (final dynamic match) => (match["robot_match_status"]
+                                ["title"] as String) !=
+                            "Didn't come to field"
+                        ? (match["endgame_balance"]["endgame_points"] as int)
+                        : 0,
                   )
                   .toList()
                   .averageOrNull ??
@@ -265,6 +324,11 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
             points: points,
             matchStatuses: matchStatuses,
           );
+          final CompareLineChartData totalDeliverdLineChart =
+              CompareLineChartData(
+            points: totalDelivered,
+            matchStatuses: matchStatuses,
+          );
 
           return CompareTeam(
             autoBalanceSuccessPercentage: autoBalanceSuccessPercentage,
@@ -282,6 +346,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
             avgTeleGamepiecesPoints: avgTeleGamepiecesPoints,
             avgAutoBalancePoints: avgAutoBalancePoints,
             avgEndgameBalancePoints: avgEndgameBalancePoints,
+            totalDelivered: totalDeliverdLineChart,
           );
         }),
         (final CompareTeam team1, final CompareTeam team2) =>
