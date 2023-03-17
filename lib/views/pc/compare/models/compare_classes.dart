@@ -18,6 +18,7 @@ class CompareTeam {
     required this.autoGamepieces,
     required this.totalCones,
     required this.totalCubes,
+    required this.totalDelivered,
   });
   final LightTeam team;
   final double avgTeleGamepiecesPoints;
@@ -34,6 +35,7 @@ class CompareTeam {
   final CompareLineChartData endgameBalanceVals;
   final CompareLineChartData totalCones;
   final CompareLineChartData totalCubes;
+  final CompareLineChartData totalDelivered;
 }
 
 class CompareLineChartData {

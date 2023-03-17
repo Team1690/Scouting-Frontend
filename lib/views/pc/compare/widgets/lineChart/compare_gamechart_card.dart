@@ -95,6 +95,16 @@ class CompareGamechartCard extends StatelessWidget {
                         colors,
                         "Total Cubes",
                       ),
+                      CompareLineChart(
+                        data
+                            .map(
+                              (final CompareTeam element) =>
+                                  element.totalDelivered,
+                            )
+                            .toList(),
+                        colors,
+                        "Total Delivered",
+                      ),
                       CompareClimbLineChart(
                         data
                             .map(
