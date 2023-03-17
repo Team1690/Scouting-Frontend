@@ -37,6 +37,11 @@ class QuickDataCard extends StatelessWidget {
                           data.avgAutoCubesLow,
                         ),
                         gamepieceRow(
+                          "Delivered",
+                          data.avgAutoConesDelivered,
+                          data.avgAutoCubesDelivered,
+                        ),
+                        gamepieceRow(
                           "Failed",
                           data.avgAutoConesFailed,
                           data.avgAutoCubesFailed,
@@ -65,6 +70,11 @@ class QuickDataCard extends StatelessWidget {
                           "Low",
                           data.avgTeleConesLow,
                           data.avgTeleCubesLow,
+                        ),
+                        gamepieceRow(
+                          "Delivered",
+                          data.avgTeleConesDelivered,
+                          data.avgTeleCubesDelivered,
                         ),
                         gamepieceRow(
                           "Failed",
@@ -103,7 +113,10 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                          "Gamepiece sum: ${data.avgGamepieces.toStringAsFixed(1)}",
+                          "Gamepieces Scored: ${data.avgGamepieces.toStringAsFixed(1)}",
+                        ),
+                        Text(
+                          "Gamepieces Delivered: ${data.avgDelivered.toStringAsFixed(1)}",
                         ),
                         Text(
                           "Best Auto Balance: ${data.highestBalanceTitleAuto}",

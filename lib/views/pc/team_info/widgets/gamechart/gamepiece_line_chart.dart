@@ -29,6 +29,10 @@ class GamepiecesLineChart extends StatelessWidget {
                         style: TextStyle(color: Colors.orange),
                       ),
                       TextSpan(
+                        text: " Delivered ",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      TextSpan(
                         text: " Failed ",
                         style: TextStyle(color: Colors.red),
                       ),
@@ -58,6 +62,7 @@ class GamepiecesLineChart extends StatelessWidget {
                 Colors.green,
                 Colors.yellow,
                 Colors.orange,
+                Colors.blue,
                 Colors.red,
               ],
               distanceFromHighest: 4,

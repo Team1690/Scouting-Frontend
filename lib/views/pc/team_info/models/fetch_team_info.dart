@@ -68,6 +68,10 @@ query TeamInfo(\$id: Int!) {
           tele_cubes_mid
           tele_cubes_top
           tele_cubes_failed
+          auto_cones_delivered
+          auto_cubes_delivered
+          tele_cones_delivered
+          tele_cubes_delivered
         }
       }
     }
@@ -111,6 +115,10 @@ query TeamInfo(\$id: Int!) {
       tele_cubes_mid
       tele_cubes_top
       tele_cubes_failed
+      auto_cones_delivered
+      auto_cubes_delivered
+      tele_cones_delivered
+      tele_cubes_delivered
     }
   }
 }
@@ -182,6 +190,11 @@ Future<Team> fetchTeamInfo(
           Gamepiece.cone,
           GridLevel.low,
         );
+        final double autoConesDelivered = avgNullToZero(
+          MatchMode.auto,
+          Gamepiece.cone,
+          GridLevel.none,
+        );
         final double autoConesFailed =
             avgNullToZero(MatchMode.auto, Gamepiece.cone);
         final double teleConesTop = avgNullToZero(
@@ -198,6 +211,11 @@ Future<Team> fetchTeamInfo(
           MatchMode.tele,
           Gamepiece.cone,
           GridLevel.low,
+        );
+        final double teleConesDelivered = avgNullToZero(
+          MatchMode.tele,
+          Gamepiece.cone,
+          GridLevel.none,
         );
         final double teleConesFailed =
             avgNullToZero(MatchMode.tele, Gamepiece.cone);
@@ -216,6 +234,11 @@ Future<Team> fetchTeamInfo(
           Gamepiece.cube,
           GridLevel.low,
         );
+        final double autoCubesDelivered = avgNullToZero(
+          MatchMode.auto,
+          Gamepiece.cube,
+          GridLevel.none,
+        );
         final double autoCubesFailed =
             avgNullToZero(MatchMode.auto, Gamepiece.cube);
         final double teleCubesTop =
@@ -224,6 +247,11 @@ Future<Team> fetchTeamInfo(
             avgNullToZero(MatchMode.tele, Gamepiece.cube, GridLevel.mid);
         final double teleCubesLow =
             avgNullToZero(MatchMode.tele, Gamepiece.cube, GridLevel.low);
+        final double teleCubesDelivered = avgNullToZero(
+          MatchMode.tele,
+          Gamepiece.cube,
+          GridLevel.none,
+        );
         final double teleCubesFailed = avgNullToZero(
           MatchMode.tele,
           Gamepiece.cube,
@@ -279,6 +307,12 @@ Future<Team> fetchTeamInfo(
               .toList(),
         );
         final bool nullValidator = avg["auto_cones_top"] == null;
+        final double avgDelivered = nullValidator
+            ? 0
+            : autoCubesDelivered +
+                autoConesDelivered +
+                teleCubesDelivered +
+                teleConesDelivered;
         final QuickData quickData = QuickData(
           matchesBalancedAuto: matchesBalanced(MatchMode.auto),
           matchesBalancedEndgame: matchesBalanced(MatchMode.tele),
@@ -299,7 +333,8 @@ Future<Team> fetchTeamInfo(
           amoutOfMatches: matches.length,
           avgAutoBalancePoints: autoBalancePoints.averageOrNull ?? 0,
           avgEndgameBalancePoints: endgameBalancePoints.averageOrNull ?? 0,
-          avgGamepieces: nullValidator ? 0 : getPieces(parseMatch(avg)),
+          avgGamepieces:
+              nullValidator ? 0 : getPieces(parseMatch(avg)) - avgDelivered,
           avgGamepiecePoints: nullValidator ? 0 : getPoints(parseMatch(avg)),
           avgAutoGamepieces:
               nullValidator ? 0 : getPieces(parseByMode(MatchMode.auto, avg)),
@@ -321,6 +356,11 @@ Future<Team> fetchTeamInfo(
           avgTeleCubesLow: teleCubesLow,
           avgTeleCubesMid: teleCubesMid,
           avgTeleCubesTop: teleCubesTop,
+          avgAutoConesDelivered: autoConesDelivered,
+          avgAutoCubesDelivered: autoCubesDelivered,
+          avgTeleConesDelivered: teleConesDelivered,
+          avgTeleCubesDelivered: teleCubesDelivered,
+          avgDelivered: avgDelivered,
         );
         List<int> getBalanceLineChart(final MatchMode mode) => matches
                 .map(
@@ -407,6 +447,13 @@ Future<Team> fetchTeamInfo(
                 matches
                     .map(
                       (final dynamic match) =>
+                          match["${mode.title}_${piece.title}_delivered"]
+                              as int,
+                    )
+                    .toList(),
+                matches
+                    .map(
+                      (final dynamic match) =>
                           match["${mode.title}_${piece.title}_failed"] as int,
                     )
                     .toList(),
@@ -414,7 +461,7 @@ Future<Team> fetchTeamInfo(
               title:
                   "${mode == MatchMode.auto ? "Autonomous" : "Teleoperated"} ${piece.title}",
               robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-                4,
+                5,
                 (teamByPk["technical_matches"] as List<dynamic>)
                     .map(
                       (final dynamic match) => titleToEnum(
@@ -474,11 +521,12 @@ Future<Team> fetchTeamInfo(
               gamepieceLevelData(gamepiece, GridLevel.top),
               gamepieceLevelData(gamepiece, GridLevel.mid),
               gamepieceLevelData(gamepiece, GridLevel.low),
+              gamepieceLevelData(gamepiece, GridLevel.none),
               gamepieceLevelData(gamepiece),
             ],
             title: gamepiece == Gamepiece.cone ? "Cones" : "Cubes",
             robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-              4,
+              5,
               (teamByPk["technical_matches"] as List<dynamic>)
                   .map(
                     (final dynamic e) => titleToEnum(
@@ -512,10 +560,14 @@ Future<Team> fetchTeamInfo(
               dataAllCones.points[3],
               dataAllCubes.points[3],
             ),
+            combineLists(
+              dataAllCones.points[4],
+              dataAllCubes.points[4],
+            ),
           ],
           title: "Gamepieces",
           robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
-            4,
+            5,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
                   (final dynamic match) => titleToEnum(
