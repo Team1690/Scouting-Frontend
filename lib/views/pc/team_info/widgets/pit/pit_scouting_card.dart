@@ -71,40 +71,50 @@ class PitScoutingCard extends StatelessWidget {
                       .toList(),
                 )
               ],
-              const Align(
+              Align(
                 alignment: Alignment.center,
-                child: Text(
-                  "Drivetrain",
-                  style: TextStyle(fontSize: 18),
+                child: Column(
+                  children: <Widget>[
+                    const Text(
+                      "Drivetrain",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text("Drivetrain: ${data.driveTrainType}"),
+                    Text("Drive motor: ${data.driveMotorType}"),
+                    Text("Drive motor amount: ${data.driveMotorAmount}"),
+                    Text("Drive wheel: ${data.driveWheelType}"),
+                    HasSomething(
+                      title: "Has shifter:",
+                      value: data.hasShifer,
+                    ),
+                    Text(
+                      "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
+                    ),
+                    Text("Weight: ${data.weight}Kg"),
+                    Text("Width: ${data.width}cm"),
+                    Text("Length: ${data.length}cm"),
+                    Text(
+                      "${data.hasGroundIntake ? "CAN" : "CAN'T"} intake ground",
+                    ),
+                    Text("${data.canScoreTop ? "CAN" : "CAN'T"} score top"),
+                  ],
                 ),
               ),
-              Text("Drivetrain: ${data.driveTrainType}"),
-              Text("Drive motor: ${data.driveMotorType}"),
-              Text("Drive motor amount: ${data.driveMotorAmount}"),
-              Text("Drive wheel: ${data.driveWheelType}"),
-              HasSomething(
-                title: "Has shifter:",
-                value: data.hasShifer,
-              ),
-              Text(
-                "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
-              ),
-              Text("Weight: ${data.weight}Kg"),
-              Text("Width: ${data.width}cm"),
-              Text("Length: ${data.length}cm"),
-              Text("${data.hasGroundIntake ? "CAN" : "CAN'T"} intake ground"),
-              Text("${data.canScoreTop ? "CAN" : "CAN'T"} score top"),
-              const Align(
+              Align(
                 alignment: Alignment.center,
-                child: Text(
-                  "Notes",
-                  style: TextStyle(fontSize: 18),
+                child: Column(
+                  children: <Widget>[
+                    const Text(
+                      "Notes",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
+                      data.notes,
+                      softWrap: true,
+                      textDirection: TextDirection.rtl,
+                    ),
+                  ],
                 ),
-              ),
-              Text(
-                data.notes,
-                softWrap: true,
-                textDirection: TextDirection.rtl,
               ),
               if (!isPC(context)) ...<Widget>[
                 const SizedBox(
@@ -168,6 +178,7 @@ class HasSomething extends StatelessWidget {
   final String title;
   @override
   Widget build(final BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(title),
           value.mapNullable(
