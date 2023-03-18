@@ -188,6 +188,10 @@ subscription Status {
     auto_cubes_low
     auto_cubes_mid
     auto_cubes_top
+    auto_cones_delivered
+    auto_cubes_delivered
+    tele_cones_delivered
+    tele_cubes_delivered
     auto_balance {
       auto_points
     }
