@@ -146,7 +146,7 @@ class PickList extends StatelessWidget {
                                     const Spacer(),
                                     Expanded(
                                       child: Text(
-                                        "Avg Balancing Robots: ${pickListTeam.avgBalancePartners}",
+                                        "Avg Balancing Robots: ${pickListTeam.avgBalancePartners.toStringAsFixed(1)}",
                                       ),
                                     ),
                                     Expanded(

@@ -103,7 +103,7 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
           );
     final double avgBalancePartners = (avg["balanced_with"] as double?)
             .mapNullable((final double p0) => p0 + 1) ??
-        0;
+        1;
     final List<int> autoBalance =
         (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
             .where(
