@@ -72,6 +72,7 @@ query TeamInfo(\$id: Int!) {
           auto_cubes_delivered
           tele_cones_delivered
           tele_cubes_delivered
+          balanced_with
         }
       }
     }
@@ -322,7 +323,9 @@ Future<Team> fetchTeamInfo(
                 autoConesDelivered +
                 teleCubesDelivered +
                 teleConesDelivered;
+        final double avgBalancePartners = (avg["balanced_with"] ?? 0) as double;
         final QuickData quickData = QuickData(
+          avgBalancePartners: avgBalancePartners,
           matchesBalancedAuto: matchesBalanced(MatchMode.auto, matches),
           matchesBalancedEndgame: matchesBalanced(MatchMode.tele, matches),
           firstPicklistIndex: team["team_by_pk"]["first_picklist_index"] as int,
