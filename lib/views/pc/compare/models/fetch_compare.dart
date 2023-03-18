@@ -93,12 +93,8 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                 (final dynamic technicalMatch) => (getPieces(
                       parseByMode(MatchMode.auto, technicalMatch),
                     ).toInt() -
-                    ((technicalMatch[
-                                "${MatchMode.auto.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
-                            as int) +
-                        (technicalMatch[
-                                "${MatchMode.auto.title}_${Gamepiece.cube.title}_${GridLevel.none.title}"]
-                            as int))),
+                    ((technicalMatch["auto_cones_delivered"] as int) +
+                        (technicalMatch["auto_cubes_delivered"] as int))),
               )
               .toList();
           final List<int> teleGamepieces = matches
@@ -106,27 +102,17 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                 (final dynamic technicalMatch) => (getPieces(
                       parseByMode(MatchMode.tele, technicalMatch),
                     ).toInt() -
-                    ((technicalMatch[
-                                "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
-                            as int) +
-                        (technicalMatch[
-                                "${MatchMode.tele.title}_${Gamepiece.cube.title}_${GridLevel.none.title}"]
-                            as int))),
+                    ((technicalMatch["tele_cones_delivered"] as int) +
+                        (technicalMatch["tele_cubes_delivered"] as int))),
               )
               .toList();
           final List<int> totalDelivered = matches
               .map(
                 (final dynamic technicalMatch) =>
-                    (technicalMatch["${MatchMode.auto.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"] as int) +
-                    (technicalMatch[
-                            "${MatchMode.auto.title}_${Gamepiece.cube.title}_${GridLevel.none.title}"]
-                        as int) +
-                    (technicalMatch[
-                            "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
-                        as int) +
-                    (technicalMatch[
-                            "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
-                        as int),
+                    ((technicalMatch["auto_cones_delivered"] as int) +
+                        (technicalMatch["auto_cubes_delivered"] as int)) +
+                    ((technicalMatch["tele_cones_delivered"] as int) +
+                        (technicalMatch["tele_cubes_delivered"] as int)),
               )
               .toList();
           final List<int> gamepieces = matches
@@ -134,18 +120,10 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                 (final dynamic technicalMatch) => (getPieces(
                       parseMatch(technicalMatch),
                     ).toInt() -
-                    ((technicalMatch[
-                                "${MatchMode.auto.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
-                            as int) +
-                        (technicalMatch[
-                                "${MatchMode.auto.title}_${Gamepiece.cube.title}_${GridLevel.none.title}"]
-                            as int) +
-                        (technicalMatch[
-                                "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
-                            as int) +
-                        (technicalMatch[
-                                "${MatchMode.tele.title}_${Gamepiece.cone.title}_${GridLevel.none.title}"]
-                            as int))),
+                    ((technicalMatch["auto_cones_delivered"] as int) +
+                        (technicalMatch["auto_cubes_delivered"] as int)) +
+                    ((technicalMatch["tele_cones_delivered"] as int) +
+                        (technicalMatch["tele_cubes_delivered"] as int))),
               )
               .toList();
           final List<int> points = matches
