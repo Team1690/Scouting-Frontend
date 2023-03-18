@@ -27,6 +27,10 @@ query Scatter {
         tele_cubes_low
         tele_cubes_mid
         tele_cubes_top
+        auto_cones_delivered
+        auto_cubes_delivered
+        tele_cones_delivered
+        tele_cubes_delivered
       }
     }
   }
@@ -43,6 +47,10 @@ query Scatter {
     tele_cubes_low
     tele_cubes_mid
     tele_cubes_top
+    auto_cones_delivered
+    auto_cubes_delivered
+    tele_cones_delivered
+    tele_cubes_delivered
   }
   }
 }
