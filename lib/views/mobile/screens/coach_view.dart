@@ -1,6 +1,7 @@
 import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/average_or_null.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -143,44 +144,47 @@ query FetchCoach {
       id
       name
       number
-      new_technical_matches_aggregate(where: {ignored: {_eq: false}}) {
-        aggregate {
-          avg {
-            auto_cones_low
-            auto_cones_mid
-            auto_cones_top
-            auto_cones_failed
-            auto_cubes_low
-            auto_cubes_mid
-            auto_cubes_top
-            auto_cubes_failed
-            tele_cones_low
-            tele_cones_mid
-            tele_cones_top
-            tele_cones_failed
-            tele_cubes_low
-            tele_cubes_mid
-            tele_cubes_top
-            tele_cubes_failed
-
-          }
+     technical_matches_aggregate(where: {ignored: {_eq: false}}) {
+      aggregate {
+        avg {
+          auto_cones_low
+          auto_cones_mid
+          auto_cones_top
+          auto_cubes_low
+          auto_cubes_mid
+          auto_cubes_top
+          tele_cones_low
+          tele_cones_mid
+          tele_cones_top
+          tele_cubes_low
+          tele_cubes_mid
+          tele_cubes_top
+           auto_cones_delivered
+          auto_cubes_delivered
+          tele_cones_delivered
+         tele_cubes_delivered
         }
-        nodes {
-          auto_balance{
-          title
+    }
+      nodes{
+        auto_balance{
           auto_points
-          }
-          endgame_balance{
-            title
-            endgame_points
-          }
-
+          title
+        }
+        endgame_balance{
+          endgame_points
+          title
+        }
+        robot_match_status{
+          title
         }
       }
-    }""",
+    }
+    }
+    """,
         ).join(" ")}
   }
 }
+
 
 
 """;
@@ -207,100 +211,107 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   return null;
                 }
                 final LightTeam team = LightTeam.fromJson(match[e]);
-                final dynamic avg = match[e]["new_technical_matches_aggregate"]
-                    ["aggregate"]["avg"];
-                final bool nullValidator = avg["auto_cones_top"] == null;
+                final List<dynamic> nodes = match[e]
+                    ["technical_matches_aggregate"]["nodes"] as List<dynamic>;
+                final dynamic avg =
+                    match[e]["technical_matches_aggregate"]["aggregate"]["avg"];
+                final bool avgNullValidator = avg["auto_cones_top"] == null;
+                final bool nodeNullValidator = nodes.isEmpty;
+                final double avgAutoDelivered = avgNullValidator
+                    ? double.nan
+                    : (avg["auto_cones_delivered"] as double) +
+                        (avg["auto_cubes_delivered"] as double);
+                final double avgTeleDelivered = avgNullValidator
+                    ? double.nan
+                    : ((avg["tele_cones_delivered"] as double) +
+                        (avg["tele_cubes_delivered"] as double));
+                final double avgAutoGamepieces = avgNullValidator
+                    ? double.nan
+                    : getPieces(parseByMode(MatchMode.auto, avg)) -
+                        avgAutoDelivered;
+                final double avgTeleGamepieces = avgNullValidator
+                    ? double.nan
+                    : getPieces(parseByMode(MatchMode.tele, avg)) -
+                        avgTeleDelivered;
                 final double avgGamepiecePoints =
-                    nullValidator ? double.nan : getPoints(parseMatch(avg));
-                final double avgAutoGamepiece = nullValidator
+                    avgNullValidator ? double.nan : getPoints(parseMatch(avg));
+                final int amountOfMatches = nodes.length;
+                final double avgAutoBalancePoints = nodeNullValidator
                     ? double.nan
-                    : getPieces(parseByMode(MatchMode.auto, avg));
-                final double avgAutoFailed = nullValidator
+                    : nodes
+                            .where(
+                              (final dynamic element) =>
+                                  element["robot_match_status"] !=
+                                          "Didn't come to field"
+                                      ? element["auto_balance"]["title"] !=
+                                          "No Attempt"
+                                      : false,
+                            )
+                            .map(
+                              (final dynamic match) =>
+                                  match["auto_balance"]["auto_points"] as int,
+                            )
+                            .toList()
+                            .averageOrNull ??
+                        double.nan;
+                final double avgEndgameBalancePoints = nodeNullValidator
                     ? double.nan
-                    : (avg["auto_cubes_failed"] as double) +
-                        (avg["auto_cones_failed"] as double);
-                final double avgTeleGamepiece = nullValidator
+                    : nodes
+                            .where(
+                              (final dynamic element) =>
+                                  element["robot_match_status"] !=
+                                          "Didn't come to field"
+                                      ? element["endgame_balance"]["title"] !=
+                                          "No attempt"
+                                      : false,
+                            )
+                            .map(
+                              (final dynamic match) => match["endgame_balance"]
+                                  ["endgame_points"] as int,
+                            )
+                            .toList()
+                            .averageOrNull ??
+                        double.nan;
+                final double autoBalancePercentage = nodeNullValidator
                     ? double.nan
-                    : getPieces(parseByMode(MatchMode.tele, avg));
-                final double avgTeleFailed = nullValidator
+                    : nodes
+                            .where(
+                              (final dynamic element) =>
+                                  element["robot_match_status"] !=
+                                          "Didn't come to field"
+                                      ? element["auto_balance"]["title"] !=
+                                              "No attempt" &&
+                                          element["auto_balance"]["title"] !=
+                                              "Failed"
+                                      : false,
+                            )
+                            .length /
+                        amountOfMatches;
+                final double endgameBalancePercentage = nodeNullValidator
                     ? double.nan
-                    : (avg["tele_cubes_failed"] as double) +
-                        (avg["tele_cones_failed"] as double);
-
-                final Iterable<int> autoBalance = (match[e]
-                            ["new_technical_matches_aggregate"]["nodes"]
-                        as List<dynamic>)
-                    .where(
-                      (final dynamic element) =>
-                          element["auto_balance"]["title"] != "No attempt",
-                    )
-                    .map<int>(
-                      (final dynamic e) =>
-                          e["auto_balance"]["auto_points"] as int,
-                    );
-                final Iterable<int> endgameBalance = (match[e]
-                            ["new_technical_matches_aggregate"]["nodes"]
-                        as List<dynamic>)
-                    .where(
-                      (final dynamic element) =>
-                          element["endgame_balance"]["title"] != "No attempt",
-                    )
-                    .map<int>(
-                      (final dynamic e) =>
-                          e["endgame_balance"]["endgame_points"] as int,
-                    );
-                final int amountOfMatches = (match[e]
-                            ["new_technical_matches_aggregate"]["nodes"]
-                        as List<dynamic>)
-                    .length;
-                final double autoBalanceAvg = autoBalance.isEmpty
-                    ? 0
-                    : autoBalance.length == 1
-                        ? autoBalance.first.toDouble()
-                        : autoBalance.reduce(
-                              (final int value, final int element) =>
-                                  value + element,
-                            ) /
-                            autoBalance.length;
-                final double endgameBalanceAvg = endgameBalance.isEmpty
-                    ? 0
-                    : endgameBalance.length == 1
-                        ? endgameBalance.first.toDouble()
-                        : endgameBalance.reduce(
-                              (final int value, final int element) =>
-                                  value + element,
-                            ) /
-                            endgameBalance.length;
-
+                    : nodes
+                            .where(
+                              (final dynamic element) =>
+                                  element["robot_match_status"] !=
+                                          "Didn't come to field"
+                                      ? element["endgame_balance"]["title"] !=
+                                              "No attempt" &&
+                                          element["endgame_balance"]["title"] !=
+                                              "Failed"
+                                      : false,
+                            )
+                            .length /
+                        amountOfMatches;
                 return CoachViewLightTeam(
-                  matchesBalancedAuto: (match[e]
-                              ["new_technical_matches_aggregate"]["nodes"]
-                          as List<dynamic>)
-                      .where(
-                        (final dynamic element) =>
-                            element["auto_balance"]["title"] != "No attempt" &&
-                            element["auto_balance"]["title"] != "Failed",
-                      )
-                      .length,
-                  matchesBalancedEndgame: (match[e]
-                              ["new_technical_matches_aggregate"]["nodes"]
-                          as List<dynamic>)
-                      .where(
-                        (final dynamic element) =>
-                            element["endgame_balance"]["title"] !=
-                                "No attempt" &&
-                            element["endgame_balance"]["title"] != "Failed",
-                      )
-                      .length,
-                  amountOfMatches: amountOfMatches,
                   avgGamepiecePoints: avgGamepiecePoints,
+                  amountOfMatches: amountOfMatches,
                   team: team,
-                  avgAutoBalancePoints: autoBalanceAvg,
-                  avgEndgameBalancePoints: endgameBalanceAvg,
-                  autoGamepieces: avgAutoGamepiece,
-                  autoFailed: avgAutoFailed,
-                  teleGamepieces: avgTeleGamepiece,
-                  teleFailed: avgTeleFailed,
+                  avgDelivered: avgAutoDelivered + avgTeleDelivered,
+                  avgGamepiecesPlaced: avgAutoGamepieces + avgTeleGamepieces,
+                  avgEndgameBalancePoints: avgEndgameBalancePoints,
+                  endgameBalancePercentage: endgameBalancePercentage,
+                  avgAutoBalancePoints: avgAutoBalancePoints,
+                  autoBalancePercentage: autoBalancePercentage,
                   isBlue: e.startsWith("blue"),
                 );
               })
@@ -338,29 +349,25 @@ const List<String> teamValues = <String>[
 
 class CoachViewLightTeam {
   const CoachViewLightTeam({
-    required this.avgGamepiecePoints,
-    required this.avgAutoBalancePoints,
     required this.avgEndgameBalancePoints,
+    required this.avgAutoBalancePoints,
     required this.team,
-    required this.autoGamepieces,
-    required this.autoFailed,
-    required this.teleGamepieces,
-    required this.teleFailed,
-    required this.isBlue,
-    required this.matchesBalancedAuto,
-    required this.matchesBalancedEndgame,
     required this.amountOfMatches,
+    required this.autoBalancePercentage,
+    required this.endgameBalancePercentage,
+    required this.avgGamepiecesPlaced,
+    required this.isBlue,
+    required this.avgDelivered,
+    required this.avgGamepiecePoints,
   });
   final int amountOfMatches;
-  final double avgGamepiecePoints;
-  final double avgAutoBalancePoints;
   final double avgEndgameBalancePoints;
-  final double autoGamepieces;
-  final double autoFailed;
-  final double teleGamepieces;
-  final double teleFailed;
-  final int matchesBalancedAuto;
-  final int matchesBalancedEndgame;
+  final double endgameBalancePercentage;
+  final double avgAutoBalancePoints;
+  final double autoBalancePercentage;
+  final double avgDelivered;
+  final double avgGamepiecesPlaced;
+  final double avgGamepiecePoints;
   final LightTeam team;
   final bool isBlue;
 }
@@ -429,12 +436,12 @@ Widget teamData(
                     if (team.amountOfMatches == 0)
                       ...List<Spacer>.filled(7, const Spacer())
                     else ...<Widget>[
-                      const Spacer(),
                       Expanded(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Match Gamepieces: ${team.autoGamepieces}/${team.teleGamepieces}/${team.teleGamepieces + team.autoGamepieces}/${team.avgGamepiecePoints.toStringAsFixed(1)}",
+                            "Amount Of Matches: ${(team.amountOfMatches)}",
+                            style: const TextStyle(fontSize: 12),
                           ),
                         ),
                       ),
@@ -442,7 +449,8 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Auto Balance: ${team.avgAutoBalancePoints.toStringAsFixed(1)}/${team.matchesBalancedAuto}/${team.amountOfMatches}",
+                            "Balance: ${team.avgAutoBalancePoints.toStringAsFixed(1)} / ${(team.autoBalancePercentage * 100).toStringAsFixed(1)}% / ${team.avgEndgameBalancePoints.toStringAsFixed(1)} / ${(team.endgameBalancePercentage * 100).toStringAsFixed(1)}%",
+                            style: const TextStyle(fontSize: 12),
                           ),
                         ),
                       ),
@@ -450,7 +458,8 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Endgame Balance: ${team.avgEndgameBalancePoints.toStringAsFixed(1)}/${team.matchesBalancedEndgame}/${team.amountOfMatches}",
+                            "Avg Gamepiece Amount: ${team.avgGamepiecesPlaced.toStringAsFixed(1)}",
+                            style: const TextStyle(fontSize: 12),
                           ),
                         ),
                       ),
@@ -458,7 +467,8 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Auto Success Rate: ${(team.autoGamepieces / (team.autoFailed + team.autoGamepieces) * 100).toStringAsFixed(1)}%",
+                            "Avg Gamepiece Score: ${team.avgGamepiecePoints.toStringAsFixed(1)}",
+                            style: const TextStyle(fontSize: 12),
                           ),
                         ),
                       ),
@@ -466,7 +476,8 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Tele Success Rate: ${(team.teleGamepieces / (team.teleFailed + team.teleGamepieces) * 100).toStringAsFixed(1)}%",
+                            "Avg Delivered: ${team.avgDelivered.toStringAsFixed(1)}",
+                            style: const TextStyle(fontSize: 12),
                           ),
                         ),
                       ),
