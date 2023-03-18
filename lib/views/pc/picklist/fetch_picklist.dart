@@ -1,6 +1,7 @@
 import "package:scouting_frontend/models/average_or_null.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -42,6 +43,11 @@ Stream<List<PickListTeam>> fetchPicklist() {
           tele_cubes_low
           tele_cubes_mid
           tele_cubes_top
+          auto_cones_delivered
+          auto_cubes_delivered
+          tele_cones_delivered
+          tele_cubes_delivered
+          balanced_with
         }
       }
       nodes {
@@ -79,6 +85,15 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
       (pickListTeams["team"] as List<dynamic>).map((final dynamic team) {
     final dynamic avg = team["technical_matches_aggregate"]["aggregate"]["avg"];
     final bool nullValidator = avg["auto_cones_top"] == null;
+    final double avgAutoDelivered = nullValidator
+        ? double.nan
+        : (avg["auto_cones_delivered"] as double) +
+            (avg["auto_cubes_delivered"] as double);
+    final double avgDelivered = nullValidator
+        ? double.nan
+        : (avgAutoDelivered +
+            (avg["tele_cones_delivered"] as double) +
+            (avg["tele_cubes_delivered"] as double));
     final double avgGamepiecePoints = nullValidator
         ? double.nan
         : getPoints(
@@ -86,11 +101,16 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
               avg,
             ),
           );
+    final double avgBalancePartners = (avg["balanced_with"] as double?)
+            .mapNullable((final double p0) => p0 + 1) ??
+        1;
     final List<int> autoBalance =
         (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
             .where(
               (final dynamic node) =>
-                  node["auto_balance"]["title"] != "No attempt",
+                  node["robot_match_status"]["title"] != "Didn't come to field"
+                      ? node["auto_balance"]["title"] != "No attempt"
+                      : false,
             )
             .map<int>(
               (final dynamic node) =>
@@ -113,30 +133,36 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
             )
             .toList();
     return PickListTeam(
+      avgBalancePartners: avgBalancePartners,
       drivetrain: team["_2023_pit"]?["drivetrain"]["title"] as String?,
       matchesBalanced:
           (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
               .where(
-                (final dynamic node) =>
-                    node["auto_balance"]["title"] != "No attempt" &&
-                    node["auto_balance"]["title"] != "Failed",
+                (final dynamic node) => node["robot_match_status"]["title"] !=
+                        "Didn't come to field"
+                    ? node["auto_balance"]["title"] != "No attempt" &&
+                        node["auto_balance"]["title"] != "Failed"
+                    : false,
               )
               .length,
+      avgDelivered: avgDelivered,
       avgGamepieces: nullValidator
           ? double.nan
           : getPieces(
-              parseMatch(
-                avg,
-              ),
-            ),
+                parseMatch(
+                  avg,
+                ),
+              ) -
+              avgDelivered,
       autoGamepieceAvg: nullValidator
           ? double.nan
           : getPieces(
-              parseByMode(
-                MatchMode.auto,
-                avg,
-              ),
-            ),
+                parseByMode(
+                  MatchMode.auto,
+                  avg,
+                ),
+              ) -
+              avgAutoDelivered,
       amountOfMatches: amountOfMatches,
       team: LightTeam.fromJson(team),
       firstListIndex: team["first_picklist_index"] as int,
