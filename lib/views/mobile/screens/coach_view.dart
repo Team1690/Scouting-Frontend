@@ -163,6 +163,7 @@ query FetchCoach {
           auto_cubes_delivered
           tele_cones_delivered
          tele_cubes_delivered
+         balanced_with
         }
     }
       nodes{
@@ -302,6 +303,9 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                             )
                             .length /
                         amountOfMatches;
+                final double avgBalancePartners = avgNullValidator
+                    ? double.nan
+                    : (avg["balanced_with"] ?? 0) as double;
                 return CoachViewLightTeam(
                   avgGamepiecePoints: avgGamepiecePoints,
                   amountOfMatches: amountOfMatches,
@@ -310,6 +314,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   avgGamepiecesPlaced: avgAutoGamepieces + avgTeleGamepieces,
                   avgEndgameBalancePoints: avgEndgameBalancePoints,
                   endgameBalancePercentage: endgameBalancePercentage,
+                  endgameBalancePartners: avgBalancePartners,
                   avgAutoBalancePoints: avgAutoBalancePoints,
                   autoBalancePercentage: autoBalancePercentage,
                   isBlue: e.startsWith("blue"),
@@ -350,6 +355,7 @@ const List<String> teamValues = <String>[
 class CoachViewLightTeam {
   const CoachViewLightTeam({
     required this.avgEndgameBalancePoints,
+    required this.endgameBalancePartners,
     required this.avgAutoBalancePoints,
     required this.team,
     required this.amountOfMatches,
@@ -363,6 +369,7 @@ class CoachViewLightTeam {
   final int amountOfMatches;
   final double avgEndgameBalancePoints;
   final double endgameBalancePercentage;
+  final double endgameBalancePartners;
   final double avgAutoBalancePoints;
   final double autoBalancePercentage;
   final double avgDelivered;
@@ -449,7 +456,16 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Balance: ${team.avgAutoBalancePoints.toStringAsFixed(1)} / ${(team.autoBalancePercentage * 100).toStringAsFixed(1)}% / ${team.avgEndgameBalancePoints.toStringAsFixed(1)} / ${(team.endgameBalancePercentage * 100).toStringAsFixed(1)}%",
+                            "Auto Balance: ${team.avgAutoBalancePoints.toStringAsFixed(1)} / ${(team.autoBalancePercentage * 100).toStringAsFixed(1)}%",
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Endgame Balance: ${team.avgEndgameBalancePoints.toStringAsFixed(1)} / ${(team.endgameBalancePercentage * 100).toStringAsFixed(1)}% / ${team.endgameBalancePartners + 1}",
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),
