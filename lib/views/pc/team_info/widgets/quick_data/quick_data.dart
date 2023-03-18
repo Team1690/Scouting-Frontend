@@ -121,6 +121,9 @@ class QuickDataCard extends StatelessWidget {
                         Text(
                           "Best Auto Balance: ${data.highestBalanceTitleAuto}",
                         ),
+                        Text(
+                          "Avg Balancing Robots: ${data.avgBalancePartners + 1}",
+                        ),
                         const Spacer(
                           flex: 2,
                         ),

@@ -284,6 +284,9 @@ class CoachQuickData extends StatelessWidget {
                 "Gamepieces Delivered: ${data.avgDelivered.toStringAsFixed(1)}",
               ),
               Text(
+                "Avg Balancing Robots: ${data.avgBalancePartners + 1}",
+              ),
+              Text(
                 textAlign: TextAlign.center,
                 "Best Auto Balance: ${data.highestBalanceTitleAuto}",
               ),

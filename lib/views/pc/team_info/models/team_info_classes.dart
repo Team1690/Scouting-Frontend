@@ -2,6 +2,7 @@ import "package:scouting_frontend/models/team_model.dart";
 
 class QuickData {
   QuickData({
+    required this.avgBalancePartners,
     required this.avgAutoBalancePoints,
     required this.avgEndgameBalancePoints,
     required this.avgAutoConesTop,
@@ -69,6 +70,7 @@ class QuickData {
   final double avgDelivered;
   final double avgAutoGamepieces;
   final double avgTeleGamepieces;
+  final double avgBalancePartners;
 }
 
 class AutoByPosData {
