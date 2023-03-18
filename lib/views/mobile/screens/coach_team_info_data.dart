@@ -67,6 +67,13 @@ class CoachTeamData extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(10),
                           child: DashboardCard(
+                            title: "Auto Data",
+                            body: CoachAutoData(data.autoData),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: DashboardCard(
                             title: "Quick data",
                             body: CoachQuickData(data.quickData),
                           ),
@@ -171,159 +178,289 @@ class CoachQuickData extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => data.amoutOfMatches == 0
       ? const Center(child: Text("No data :("))
-      : Column(
-          children: <Widget>[
-            const Spacer(),
-            Row(
-              children: <Expanded>[
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Auto",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      gamepieceRow(
-                        "Top",
-                        data.avgAutoConesTop,
-                        data.avgAutoCubesTop,
-                      ),
-                      gamepieceRow(
-                        "Mid",
-                        data.avgAutoConesMid,
-                        data.avgAutoCubesMid,
-                      ),
-                      gamepieceRow(
-                        "Low",
-                        data.avgAutoConesLow,
-                        data.avgAutoCubesLow,
-                      ),
-                      gamepieceRow(
-                        "Delivered",
-                        data.avgAutoConesDelivered,
-                        data.avgAutoCubesDelivered,
-                      ),
-                      gamepieceRow(
-                        "Failed",
-                        data.avgAutoConesFailed,
-                        data.avgAutoCubesFailed,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Points",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Gamepieces: ${data.avgGamepiecePoints.toStringAsFixed(1)}",
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Auto Balance: ${data.avgAutoBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedAuto}/${data.amoutOfMatches}",
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Endgame Balance: ${data.avgEndgameBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedEndgame}/${data.amoutOfMatches}",
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Picklist",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "First: ${data.firstPicklistIndex + 1}",
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Second: ${data.secondPicklistIndex + 1}",
-                      ),
-                    ],
-                  ),
+      : SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          primary: false,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  "Auto",
+                  style: TextStyle(fontSize: 18),
                 ),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Teleop",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      gamepieceRow(
-                        "Top",
-                        data.avgTeleConesTop,
-                        data.avgTeleCubesTop,
-                      ),
-                      gamepieceRow(
-                        "Mid",
-                        data.avgTeleConesMid,
-                        data.avgTeleCubesMid,
-                      ),
-                      gamepieceRow(
-                        "Low",
-                        data.avgTeleConesLow,
-                        data.avgTeleCubesLow,
-                      ),
-                      gamepieceRow(
-                        "Delivered",
-                        data.avgTeleConesDelivered,
-                        data.avgTeleCubesDelivered,
-                      ),
-                      gamepieceRow(
-                        "Failed",
-                        data.avgTeleConesFailed,
-                        data.avgTeleCubesFailed,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Aim",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Auto: ${data.avgAutoGamepieces.toStringAsFixed(1)}/${(data.avgAutoGamepieces + data.avgAutoConesFailed + data.avgAutoCubesFailed).toStringAsFixed(1)}",
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Teleop: ${data.avgTeleGamepieces.toStringAsFixed(1)}/${(data.avgTeleGamepieces + data.avgTeleConesFailed + data.avgTeleCubesFailed).toStringAsFixed(1)}",
-                      ),
-                      const Text(
-                        "Misc",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Gamepieces Scored: ${data.avgGamepieces.toStringAsFixed(1)}",
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Gamepieces Delivered: ${data.avgDelivered.toStringAsFixed(1)}",
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Best Auto Balance: ${data.highestBalanceTitleAuto}",
-                      ),
-                    ],
-                  ),
+              ),
+              gamepieceRow(
+                "Top",
+                data.avgAutoConesTop,
+                data.avgAutoCubesTop,
+              ),
+              gamepieceRow(
+                "Mid",
+                data.avgAutoConesMid,
+                data.avgAutoCubesMid,
+              ),
+              gamepieceRow(
+                "Low",
+                data.avgAutoConesLow,
+                data.avgAutoCubesLow,
+              ),
+              gamepieceRow(
+                "Delivered",
+                data.avgAutoConesDelivered,
+                data.avgAutoCubesDelivered,
+              ),
+              gamepieceRow(
+                "Failed",
+                data.avgAutoConesFailed,
+                data.avgAutoCubesFailed,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  "Teleop",
+                  style: TextStyle(fontSize: 18),
                 ),
-              ],
-            ),
-            const Spacer(
-              flex: 2,
-            )
-          ],
+              ),
+              gamepieceRow(
+                "Top",
+                data.avgTeleConesTop,
+                data.avgTeleCubesTop,
+              ),
+              gamepieceRow(
+                "Mid",
+                data.avgTeleConesMid,
+                data.avgTeleCubesMid,
+              ),
+              gamepieceRow(
+                "Low",
+                data.avgTeleConesLow,
+                data.avgTeleCubesLow,
+              ),
+              gamepieceRow(
+                "Delivered",
+                data.avgTeleConesDelivered,
+                data.avgTeleCubesDelivered,
+              ),
+              gamepieceRow(
+                "Failed",
+                data.avgTeleConesFailed,
+                data.avgTeleCubesFailed,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  "Points",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Gamepieces: ${data.avgGamepiecePoints.toStringAsFixed(1)}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Auto Balance: ${data.avgAutoBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedAuto}/${data.amoutOfMatches}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Endgame Balance: ${data.avgEndgameBalancePoints.toStringAsFixed(1)}/${data.matchesBalancedEndgame}/${data.amoutOfMatches}",
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  "Misc",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Gamepieces Scored: ${data.avgGamepieces.toStringAsFixed(1)}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Gamepieces Delivered: ${data.avgDelivered.toStringAsFixed(1)}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Best Auto Balance: ${data.highestBalanceTitleAuto}",
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  "Aim",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Auto: ${data.avgAutoGamepieces.toStringAsFixed(1)}/${(data.avgAutoGamepieces + data.avgAutoConesFailed + data.avgAutoCubesFailed).toStringAsFixed(1)}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Teleop: ${data.avgTeleGamepieces.toStringAsFixed(1)}/${(data.avgTeleGamepieces + data.avgTeleConesFailed + data.avgTeleCubesFailed).toStringAsFixed(1)}",
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  "Picklist",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "First: ${data.firstPicklistIndex + 1}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Second: ${data.secondPicklistIndex + 1}",
+              ),
+            ],
+          ),
         );
+}
+
+class CoachAutoData extends StatelessWidget {
+  const CoachAutoData(this.data);
+  final AutoData data;
+
+  @override
+  Widget build(final BuildContext context) => CarouselWithIndicator(
+        direction: Axis.vertical,
+        enableInfininteScroll: true,
+        initialPage: 0,
+        widgets: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(
+                height: 15,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  "Near Feeder",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              data.nearFeederData.amoutOfMatches == 0
+                  ? const Center(child: Text("No near feeder data"))
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Avg Gamepieces Intaked: ${data.nearFeederData.avgAutoDelivered.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Gamepiece Scored: ${data.nearFeederData.avgAutoGampepiecePoints.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Highest Balance: ${data.nearFeederData.highestBalanceTitleAuto}",
+                        ),
+                        Text(
+                          "Matches Balanced: ${data.nearFeederData.matchesBalancedAuto}",
+                        ),
+                        Text(
+                          "Avg Balance Points: ${data.nearFeederData.avgBalancePoints.toStringAsFixed(1)}",
+                        ),
+                        Text(
+                          "Amount Of Matches: ${data.nearFeederData.amoutOfMatches}",
+                        ),
+                      ],
+                    ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(
+                height: 15,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  "Middle",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              data.middleData.amoutOfMatches == 0
+                  ? const Center(child: Text("No middle data"))
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Avg Gamepieces Intaked: ${data.middleData.avgAutoDelivered.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Gamepiece Scored: ${data.middleData.avgAutoGampepiecePoints.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Highest Balance: ${data.middleData.highestBalanceTitleAuto}",
+                        ),
+                        Text(
+                          "Matches Balanced: ${data.middleData.matchesBalancedAuto}",
+                        ),
+                        Text(
+                          "Avg Balance Score: ${data.middleData.avgBalancePoints.toStringAsFixed(1)}",
+                        ),
+                        Text(
+                          "Amount Of Matches: ${data.middleData.amoutOfMatches}",
+                        ),
+                      ],
+                    ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(
+                height: 15,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  "Near Gate",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              data.dataNearGate.amoutOfMatches == 0
+                  ? const Center(child: Text("No near gate data"))
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Avg Gamepiece Points: ${data.dataNearGate.avgAutoGampepiecePoints.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Gamepieces Delivered: ${data.dataNearGate.avgAutoDelivered.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Highest Balance: ${data.dataNearGate.highestBalanceTitleAuto}",
+                        ),
+                        Text(
+                          "Matches Balanced: ${data.dataNearGate.matchesBalancedAuto}",
+                        ),
+                        Text(
+                          "Avg Balance Points: ${data.dataNearGate.avgBalancePoints.toStringAsFixed(1)}",
+                        ),
+                        Text(
+                          "Amount Of Matches: ${data.dataNearGate.amoutOfMatches}",
+                        ),
+                      ],
+                    ),
+            ],
+          ),
+        ],
+      );
 }

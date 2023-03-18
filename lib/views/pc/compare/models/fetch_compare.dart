@@ -56,7 +56,7 @@ query FetchCompare(\$ids: [Int!]) {
       tele_cones_top
       tele_cubes_low
       tele_cubes_mid
-      tele_cubes_top 
+      tele_cubes_top
     }
     name
     number
@@ -183,7 +183,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
           final List<int> autoBalanceLineChartPoints =
               autoBalanceVals.map<int>((final String title) {
             switch (title) {
-              case "No Attempt":
+              case "No attempt":
                 return -1;
               case "Failed":
                 return 0;
@@ -211,7 +211,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
           final List<int> endgameBalanceLineChartPoints =
               endgameBalanceVals.map<int>((final String title) {
             switch (title) {
-              case "No Attempt":
+              case "No attempt":
                 return -1;
               case "Failed":
                 return 0;

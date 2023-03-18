@@ -71,6 +71,34 @@ class QuickData {
   final double avgTeleGamepieces;
 }
 
+class AutoByPosData {
+  AutoByPosData({
+    required this.matchesBalancedAuto,
+    required this.highestBalanceTitleAuto,
+    required this.amoutOfMatches,
+    required this.avgAutoGampepiecePoints,
+    required this.avgAutoDelivered,
+    required this.avgBalancePoints,
+  });
+  final int amoutOfMatches;
+  final String highestBalanceTitleAuto;
+  final int matchesBalancedAuto;
+  final double avgAutoDelivered;
+  final double avgAutoGampepiecePoints;
+  final double avgBalancePoints;
+}
+
+class AutoData {
+  AutoData({
+    required this.dataNearGate,
+    required this.middleData,
+    required this.nearFeederData,
+  });
+  final AutoByPosData nearFeederData;
+  final AutoByPosData middleData;
+  final AutoByPosData dataNearGate;
+}
+
 class SpecificData {
   const SpecificData(this.msg);
   final List<SpecificMatch> msg;
@@ -236,6 +264,7 @@ class Team {
     required this.allCubesData,
     required this.allData,
     required this.pointsData,
+    required this.autoData,
   });
   final LightTeam team;
   final SpecificData specificData;
@@ -251,4 +280,5 @@ class Team {
   final LineChartData autoCubesData;
   final LineChartData allCubesData;
   final LineChartData allData;
+  final AutoData autoData;
 }
