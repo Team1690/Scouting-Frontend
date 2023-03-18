@@ -95,6 +95,9 @@ query TeamInfo(\$id: Int!) {
       robot_match_status {
         title
       }
+      robot_placement{
+        title
+      }
       is_rematch
       auto_cones_low
       auto_cones_mid
@@ -262,10 +265,12 @@ Future<Team> fetchTeamInfo(
 
         List<int> balancePoints(final MatchMode mode) => matches
             .where(
-              (final dynamic match) =>
-                  match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
-                      ["title"] !=
-                  "No attempt",
+              (final dynamic match) => match["robot_match_status"]["title"] !=
+                      "Didn't come to field"
+                  ? match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
+                          ["title"] !=
+                      "No attempt"
+                  : false,
             )
             .map(
               (final dynamic match) => match[
@@ -275,17 +280,21 @@ Future<Team> fetchTeamInfo(
             )
             .toList();
 
-        int matchesBalanced(final MatchMode mode) => matches
-            .where(
-              (final dynamic match) =>
-                  match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
-                          ["title"] !=
-                      "No attempt" &&
-                  match["${mode.title == MatchMode.auto.title ? mode.title : "endgame"}_balance"]
-                          ["title"] !=
-                      "Failed",
-            )
-            .length;
+        int matchesBalanced(final MatchMode mode, final List<dynamic> data) =>
+            data
+                .where(
+                  (final dynamic match) => match["robot_match_status"]
+                              ["title"] !=
+                          "Didn't come to field"
+                      ? match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
+                                  ["title"] !=
+                              "No attempt" &&
+                          match["${mode.title == MatchMode.auto.title ? mode.title : "endgame"}_balance"]
+                                  ["title"] !=
+                              "Failed"
+                      : false,
+                )
+                .length;
         final List<int> autoBalancePoints = balancePoints(MatchMode.auto);
         final List<int> endgameBalancePoints = balancePoints(MatchMode.tele);
         final SpecificData specificData = SpecificData(
@@ -314,22 +323,34 @@ Future<Team> fetchTeamInfo(
                 teleCubesDelivered +
                 teleConesDelivered;
         final QuickData quickData = QuickData(
-          matchesBalancedAuto: matchesBalanced(MatchMode.auto),
-          matchesBalancedEndgame: matchesBalanced(MatchMode.tele),
+          matchesBalancedAuto: matchesBalanced(MatchMode.auto, matches),
+          matchesBalancedEndgame: matchesBalanced(MatchMode.tele, matches),
           firstPicklistIndex: team["team_by_pk"]["first_picklist_index"] as int,
           secondPicklistIndex:
               team["team_by_pk"]["second_picklist_index"] as int,
           highestBalanceTitleAuto: matches.isEmpty
               ? "highestLevelTitle QuickData: this isn't supposed to be shown because of amoutOfMatches check in ui"
               : matches
-                  .map<dynamic>((final dynamic match) => match["auto_balance"])
-                  .reduceSafe(
-                    (final dynamic value, final dynamic element) =>
-                        (value["auto_points"] as int) >
-                                (element["auto_points"] as int)
-                            ? value
-                            : element,
-                  )["title"] as String,
+                  .where(
+                    (final dynamic match) =>
+                        match["robot_match_status"]["title"] !=
+                        "Didn't come to field",
+                  )
+                  .map<Map<String, dynamic>>(
+                    (final dynamic match) =>
+                        match["auto_balance"] as Map<String, dynamic>,
+                  )
+                  .fold(
+                  <String, dynamic>{"auto_points": 0, "title": "No attempt"},
+                  (
+                    final Map<String, dynamic> value,
+                    final Map<String, dynamic> element,
+                  ) =>
+                      (value["auto_points"] as int) >
+                              (element["auto_points"] as int)
+                          ? value
+                          : element,
+                )["title"] as String,
           amoutOfMatches: matches.length,
           avgAutoBalancePoints: autoBalancePoints.averageOrNull ?? 0,
           avgEndgameBalancePoints: endgameBalancePoints.averageOrNull ?? 0,
@@ -364,9 +385,12 @@ Future<Team> fetchTeamInfo(
         );
         List<int> getBalanceLineChart(final MatchMode mode) => matches
                 .map(
-                  (final dynamic match) => match[
-                          "${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
-                      ["title"] as String,
+                  (final dynamic match) => match["robot_match_status"]
+                              ["title"] !=
+                          "Didn't come to field"
+                      ? match["${mode == MatchMode.auto ? mode.title : "endgame"}_balance"]
+                          ["title"] as String
+                      : "No attempt",
                 )
                 .toList()
                 .map<int>((final String title) {
@@ -598,6 +622,66 @@ Future<Team> fetchTeamInfo(
                 .toList()
           ],
         );
+        AutoByPosData getDataByNodeList(final List<dynamic> matchesInPos) =>
+            AutoByPosData(
+              matchesBalancedAuto:
+                  matchesBalanced(MatchMode.auto, matchesInPos),
+              highestBalanceTitleAuto: matchesInPos.isEmpty
+                  ? "highestLevelTitle QuickData: this isn't supposed to be shown because of amoutOfMatches check in ui"
+                  : matchesInPos
+                      .where(
+                        (final dynamic match) =>
+                            match["robot_match_status"]["title"] !=
+                            "Didn't come to field",
+                      )
+                      .map<Map<String, dynamic>>(
+                        (final dynamic match) =>
+                            match["auto_balance"] as Map<String, dynamic>,
+                      )
+                      .fold(
+                      <String, dynamic>{
+                        "auto_points": 0,
+                        "title": "No attempt"
+                      },
+                      (
+                        final Map<String, dynamic> value,
+                        final Map<String, dynamic> element,
+                      ) =>
+                          (value["auto_points"] as int) >
+                                  (element["auto_points"] as int)
+                              ? value
+                              : element,
+                    )["title"] as String,
+              avgBalancePoints: matchesInPos
+                      .map<int>(
+                        (final dynamic match) => match["robot_match_status"]
+                                    ["title"] !=
+                                "Didn't come to field"
+                            ? match["auto_balance"]["auto_points"] as int
+                            : 0,
+                      )
+                      .toList()
+                      .averageOrNull ??
+                  double.nan,
+              amoutOfMatches: matchesInPos.length,
+              avgAutoGampepiecePoints: matchesInPos
+                      .map(
+                        (final dynamic match) =>
+                            getPoints(parseByMode(MatchMode.auto, match)),
+                      )
+                      .toList()
+                      .averageOrNull ??
+                  double.nan,
+              avgAutoDelivered: matchesInPos
+                      .map(
+                        (final dynamic match) =>
+                            (match["auto_cones_delivered"] as int) +
+                            (match["auto_cubes_delivered"] as int),
+                      )
+                      .toList()
+                      .averageOrNull ??
+                  double.nan,
+            );
         return Team(
           pointsData: pointsData,
           allConesData: dataAllCones,
@@ -613,6 +697,35 @@ Future<Team> fetchTeamInfo(
           autoConesData: dataAutoCones,
           teleCubesData: dataTeleCubes,
           autoCubesData: dataAutoCubes,
+          autoData: AutoData(
+            dataNearGate: getDataByNodeList(
+              matches
+                  .where(
+                    (final dynamic match) =>
+                        (match["robot_placement"]["title"] as String) ==
+                        "Near Gate",
+                  )
+                  .toList(),
+            ),
+            middleData: getDataByNodeList(
+              matches
+                  .where(
+                    (final dynamic match) =>
+                        (match["robot_placement"]["title"] as String) ==
+                        "Middle",
+                  )
+                  .toList(),
+            ),
+            nearFeederData: getDataByNodeList(
+              matches
+                  .where(
+                    (final dynamic match) =>
+                        (match["robot_placement"]["title"] as String) ==
+                        "Near Feeder",
+                  )
+                  .toList(),
+            ),
+          ),
         );
       },
       document: gql(teamInfoQuery),
