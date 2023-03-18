@@ -465,7 +465,7 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Endgame Balance: ${team.avgEndgameBalancePoints.toStringAsFixed(1)} / ${(team.endgameBalancePercentage * 100).toStringAsFixed(1)}% / ${team.endgameBalancePartners + 1}",
+                            "Endgame Balance: ${team.avgEndgameBalancePoints.toStringAsFixed(1)} / ${(team.endgameBalancePercentage * 100).toStringAsFixed(1)}% / ${(team.endgameBalancePartners + 1).toStringAsFixed(1)}",
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),
