@@ -143,13 +143,15 @@ class Scatter extends StatelessWidget {
                             maxX: report
                                 .map(
                                   (final ScatterData e) =>
-                                      (e.gamepiecePointsAvg),
+                                      (e.gamepiecePointsAvg + 1)
+                                          .roundToDouble(),
                                 )
                                 .reduce(max),
                             maxY: report
                                 .map(
                                   (final ScatterData e) =>
-                                      e.yGamepiecePointsStddev,
+                                      (e.yGamepiecePointsStddev + 1)
+                                          .roundToDouble(),
                                 )
                                 .fold<double>(25.0, max),
                           ),
