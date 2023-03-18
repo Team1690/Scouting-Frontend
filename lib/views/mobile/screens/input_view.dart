@@ -188,7 +188,8 @@ class _UserInputState extends State<UserInput> {
                                 match.robotMatchStatusId == notOnFieldId
                                     ? null
                                     : submmission.onNull(
-                                        "Please pick a starting position"),
+                                        "Please pick a starting position",
+                                      ),
                           ),
                           const SizedBox(
                             height: 15,
@@ -477,6 +478,61 @@ class _UserInputState extends State<UserInput> {
                     const SizedBox(
                       height: 20,
                     ),
+                    Visibility(
+                      visible: match.robotMatchStatusId != notOnFieldId,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Selector<int>(
+                          validate: (final int? submission) => submission
+                              .onNull("Please pick an endgame balance result"),
+                          options: balanceProvider.keys.toList(),
+                          placeholder: "Choose an endgame balance result",
+                          makeItem: (final int index) =>
+                              balanceProvider[index]!,
+                          onChange: (final int balance) {
+                            setState(() {
+                              match.endgameBalanceStatus = balance;
+                              match.balancedWith = balanceProvider[balance] ==
+                                          "Balanced" ||
+                                      balanceProvider[balance] == "Unbalanced"
+                                  ? 0
+                                  : null;
+                            });
+                          },
+                          value: match.endgameBalanceStatus,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Visibility(
+                      visible: match.balancedWith != null,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const Text(
+                            textAlign: TextAlign.center,
+                            "Balanced with:",
+                          ),
+                          Slider(
+                            onChanged: (final double amountOfBots) =>
+                                setState(() {
+                              match.balancedWith = amountOfBots.toInt();
+                            }),
+                            value: (match.balancedWith ?? 0).toDouble(),
+                            min: 0,
+                            max: 2,
+                            divisions: 2,
+                            label: (match.balancedWith ?? 0).toString(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     SectionDivider(label: "Robot fault"),
                     Switcher(
                       labels: const <String>[
@@ -510,29 +566,6 @@ class _UserInputState extends State<UserInput> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Visibility(
-                      visible: match.robotMatchStatusId != notOnFieldId,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Selector<int>(
-                          validate: (final int? submission) => submission
-                              .onNull("Please pick an endgame balance result"),
-                          options: balanceProvider.keys.toList(),
-                          placeholder: "Choose an endgame balance result",
-                          makeItem: (final int index) =>
-                              balanceProvider[index]!,
-                          onChange: (final int balance) {
-                            setState(() {
-                              match.endgameBalanceStatus = balance;
-                            });
-                          },
-                          value: match.endgameBalanceStatus,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     SubmitButton(
                       resetForm: () {
                         setState(() {
@@ -561,8 +594,8 @@ class _UserInputState extends State<UserInput> {
 }
 
 const String mutation = r"""
-mutation InsertTechnicalMatch($starting_position_id: Int, $tele_cubes_delivered: Int, $tele_cones_delivered: Int, $auto_cubes_delivered: Int, $auto_cones_delivered: Int, $auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int) {
-  insert__2023_technical_match(objects: {starting_position_id: $starting_position_id, auto_balance_id: $auto_balance_id, tele_cubes_delivered: $tele_cubes_delivered, tele_cones_delivered: $tele_cones_delivered, auto_cubes_delivered: $auto_cubes_delivered, auto_cones_delivered: $auto_cones_delivered, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
+mutation InsertTechnicalMatch($balanced_with: Int, $starting_position_id: Int, $tele_cubes_delivered: Int, $tele_cones_delivered: Int, $auto_cubes_delivered: Int, $auto_cones_delivered: Int, $auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int) {
+  insert__2023_technical_match(objects: {balanced_with: $balanced_with, starting_position_id: $starting_position_id, auto_balance_id: $auto_balance_id, tele_cubes_delivered: $tele_cubes_delivered, tele_cones_delivered: $tele_cones_delivered, auto_cubes_delivered: $auto_cubes_delivered, auto_cones_delivered: $auto_cones_delivered, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
     returning {
       id
     }
