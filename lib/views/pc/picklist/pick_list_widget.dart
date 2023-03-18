@@ -104,6 +104,12 @@ class PickList extends StatelessWidget {
                                           "Gamepiece points avg: ${pickListTeam.avgGamepiecePoints.toStringAsFixed(1)}",
                                         ),
                                       ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          "Avg Gamepieces Delivered: ${pickListTeam.avgDelivered.toStringAsFixed(1)}",
+                                        ),
+                                      ),
                                     ] else
                                       ...List<Spacer>.filled(
                                         4,
@@ -138,6 +144,11 @@ class PickList extends StatelessWidget {
                                 title: Row(
                                   children: <Widget>[
                                     const Spacer(),
+                                    Expanded(
+                                      child: Text(
+                                        "Avg Balancing Robots: ${pickListTeam.avgBalancePartners}",
+                                      ),
+                                    ),
                                     Expanded(
                                       child: Text(
                                         "Best Balance: ${pickListTeam.maxBalanceTitle}",
@@ -187,7 +198,7 @@ class PickList extends StatelessWidget {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "Gamepiece avg: ${pickListTeam.avgGamepieces.toStringAsFixed(1)}",
+                                      "Avg Scored Gamepieces : ${pickListTeam.avgGamepieces.toStringAsFixed(1)}",
                                     ),
                                   ),
                                   Expanded(
@@ -197,7 +208,7 @@ class PickList extends StatelessWidget {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "Balance points: ${pickListTeam.avgAutoBalancePoints.toStringAsFixed(1)}/${pickListTeam.matchesBalanced}/${pickListTeam.amountOfMatches}",
+                                      "Auto Balance: ${pickListTeam.avgAutoBalancePoints.toStringAsFixed(1)}/${pickListTeam.matchesBalanced}/${pickListTeam.amountOfMatches}",
                                     ),
                                   ),
                                 ]
@@ -318,6 +329,8 @@ class PickListTeam {
     required this.robotMatchStatusToAmount,
     required this.autoGamepieceAvg,
     required this.avgGamepieces,
+    required this.avgDelivered,
+    required this.avgBalancePartners,
     required this.matchesBalanced,
     required this.maxBalanceTitle,
     required this.drivetrain,
@@ -329,6 +342,8 @@ class PickListTeam {
   final double avgAutoBalancePoints;
   final double autoGamepieceAvg;
   final double avgGamepieces;
+  final double avgDelivered;
+  final double avgBalancePartners;
 
   final LightTeam team;
   final List<String>? faultMessages;
