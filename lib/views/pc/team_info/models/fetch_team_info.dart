@@ -684,6 +684,19 @@ Future<Team> fetchTeamInfo(
                       .toList()
                       .averageOrNull ??
                   double.nan,
+              avgAutoGampepieces: nullValidator
+                  ? 0
+                  : (matchesInPos
+                              .map(
+                                (final dynamic match) => getPieces(
+                                  parseByMode(MatchMode.auto, match),
+                                ),
+                              )
+                              .toList()
+                              .averageOrNull ??
+                          double.nan) -
+                      autoCubesDelivered -
+                      autoConesDelivered,
             );
         return Team(
           pointsData: pointsData,

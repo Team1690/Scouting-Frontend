@@ -79,6 +79,7 @@ class AutoByPosData {
     required this.highestBalanceTitleAuto,
     required this.amoutOfMatches,
     required this.avgAutoGampepiecePoints,
+    required this.avgAutoGampepieces,
     required this.avgAutoDelivered,
     required this.avgBalancePoints,
   });
@@ -87,6 +88,7 @@ class AutoByPosData {
   final int matchesBalancedAuto;
   final double avgAutoDelivered;
   final double avgAutoGampepiecePoints;
+  final double avgAutoGampepieces;
   final double avgBalancePoints;
 }
 
