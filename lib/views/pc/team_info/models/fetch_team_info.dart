@@ -687,16 +687,17 @@ Future<Team> fetchTeamInfo(
               avgAutoGampepieces: nullValidator
                   ? 0
                   : (matchesInPos
-                              .map(
-                                (final dynamic match) => getPieces(
+                          .map(
+                            (final dynamic match) =>
+                                getPieces(
                                   parseByMode(MatchMode.auto, match),
-                                ),
-                              )
-                              .toList()
-                              .averageOrNull ??
-                          double.nan) -
-                      autoCubesDelivered -
-                      autoConesDelivered,
+                                ) -
+                                ((match["auto_cones_delivered"] as int) +
+                                    (match["auto_cubes_delivered"] as int)),
+                          )
+                          .toList()
+                          .averageOrNull ??
+                      double.nan),
             );
         return Team(
           pointsData: pointsData,
