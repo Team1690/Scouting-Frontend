@@ -135,6 +135,8 @@ class _UserInputState extends State<UserInput> {
                       height: 15,
                     ),
                     TeamAndMatchSelection(
+                      matchController: matchController,
+                      teamNumberController: teamNumberController,
                       onChange: (
                         final ScheduleMatch selectedMatch,
                         final LightTeam? team,
