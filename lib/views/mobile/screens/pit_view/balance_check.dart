@@ -181,29 +181,29 @@ class BalanceCheckResults extends StatelessWidget {
                       0),
                 );
                 final double firstTeamWidthInSide = firstTeamWidthInMid -
-                    (firstTeamWidthInMid -
+                    ((firstTeamWidthInMid -
                             (firstTeamTable.mapNullable(
                                   (final Map<String, dynamic> p0) =>
                                       p0["space_between_wheels"] as int,
                                 ) ??
                                 0)) /
-                        2;
+                        2);
                 final double secondTeamWidthInSide = secondTeamWidthInMid -
                     (secondTeamWidthInMid -
-                            (secondTeamTable.mapNullable(
+                        ((secondTeamTable.mapNullable(
                                   (final Map<String, dynamic> p0) =>
                                       p0["space_between_wheels"] as int,
                                 ) ??
                                 0)) /
-                        2;
+                            2);
                 final double thirdTeamWidthInSide = thirdTeamWidthInMid -
                     (thirdTeamWidthInMid -
-                            (thirdTeamTable.mapNullable(
+                        ((thirdTeamTable.mapNullable(
                                   (final Map<String, dynamic> p0) =>
                                       p0["space_between_wheels"] as int,
                                 ) ??
                                 0)) /
-                        2;
+                            2);
                 return Column(
                   children: <Widget>[
                     Text(
