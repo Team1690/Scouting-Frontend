@@ -181,10 +181,19 @@ class BalanceCheckResults extends StatelessWidget {
                       "Can Balance With ${firstTeam.number} In The Middle: ${(secondTeamWidthInSide + thirdTeamWidthInSide + firstTeamWidthInMid) < 243 ? "Yes" : "No"}",
                     ),
                     Text(
+                      "Total Width: ${secondTeamWidthInSide + thirdTeamWidthInSide + firstTeamWidthInMid}",
+                    ),
+                    Text(
                       "Can Balance With ${secondTeam.number} In The Middle: ${(firstTeamWidthInSide + thirdTeamWidthInSide + secondTeamWidthInMid) < 243 ? "Yes" : "No"}",
                     ),
                     Text(
+                      "Total Width: ${firstTeamWidthInSide + thirdTeamWidthInSide + secondTeamWidthInMid}",
+                    ),
+                    Text(
                       "Can Balance With ${thirdTeam.number} In The Middle: ${(secondTeamWidthInSide + firstTeamWidthInSide + thirdTeamWidthInMid) < 243 ? "Yes" : "No"}",
+                    ),
+                    Text(
+                      "Total Width: ${secondTeamWidthInSide + firstTeamWidthInSide + thirdTeamWidthInMid}",
                     )
                   ],
                 );
