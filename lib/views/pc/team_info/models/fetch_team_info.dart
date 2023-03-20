@@ -99,6 +99,7 @@ query TeamInfo(\$id: Int!) {
       robot_placement{
         title
       }
+      balanced_with
       is_rematch
       auto_cones_low
       auto_cones_mid
@@ -323,9 +324,22 @@ Future<Team> fetchTeamInfo(
                 autoConesDelivered +
                 teleCubesDelivered +
                 teleConesDelivered;
-        final double avgBalancePartners = (avg["balanced_with"] ?? 0) as double;
+        final int matchesBalancedSingle = matches
+            .where(
+              (final dynamic match) => (match["balanced_with"] as int?) == 0,
+            )
+            .length;
+        final int matchesBalancedDouble = matches
+            .where(
+              (final dynamic match) => (match["balanced_with"] as int?) == 1,
+            )
+            .length;
+        final int matchesBalancedTriple = matches
+            .where(
+              (final dynamic match) => (match["balanced_with"] as int?) == 2,
+            )
+            .length;
         final QuickData quickData = QuickData(
-          avgBalancePartners: avgBalancePartners,
           matchesBalancedAuto: matchesBalanced(MatchMode.auto, matches),
           matchesBalancedEndgame: matchesBalanced(MatchMode.tele, matches),
           firstPicklistIndex: team["team_by_pk"]["first_picklist_index"] as int,
@@ -385,6 +399,9 @@ Future<Team> fetchTeamInfo(
           avgTeleConesDelivered: teleConesDelivered,
           avgTeleCubesDelivered: teleCubesDelivered,
           avgDelivered: avgDelivered,
+          matchesBalancedSingle: matchesBalancedSingle,
+          matchesBalancedDouble: matchesBalancedDouble,
+          matchesBalancedTriple: matchesBalancedTriple,
         );
         List<int> getBalanceLineChart(final MatchMode mode) => matches
                 .map(
