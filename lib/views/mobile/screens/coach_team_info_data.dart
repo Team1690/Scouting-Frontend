@@ -357,10 +357,13 @@ class CoachAutoData extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "Avg Gamepieces Intaked: ${data.nearFeederData.avgAutoDelivered.toStringAsFixed(2)}",
+                          "Avg Gamepiece Scored: ${data.nearFeederData.avgAutoGampepieces.toStringAsFixed(2)}",
                         ),
                         Text(
-                          "Avg Gamepiece Scored: ${data.nearFeederData.avgAutoGampepiecePoints.toStringAsFixed(2)}",
+                          "Avg Gamepieces Delivered: ${data.nearFeederData.avgAutoDelivered.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Gamepiece Points: ${data.nearFeederData.avgAutoGampepiecePoints.toStringAsFixed(2)}",
                         ),
                         Text(
                           "Highest Balance: ${data.nearFeederData.highestBalanceTitleAuto}",
@@ -400,10 +403,13 @@ class CoachAutoData extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "Avg Gamepieces Intaked: ${data.middleData.avgAutoDelivered.toStringAsFixed(2)}",
+                          "Avg Gamepiece Scored: ${data.middleData.avgAutoGampepieces.toStringAsFixed(2)}",
                         ),
                         Text(
-                          "Avg Gamepiece Scored: ${data.middleData.avgAutoGampepiecePoints.toStringAsFixed(2)}",
+                          "Avg Gamepieces Delivered: ${data.middleData.avgAutoDelivered.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Gamepiece Points: ${data.middleData.avgAutoGampepiecePoints.toStringAsFixed(2)}",
                         ),
                         Text(
                           "Highest Balance: ${data.middleData.highestBalanceTitleAuto}",
@@ -443,10 +449,13 @@ class CoachAutoData extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "Avg Gamepiece Points: ${data.dataNearGate.avgAutoGampepiecePoints.toStringAsFixed(2)}",
+                          "Avg Gamepiece Scored: ${data.dataNearGate.avgAutoGampepieces.toStringAsFixed(2)}",
                         ),
                         Text(
                           "Avg Gamepieces Delivered: ${data.dataNearGate.avgAutoDelivered.toStringAsFixed(2)}",
+                        ),
+                        Text(
+                          "Avg Gamepiece Points: ${data.dataNearGate.avgAutoGampepiecePoints.toStringAsFixed(2)}",
                         ),
                         Text(
                           "Highest Balance: ${data.dataNearGate.highestBalanceTitleAuto}",

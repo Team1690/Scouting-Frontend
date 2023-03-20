@@ -212,8 +212,9 @@ final Map<EffectiveScore, int> score = <EffectiveScore, int>{
             MapEntry<EffectiveScore, int>(
           effectiveScore,
           effectiveScore.level!.points +
-              effectiveScore.mode
-                  .pointAddition, //this can be null since we define each EffectiveScore here to have a level (aka not missed)
+              (effectiveScore.level != GridLevel.none
+                  ? effectiveScore.mode.pointAddition
+                  : 0), //this can be null since we define each EffectiveScore here to have a level (aka not missed)
         ),
       )
 };
