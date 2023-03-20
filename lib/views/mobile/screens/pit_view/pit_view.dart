@@ -41,6 +41,7 @@ class _PitViewState extends State<PitView> {
   final TextEditingController weightController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
   final TextEditingController lengthController = TextEditingController();
+  final TextEditingController betweenWheelsController = TextEditingController();
   final List<String> driveWheelTypes = <String>[
     "Tread",
     "Colson",
@@ -266,6 +267,26 @@ class _PitViewState extends State<PitView> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: betweenWheelsController,
+                      onChanged: (final String length) {
+                        vars.spaceBetweenWheels = length;
+                      },
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      decoration: const InputDecoration(
+                        labelText: "Space Between Wheels",
+                        prefixIcon: Icon(Icons.compare_arrows),
+                      ),
+                      validator: _numericValidator(
+                        "please enter the robot's space between wheels",
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
                       controller: weightController,
                       onChanged: (final String weight) {
                         vars.weight = weight;
@@ -383,13 +404,14 @@ class _PitViewState extends State<PitView> {
                       getResult: () => result,
                       mutation: """
           mutation InsertPit(
+              \$space_between_wheels:Int,
               \$url: String,
               \$drive_motor_amount: Int,
               \$drivemotor_id: Int,
               \$drivetrain_id: Int,
               \$drive_wheel_type: String,
               \$gearbox_purchased: Boolean,
-              \$notes:String, 
+              \$notes:String,
               \$has_shifter:Boolean,
               \$team_id:Int,
               \$weight:Int,
@@ -399,6 +421,7 @@ class _PitViewState extends State<PitView> {
               \$has_ground_intake:Boolean,
               ) {
           insert__2023_pit(objects: {
+          space_between_wheels: \$space_between_wheels,
           url: \$url,
           drive_motor_amount: \$drive_motor_amount,
           drivemotor_id: \$drivemotor_id,
