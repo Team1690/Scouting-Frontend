@@ -87,6 +87,30 @@ class QuickDataCard extends StatelessWidget {
                     Column(
                       children: <Widget>[
                         const Text(
+                          "Endgame Balance",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        const Spacer(),
+                        Text(
+                          "Single Balances: ${data.matchesBalancedSingle}",
+                        ),
+                        Text(
+                          "Double Balances: ${data.matchesBalancedDouble}",
+                        ),
+                        Text(
+                          "Triple Balances: ${data.matchesBalancedTriple}",
+                        ),
+                        Text(
+                          "Balance Percentage: ${(data.matchesBalancedEndgame / data.amoutOfMatches * 100).toStringAsFixed(1)}%",
+                        ),
+                        const Spacer(
+                          flex: 2,
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        const Text(
                           "Points",
                           style: TextStyle(fontSize: 18),
                         ),
@@ -122,7 +146,7 @@ class QuickDataCard extends StatelessWidget {
                           "Best Auto Balance: ${data.highestBalanceTitleAuto}",
                         ),
                         Text(
-                          "Avg Balancing Robots: ${data.avgBalancePartners + 1}",
+                          "Matches Played: ${data.amoutOfMatches}",
                         ),
                         const Spacer(
                           flex: 2,

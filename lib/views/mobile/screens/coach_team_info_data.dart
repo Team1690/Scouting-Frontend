@@ -252,6 +252,29 @@ class CoachQuickData extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Text(
+                  "Endgame Balance",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Single Balances: ${data.matchesBalancedSingle}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Double Balances: ${data.matchesBalancedDouble}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Triple Balances: ${data.matchesBalancedTriple}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Balance Percentage: ${(data.matchesBalancedEndgame / data.amoutOfMatches * 100).toStringAsFixed(1)}%",
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
                   "Points",
                   style: TextStyle(fontSize: 18),
                 ),
@@ -284,11 +307,12 @@ class CoachQuickData extends StatelessWidget {
                 "Gamepieces Delivered: ${data.avgDelivered.toStringAsFixed(1)}",
               ),
               Text(
-                "Avg Balancing Robots: ${data.avgBalancePartners + 1}",
+                textAlign: TextAlign.center,
+                "Best Auto Balance: ${data.highestBalanceTitleAuto}",
               ),
               Text(
                 textAlign: TextAlign.center,
-                "Best Auto Balance: ${data.highestBalanceTitleAuto}",
+                "Matches Played: ${data.amoutOfMatches}",
               ),
               const Padding(
                 padding: EdgeInsets.all(10.0),
