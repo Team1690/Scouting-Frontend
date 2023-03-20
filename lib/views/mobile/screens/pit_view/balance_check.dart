@@ -7,6 +7,7 @@ import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
+import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 
 class BalanceCheck extends StatefulWidget {
   const BalanceCheck([
@@ -37,17 +38,25 @@ class _ChangeMatchState extends State<BalanceCheck> {
     firstTeam = widget.initialTeam;
 
     teamControllers[0] = TextEditingController(
-      text: "${widget.initialTeam?.number} ${widget.initialTeam?.name}",
+      text: widget.initialTeam.mapNullable(
+            (final LightTeam team) => "${team.number} ${team.name}",
+          ) ??
+          "",
     );
   }
 
   @override
-  Widget build(final BuildContext context) => SizedBox(
-        width: 100,
-        height: double.infinity,
-        child: AlertDialog(
-          title: const Text("Check Balances"),
-          content: Column(
+  Widget build(final BuildContext context) => Scaffold(
+        drawer: SideNavBar(),
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 5,
+          title: const Text(
+            "Orbit Scouting",
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
             children: <Widget>[
               SectionDivider(label: "Teams"),
               TeamSelectionFuture(
@@ -91,11 +100,7 @@ class BalanceCheckResults extends StatelessWidget {
   Widget build(final BuildContext context) =>
       FutureBuilder<Map<String, dynamic>>(
         future: Future<Map<String, dynamic>>(
-          () => <String, dynamic>{
-            "first_team": fetchPit(firstTeam, context),
-            "second_team": fetchPit(secondTeam, context),
-            "third_team": fetchPit(thirdTeam, context),
-          },
+          () => fetchPit(firstTeam, secondTeam, thirdTeam, context),
         ),
         builder: (
           final BuildContext context,
@@ -108,61 +113,80 @@ class BalanceCheckResults extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-
           return snapShot.data
                   .mapNullable<Widget>((final Map<String, dynamic> teams) {
+                final Map<String, dynamic>? firstTeamTable =
+                    teams["first_team"] as Map<String, dynamic>?;
+                final Map<String, dynamic>? secondTeamTable =
+                    teams["second_team"] as Map<String, dynamic>?;
+                final Map<String, dynamic>? thirdTeamTable =
+                    teams["third_team"] as Map<String, dynamic>?;
                 final int firstTeamWidthInMid = min(
-                  (teams["first_team"]["width"] as int),
-                  (teams["first_team"]["length"] as int),
+                  (firstTeamTable.mapNullable(
+                        (final Map<String, dynamic> p0) => p0["width"] as int,
+                      ) ??
+                      0),
+                  (firstTeamTable.mapNullable(
+                        (final Map<String, dynamic> p0) => p0["length"] as int,
+                      ) ??
+                      0),
                 );
                 final int secondTeamWidthInMid = min(
-                  (teams["second_team"]["width"] as int),
-                  (teams["second_team"]["length"] as int),
+                  (secondTeamTable.mapNullable(
+                        (final Map<String, dynamic> p0) => p0["width"] as int,
+                      ) ??
+                      0),
+                  (secondTeamTable.mapNullable(
+                        (final Map<String, dynamic> p0) => p0["length"] as int,
+                      ) ??
+                      0),
                 );
                 final int thirdTeamWidthInMid = min(
-                  (teams["third_team"]["width"] as int),
-                  (teams["third_team"]["length"] as int),
+                  (thirdTeamTable.mapNullable(
+                        (final Map<String, dynamic> p0) => p0["width"] as int,
+                      ) ??
+                      0),
+                  (thirdTeamTable.mapNullable(
+                        (final Map<String, dynamic> p0) => p0["length"] as int,
+                      ) ??
+                      0),
                 );
                 final double firstTeamWidthInSide = firstTeamWidthInMid -
                     (firstTeamWidthInMid -
-                            (teams["first_team"]["space_between_wheels"]
-                                as int)) /
+                            (firstTeamTable.mapNullable(
+                                  (final Map<String, dynamic> p0) =>
+                                      p0["space_between_wheels"] as int,
+                                ) ??
+                                0)) /
                         2;
                 final double secondTeamWidthInSide = secondTeamWidthInMid -
                     (secondTeamWidthInMid -
-                            (teams["second_team"]["space_between_wheels"]
-                                as int)) /
+                            (secondTeamTable.mapNullable(
+                                  (final Map<String, dynamic> p0) =>
+                                      p0["space_between_wheels"] as int,
+                                ) ??
+                                0)) /
                         2;
                 final double thirdTeamWidthInSide = thirdTeamWidthInMid -
                     (thirdTeamWidthInMid -
-                            (teams["third_team"]["space_between_wheels"]
-                                as int)) /
+                            (thirdTeamTable.mapNullable(
+                                  (final Map<String, dynamic> p0) =>
+                                      p0["space_between_wheels"] as int,
+                                ) ??
+                                0)) /
                         2;
-                return SizedBox(
-                  child: AlertDialog(
-                    content: Column(
-                      children: <Widget>[
-                        Text(
-                          "First Team: ${firstTeam.number} ${firstTeam.name}",
-                        ),
-                        Text(
-                          "Second Team: ${secondTeam.number} ${secondTeam.name}",
-                        ),
-                        Text(
-                          "Third Team: ${thirdTeam.number} ${thirdTeam.name}",
-                        ),
-                        Text(
-                          "Can Balance With ${firstTeam.number} In The Middle: ${(secondTeamWidthInSide + thirdTeamWidthInSide + firstTeamWidthInMid) < 180 ? "Yes" : "No"}",
-                        ),
-                        Text(
-                          "Can Balance With ${secondTeam.number} In The Middle: ${(firstTeamWidthInSide + thirdTeamWidthInSide + secondTeamWidthInMid) < 180 ? "Yes" : "No"}",
-                        ),
-                        Text(
-                          "Can Balance With ${thirdTeam.number} In The Middle: ${(secondTeamWidthInSide + firstTeamWidthInSide + thirdTeamWidthInMid) < 180 ? "Yes" : "No"}",
-                        )
-                      ],
+                return Column(
+                  children: <Widget>[
+                    Text(
+                      "Can Balance With ${firstTeam.number} In The Middle: ${(secondTeamWidthInSide + thirdTeamWidthInSide + firstTeamWidthInMid) < 243 ? "Yes" : "No"}",
                     ),
-                  ),
+                    Text(
+                      "Can Balance With ${secondTeam.number} In The Middle: ${(firstTeamWidthInSide + thirdTeamWidthInSide + secondTeamWidthInMid) < 243 ? "Yes" : "No"}",
+                    ),
+                    Text(
+                      "Can Balance With ${thirdTeam.number} In The Middle: ${(secondTeamWidthInSide + firstTeamWidthInSide + thirdTeamWidthInMid) < 243 ? "Yes" : "No"}",
+                    )
+                  ],
                 );
               }) ??
               const Text("No data available");
@@ -170,35 +194,34 @@ class BalanceCheckResults extends StatelessWidget {
       );
 }
 
-Future<Map<String, dynamic>?> fetchPit(
-  final LightTeam teamForQuery,
+Future<Map<String, dynamic>> fetchPit(
+  final LightTeam firstTeam,
+  final LightTeam secondTeam,
+  final LightTeam thirdTeam,
   final BuildContext context,
 ) async {
   final GraphQLClient client = getClient();
 
-  final QueryResult<Map<String, dynamic>?> result = await client.query(
-    QueryOptions<Map<String, dynamic>?>(
+  final QueryResult<Map<String, dynamic>> result = await client.query(
+    QueryOptions<Map<String, dynamic>>(
       parserFn: (final Map<String, dynamic> team) {
-        //couldn't use map nullable because team["team_by_pk"] is dynamic
-        final Map<String, dynamic> teamByPk = team["team_by_pk"] != null
-            ? team["team_by_pk"] as Map<String, dynamic>
-            : throw Exception("that team doesnt exist");
-        final Map<String, dynamic>? pit =
-            (teamByPk["_2023_pit"] as Map<String, dynamic>?);
-        return pit.mapNullable(
-          (final Map<String, dynamic> pitTable) => <String, dynamic>{
-            "weight": pitTable["weight"],
-            "width": pitTable["width"],
-            "spaceBetweenWheels": pitTable["space_between_wheels"],
-            "length": pitTable["length"],
-            "driveMotorAmount": pitTable["drive_motor_amount"],
-            "driveWheelType": pitTable["drive_wheel_type"],
-          },
-        );
+        //checking if its length 3 is equivalent to all of the data isn't null
+        final List<dynamic> listOfAllTeams =
+            (team["team"] as List<dynamic>).length == 3
+                ? team["team"] as List<dynamic>
+                : throw Exception("Please input different teams");
+        final List<Map<String, dynamic>> teamsTables = listOfAllTeams
+            .map((final dynamic e) => e["_2023_pit"] as Map<String, dynamic>)
+            .toList();
+        return <String, dynamic>{
+          "first_team": getTeamsData(teamsTables[0]),
+          "second_team": getTeamsData(teamsTables[1]),
+          "third_team": getTeamsData(teamsTables[2]),
+        };
       },
       document: gql(pitTeamsQuery),
       variables: <String, dynamic>{
-        "id": teamForQuery.id,
+        "ids": <int>[firstTeam.id, secondTeam.id, thirdTeam.id],
       },
     ),
   );
@@ -206,8 +229,8 @@ Future<Map<String, dynamic>?> fetchPit(
 }
 
 const String pitTeamsQuery = """
-query TeamInfo(\$id: Int!) {
-  team_by_pk(id: \$id) {
+query TeamInfo(\$ids: [Int!]) {
+  team(where: {id: {_in: \$ids}}) {
     _2023_pit {
       weight
       width
@@ -219,3 +242,13 @@ query TeamInfo(\$id: Int!) {
   }
 }
 """;
+
+Map<String, dynamic> getTeamsData(final Map<String, dynamic> pitTable) =>
+    <String, dynamic>{
+      "weight": pitTable["weight"],
+      "width": pitTable["width"],
+      "space_between_wheels": pitTable["space_between_wheels"],
+      "length": pitTable["length"],
+      "driveMotorAmount": pitTable["drive_motor_amount"],
+      "driveWheelType": pitTable["drive_wheel_type"],
+    };
