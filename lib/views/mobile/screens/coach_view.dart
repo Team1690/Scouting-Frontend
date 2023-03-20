@@ -144,6 +144,9 @@ query FetchCoach {
       id
       name
       number
+    technical_matches(where: {ignored: {_eq: false}}){
+        balanced_with
+      }
      technical_matches_aggregate(where: {ignored: {_eq: false}}) {
       aggregate {
         avg {
@@ -303,9 +306,26 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                             )
                             .length /
                         amountOfMatches;
-                final double avgBalancePartners = avgNullValidator
-                    ? double.nan
-                    : (avg["balanced_with"] ?? 0) as double;
+                final List<dynamic> matches =
+                    match[e]["technical_matches"] as List<dynamic>;
+                final int matchesBalancedSingle = matches
+                    .where(
+                      (final dynamic match) =>
+                          (match["balanced_with"] as int?) == 0,
+                    )
+                    .length;
+                final int matchesBalancedDouble = matches
+                    .where(
+                      (final dynamic match) =>
+                          (match["balanced_with"] as int?) == 1,
+                    )
+                    .length;
+                final int matchesBalancedTriple = matches
+                    .where(
+                      (final dynamic match) =>
+                          (match["balanced_with"] as int?) == 2,
+                    )
+                    .length;
                 return CoachViewLightTeam(
                   avgGamepiecePoints: avgGamepiecePoints,
                   amountOfMatches: amountOfMatches,
@@ -314,7 +334,9 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   avgGamepiecesPlaced: avgAutoGamepieces + avgTeleGamepieces,
                   avgEndgameBalancePoints: avgEndgameBalancePoints,
                   endgameBalancePercentage: endgameBalancePercentage,
-                  endgameBalancePartners: avgBalancePartners,
+                  matchesBalancedSingle: matchesBalancedSingle,
+                  matchesBalancedDouble: matchesBalancedDouble,
+                  matchesBalancedTriple: matchesBalancedTriple,
                   avgAutoBalancePoints: avgAutoBalancePoints,
                   autoBalancePercentage: autoBalancePercentage,
                   isBlue: e.startsWith("blue"),
@@ -355,7 +377,9 @@ const List<String> teamValues = <String>[
 class CoachViewLightTeam {
   const CoachViewLightTeam({
     required this.avgEndgameBalancePoints,
-    required this.endgameBalancePartners,
+    required this.matchesBalancedSingle,
+    required this.matchesBalancedDouble,
+    required this.matchesBalancedTriple,
     required this.avgAutoBalancePoints,
     required this.team,
     required this.amountOfMatches,
@@ -369,7 +393,9 @@ class CoachViewLightTeam {
   final int amountOfMatches;
   final double avgEndgameBalancePoints;
   final double endgameBalancePercentage;
-  final double endgameBalancePartners;
+  final int matchesBalancedSingle;
+  final int matchesBalancedDouble;
+  final int matchesBalancedTriple;
   final double avgAutoBalancePoints;
   final double autoBalancePercentage;
   final double avgDelivered;
@@ -447,7 +473,25 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Amount Of Matches: ${(team.amountOfMatches)}",
+                            "Avg Gamepieces Scored: ${team.avgGamepiecesPlaced.toStringAsFixed(1)}",
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Avg Gamepiece Points: ${team.avgGamepiecePoints.toStringAsFixed(1)}",
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Text(
+                            "Avg Delivered: ${team.avgDelivered.toStringAsFixed(1)}",
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),
@@ -465,7 +509,7 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Endgame Balance: ${team.avgEndgameBalancePoints.toStringAsFixed(1)} / ${(team.endgameBalancePercentage * 100).toStringAsFixed(1)}% / ${(team.endgameBalancePartners + 1).toStringAsFixed(1)}",
+                            "Endgame Balance: ${team.avgEndgameBalancePoints.toStringAsFixed(1)} / ${(team.endgameBalancePercentage * 100).toStringAsFixed(1)}%",
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),
@@ -474,7 +518,7 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Avg Gamepiece Amount: ${team.avgGamepiecesPlaced.toStringAsFixed(1)}",
+                            "Balance Partners: ${team.matchesBalancedSingle} / ${team.matchesBalancedDouble} / ${team.matchesBalancedTriple}",
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),
@@ -483,16 +527,7 @@ Widget teamData(
                         child: FittedBox(
                           fit: BoxFit.fill,
                           child: Text(
-                            "Avg Gamepiece Score: ${team.avgGamepiecePoints.toStringAsFixed(1)}",
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Text(
-                            "Avg Delivered: ${team.avgDelivered.toStringAsFixed(1)}",
+                            "Amount Of Matches: ${(team.amountOfMatches)}",
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),

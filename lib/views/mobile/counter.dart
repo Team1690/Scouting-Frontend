@@ -24,7 +24,6 @@ class Counter extends StatelessWidget {
   final int upperLimit;
   final int lowerLimit;
   final int longPressedValue;
-
   final int count;
   @override
   Widget build(final BuildContext context) => Column(
@@ -41,7 +40,7 @@ class Counter extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 4,
                 child: FittedBox(
                   fit: BoxFit.fitWidth,
                   child: Padding(
