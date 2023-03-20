@@ -6,6 +6,7 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
+import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 
@@ -56,36 +57,64 @@ class _ChangeMatchState extends State<BalanceCheck> {
           ),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SectionDivider(label: "Teams"),
-              TeamSelectionFuture(
-                onChange: (final LightTeam team) => firstTeam = team,
-                controller: teamControllers[0],
-              ),
-              TeamSelectionFuture(
-                onChange: (final LightTeam team) => secondTeam = team,
-                controller: teamControllers[1],
-              ),
-              TeamSelectionFuture(
-                onChange: (final LightTeam team) => thirdTeam = team,
-                controller: teamControllers[2],
-              ),
-              FloatingActionButton(
-                onPressed: () {
-                  if (!(firstTeam == null ||
-                      secondTeam == null ||
-                      thirdTeam == null)) {
-                    setState(() {
-                      isVisible = true;
-                    });
-                  }
-                },
-              ),
-              isVisible
-                  ? BalanceCheckResults(firstTeam!, secondTeam!, thirdTeam!)
-                  : const Text("Please press the button after inputing teams"),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: <Widget>[
+                SectionDivider(label: "Teams"),
+                TeamSelectionFuture(
+                  onChange: (final LightTeam team) => firstTeam = team,
+                  controller: teamControllers[0],
+                ),
+                TeamSelectionFuture(
+                  onChange: (final LightTeam team) => secondTeam = team,
+                  controller: teamControllers[1],
+                ),
+                TeamSelectionFuture(
+                  onChange: (final LightTeam team) => thirdTeam = team,
+                  controller: teamControllers[2],
+                ),
+                SizedBox(
+                  height: 50,
+                  width: 150,
+                  child: RoundedIconButton(
+                    icon: Icons.calculate,
+                    onLongPress: () {
+                      if (!(firstTeam == null ||
+                          secondTeam == null ||
+                          thirdTeam == null)) {
+                        setState(() {
+                          isVisible = true;
+                        });
+                      }
+                    },
+                    onPress: () {
+                      if (!(firstTeam == null ||
+                          secondTeam == null ||
+                          thirdTeam == null)) {
+                        setState(() {
+                          isVisible = true;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                isVisible
+                    ? BalanceCheckResults(firstTeam!, secondTeam!, thirdTeam!)
+                    : const Text(
+                        "Please press the button after inputing teams",
+                      ),
+              ]
+                  .expand(
+                    (final Widget element) => <Widget>[
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      element,
+                    ],
+                  )
+                  .toList(),
+            ),
           ),
         ),
       );
@@ -219,6 +248,11 @@ Future<Map<String, dynamic>> fetchPit(
             (team["team"] as List<dynamic>).length == 3
                 ? team["team"] as List<dynamic>
                 : throw Exception("Please input different teams");
+        if (listOfAllTeams
+            .map((final dynamic e) => e["_2023_pit"] == null)
+            .contains(true)) {
+          throw Exception("One of the teams does not have pit data");
+        }
         final List<Map<String, dynamic>> teamsTables = listOfAllTeams
             .map((final dynamic e) => e["_2023_pit"] as Map<String, dynamic>)
             .toList();

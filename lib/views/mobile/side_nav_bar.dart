@@ -87,8 +87,8 @@ class SideNavBar extends StatelessWidget {
               widget: CompareScreen.new,
             ),
             const NavbarTile(
-              icon: Icons.compare_arrows_rounded,
-              title: "Balance Check",
+              icon: Icons.balance,
+              title: "Triple Balance",
               widget: BalanceCheck.new,
             )
           ],
