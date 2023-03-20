@@ -235,7 +235,9 @@ class PitData {
     required this.length,
     required this.hasGroundIntake,
     required this.canScoreTop,
+    required this.spaceBetweenWheels,
   });
+  final int spaceBetweenWheels;
   final String driveTrainType;
   final int driveMotorAmount;
   final String driveWheelType;

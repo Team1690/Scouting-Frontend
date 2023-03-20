@@ -51,24 +51,26 @@ class PitScoutingCard extends StatelessWidget {
                     )
                   ],
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: data.faultMessages!
-                      .map(
-                        (final String a) => Text(
-                          a,
-                          textDirection: TextDirection.rtl,
-                        ),
-                      )
-                      .expand(
-                        (final Text element) => <Widget>[
-                          element,
-                          const SizedBox(
-                            height: 20,
-                          )
-                        ],
-                      )
-                      .toList(),
+                Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: data.faultMessages!
+                        .map(
+                          (final String a) => Text(
+                            a,
+                            textDirection: TextDirection.rtl,
+                          ),
+                        )
+                        .expand(
+                          (final Text element) => <Widget>[
+                            element,
+                            const SizedBox(
+                              height: 20,
+                            )
+                          ],
+                        )
+                        .toList(),
+                  ),
                 )
               ],
               Align(
@@ -93,6 +95,7 @@ class PitScoutingCard extends StatelessWidget {
                     Text("Weight: ${data.weight}Kg"),
                     Text("Width: ${data.width}cm"),
                     Text("Length: ${data.length}cm"),
+                    Text("Space Between Wheels: ${data.spaceBetweenWheels}cm"),
                     Text(
                       "${data.hasGroundIntake ? "CAN" : "CAN'T"} intake ground",
                     ),

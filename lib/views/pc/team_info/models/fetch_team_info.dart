@@ -20,6 +20,7 @@ query TeamInfo(\$id: Int!) {
     _2023_pit {
       weight
       width
+      space_between_wheels
       length
       drive_motor_amount
       drive_wheel_type
@@ -153,6 +154,7 @@ Future<Team> fetchTeamInfo(
           (final Map<String, dynamic> pitTable) => PitData(
             weight: pitTable["weight"] as int,
             width: pitTable["width"] as int,
+            spaceBetweenWheels: pitTable["space_between_wheels"] as int,
             length: pitTable["length"] as int,
             driveMotorAmount: pitTable["drive_motor_amount"] as int,
             driveWheelType: pitTable["drive_wheel_type"] as String,
