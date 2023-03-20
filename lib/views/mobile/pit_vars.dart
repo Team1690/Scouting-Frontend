@@ -11,6 +11,7 @@ class PitVars implements HasuraVars {
   int? teamId;
   String length = "";
   String width = "";
+  String spaceBetweenWheels = "";
   String weight = "";
   bool hasGroundIntake = false;
   bool canScoreTop = false;
@@ -26,6 +27,7 @@ class PitVars implements HasuraVars {
         "team_id": teamId,
         "width": int.parse(width),
         "length": int.parse(length),
+        "space_between_wheels": int.parse(spaceBetweenWheels),
         "weight": int.parse(weight),
         "has_ground_intake": hasGroundIntake,
         "can_score_top": canScoreTop,
@@ -42,6 +44,7 @@ class PitVars implements HasuraVars {
     teamId = null;
     weight = "";
     width = "";
+    spaceBetweenWheels = "";
     length = "";
     hasGroundIntake = false;
     canScoreTop = false;
