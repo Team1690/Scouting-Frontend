@@ -242,7 +242,9 @@ class _SpecificState extends State<Specific> {
                             vars.reset();
                             for (final TextEditingController controller
                                 in controllers) {
-                              controller.clear();
+                              if (controller != controllers[0]) {
+                                controller.clear();
+                              }
                             }
                           });
                         },
