@@ -283,7 +283,6 @@ Future<Team> fetchTeamInfo(
                   "${mode == MatchMode.auto ? mode.title : "endgame"}_points"] as int,
             )
             .toList();
-
         int matchesBalanced(final MatchMode mode, final List<dynamic> data) =>
             data
                 .where(
@@ -738,8 +737,9 @@ Future<Team> fetchTeamInfo(
               matches
                   .where(
                     (final dynamic match) =>
+                        match["robot_placement"] != null &&
                         (match["robot_placement"]["title"] as String) ==
-                        "Near Gate",
+                            "Near Gate",
                   )
                   .toList(),
             ),
@@ -747,8 +747,9 @@ Future<Team> fetchTeamInfo(
               matches
                   .where(
                     (final dynamic match) =>
+                        match["robot_placement"] != null &&
                         (match["robot_placement"]["title"] as String) ==
-                        "Middle",
+                            "Middle",
                   )
                   .toList(),
             ),
@@ -756,8 +757,9 @@ Future<Team> fetchTeamInfo(
               matches
                   .where(
                     (final dynamic match) =>
+                        match["robot_placement"] != null &&
                         (match["robot_placement"]["title"] as String) ==
-                        "Near Feeder",
+                            "Near Feeder",
                   )
                   .toList(),
             ),
