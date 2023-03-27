@@ -351,7 +351,7 @@ class _PitViewState extends State<PitView> {
                       children: const <Widget>[
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text("Top Cones Scoring"),
+                          child: Text("High Cones Scoring"),
                         )
                       ],
                       isSelected: <bool>[vars.canScoreTop],

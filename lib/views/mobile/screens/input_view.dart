@@ -213,7 +213,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cones"),
                                 ...<CounterSpec>[
                                   CounterSpec.amberColors(
-                                    "Top Scored",
+                                    "High Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.autoConesTop,
                                     (final int score) =>
@@ -275,7 +275,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cubes"),
                                 ...<CounterSpec>[
                                   CounterSpec.purpleColors(
-                                    "Top Scored",
+                                    "High Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.autoCubesTop,
                                     (final int score) =>
@@ -388,7 +388,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cones"),
                                 ...<CounterSpec>[
                                   CounterSpec.amberColors(
-                                    "Top Scored",
+                                    "High Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.teleConesTop,
                                     (final int score) =>
@@ -450,7 +450,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cubes"),
                                 ...<CounterSpec>[
                                   CounterSpec.purpleColors(
-                                    "Top Scored",
+                                    "High Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.teleCubesTop,
                                     (final int score) =>

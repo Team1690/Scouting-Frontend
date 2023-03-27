@@ -193,7 +193,7 @@ class CoachQuickData extends StatelessWidget {
                 ),
               ),
               gamepieceRow(
-                "Top",
+                "High",
                 data.avgAutoConesTop,
                 data.avgAutoCubesTop,
               ),
@@ -225,7 +225,7 @@ class CoachQuickData extends StatelessWidget {
                 ),
               ),
               gamepieceRow(
-                "Top",
+                "High",
                 data.avgTeleConesTop,
                 data.avgTeleCubesTop,
               ),
