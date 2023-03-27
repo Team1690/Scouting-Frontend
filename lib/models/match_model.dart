@@ -33,11 +33,13 @@ class Match implements HasuraVars {
     this.teleCubesDelivered = 0,
     this.startingPositionId,
     this.balancedWith,
+    this.mobility = false,
   });
 
   void clear(final BuildContext context) {
     startingPositionId = null;
     balancedWith = null;
+    mobility = false;
     autoConesTop = 0;
     autoConesMid = 0;
     autoConesLow = 0;
@@ -67,6 +69,7 @@ class Match implements HasuraVars {
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"]!;
   }
 
+  bool mobility = false;
   bool preScouting = false;
   bool isRematch;
   ScheduleMatch? scheduleMatch;
@@ -129,6 +132,7 @@ class Match implements HasuraVars {
         "is_rematch": isRematch,
         "starting_position_id": startingPositionId,
         "balanced_with": balancedWith,
+        "auto_mobility": mobility,
       };
 }
 
