@@ -330,6 +330,29 @@ class _UserInputState extends State<UserInput> {
                     ),
                     Visibility(
                       visible: match.robotMatchStatusId != notOnFieldId,
+                      child: ToggleButtons(
+                        fillColor: const Color.fromARGB(10, 244, 67, 54),
+                        selectedColor: Colors.red,
+                        selectedBorderColor: Colors.red,
+                        children: const <Widget>[
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text("Mobility"),
+                          )
+                        ],
+                        isSelected: <bool>[match.mobility],
+                        onPressed: (final int i) {
+                          setState(() {
+                            match.mobility = !match.mobility;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Visibility(
+                      visible: match.robotMatchStatusId != notOnFieldId,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Selector<int>(
