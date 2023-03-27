@@ -402,7 +402,7 @@ class CoachAutoData extends StatelessWidget {
                           "Amount Of Matches: ${data.nearFeederData.amoutOfMatches}",
                         ),
                         Text(
-                          "Amount Of Matches: ${data.nearFeederData.amountOfMobility}",
+                          "Amount Of Mobility: ${data.nearFeederData.amountOfMobility}",
                         ),
                       ],
                     ),
@@ -451,7 +451,7 @@ class CoachAutoData extends StatelessWidget {
                           "Amount Of Matches: ${data.middleData.amoutOfMatches}",
                         ),
                         Text(
-                          "Amount Of Matches: ${data.middleData.amountOfMobility}",
+                          "Amount Of Mobility: ${data.middleData.amountOfMobility}",
                         ),
                       ],
                     ),
@@ -500,7 +500,7 @@ class CoachAutoData extends StatelessWidget {
                           "Amount Of Matches: ${data.dataNearGate.amoutOfMatches}",
                         ),
                         Text(
-                          "Amount Of Matches: ${data.dataNearGate.amountOfMobility}",
+                          "Amount Of Mobility: ${data.dataNearGate.amountOfMobility}",
                         ),
                       ],
                     ),
