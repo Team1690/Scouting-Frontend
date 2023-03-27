@@ -125,6 +125,7 @@ query TeamInfo(\$id: Int!) {
       auto_cubes_delivered
       tele_cones_delivered
       tele_cubes_delivered
+      auto_mobility
     }
   }
 }
@@ -340,7 +341,11 @@ Future<Team> fetchTeamInfo(
               (final dynamic match) => (match["balanced_with"] as int?) == 2,
             )
             .length;
+        final int amountOfmobility = matches
+            .where((final dynamic match) => (match["auto_mobility"] as bool))
+            .length;
         final QuickData quickData = QuickData(
+          amountOfMobility: amountOfmobility,
           matchesBalancedAuto: matchesBalanced(MatchMode.auto, matches),
           matchesBalancedEndgame: matchesBalanced(MatchMode.tele, matches),
           firstPicklistIndex: team["team_by_pk"]["first_picklist_index"] as int,
@@ -623,7 +628,7 @@ Future<Team> fetchTeamInfo(
           ),
         );
 
-        final LineChartData pointsData = LineChartData(
+        final LineChartData gamepiecePointsData = LineChartData(
           points: <List<int>>[
             matches
                 .map(
@@ -631,7 +636,7 @@ Future<Team> fetchTeamInfo(
                 )
                 .toList()
           ],
-          title: "Points",
+          title: "Gamepieces Points",
           gameNumbers: matchNumbers,
           robotMatchStatuses: <List<RobotMatchStatus>>[
             (teamByPk["technical_matches"] as List<dynamic>)
@@ -645,6 +650,11 @@ Future<Team> fetchTeamInfo(
         );
         AutoByPosData getDataByNodeList(final List<dynamic> matchesInPos) =>
             AutoByPosData(
+              amountOfMobility: matchesInPos
+                  .where(
+                    (final dynamic match) => match["auto_mobility"] as bool,
+                  )
+                  .length,
               matchesBalancedAuto:
                   matchesBalanced(MatchMode.auto, matchesInPos),
               highestBalanceTitleAuto: matchesInPos.isEmpty
@@ -718,7 +728,7 @@ Future<Team> fetchTeamInfo(
                       double.nan),
             );
         return Team(
-          pointsData: pointsData,
+          gamepiecePointsData: gamepiecePointsData,
           allConesData: dataAllCones,
           allCubesData: dataAllCubes,
           allData: scoredMissedDataAll,

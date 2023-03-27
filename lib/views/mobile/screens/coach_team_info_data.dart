@@ -129,8 +129,8 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
             "Gamepieces",
           ),
           CoachTeamInfoLineChart(
-            PointsLineChart(data.pointsData),
-            "Points",
+            PointsLineChart(data.gamepiecePointsData),
+            "Gamepieces Points",
           ),
           CoachTeamInfoLineChart(
             BalanceLineChart(data.autoBalanceData),
@@ -401,6 +401,9 @@ class CoachAutoData extends StatelessWidget {
                         Text(
                           "Amount Of Matches: ${data.nearFeederData.amoutOfMatches}",
                         ),
+                        Text(
+                          "Amount Of Matches: ${data.nearFeederData.amountOfMobility}",
+                        ),
                       ],
                     ),
             ],
@@ -447,6 +450,9 @@ class CoachAutoData extends StatelessWidget {
                         Text(
                           "Amount Of Matches: ${data.middleData.amoutOfMatches}",
                         ),
+                        Text(
+                          "Amount Of Matches: ${data.middleData.amountOfMobility}",
+                        ),
                       ],
                     ),
             ],
@@ -492,6 +498,9 @@ class CoachAutoData extends StatelessWidget {
                         ),
                         Text(
                           "Amount Of Matches: ${data.dataNearGate.amoutOfMatches}",
+                        ),
+                        Text(
+                          "Amount Of Matches: ${data.dataNearGate.amountOfMobility}",
                         ),
                       ],
                     ),

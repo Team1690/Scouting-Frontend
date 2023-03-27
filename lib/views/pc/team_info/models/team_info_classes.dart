@@ -38,7 +38,9 @@ class QuickData {
     required this.matchesBalancedSingle,
     required this.matchesBalancedDouble,
     required this.matchesBalancedTriple,
+    required this.amountOfMobility,
   });
+  final int amountOfMobility;
   final int amoutOfMatches;
   final double avgGamepiecePoints;
   final double avgAutoConesTop;
@@ -86,7 +88,9 @@ class AutoByPosData {
     required this.avgAutoGampepieces,
     required this.avgAutoDelivered,
     required this.avgBalancePoints,
+    required this.amountOfMobility,
   });
+  final int amountOfMobility;
   final int amoutOfMatches;
   final String highestBalanceTitleAuto;
   final int matchesBalancedAuto;
@@ -273,7 +277,7 @@ class Team {
     required this.autoCubesData,
     required this.allCubesData,
     required this.allData,
-    required this.pointsData,
+    required this.gamepiecePointsData,
     required this.autoData,
   });
   final LightTeam team;
@@ -282,7 +286,7 @@ class Team {
   final QuickData quickData;
   final LineChartData autoBalanceData;
   final LineChartData endgameBalanceData;
-  final LineChartData pointsData;
+  final LineChartData gamepiecePointsData;
   final LineChartData teleConesData;
   final LineChartData autoConesData;
   final LineChartData allConesData;

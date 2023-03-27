@@ -148,6 +148,9 @@ class QuickDataCard extends StatelessWidget {
                         Text(
                           "Matches Played: ${data.amoutOfMatches}",
                         ),
+                        Text(
+                          "Auto Mobolity: ${data.amountOfMobility}",
+                        ),
                         const Spacer(
                           flex: 2,
                         ),
