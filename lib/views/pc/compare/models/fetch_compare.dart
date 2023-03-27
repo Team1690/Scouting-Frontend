@@ -127,7 +127,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                         (technicalMatch["tele_cubes_delivered"] as int))),
               )
               .toList();
-          final List<int> points = matches
+          final List<int> gamepiecePoints = matches
               .map(
                 (final dynamic technicalMatch) => (getPoints(
                   parseMatch(technicalMatch),
@@ -300,7 +300,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
             matchStatuses: matchStatuses,
           );
           final CompareLineChartData pointLineChart = CompareLineChartData(
-            points: points,
+            points: gamepiecePoints,
             matchStatuses: matchStatuses,
           );
           final CompareLineChartData totalDeliverdLineChart =
@@ -315,7 +315,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
             autoBalanceVals: autoBalanceLineChartVals,
             endgameBalanceVals: endgameBalanceLineChartVals,
             gamepieces: gamepiecesLine,
-            points: pointLineChart,
+            gamepiecePoints: pointLineChart,
             team: team,
             totalCones: totalConesLineChart,
             totalCubes: totalCubesLineChart,

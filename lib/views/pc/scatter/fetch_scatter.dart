@@ -78,17 +78,17 @@ Future<List<ScatterData>> fetchScatterData() async {
                   //if one of these is null, the team's match data doesnt exist so we return null
                   return null;
                 }
-                final double avgPoints = getPoints(parseMatch(avg));
+                final double avgGamepiecePoints = getPoints(parseMatch(avg));
                 final Iterable<double> matchesGamepiecePoints = matches
                     .map((final dynamic match) => getPoints(parseMatch(match)));
                 final double yStddevGamepiecePoints = matchesGamepiecePoints
                     .map(
                       (final double matchPoints) =>
-                          (matchPoints - avgPoints).abs(),
+                          (matchPoints - avgGamepiecePoints).abs(),
                     )
                     .average;
                 return ScatterData(
-                  avgPoints,
+                  avgGamepiecePoints,
                   yStddevGamepiecePoints,
                   team,
                 );

@@ -13,7 +13,7 @@ class CompareTeam {
     required this.autoBalanceVals,
     required this.gamepieces,
     required this.endgameBalanceVals,
-    required this.points,
+    required this.gamepiecePoints,
     required this.team,
     required this.autoGamepieces,
     required this.totalCones,
@@ -30,7 +30,7 @@ class CompareTeam {
   final CompareLineChartData autoGamepieces;
   final CompareLineChartData teleGamepieces;
   final CompareLineChartData gamepieces;
-  final CompareLineChartData points;
+  final CompareLineChartData gamepiecePoints;
   final CompareLineChartData autoBalanceVals;
   final CompareLineChartData endgameBalanceVals;
   final CompareLineChartData totalCones;
