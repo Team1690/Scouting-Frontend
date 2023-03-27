@@ -100,7 +100,8 @@ Stream<List<StatusItem<MatchIdentifier, StatusMatch>>> fetchStatus(
                 : (getPoints(parseMatch(scoutedMatchTable)) as int) +
                     (scoutedMatchTable["endgame_balance"]["endgame_points"]
                         as int) +
-                    (scoutedMatchTable["auto_balance"]["auto_points"] as int),
+                    (scoutedMatchTable["auto_balance"]["auto_points"] as int) +
+                    (scoutedMatchTable["auto_mobility"] as bool ? 3 : 0),
             scheduleMatch.redAlliance.contains(
               team,
             )
@@ -192,6 +193,7 @@ subscription Status {
     auto_cubes_delivered
     tele_cones_delivered
     tele_cubes_delivered
+    auto_mobility
     auto_balance {
       auto_points
     }
