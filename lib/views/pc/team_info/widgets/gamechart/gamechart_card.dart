@@ -25,7 +25,7 @@ class Gamechart extends StatelessWidget {
                       GamepiecesLineChart(data.autoCubesData),
                       GamepiecesLineChart(data.teleCubesData),
                       GamepiecesLineChart(data.allData),
-                      PointsLineChart(data.pointsData),
+                      PointsLineChart(data.gamepiecePointsData),
                       BalanceLineChart(data.autoBalanceData),
                       BalanceLineChart(data.endgameBalanceData),
                     ],

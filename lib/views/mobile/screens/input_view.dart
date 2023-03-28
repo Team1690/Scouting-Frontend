@@ -213,7 +213,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cones"),
                                 ...<CounterSpec>[
                                   CounterSpec.amberColors(
-                                    "Top Scored",
+                                    "High Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.autoConesTop,
                                     (final int score) =>
@@ -275,7 +275,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cubes"),
                                 ...<CounterSpec>[
                                   CounterSpec.purpleColors(
-                                    "Top Scored",
+                                    "High Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.autoCubesTop,
                                     (final int score) =>
@@ -330,6 +330,29 @@ class _UserInputState extends State<UserInput> {
                     ),
                     Visibility(
                       visible: match.robotMatchStatusId != notOnFieldId,
+                      child: ToggleButtons(
+                        fillColor: const Color.fromARGB(10, 244, 67, 54),
+                        selectedColor: Colors.red,
+                        selectedBorderColor: Colors.red,
+                        children: const <Widget>[
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text("Mobility"),
+                          )
+                        ],
+                        isSelected: <bool>[match.mobility],
+                        onPressed: (final int i) {
+                          setState(() {
+                            match.mobility = !match.mobility;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Visibility(
+                      visible: match.robotMatchStatusId != notOnFieldId,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Selector<int>(
@@ -365,7 +388,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cones"),
                                 ...<CounterSpec>[
                                   CounterSpec.amberColors(
-                                    "Top Scored",
+                                    "High Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.teleConesTop,
                                     (final int score) =>
@@ -427,7 +450,7 @@ class _UserInputState extends State<UserInput> {
                                 SectionDivider(label: "Cubes"),
                                 ...<CounterSpec>[
                                   CounterSpec.purpleColors(
-                                    "Top Scored",
+                                    "High Scored",
                                     Icons.arrow_circle_up_outlined,
                                     () => match.teleCubesTop,
                                     (final int score) =>
@@ -596,8 +619,8 @@ class _UserInputState extends State<UserInput> {
 }
 
 const String mutation = r"""
-mutation InsertTechnicalMatch($balanced_with: Int, $starting_position_id: Int, $tele_cubes_delivered: Int, $tele_cones_delivered: Int, $auto_cubes_delivered: Int, $auto_cones_delivered: Int, $auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int) {
-  insert__2023_technical_match(objects: {balanced_with: $balanced_with, starting_position_id: $starting_position_id, auto_balance_id: $auto_balance_id, tele_cubes_delivered: $tele_cubes_delivered, tele_cones_delivered: $tele_cones_delivered, auto_cubes_delivered: $auto_cubes_delivered, auto_cones_delivered: $auto_cones_delivered, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
+mutation InsertTechnicalMatch($auto_mobility: Boolean,$balanced_with: Int, $starting_position_id: Int, $tele_cubes_delivered: Int, $tele_cones_delivered: Int, $auto_cubes_delivered: Int, $auto_cones_delivered: Int, $auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int) {
+  insert__2023_technical_match(objects: {auto_mobility: $auto_mobility, balanced_with: $balanced_with, starting_position_id: $starting_position_id, auto_balance_id: $auto_balance_id, tele_cubes_delivered: $tele_cubes_delivered, tele_cones_delivered: $tele_cones_delivered, auto_cubes_delivered: $auto_cubes_delivered, auto_cones_delivered: $auto_cones_delivered, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
     returning {
       id
     }

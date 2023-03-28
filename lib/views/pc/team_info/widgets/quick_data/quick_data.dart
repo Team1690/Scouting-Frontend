@@ -22,7 +22,7 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         const Spacer(),
                         gamepieceRow(
-                          "Top",
+                          "High",
                           data.avgAutoConesTop,
                           data.avgAutoCubesTop,
                         ),
@@ -57,7 +57,7 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         const Spacer(),
                         gamepieceRow(
-                          "Top",
+                          "High",
                           data.avgTeleConesTop,
                           data.avgTeleCubesTop,
                         ),
@@ -147,6 +147,9 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         Text(
                           "Matches Played: ${data.amoutOfMatches}",
+                        ),
+                        Text(
+                          "Auto Mobolity: ${data.amountOfMobility}",
                         ),
                         const Spacer(
                           flex: 2,
