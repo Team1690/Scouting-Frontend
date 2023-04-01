@@ -532,7 +532,7 @@ Stream<List<LightTeam>> fetchTeamsWithoutPit() => getClient()
         document: gql(
           r"""
 query NoPit {
-  team(where:  {_not: { pit: {} } }) {
+  team(where:  {_not: { _2023_pit: {} } }) {
     number
     name
     id
