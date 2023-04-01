@@ -15,10 +15,12 @@ import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
+import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/mobile/switcher.dart";
 
 class PitView extends StatefulWidget {
-  PitView();
+  const PitView([this.initialVars]);
+  final PitVars? initialVars;
 
   @override
   State<PitView> createState() => _PitViewState();
@@ -28,7 +30,6 @@ class _PitViewState extends State<PitView> {
   LightTeam? team;
 
   XFile? result;
-
   PitVars vars = PitVars();
   final GlobalKey<FormState> formKey = GlobalKey();
   final TextEditingController wheelTypeController = TextEditingController();
@@ -63,9 +64,27 @@ class _PitViewState extends State<PitView> {
       notesController.clear();
       wheelTypeController.clear();
       teamSelectionController.clear();
+      betweenWheelsController.clear();
       result = null;
       advancedSwitchController.value = false;
+      otherWheelSelected = false;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    vars = widget.initialVars ?? PitVars();
+    widthController.text = vars.width;
+    lengthController.text = vars.length;
+    weightController.text = vars.weight;
+    notesController.text = vars.notes;
+    if (!driveWheelTypes.contains(vars.driveWheelType) &&
+        widget.initialVars != null) {
+      otherWheelSelected = true;
+    }
+    wheelTypeController.text = vars.driveWheelType ?? "";
+    betweenWheelsController.text = vars.spaceBetweenWheels;
   }
 
   @override
@@ -100,12 +119,15 @@ class _PitViewState extends State<PitView> {
                 ),
                 child: Column(
                   children: <Widget>[
-                    TeamSelectionFuture(
-                      teams: TeamProvider.of(context).teams,
-                      controller: teamSelectionController,
-                      onChange: (final LightTeam lightTeam) {
-                        vars.teamId = lightTeam.id;
-                      },
+                    Visibility(
+                      visible: widget.initialVars == null,
+                      child: TeamSelectionFuture(
+                        teams: TeamProvider.of(context).teams,
+                        controller: teamSelectionController,
+                        onChange: (final LightTeam lightTeam) {
+                          vars.teamId = lightTeam.id;
+                        },
+                      ),
                     ),
                     SectionDivider(label: "Drive Train"),
                     Selector<int>(
@@ -332,6 +354,7 @@ class _PitViewState extends State<PitView> {
                     Visibility(
                       visible: otherWheelSelected,
                       child: TextFormField(
+                        controller: wheelTypeController,
                         onChanged: (final String specifiedWheel) {
                           setState(() {
                             vars.driveWheelType = specifiedWheel;
@@ -391,13 +414,20 @@ class _PitViewState extends State<PitView> {
                     const SizedBox(
                       height: 20,
                     ),
-                    SectionDivider(label: "Robot Image"),
-                    ImagePickerWidget(
-                      validate: (final XFile? image) =>
-                          image.onNull("Please pick an Image"),
-                      controller: advancedSwitchController,
-                      onImagePicked: (final XFile newResult) =>
-                          result = newResult,
+                    Visibility(
+                      visible: widget.initialVars == null,
+                      child: Column(
+                        children: <Widget>[
+                          SectionDivider(label: "Robot Image"),
+                          ImagePickerWidget(
+                            validate: (final XFile? image) =>
+                                result.onNull("Please pick an Image"),
+                            controller: advancedSwitchController,
+                            onImagePicked: (final XFile newResult) =>
+                                result = newResult,
+                          ),
+                        ],
+                      ),
                     ),
                     SectionDivider(label: "Notes"),
                     TextField(
@@ -426,10 +456,32 @@ class _PitViewState extends State<PitView> {
                     const SizedBox(
                       height: 20,
                     ),
-                    FireBaseSubmitButton(
-                      validate: () => formKey.currentState!.validate(),
-                      getResult: () => result,
-                      mutation: """
+                    ...<Widget>[
+                      widget.initialVars == null
+                          ? FireBaseSubmitButton(
+                              validate: () => formKey.currentState!.validate(),
+                              getResult: () => result,
+                              mutation: insertMutation,
+                              vars: vars,
+                              resetForm: resetFrame,
+                            )
+                          : SubmitButton(
+                              vars: vars,
+                              mutation: updateMutation,
+                              resetForm: resetFrame,
+                              validate: () => formKey.currentState!.validate(),
+                            )
+                    ]
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+}
+
+const String insertMutation = """
           mutation InsertPit(
               \$space_between_wheels:Int,
               \$url: String,
@@ -469,18 +521,45 @@ class _PitViewState extends State<PitView> {
               }
           }
           }
-          """,
-                      vars: vars,
-                      resetForm: resetFrame,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-}
+          """;
+
+const String updateMutation = """
+          mutation UpdatePit(
+              \$space_between_wheels:Int,
+              \$drive_motor_amount: Int,
+              \$drivemotor_id: Int,
+              \$drivetrain_id: Int,
+              \$drive_wheel_type: String,
+              \$gearbox_purchased: Boolean,
+              \$notes:String,
+              \$has_shifter:Boolean,
+              \$team_id:Int,
+              \$weight:Int,
+              \$width:Int,
+              \$length:Int,
+              \$can_score_top:Boolean,
+              \$has_ground_intake:Boolean,
+              ) {
+          update__2023_pit(where: {team_id: {_eq: \$team_id}}, _set: {
+            space_between_wheels: \$space_between_wheels,
+          drive_motor_amount: \$drive_motor_amount,
+          drivemotor_id: \$drivemotor_id,
+          drivetrain_id: \$drivetrain_id,
+          drive_wheel_type: \$drive_wheel_type,
+          gearbox_purchased: \$gearbox_purchased,
+          notes: \$notes,
+          has_shifter: \$has_shifter,
+          team_id: \$team_id,
+          weight:  \$weight,
+          width:  \$width,
+          length:  \$length,
+          has_ground_intake: \$has_ground_intake,
+          can_score_top: \$can_score_top,
+          }) {
+    affected_rows
+  }
+          }
+          """;
 
 class TeamsWithoutPit extends StatelessWidget {
   const TeamsWithoutPit();
