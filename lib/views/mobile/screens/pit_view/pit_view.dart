@@ -50,7 +50,7 @@ class _PitViewState extends State<PitView> {
     "Omni",
     "Other"
   ];
-
+  bool otherWheelSelected = false;
   FormFieldValidator<String> _numericValidator(final String error) =>
       (final String? text) => int.tryParse(text ?? "").onNull(error);
 
@@ -309,17 +309,44 @@ class _PitViewState extends State<PitView> {
                     Selector<String>(
                       options: driveWheelTypes,
                       placeholder: "Choose a drive wheel",
-                      value: vars.driveWheelType,
+                      value: otherWheelSelected ? "Other" : vars.driveWheelType,
                       makeItem: (final String wheelType) => wheelType,
                       onChange: (final String newValue) {
                         setState(() {
-                          vars.driveWheelType = newValue;
+                          if (newValue == "Other") {
+                            otherWheelSelected = true;
+                          } else {
+                            otherWheelSelected = false;
+                            vars.driveWheelType = newValue;
+                          }
                         });
                       },
                       validate: (final String? wheelType) =>
                           wheelType == null || wheelType.isEmpty
                               ? "please enter the robot's wheel type"
                               : null,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Visibility(
+                      visible: otherWheelSelected,
+                      child: TextFormField(
+                        onChanged: (final String specifiedWheel) {
+                          setState(() {
+                            vars.driveWheelType = specifiedWheel;
+                          });
+                        },
+                        validator: (final String? otherWheelOption) =>
+                            otherWheelSelected &&
+                                    (otherWheelOption == null ||
+                                        otherWheelOption.isEmpty)
+                                ? "Please specify \"Other\" wheel type"
+                                : null,
+                        decoration: const InputDecoration(
+                          labelText: "\"Other\" drive wheel type",
+                        ),
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
