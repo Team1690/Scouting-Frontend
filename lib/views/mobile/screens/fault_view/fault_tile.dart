@@ -51,17 +51,23 @@ class FaultTile extends StatelessWidget {
           ],
         ),
         children: <Widget>[
-          ListTile(
-            title: Text(
-              "match: ${IdProvider.of(context).matchType.idToName[e.matchType]} ${e.matchNumber}",
-            ),
-            subtitle: Text(
-              e.faultMessage,
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          )
+          e.matchNumber != null
+              ? ListTile(
+                  title: Text(
+                    "match: ${IdProvider.of(context).matchType.idToName[e.matchType]} ${e.matchNumber}",
+                  ),
+                  subtitle: Text(
+                    e.faultMessage,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : ListTile(
+                  title: Text(
+                    e.faultMessage,
+                  ),
+                )
         ],
       );
 }
