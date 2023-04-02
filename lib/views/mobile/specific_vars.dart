@@ -25,7 +25,9 @@ class SpecificVars implements HasuraVars {
         "is_rematch": isRematch,
         "schedule_match_id": scheduleMatch?.id,
         "scouter_name": name,
-        if (faultMessage != null) "fault_message": faultMessage
+        "match_number": scheduleMatch?.matchNumber,
+        "match_type_id": scheduleMatch?.matchTypeId,
+        if (faultMessage != null) "fault_message": faultMessage,
       };
 
   void reset() {

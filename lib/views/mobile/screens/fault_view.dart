@@ -108,6 +108,8 @@ Stream<List<FaultEntry>> fetchFaults() {
                   ),
                   e["id"] as int,
                   e["fault_status"]["title"] as String,
+                  e["match_number"] as int?,
+                  e["match_type_id"] as int?,
                 ),
               )
               .toList(),
@@ -117,9 +119,16 @@ Stream<List<FaultEntry>> fetchFaults() {
 }
 
 class NewFault {
-  const NewFault(this.message, this.team);
+  const NewFault(
+    this.message,
+    this.team,
+    this.matchNumber,
+    this.matchTypeId,
+  );
   final String message;
   final LightTeam team;
+  final int? matchNumber;
+  final int? matchTypeId;
 }
 
 class FaultEntry {
@@ -128,7 +137,11 @@ class FaultEntry {
     this.team,
     this.id,
     this.faultStatus,
+    this.matchNumber,
+    this.matchType,
   );
+  final int? matchType;
+  final int? matchNumber;
   final String faultMessage;
   final int id;
   final LightTeam team;
@@ -163,7 +176,8 @@ subscription MyQuery {
       id
     }
     message
-
+    match_type_id
+    match_number
   }
 }
 
