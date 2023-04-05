@@ -1,3 +1,5 @@
+import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
@@ -12,6 +14,7 @@ class SpecificVars implements HasuraVars {
   ScheduleMatch? scheduleMatch;
   String name = "";
   bool isRematch = false;
+  int defenseAmount = 1;
 
   String? faultMessage;
   @override
@@ -25,12 +28,13 @@ class SpecificVars implements HasuraVars {
         "is_rematch": isRematch,
         "schedule_match_id": scheduleMatch?.id,
         "scouter_name": name,
-        "match_number": scheduleMatch?.matchNumber,
-        "match_type_id": scheduleMatch?.matchTypeId,
+        if (faultMessage != null) "match_number": scheduleMatch?.matchNumber,
+        if (faultMessage != null) "match_type_id": scheduleMatch?.matchTypeId,
+        "defense_amount_id": defenseAmount,
         if (faultMessage != null) "fault_message": faultMessage,
       };
 
-  void reset() {
+  void reset(final BuildContext context) {
     isRematch = false;
     scheduleMatch = null;
     faultMessage = null;
@@ -40,5 +44,6 @@ class SpecificVars implements HasuraVars {
     placement = null;
     defense = null;
     generalNotes = null;
+    defenseAmount = IdProvider.of(context).defense.nameToId["No Defense"]!;
   }
 }

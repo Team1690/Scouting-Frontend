@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -6,9 +7,11 @@ import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/dropdown_line.dart";
 
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
+import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
+import "package:scouting_frontend/views/mobile/switcher.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
 class Specific extends StatefulWidget {
@@ -25,6 +28,12 @@ class _SpecificState extends State<Specific> {
   );
   final SpecificVars vars = SpecificVars();
   final FocusNode node = FocusNode();
+
+  late final Map<int, int> defenseAmountIndexToId = <int, int>{
+    -1: IdProvider.of(context).defense.nameToId["No Defense"]!,
+    0: IdProvider.of(context).defense.nameToId["Half Defense"]!,
+    1: IdProvider.of(context).defense.nameToId["Full Defense"]!
+  };
 
   @override
   Widget build(final BuildContext context) => GestureDetector(
@@ -171,6 +180,24 @@ class _SpecificState extends State<Specific> {
                     const SizedBox(
                       height: 15,
                     ),
+                    SectionDivider(label: "Defense Amount"),
+                    Switcher(
+                      labels: const <String>["Half Defense", "Full Defense"],
+                      colors: const <Color>[Colors.blue, Colors.green],
+                      onChange: (final int i) {
+                        setState(() {
+                          vars.defenseAmount = defenseAmountIndexToId[i]!;
+                        });
+                      },
+                      selected: <int, int>{
+                        for (final MapEntry<int, int> i
+                            in defenseAmountIndexToId.entries)
+                          i.value: i.key
+                      }[vars.defenseAmount]!,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     FittedBox(
                       fit: BoxFit.fitWidth,
                       child: Row(
@@ -239,7 +266,7 @@ class _SpecificState extends State<Specific> {
                         validate: () => formKey.currentState!.validate(),
                         resetForm: () {
                           setState(() {
-                            vars.reset();
+                            vars.reset(context);
                             for (final TextEditingController controller
                                 in controllers) {
                               if (controller != controllers[0]) {
@@ -249,8 +276,8 @@ class _SpecificState extends State<Specific> {
                           });
                         },
                         mutation: """
-mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int,\$match_type_id:Int,\$match_number:Int , \$fault_message:String){
-  insert__2023_specific(objects: {defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id}) {
+mutation A(\$defense_amount_id: Int, \$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int, \$fault_message:String ${vars.faultMessage == null ? "" : ",\$match_type_id:Int,\$match_number:Int "} ){
+  insert__2023_specific(objects: {defense_amount_id: \$defense_amount_id, defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id}) {
     affected_rows
   }
                   ${vars.faultMessage == null ? "" : """
