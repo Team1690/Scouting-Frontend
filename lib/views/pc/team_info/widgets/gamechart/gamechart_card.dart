@@ -20,11 +20,11 @@ class Gamechart extends StatelessWidget {
                 ? const Text("Not enough data for line chart")
                 : CarouselWithIndicator(
                     widgets: <Widget>[
+                      GamepiecesLineChart(data.allData),
                       GamepiecesLineChart(data.autoConesData),
                       GamepiecesLineChart(data.teleConesData),
                       GamepiecesLineChart(data.autoCubesData),
                       GamepiecesLineChart(data.teleCubesData),
-                      GamepiecesLineChart(data.allData),
                       PointsLineChart(data.gamepiecePointsData),
                       BalanceLineChart(data.autoBalanceData),
                       BalanceLineChart(data.endgameBalanceData),

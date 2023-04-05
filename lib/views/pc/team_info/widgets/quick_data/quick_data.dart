@@ -159,6 +159,27 @@ class QuickDataCard extends StatelessWidget {
                     Column(
                       children: <Widget>[
                         const Text(
+                          "Under Defense",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        const Spacer(),
+                        Text(
+                          "Avg GP Under No Defense: ${data.avgGamePiecesNoDefense.toStringAsFixed(1)}",
+                        ),
+                        Text(
+                          "Avg GP Under Half Defense: ${data.avgGamePiecesHalfDefense.toStringAsFixed(1)}",
+                        ),
+                        Text(
+                          "Avg GP Under Full Defense: ${data.avgGamePiecesFullDefense.toStringAsFixed(1)}",
+                        ),
+                        const Spacer(
+                          flex: 2,
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        const Text(
                           "Picklist",
                           style: TextStyle(fontSize: 18),
                         ),
