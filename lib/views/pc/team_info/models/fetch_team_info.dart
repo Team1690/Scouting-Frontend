@@ -2,6 +2,7 @@ import "package:flutter/cupertino.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/average_or_null.dart";
 import "package:scouting_frontend/models/helpers.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
@@ -38,6 +39,7 @@ query TeamInfo(\$id: Int!) {
       }
     }
     _2023_specifics{
+      schedule_match_id
       defense
       drivetrain_and_driving
       general_notes
@@ -45,9 +47,13 @@ query TeamInfo(\$id: Int!) {
       placement
       is_rematch
       scouter_name
+      defense_amount_id
       match{
         match_type_id
         match_number
+      }
+      defense_amount{
+        title
       }
     }
     technical_matches_aggregate(where: {ignored: {_eq: false}}) {
@@ -100,6 +106,7 @@ query TeamInfo(\$id: Int!) {
       robot_placement{
         title
       }
+      schedule_match_id
       balanced_with
       is_rematch
       auto_cones_low
@@ -268,7 +275,6 @@ Future<Team> fetchTeamInfo(
 
         final List<dynamic> matches =
             (teamByPk["technical_matches"] as List<dynamic>);
-
         List<int> balancePoints(final MatchMode mode) => matches
             .where(
               (final dynamic match) => match["robot_match_status"]["title"] !=
@@ -345,6 +351,77 @@ Future<Team> fetchTeamInfo(
         final int amountOfmobility = matches
             .where((final dynamic match) => (match["auto_mobility"] as bool))
             .length;
+        final bool specificNullValidator =
+            teamByPk["_2023_specifics"][0]["defense_amount"] == null;
+        final List<int> scheduleMatchesNoDefense = specificNullValidator
+            ? []
+            : (teamByPk["_2023_specifics"] as List<dynamic>)
+                .where((final dynamic specific) =>
+                    (specific["defense_amount_id"] as int) ==
+                    IdProvider.of(context).defense.nameToId["No Defense"])
+                .map(
+                  (final dynamic specific) =>
+                      (specific["schedule_match_id"] as int),
+                )
+                .toList();
+        final List<int> scheduleMatchesHalfDefense = specificNullValidator
+            ? []
+            : (teamByPk["_2023_specifics"] as List<dynamic>)
+                .where((final dynamic specific) =>
+                    (specific["defense_amount_id"] as int) ==
+                    IdProvider.of(context).defense.nameToId["Half Defense"])
+                .map(
+                  (final dynamic specific) =>
+                      (specific["schedule_match_id"] as int),
+                )
+                .toList();
+        final List<int> scheduleMatchesFullDefense = specificNullValidator
+            ? []
+            : (teamByPk["_2023_specifics"] as List<dynamic>)
+                .where((final dynamic specific) =>
+                    (specific["defense_amount_id"] as int) ==
+                    IdProvider.of(context).defense.nameToId["Full Defense"])
+                .map(
+                  (final dynamic specific) =>
+                      (specific["schedule_match_id"] as int),
+                )
+                .toList();
+
+        double getAvgByDefense(final List<dynamic> technicalMatches) =>
+            technicalMatches.isEmpty && !nullValidator
+                ? double.nan
+                : technicalMatches
+                        .map(
+                          (final dynamic match) =>
+                              getPieces(
+                                parseMatch(match),
+                              ) -
+                              ((match["auto_cones_delivered"] as int) +
+                                  (match["auto_cubes_delivered"] as int) +
+                                  (match["tele_cones_delivered"] as int) +
+                                  (match["tele_cubes_delivered"] as int)),
+                        )
+                        .toList()
+                        .averageOrNull ??
+                    double.nan;
+        final double avgGamepiecesNoDefense = nullValidator
+            ? 0
+            : getAvgByDefense(matches
+                .where((final dynamic match) => scheduleMatchesNoDefense
+                    .contains(match["schedule_match_id"] as int))
+                .toList());
+        final double avgGamepiecesHalfDefense = nullValidator
+            ? 0
+            : getAvgByDefense(matches
+                .where((final dynamic match) => scheduleMatchesHalfDefense
+                    .contains(match["schedule_match_id"] as int))
+                .toList());
+        final double avgGamepiecesFullDefense = nullValidator
+            ? 0
+            : getAvgByDefense(matches
+                .where((final dynamic match) => scheduleMatchesFullDefense
+                    .contains(match["schedule_match_id"] as int))
+                .toList());
         final QuickData quickData = QuickData(
           amountOfMobility: amountOfmobility,
           matchesBalancedAuto: matchesBalanced(MatchMode.auto, matches),
@@ -409,6 +486,9 @@ Future<Team> fetchTeamInfo(
           matchesBalancedSingle: matchesBalancedSingle,
           matchesBalancedDouble: matchesBalancedDouble,
           matchesBalancedTriple: matchesBalancedTriple,
+          avgGamePiecesNoDefense: avgGamepiecesNoDefense,
+          avgGamePiecesHalfDefense: avgGamepiecesHalfDefense,
+          avgGamePiecesFullDefense: avgGamepiecesFullDefense,
         );
         List<int> getBalanceLineChart(final MatchMode mode) => matches
                 .map(

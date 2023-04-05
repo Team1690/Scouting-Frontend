@@ -39,6 +39,9 @@ class QuickData {
     required this.matchesBalancedDouble,
     required this.matchesBalancedTriple,
     required this.amountOfMobility,
+    required this.avgGamePiecesNoDefense,
+    required this.avgGamePiecesHalfDefense,
+    required this.avgGamePiecesFullDefense,
   });
   final int amountOfMobility;
   final int amoutOfMatches;
@@ -77,6 +80,9 @@ class QuickData {
   final int matchesBalancedSingle;
   final int matchesBalancedDouble;
   final int matchesBalancedTriple;
+  final double avgGamePiecesNoDefense;
+  final double avgGamePiecesHalfDefense;
+  final double avgGamePiecesFullDefense;
 }
 
 class AutoByPosData {
