@@ -354,33 +354,39 @@ Future<Team> fetchTeamInfo(
         final bool specificNullValidator =
             teamByPk["_2023_specifics"][0]["defense_amount"] == null;
         final List<int> scheduleMatchesNoDefense = specificNullValidator
-            ? []
+            ? <int>[]
             : (teamByPk["_2023_specifics"] as List<dynamic>)
-                .where((final dynamic specific) =>
-                    (specific["defense_amount_id"] as int) ==
-                    IdProvider.of(context).defense.nameToId["No Defense"])
+                .where(
+                  (final dynamic specific) =>
+                      (specific["defense_amount_id"] as int) ==
+                      IdProvider.of(context).defense.nameToId["No Defense"],
+                )
                 .map(
                   (final dynamic specific) =>
                       (specific["schedule_match_id"] as int),
                 )
                 .toList();
         final List<int> scheduleMatchesHalfDefense = specificNullValidator
-            ? []
+            ? <int>[]
             : (teamByPk["_2023_specifics"] as List<dynamic>)
-                .where((final dynamic specific) =>
-                    (specific["defense_amount_id"] as int) ==
-                    IdProvider.of(context).defense.nameToId["Half Defense"])
+                .where(
+                  (final dynamic specific) =>
+                      (specific["defense_amount_id"] as int) ==
+                      IdProvider.of(context).defense.nameToId["Half Defense"],
+                )
                 .map(
                   (final dynamic specific) =>
                       (specific["schedule_match_id"] as int),
                 )
                 .toList();
         final List<int> scheduleMatchesFullDefense = specificNullValidator
-            ? []
+            ? <int>[]
             : (teamByPk["_2023_specifics"] as List<dynamic>)
-                .where((final dynamic specific) =>
-                    (specific["defense_amount_id"] as int) ==
-                    IdProvider.of(context).defense.nameToId["Full Defense"])
+                .where(
+                  (final dynamic specific) =>
+                      (specific["defense_amount_id"] as int) ==
+                      IdProvider.of(context).defense.nameToId["Full Defense"],
+                )
                 .map(
                   (final dynamic specific) =>
                       (specific["schedule_match_id"] as int),
@@ -406,22 +412,34 @@ Future<Team> fetchTeamInfo(
                     double.nan;
         final double avgGamepiecesNoDefense = nullValidator
             ? 0
-            : getAvgByDefense(matches
-                .where((final dynamic match) => scheduleMatchesNoDefense
-                    .contains(match["schedule_match_id"] as int))
-                .toList());
+            : getAvgByDefense(
+                matches
+                    .where(
+                      (final dynamic match) => scheduleMatchesNoDefense
+                          .contains(match["schedule_match_id"] as int),
+                    )
+                    .toList(),
+              );
         final double avgGamepiecesHalfDefense = nullValidator
             ? 0
-            : getAvgByDefense(matches
-                .where((final dynamic match) => scheduleMatchesHalfDefense
-                    .contains(match["schedule_match_id"] as int))
-                .toList());
+            : getAvgByDefense(
+                matches
+                    .where(
+                      (final dynamic match) => scheduleMatchesHalfDefense
+                          .contains(match["schedule_match_id"] as int),
+                    )
+                    .toList(),
+              );
         final double avgGamepiecesFullDefense = nullValidator
             ? 0
-            : getAvgByDefense(matches
-                .where((final dynamic match) => scheduleMatchesFullDefense
-                    .contains(match["schedule_match_id"] as int))
-                .toList());
+            : getAvgByDefense(
+                matches
+                    .where(
+                      (final dynamic match) => scheduleMatchesFullDefense
+                          .contains(match["schedule_match_id"] as int),
+                    )
+                    .toList(),
+              );
         final QuickData quickData = QuickData(
           amountOfMobility: amountOfmobility,
           matchesBalancedAuto: matchesBalanced(MatchMode.auto, matches),
