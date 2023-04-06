@@ -317,7 +317,7 @@ class CoachQuickData extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Text(
-                  "Under Defense",
+                  "Defense Stats",
                   style: TextStyle(fontSize: 18),
                 ),
               ),

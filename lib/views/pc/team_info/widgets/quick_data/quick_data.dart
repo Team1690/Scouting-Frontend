@@ -159,18 +159,18 @@ class QuickDataCard extends StatelessWidget {
                     Column(
                       children: <Widget>[
                         const Text(
-                          "Under Defense",
+                          "Defense Stats",
                           style: TextStyle(fontSize: 18),
                         ),
                         const Spacer(),
                         Text(
-                          "Avg GP Under No Defense: ${data.avgGamePiecesNoDefense.toStringAsFixed(1)}",
+                          "Avg GP When Not Defending: ${data.avgGamePiecesNoDefense.toStringAsFixed(1)}",
                         ),
                         Text(
-                          "Avg GP Under Half Defense: ${data.avgGamePiecesHalfDefense.toStringAsFixed(1)}",
+                          "Avg GP When Half Defending: ${data.avgGamePiecesHalfDefense.toStringAsFixed(1)}",
                         ),
                         Text(
-                          "Avg GP Under Full Defense: ${data.avgGamePiecesFullDefense.toStringAsFixed(1)}",
+                          "Avg GP When Full Defending: ${data.avgGamePiecesFullDefense.toStringAsFixed(1)}",
                         ),
                         const Spacer(
                           flex: 2,
