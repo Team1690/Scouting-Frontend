@@ -34,6 +34,12 @@ query FetchCompare(\$ids: [Int!]) {
         }
       }
     }
+    _2023_specifics{
+      defense_amount_id
+      defense_amount{
+        title
+      }
+    }
     technical_matches(where: {ignored: {_eq: false}},order_by:[ {match: {match_type: {order: asc}}},{ match:{match_number:asc}},{is_rematch: asc}]) {
       auto_balance{
         auto_points
@@ -88,6 +94,8 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
           final LightTeam team = LightTeam.fromJson(teamsTable);
           final List<dynamic> matches =
               teamsTable["technical_matches"] as List<dynamic>;
+          final List<dynamic> specificMatches =
+              teamsTable["_2023_specifics"] as List<dynamic>;
           final List<int> autoGamepieces = matches
               .map(
                 (final dynamic technicalMatch) => (getPieces(
@@ -262,8 +270,15 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
           }).toList();
           final List<RobotMatchStatus> matchStatuses = matches
               .map(
-                (final dynamic e) => titleToEnum(
+                (final dynamic e) => robotMatchStatusTitleToEnum(
                   e["robot_match_status"]["title"] as String,
+                ),
+              )
+              .toList();
+          final List<DefenseAmount> defenceAmounts = specificMatches
+              .map(
+                (final dynamic e) => defenseAmountTitleToEnum(
+                  e["defense_amount"]["title"] as String,
                 ),
               )
               .toList();
@@ -271,42 +286,61 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
               CompareLineChartData(
             points: endgameBalanceLineChartPoints,
             matchStatuses: matchStatuses,
+            defenseAmounts: matches
+                .map(
+                  (final dynamic match) => DefenseAmount
+                      .noDefense, //defense should not be shown in Balance Charts
+                )
+                .toList(),
           );
           final CompareLineChartData autoBalanceLineChartVals =
               CompareLineChartData(
             points: autoBalanceLineChartPoints,
             matchStatuses: matchStatuses,
+            defenseAmounts: matches
+                .map(
+                  (final dynamic match) => DefenseAmount
+                      .noDefense, //defense should not be shown in Balance Charts
+                )
+                .toList(),
           );
           final CompareLineChartData totalCubesLineChart = CompareLineChartData(
             points: totalCubes,
             matchStatuses: matchStatuses,
+            defenseAmounts: defenceAmounts,
           );
           final CompareLineChartData totalConesLineChart = CompareLineChartData(
             points: totalCones,
             matchStatuses: matchStatuses,
+            defenseAmounts: defenceAmounts,
           );
           final CompareLineChartData gamepiecesLine = CompareLineChartData(
             points: gamepieces,
             matchStatuses: matchStatuses,
+            defenseAmounts: defenceAmounts,
           );
           final CompareLineChartData autoGamepiecesLineChart =
               CompareLineChartData(
             points: autoGamepieces,
             matchStatuses: matchStatuses,
+            defenseAmounts: defenceAmounts,
           );
           final CompareLineChartData teleGamepiecesLineChart =
               CompareLineChartData(
             points: teleGamepieces,
             matchStatuses: matchStatuses,
+            defenseAmounts: defenceAmounts,
           );
           final CompareLineChartData pointLineChart = CompareLineChartData(
             points: gamepiecePoints,
             matchStatuses: matchStatuses,
+            defenseAmounts: defenceAmounts,
           );
           final CompareLineChartData totalDeliverdLineChart =
               CompareLineChartData(
             points: totalDelivered,
             matchStatuses: matchStatuses,
+            defenseAmounts: defenceAmounts,
           );
 
           return CompareTeam(

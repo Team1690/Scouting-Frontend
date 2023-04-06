@@ -558,9 +558,18 @@ Future<Team> fetchTeamInfo(
                 1,
                 (teamByPk["technical_matches"] as List<dynamic>)
                     .map(
-                      (final dynamic match) => titleToEnum(
+                      (final dynamic match) => robotMatchStatusTitleToEnum(
                         match["robot_match_status"]["title"] as String,
                       ),
+                    )
+                    .toList(),
+              ),
+              defenseAmounts: List<List<DefenseAmount>>.filled(
+                1,
+                (teamByPk["technical_matches"] as List<dynamic>)
+                    .map(
+                      (final dynamic match) => DefenseAmount
+                          .noDefense, //defense should not be shown in Balance Charts
                     )
                     .toList(),
               ),
@@ -613,14 +622,23 @@ Future<Team> fetchTeamInfo(
                 5,
                 (teamByPk["technical_matches"] as List<dynamic>)
                     .map(
-                      (final dynamic match) => titleToEnum(
+                      (final dynamic match) => robotMatchStatusTitleToEnum(
                         match["robot_match_status"]["title"] as String,
                       ),
                     )
                     .toList(),
               ),
+              defenseAmounts: List<List<DefenseAmount>>.filled(
+                5,
+                (teamByPk["_2023_specifics"] as List<dynamic>)
+                    .map(
+                      (final dynamic match) => defenseAmountTitleToEnum(
+                        match["defense_amount"]["title"] as String,
+                      ),
+                    )
+                    .toList(),
+              ),
             );
-
         final LineChartData dataTeleCones = getGamepieceChartData(
           MatchMode.tele,
           Gamepiece.cone,
@@ -678,8 +696,18 @@ Future<Team> fetchTeamInfo(
               5,
               (teamByPk["technical_matches"] as List<dynamic>)
                   .map(
-                    (final dynamic e) => titleToEnum(
+                    (final dynamic e) => robotMatchStatusTitleToEnum(
                       e["robot_match_status"]["title"] as String,
+                    ),
+                  )
+                  .toList(),
+            ),
+            defenseAmounts: List<List<DefenseAmount>>.filled(
+              5,
+              (teamByPk["_2023_specifics"] as List<dynamic>)
+                  .map(
+                    (final dynamic match) => defenseAmountTitleToEnum(
+                      match["defense_amount"]["title"] as String,
                     ),
                   )
                   .toList(),
@@ -719,14 +747,23 @@ Future<Team> fetchTeamInfo(
             5,
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
-                  (final dynamic match) => titleToEnum(
+                  (final dynamic match) => robotMatchStatusTitleToEnum(
                     match["robot_match_status"]["title"] as String,
                   ),
                 )
                 .toList(),
           ),
+          defenseAmounts: List<List<DefenseAmount>>.filled(
+            5,
+            (teamByPk["_2023_specifics"] as List<dynamic>)
+                .map(
+                  (final dynamic match) => defenseAmountTitleToEnum(
+                    match["defense_amount"]["title"] as String,
+                  ),
+                )
+                .toList(),
+          ),
         );
-
         final LineChartData gamepiecePointsData = LineChartData(
           points: <List<int>>[
             matches
@@ -740,8 +777,17 @@ Future<Team> fetchTeamInfo(
           robotMatchStatuses: <List<RobotMatchStatus>>[
             (teamByPk["technical_matches"] as List<dynamic>)
                 .map(
-                  (final dynamic match) => titleToEnum(
+                  (final dynamic match) => robotMatchStatusTitleToEnum(
                     match["robot_match_status"]["title"] as String,
+                  ),
+                )
+                .toList()
+          ],
+          defenseAmounts: <List<DefenseAmount>>[
+            (teamByPk["_2023_specifics"] as List<dynamic>)
+                .map(
+                  (final dynamic match) => defenseAmountTitleToEnum(
+                    match["defense_amount"]["title"] as String,
                   ),
                 )
                 .toList()

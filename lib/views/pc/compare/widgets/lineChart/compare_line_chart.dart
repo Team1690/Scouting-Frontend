@@ -25,6 +25,9 @@ class CompareLineChart extends StatelessWidget {
               top: 40,
             ),
             child: DashboardLineChart(
+              defenseAmounts: data
+                  .map((final CompareLineChartData e) => e.defenseAmounts)
+                  .toList(),
               robotMatchStatuses: data
                   .map((final CompareLineChartData e) => e.matchStatuses)
                   .toList(),
