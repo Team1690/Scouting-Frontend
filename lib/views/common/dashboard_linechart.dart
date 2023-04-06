@@ -50,44 +50,44 @@ class _BaseLineChart extends StatelessWidget {
               barWidth: 2,
               isStrokeCapRound: true,
               dotData: FlDotData(
-                  show: true,
-                  getDotPainter: (
-                    final FlSpot spot,
-                    final double d,
-                    final LineChartBarData a,
-                    final int v,
-                  ) =>
-                      FlDotCirclePainter(
-                        strokeWidth: 4,
-                        radius: 6,
-                        color: secondaryColor,
-                        strokeColor: robotMatchStatuses[index]
-                                    [spot.x.toInt()] ==
-                                RobotMatchStatus.didntComeToField
-                            ? Colors.red
-                            : robotMatchStatuses[index][spot.x.toInt()] ==
-                                    RobotMatchStatus.didntComeToField
-                                ? Colors.purple
-                                : defenseAmounts[index][spot.x.toInt()] ==
-                                        DefenseAmount.fullDefense
-                                    ? Colors.green
-                                    : Colors.blue,
-                      ),
-                  checkToShowDot:
-                      (final FlSpot spot, final LineChartBarData data) {
-                    if (robotMatchStatuses[index][spot.x.toInt()] ==
-                            RobotMatchStatus.didntComeToField ||
-                        robotMatchStatuses[index][spot.x.toInt()] ==
-                            RobotMatchStatus.didntWorkOnField) {
-                      return true;
-                    } else if (defenseAmounts[index][spot.x.toInt()] ==
-                            DefenseAmount.halfDefense ||
-                        defenseAmounts[index][spot.x.toInt()] ==
-                            DefenseAmount.fullDefense) {
-                      return true;
-                    }
-                    return false;
-                  }),
+                show: true,
+                getDotPainter: (
+                  final FlSpot spot,
+                  final double d,
+                  final LineChartBarData a,
+                  final int v,
+                ) =>
+                    FlDotCirclePainter(
+                  strokeWidth: 4,
+                  radius: 6,
+                  color: secondaryColor,
+                  strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
+                          RobotMatchStatus.didntComeToField
+                      ? Colors.red
+                      : robotMatchStatuses[index][spot.x.toInt()] ==
+                              RobotMatchStatus.didntComeToField
+                          ? Colors.purple
+                          : defenseAmounts[index][spot.x.toInt()] ==
+                                  DefenseAmount.fullDefense
+                              ? Colors.green
+                              : Colors.blue,
+                ),
+                checkToShowDot:
+                    (final FlSpot spot, final LineChartBarData data) {
+                  if (robotMatchStatuses[index][spot.x.toInt()] ==
+                          RobotMatchStatus.didntComeToField ||
+                      robotMatchStatuses[index][spot.x.toInt()] ==
+                          RobotMatchStatus.didntWorkOnField) {
+                    return true;
+                  } else if (defenseAmounts[index][spot.x.toInt()] ==
+                          DefenseAmount.halfDefense ||
+                      defenseAmounts[index][spot.x.toInt()] ==
+                          DefenseAmount.fullDefense) {
+                    return true;
+                  }
+                  return false;
+                },
+              ),
               belowBarData: BarAreaData(
                 show: true,
                 color: inputedColors[index].withOpacity(showShadow ? 0.3 : 0),

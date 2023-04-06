@@ -171,12 +171,13 @@ class SpecificMatch {
 }
 
 class LineChartData {
-  LineChartData(
-      {required this.points,
-      required this.title,
-      required this.gameNumbers,
-      required this.robotMatchStatuses,
-      required this.defenseAmounts});
+  LineChartData({
+    required this.points,
+    required this.title,
+    required this.gameNumbers,
+    required this.robotMatchStatuses,
+    required this.defenseAmounts,
+  });
   final List<List<int>> points;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
   final List<List<DefenseAmount>> defenseAmounts;
