@@ -171,19 +171,22 @@ class SpecificMatch {
 }
 
 class LineChartData {
-  LineChartData({
-    required this.points,
-    required this.title,
-    required this.gameNumbers,
-    required this.robotMatchStatuses,
-  });
+  LineChartData(
+      {required this.points,
+      required this.title,
+      required this.gameNumbers,
+      required this.robotMatchStatuses,
+      required this.defenseAmounts});
   final List<List<int>> points;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
+  final List<List<DefenseAmount>> defenseAmounts;
   final List<MatchIdentifier> gameNumbers;
   final String title;
 }
 
 enum RobotMatchStatus { worked, didntComeToField, didntWorkOnField }
+
+enum DefenseAmount { noDefense, halfDefense, fullDefense }
 
 class MatchIdentifier {
   const MatchIdentifier({

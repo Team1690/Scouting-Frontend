@@ -4,10 +4,11 @@ import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart"
-    show MatchIdentifier, RobotMatchStatus;
+    show DefenseAmount, MatchIdentifier, RobotMatchStatus;
 
 class _BaseLineChart extends StatelessWidget {
   const _BaseLineChart({
+    required this.defenseAmounts,
     required this.showShadow,
     required this.inputedColors,
     required this.dataSet,
@@ -29,6 +30,7 @@ class _BaseLineChart extends StatelessWidget {
   final List<MatchIdentifier> gameNumbers;
   final SideTitles rightTitles;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
+  final List<List<DefenseAmount>> defenseAmounts;
   @override
   Widget build(final BuildContext context) => LineChart(
         LineChartData(
@@ -48,29 +50,44 @@ class _BaseLineChart extends StatelessWidget {
               barWidth: 2,
               isStrokeCapRound: true,
               dotData: FlDotData(
-                show: true,
-                getDotPainter: (
-                  final FlSpot spot,
-                  final double d,
-                  final LineChartBarData a,
-                  final int v,
-                ) =>
-                    FlDotCirclePainter(
-                  strokeWidth: 4,
-                  radius: 6,
-                  color: secondaryColor,
-                  strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
-                          RobotMatchStatus.didntComeToField
-                      ? Colors.red
-                      : Colors.purple,
-                ),
-                checkToShowDot:
-                    (final FlSpot spot, final LineChartBarData data) =>
-                        robotMatchStatuses[index][spot.x.toInt()] ==
+                  show: true,
+                  getDotPainter: (
+                    final FlSpot spot,
+                    final double d,
+                    final LineChartBarData a,
+                    final int v,
+                  ) =>
+                      FlDotCirclePainter(
+                        strokeWidth: 4,
+                        radius: 6,
+                        color: secondaryColor,
+                        strokeColor: robotMatchStatuses[index]
+                                    [spot.x.toInt()] ==
+                                RobotMatchStatus.didntComeToField
+                            ? Colors.red
+                            : robotMatchStatuses[index][spot.x.toInt()] ==
+                                    RobotMatchStatus.didntComeToField
+                                ? Colors.purple
+                                : defenseAmounts[index][spot.x.toInt()] ==
+                                        DefenseAmount.fullDefense
+                                    ? Colors.green
+                                    : Colors.blue,
+                      ),
+                  checkToShowDot:
+                      (final FlSpot spot, final LineChartBarData data) {
+                    if (robotMatchStatuses[index][spot.x.toInt()] ==
                             RobotMatchStatus.didntComeToField ||
                         robotMatchStatuses[index][spot.x.toInt()] ==
-                            RobotMatchStatus.didntWorkOnField,
-              ),
+                            RobotMatchStatus.didntWorkOnField) {
+                      return true;
+                    } else if (defenseAmounts[index][spot.x.toInt()] ==
+                            DefenseAmount.halfDefense ||
+                        defenseAmounts[index][spot.x.toInt()] ==
+                            DefenseAmount.fullDefense) {
+                      return true;
+                    }
+                    return false;
+                  }),
               belowBarData: BarAreaData(
                 show: true,
                 color: inputedColors[index].withOpacity(showShadow ? 0.3 : 0),
@@ -146,6 +163,7 @@ class DashboardClimbLineChart extends StatelessWidget {
   final bool showShadow;
   @override
   Widget build(final BuildContext context) => _BaseLineChart(
+        defenseAmounts: const <List<DefenseAmount>>[],
         robotMatchStatuses: robotMatchStatuses,
         showShadow: showShadow,
         inputedColors: inputedColors,
@@ -207,6 +225,7 @@ class DashboardLineChart extends StatelessWidget {
     required this.showShadow,
     required this.robotMatchStatuses,
     this.sideTitlesInterval = 5,
+    required this.defenseAmounts,
   });
   final bool showShadow;
   final List<Color> inputedColors;
@@ -214,12 +233,14 @@ class DashboardLineChart extends StatelessWidget {
   final List<List<int>> dataSet;
   final List<MatchIdentifier> gameNumbers;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
+  final List<List<DefenseAmount>> defenseAmounts;
   final double sideTitlesInterval;
   int get highestValue =>
       dataSet.map((final List<int> points) => points.reduce(max)).reduce(max);
 
   @override
   Widget build(final BuildContext context) => _BaseLineChart(
+        defenseAmounts: defenseAmounts,
         robotMatchStatuses: robotMatchStatuses,
         showShadow: showShadow,
         inputedColors: inputedColors,

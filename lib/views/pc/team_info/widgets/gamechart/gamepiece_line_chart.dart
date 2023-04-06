@@ -68,6 +68,7 @@ class GamepiecesLineChart extends StatelessWidget {
               distanceFromHighest: 4,
               dataSet: data.points,
               robotMatchStatuses: data.robotMatchStatuses,
+              defenseAmounts: data.defenseAmounts,
             ),
           ),
         ],
