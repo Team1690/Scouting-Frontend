@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/common/card.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
 
@@ -36,13 +37,43 @@ class _PicklistCardState extends State<PicklistCard> {
   @override
   Widget build(final BuildContext context) => DashboardCard(
         titleWidgets: <Widget>[
-          IconButton(
-            onPressed: () {
-              setState(() {
-                currentPickList = currentPickList.nextScreen();
-              });
+          ToggleButtons(
+            children: <Widget>[
+              const Text("First"),
+              const Text("Second"),
+              const Text("Third")
+            ]
+                .map(
+                  (final Widget text) => Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: isPC(context) ? 30 : 5),
+                    child: text,
+                  ),
+                )
+                .toList(),
+            isSelected: <bool>[
+              currentPickList == CurrentPickList.first,
+              currentPickList == CurrentPickList.second,
+              currentPickList == CurrentPickList.third
+            ],
+            onPressed: (final int pressedIndex) {
+              if (pressedIndex == 0) {
+                setState(() {
+                  currentPickList = CurrentPickList.first;
+                  CurrentPickList.first;
+                });
+              } else if (pressedIndex == 1) {
+                setState(() {
+                  currentPickList = CurrentPickList.second;
+                  CurrentPickList.second;
+                });
+              } else if (pressedIndex == 2) {
+                setState(() {
+                  currentPickList = CurrentPickList.third;
+                  CurrentPickList.third;
+                });
+              }
             },
-            icon: const Icon(Icons.swap_horiz),
           ),
           IconButton(
             onPressed: () => save(List<PickListTeam>.from(data), context),
@@ -66,7 +97,7 @@ class _PicklistCardState extends State<PicklistCard> {
             icon: const Icon(Icons.sort),
           )
         ],
-        title: currentPickList.title,
+        title: "",
         body: PickList(
           uiList: data,
           onReorder: (final List<PickListTeam> list) => setState(() {
