@@ -46,7 +46,8 @@ class _PicklistCardState extends State<PicklistCard> {
                 .map(
                   (final Widget text) => Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: isPC(context) ? 30 : 5),
+                      horizontal: isPC(context) ? 30 : 5,
+                    ),
                     child: text,
                   ),
                 )
