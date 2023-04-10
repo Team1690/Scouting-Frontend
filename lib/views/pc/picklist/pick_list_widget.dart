@@ -227,16 +227,30 @@ class PickList extends StatelessWidget {
                             leading: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                if (screen.getIndex(pickListTeam) + 1 <= 24)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Text(
-                                      (screen.getIndex(pickListTeam) + 1)
-                                          .toString(),
+                                SizedBox(
+                                  width: 50,
+                                  child: TextFormField(
+                                    minLines: 1,
+                                    maxLines: 1,
+                                    style: const TextStyle(fontSize: 18),
+                                    initialValue:
+                                        (screen.getIndex(pickListTeam) + 1)
+                                            .toString(),
+                                    keyboardType: TextInputType.number,
+                                    onFieldSubmitted: (final String value) =>
+                                        reorderData(
+                                      screen.getIndex(pickListTeam),
+                                      int.tryParse(value).mapNullable(
+                                            (final int parsedInt) =>
+                                                (parsedInt - 1) % uiList.length,
+                                          ) ??
+                                          screen.getIndex(pickListTeam),
                                     ),
                                   ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
                                 FlutterSwitch(
                                   value: pickListTeam.taken,
                                   activeColor: Colors.red,
@@ -275,22 +289,37 @@ class PickList extends StatelessWidget {
                               leading: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  if (screen.getIndex(pickListTeam) + 1 <= 24)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                      ),
-                                      child: Text(
-                                        (screen.getIndex(pickListTeam) + 1)
-                                            .toString(),
+                                  SizedBox(
+                                    width: 36,
+                                    child: TextFormField(
+                                      minLines: 1,
+                                      maxLines: 1,
+                                      style: const TextStyle(fontSize: 10),
+                                      initialValue:
+                                          (screen.getIndex(pickListTeam) + 1)
+                                              .toString(),
+                                      keyboardType: TextInputType.number,
+                                      onFieldSubmitted: (final String value) =>
+                                          reorderData(
+                                        screen.getIndex(pickListTeam),
+                                        int.tryParse(value).mapNullable(
+                                              (final int parsedInt) =>
+                                                  (parsedInt - 1) %
+                                                  uiList.length,
+                                            ) ??
+                                            screen.getIndex(pickListTeam),
                                       ),
                                     ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
                                   FlutterSwitch(
                                     value: pickListTeam.taken,
                                     activeColor: Colors.red,
                                     inactiveColor: primaryColor,
                                     height: 25,
-                                    width: 100,
+                                    width: 50,
                                     onToggle: (final bool val) {
                                       pickListTeam.taken = val;
                                       onReorder(uiList);
@@ -320,6 +349,7 @@ class PickListTeam {
   PickListTeam({
     required this.firstListIndex,
     required this.secondListIndex,
+    required this.thirdListIndex,
     required this.taken,
     required this.avgGamepiecePoints,
     required this.avgAutoBalancePoints,
@@ -352,6 +382,7 @@ class PickListTeam {
 
   int firstListIndex;
   int secondListIndex;
+  int thirdListIndex;
   bool taken;
 
   @override
