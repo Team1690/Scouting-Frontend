@@ -121,6 +121,31 @@ class _SpecificState extends State<Specific> {
                           vars.drivetrainAndDriving = p0,
                       controller: controllers[3], //index of drivingController
                       label: "Driving & Drivetrain",
+                      ratingBar: RatingBar(
+                        allowHalfRating: true,
+                        ratingWidget: RatingWidget(
+                          full: const Icon(
+                            Icons.drive_eta,
+                            color: Colors.green,
+                            size: 25,
+                          ),
+                          half: const Icon(
+                            Icons.drive_eta_outlined,
+                            color: Colors.amber,
+                            size: 25,
+                          ),
+                          empty: const Icon(
+                            Icons.drive_eta_outlined,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        ),
+                        onRatingUpdate: (final double rating) =>
+                            vars.driveRating = rating,
+                        initialRating: 0,
+                        maxRating: 7,
+                        itemCount: 7,
+                      ),
                     ),
                     const SizedBox(height: 15.0),
                     DropdownLine<String>(
@@ -135,6 +160,63 @@ class _SpecificState extends State<Specific> {
                       onChange: (final String p0) => vars.intake = p0,
                       controller: controllers[4], //index of intakeController
                       label: "Intake",
+                      ratingBar: Column(
+                        children: <Widget>[
+                          RatingBar(
+                            ratingWidget: RatingWidget(
+                              full: const Icon(
+                                Icons.table_bar,
+                                color: Colors.green,
+                                size: 35,
+                              ),
+                              half: const Icon(
+                                Icons.table_bar_outlined,
+                                color: Colors.amber,
+                                size: 35,
+                              ),
+                              empty: const Icon(
+                                Icons.table_bar_outlined,
+                                color: Colors.white,
+                                size: 35,
+                              ),
+                            ),
+                            onRatingUpdate: (final double rating) =>
+                                vars.feederRating = rating,
+                            allowHalfRating: true,
+                            initialRating: 0,
+                            maxRating: 7,
+                            itemCount: 7,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          RatingBar(
+                            ratingWidget: RatingWidget(
+                              full: const Icon(
+                                Icons.grass,
+                                color: Colors.green,
+                                size: 25,
+                              ),
+                              half: const Icon(
+                                Icons.grass,
+                                color: Colors.amber,
+                                size: 25,
+                              ),
+                              empty: const Icon(
+                                Icons.grass,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                            ),
+                            onRatingUpdate: (final double rating) =>
+                                vars.groundRating = rating,
+                            allowHalfRating: true,
+                            initialRating: 0,
+                            maxRating: 7,
+                            itemCount: 7,
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 15.0),
                     DropdownLine<String>(
@@ -146,6 +228,7 @@ class _SpecificState extends State<Specific> {
                           ); //index of shooterController
                         });
                       },
+
                       onChange: (final String p0) => vars.placement = p0,
                       controller: controllers[5], //index of shooterController
                       label: "Placement",
@@ -163,6 +246,31 @@ class _SpecificState extends State<Specific> {
                       onChange: (final String p0) => vars.defense = p0,
                       controller: controllers[6], //index of defenseController
                       label: "Defense",
+                      ratingBar: RatingBar(
+                        ratingWidget: RatingWidget(
+                          full: const Icon(
+                            Icons.shield,
+                            color: Colors.green,
+                            size: 25,
+                          ),
+                          half: const Icon(
+                            Icons.shield_outlined,
+                            color: Colors.amber,
+                            size: 25,
+                          ),
+                          empty: const Icon(
+                            Icons.shield_outlined,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        ),
+                        onRatingUpdate: (final double rating) =>
+                            vars.defenseRating = rating,
+                        allowHalfRating: true,
+                        initialRating: 0,
+                        maxRating: 7,
+                        itemCount: 7,
+                      ),
                     ),
                     const SizedBox(height: 15.0),
                     DropdownLine<String>(
@@ -257,118 +365,6 @@ class _SpecificState extends State<Specific> {
                         decoration:
                             const InputDecoration(hintText: "Robot fault"),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    RatingBar(
-                      allowHalfRating: true,
-                      ratingWidget: RatingWidget(
-                        full: const Icon(
-                          Icons.drive_eta,
-                          color: Colors.green,
-                          size: 25,
-                        ),
-                        half: const Icon(
-                          Icons.drive_eta_outlined,
-                          color: Colors.amber,
-                          size: 25,
-                        ),
-                        empty: const Icon(
-                          Icons.drive_eta_outlined,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
-                      onRatingUpdate: (final double rating) =>
-                          vars.driveRating = rating,
-                      initialRating: 0,
-                      maxRating: 7,
-                      itemCount: 7,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    RatingBar(
-                      ratingWidget: RatingWidget(
-                        full: const Icon(
-                          Icons.shield,
-                          color: Colors.green,
-                          size: 25,
-                        ),
-                        half: const Icon(
-                          Icons.shield_outlined,
-                          color: Colors.amber,
-                          size: 25,
-                        ),
-                        empty: const Icon(
-                          Icons.shield_outlined,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
-                      onRatingUpdate: (final double rating) =>
-                          vars.defenseRating = rating,
-                      allowHalfRating: true,
-                      initialRating: 0,
-                      maxRating: 7,
-                      itemCount: 7,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    RatingBar(
-                      ratingWidget: RatingWidget(
-                        full: const Icon(
-                          Icons.grass,
-                          color: Colors.green,
-                          size: 25,
-                        ),
-                        half: const Icon(
-                          Icons.grass,
-                          color: Colors.amber,
-                          size: 25,
-                        ),
-                        empty: const Icon(
-                          Icons.grass,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
-                      onRatingUpdate: (final double rating) =>
-                          vars.groundRating = rating,
-                      allowHalfRating: true,
-                      initialRating: 0,
-                      maxRating: 7,
-                      itemCount: 7,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    RatingBar(
-                      ratingWidget: RatingWidget(
-                        full: const Icon(
-                          Icons.table_bar,
-                          color: Colors.green,
-                          size: 35,
-                        ),
-                        half: const Icon(
-                          Icons.table_bar_outlined,
-                          color: Colors.amber,
-                          size: 35,
-                        ),
-                        empty: const Icon(
-                          Icons.table_bar_outlined,
-                          color: Colors.white,
-                          size: 35,
-                        ),
-                      ),
-                      onRatingUpdate: (final double rating) =>
-                          vars.feederRating = rating,
-                      allowHalfRating: true,
-                      initialRating: 0,
-                      maxRating: 7,
-                      itemCount: 7,
                     ),
                     const SizedBox(
                       height: 15,
