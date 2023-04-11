@@ -249,12 +249,12 @@ class _SpecificState extends State<Specific> {
                           });
                         },
                         mutation: """
-mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int, \$fault_message:String){
+mutation A(\$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int,\$match_type_id:Int,\$match_number:Int , \$fault_message:String){
   insert__2023_specific(objects: {defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id}) {
     affected_rows
   }
                   ${vars.faultMessage == null ? "" : """
-  insert_faults(objects: {team_id: \$team_id, message: \$fault_message}) {
+  insert_faults(objects: {team_id: \$team_id, message: \$fault_message, match_type_id: \$match_type_id,match_number:\$match_number,}) {
     affected_rows
   }"""}
                   }
