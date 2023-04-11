@@ -28,9 +28,9 @@ class SpecificVars implements HasuraVars {
         "is_rematch": isRematch,
         "schedule_match_id": scheduleMatch?.id,
         "scouter_name": name,
+        "defense_amount_id": defenseAmount,
         if (faultMessage != null) "match_number": scheduleMatch?.matchNumber,
         if (faultMessage != null) "match_type_id": scheduleMatch?.matchTypeId,
-        "defense_amount_id": defenseAmount,
         if (faultMessage != null) "fault_message": faultMessage,
       };
 
