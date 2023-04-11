@@ -169,6 +169,7 @@ Future<Team> fetchTeamInfo(
             faultMessages: faultMessages,
             hasGroundIntake: pitTable["has_ground_intake"] as bool,
             canScoreTop: pitTable["can_score_top"] as bool,
+            team: teamForQuery,
           ),
         );
 

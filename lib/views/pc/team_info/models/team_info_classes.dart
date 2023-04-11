@@ -244,6 +244,7 @@ class PitData {
     required this.hasGroundIntake,
     required this.canScoreTop,
     required this.spaceBetweenWheels,
+    required this.team,
   });
   final int spaceBetweenWheels;
   final String driveTrainType;
@@ -260,6 +261,7 @@ class PitData {
   final List<String>? faultMessages;
   final bool hasGroundIntake;
   final bool canScoreTop;
+  final LightTeam team;
 }
 
 class Team {
