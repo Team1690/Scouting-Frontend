@@ -275,13 +275,16 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                 ),
               )
               .toList();
-          final List<DefenseAmount> defenceAmounts = specificMatches
-              .map(
-                (final dynamic e) => defenseAmountTitleToEnum(
-                  e["defense_amount"]["title"] as String,
-                ),
-              )
-              .toList();
+          final List<DefenseAmount> defenceAmounts = <DefenseAmount>[
+            for (int i = 0; i < matches.length; i++)
+              if (i >= specificMatches.length)
+                DefenseAmount.noDefense
+              else
+                defenseAmountTitleToEnum(
+                  (specificMatches[i] as dynamic)["defense_amount"]["title"]
+                      as String,
+                )
+          ];
           final CompareLineChartData endgameBalanceLineChartVals =
               CompareLineChartData(
             points: endgameBalanceLineChartPoints,
