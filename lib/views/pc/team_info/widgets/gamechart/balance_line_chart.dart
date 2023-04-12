@@ -23,6 +23,7 @@ class BalanceLineChart extends StatelessWidget {
             ),
             child: DashboardClimbLineChart(
               showShadow: true,
+              defenseAmounts: data.defenseAmounts,
               inputedColors: const <Color>[primaryColor],
               gameNumbers: data.gameNumbers,
               dataSet: data.points,

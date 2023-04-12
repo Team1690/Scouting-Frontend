@@ -149,12 +149,14 @@ class _BaseLineChart extends StatelessWidget {
 
 class DashboardClimbLineChart extends StatelessWidget {
   const DashboardClimbLineChart({
+    required this.defenseAmounts,
     required this.dataSet,
     required this.inputedColors,
     required this.gameNumbers,
     required this.showShadow,
     required this.robotMatchStatuses,
   });
+  final List<List<DefenseAmount>> defenseAmounts;
   final List<Color> inputedColors;
   final List<MatchIdentifier> gameNumbers;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
@@ -163,7 +165,7 @@ class DashboardClimbLineChart extends StatelessWidget {
   final bool showShadow;
   @override
   Widget build(final BuildContext context) => _BaseLineChart(
-        defenseAmounts: const <List<DefenseAmount>>[],
+        defenseAmounts: defenseAmounts,
         robotMatchStatuses: robotMatchStatuses,
         showShadow: showShadow,
         inputedColors: inputedColors,
