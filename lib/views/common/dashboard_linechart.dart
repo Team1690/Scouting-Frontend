@@ -62,7 +62,7 @@ class _BaseLineChart extends StatelessWidget {
                   radius: 6,
                   color: secondaryColor,
                   strokeColor: robotMatchStatuses[index][spot.x.toInt()] ==
-                          RobotMatchStatus.didntComeToField
+                          RobotMatchStatus.didntWorkOnField
                       ? Colors.red
                       : robotMatchStatuses[index][spot.x.toInt()] ==
                               RobotMatchStatus.didntComeToField

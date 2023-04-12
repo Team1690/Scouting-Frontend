@@ -17,6 +17,22 @@ class GamepiecesLineChart extends StatelessWidget {
                   text: const TextSpan(
                     children: <InlineSpan>[
                       TextSpan(
+                        text: " Full Defense ",
+                        style: TextStyle(color: Colors.green),
+                      ),
+                      TextSpan(
+                        text: " Half Defense ",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      TextSpan(
+                        text: " Didnt Come ",
+                        style: TextStyle(color: Colors.purple),
+                      ),
+                      TextSpan(
+                        text: " Didnt Work ",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      TextSpan(
                         text: " Top ",
                         style: TextStyle(color: Colors.green),
                       ),
