@@ -576,7 +576,27 @@ Future<Team> fetchTeamInfo(
             );
         final LineChartData autoBalanceData = getBalanceChartData(true);
         final LineChartData endgameBalanceData = getBalanceChartData(false);
-
+        final List<List<DefenseAmount>> defenseAmountBeforeAdding =
+            List<List<DefenseAmount>>.filled(
+          5,
+          (teamByPk["_2023_specifics"] as List<dynamic>)
+              .map(
+                (final dynamic match) => defenseAmountTitleToEnum(
+                  match["defense_amount"]["title"] as String,
+                ),
+              )
+              .toList(),
+        );
+        final List<List<DefenseAmount>> defenseAmount =
+            List<List<DefenseAmount>>.filled(5, <DefenseAmount>[
+          for (int i = 0;
+              i < (teamByPk["technical_matches"] as List<dynamic>).length;
+              i++)
+            if (i >= defenseAmountBeforeAdding.length)
+              DefenseAmount.noDefense
+            else
+              defenseAmountBeforeAdding[0][i]
+        ]);
         LineChartData getGamepieceChartData(
           final MatchMode mode,
           final Gamepiece piece,
@@ -628,16 +648,7 @@ Future<Team> fetchTeamInfo(
                     )
                     .toList(),
               ),
-              defenseAmounts: List<List<DefenseAmount>>.filled(
-                5,
-                (teamByPk["_2023_specifics"] as List<dynamic>)
-                    .map(
-                      (final dynamic match) => defenseAmountTitleToEnum(
-                        match["defense_amount"]["title"] as String,
-                      ),
-                    )
-                    .toList(),
-              ),
+              defenseAmounts: defenseAmount,
             );
         final LineChartData dataTeleCones = getGamepieceChartData(
           MatchMode.tele,
@@ -702,16 +713,7 @@ Future<Team> fetchTeamInfo(
                   )
                   .toList(),
             ),
-            defenseAmounts: List<List<DefenseAmount>>.filled(
-              5,
-              (teamByPk["_2023_specifics"] as List<dynamic>)
-                  .map(
-                    (final dynamic match) => defenseAmountTitleToEnum(
-                      match["defense_amount"]["title"] as String,
-                    ),
-                  )
-                  .toList(),
-            ),
+            defenseAmounts: defenseAmount,
           );
         }
 
@@ -753,16 +755,7 @@ Future<Team> fetchTeamInfo(
                 )
                 .toList(),
           ),
-          defenseAmounts: List<List<DefenseAmount>>.filled(
-            5,
-            (teamByPk["_2023_specifics"] as List<dynamic>)
-                .map(
-                  (final dynamic match) => defenseAmountTitleToEnum(
-                    match["defense_amount"]["title"] as String,
-                  ),
-                )
-                .toList(),
-          ),
+          defenseAmounts: defenseAmount,
         );
         final LineChartData gamepiecePointsData = LineChartData(
           points: <List<int>>[
@@ -783,15 +776,7 @@ Future<Team> fetchTeamInfo(
                 )
                 .toList()
           ],
-          defenseAmounts: <List<DefenseAmount>>[
-            (teamByPk["_2023_specifics"] as List<dynamic>)
-                .map(
-                  (final dynamic match) => defenseAmountTitleToEnum(
-                    match["defense_amount"]["title"] as String,
-                  ),
-                )
-                .toList()
-          ],
+          defenseAmounts: <List<DefenseAmount>>[defenseAmount[0]],
         );
         AutoByPosData getDataByNodeList(final List<dynamic> matchesInPos) =>
             AutoByPosData(
