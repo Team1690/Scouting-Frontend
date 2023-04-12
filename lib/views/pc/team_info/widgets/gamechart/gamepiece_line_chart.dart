@@ -12,7 +12,7 @@ class GamepiecesLineChart extends StatelessWidget {
             children: <Widget>[
               const Spacer(),
               Align(
-                alignment: const Alignment(0.7, -1),
+                alignment: const Alignment(-0.4, -1),
                 child: RichText(
                   text: const TextSpan(
                     children: <InlineSpan>[
@@ -66,10 +66,10 @@ class GamepiecesLineChart extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(
-              bottom: 20.0,
+              bottom: 30.0,
               left: 20.0,
               right: 20.0,
-              top: 40,
+              top: 30,
             ),
             child: DashboardLineChart(
               showShadow: false,
