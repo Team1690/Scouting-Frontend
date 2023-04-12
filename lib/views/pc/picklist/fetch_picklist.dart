@@ -19,6 +19,7 @@ Stream<List<PickListTeam>> fetchPicklist() {
     name
     number
     second_picklist_index
+    third_picklist_index
     taken
     _2023_pit{
       drivetrain{
@@ -167,6 +168,7 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
       team: LightTeam.fromJson(team),
       firstListIndex: team["first_picklist_index"] as int,
       secondListIndex: team["second_picklist_index"] as int,
+      thirdListIndex: team["third_picklist_index"] as int,
       taken: team["taken"] as bool,
       maxBalanceTitle:
           ((team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
