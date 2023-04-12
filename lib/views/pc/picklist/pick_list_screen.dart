@@ -89,6 +89,7 @@ void save(
             "colors_index": e.team.colorsIndex,
             "first_picklist_index": e.firstListIndex,
             "second_picklist_index": e.secondListIndex,
+            "third_picklist_index": e.thirdListIndex,
             "taken": e.taken
           },
         )
@@ -127,29 +128,33 @@ void save(
   }
 }
 
-enum CurrentPickList { first, second }
+enum CurrentPickList { first, second, third }
 
 extension CurrentPickListExtension on CurrentPickList {
-  T map<T>(final T Function() onFirst, final T Function() onSecond) {
+  T map<T>(
+    final T Function() onFirst,
+    final T Function() onSecond,
+    final T Function() onThird,
+  ) {
     switch (this) {
       case CurrentPickList.first:
         return onFirst();
       case CurrentPickList.second:
         return onSecond();
+      case CurrentPickList.third:
+        return onThird();
     }
   }
 
-  String get title =>
-      "${name[0].toUpperCase()}${name.substring(1).toLowerCase()} Picklist";
-
-  CurrentPickList nextScreen() =>
-      map(() => CurrentPickList.second, () => CurrentPickList.first);
-
-  int getIndex(final PickListTeam team) =>
-      map(() => team.firstListIndex, () => team.secondListIndex);
+  int getIndex(final PickListTeam team) => map(
+        () => team.firstListIndex,
+        () => team.secondListIndex,
+        () => team.thirdListIndex,
+      );
 
   int setIndex(final PickListTeam team, final int index) => map(
         () => team.firstListIndex = index,
         () => team.secondListIndex = index,
+        () => team.thirdListIndex = index,
       );
 }
