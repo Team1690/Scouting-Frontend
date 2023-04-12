@@ -592,7 +592,7 @@ Future<Team> fetchTeamInfo(
           for (int i = 0;
               i < (teamByPk["technical_matches"] as List<dynamic>).length;
               i++)
-            if (i >= defenseAmountBeforeAdding.length)
+            if (i >= defenseAmountBeforeAdding[0].length)
               DefenseAmount.noDefense
             else
               defenseAmountBeforeAdding[0][i]
