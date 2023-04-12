@@ -4,9 +4,12 @@ import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
+import "package:scouting_frontend/views/pc/team_info/widgets/pit/edit_pit.dart";
 
 class PitScoutingCard extends StatelessWidget {
-  PitScoutingCard(this.data);
+  PitScoutingCard(
+    this.data,
+  );
   final PitData data;
   @override
   Widget build(final BuildContext context) => DashboardCard(
@@ -165,6 +168,29 @@ class PitScoutingCard extends StatelessWidget {
                             (final BuildContext context, final String url) =>
                                 const CircularProgressIndicator(),
                       ),
+                    ),
+                  ),
+                )
+              ],
+              if (!isPC(context)) ...<Widget>[
+                const SizedBox(
+                  height: 15,
+                ),
+                Center(
+                  child: SizedBox(
+                    width: 90,
+                    height: 30,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        (await showDialog<PitData>(
+                          context: context,
+                          builder: ((final BuildContext dialogContext) =>
+                              EditPit(
+                                data,
+                              )),
+                        ));
+                      },
+                      child: const Text("Edit"),
                     ),
                   ),
                 )
