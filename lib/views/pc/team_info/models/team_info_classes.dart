@@ -39,6 +39,9 @@ class QuickData {
     required this.matchesBalancedDouble,
     required this.matchesBalancedTriple,
     required this.amountOfMobility,
+    required this.avgGamePiecesNoDefense,
+    required this.avgGamePiecesHalfDefense,
+    required this.avgGamePiecesFullDefense,
   });
   final int amountOfMobility;
   final int amoutOfMatches;
@@ -77,6 +80,9 @@ class QuickData {
   final int matchesBalancedSingle;
   final int matchesBalancedDouble;
   final int matchesBalancedTriple;
+  final double avgGamePiecesNoDefense;
+  final double avgGamePiecesHalfDefense;
+  final double avgGamePiecesFullDefense;
 }
 
 class AutoByPosData {
@@ -170,14 +176,18 @@ class LineChartData {
     required this.title,
     required this.gameNumbers,
     required this.robotMatchStatuses,
+    required this.defenseAmounts,
   });
   final List<List<int>> points;
   final List<List<RobotMatchStatus>> robotMatchStatuses;
+  final List<List<DefenseAmount>> defenseAmounts;
   final List<MatchIdentifier> gameNumbers;
   final String title;
 }
 
 enum RobotMatchStatus { worked, didntComeToField, didntWorkOnField }
+
+enum DefenseAmount { noDefense, halfDefense, fullDefense }
 
 class MatchIdentifier {
   const MatchIdentifier({

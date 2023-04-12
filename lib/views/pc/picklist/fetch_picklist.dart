@@ -128,7 +128,7 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
     final List<RobotMatchStatus> robotMatchStatuses =
         (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
             .map(
-              (final dynamic node) => titleToEnum(
+              (final dynamic node) => robotMatchStatusTitleToEnum(
                 node["robot_match_status"]["title"] as String,
               ),
             )

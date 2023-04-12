@@ -317,6 +317,25 @@ class CoachQuickData extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Text(
+                  "Defense Stats",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Avg GP No Defense: ${data.avgGamePiecesNoDefense.toStringAsFixed(1)}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Avg GP Half Defense: ${data.avgGamePiecesHalfDefense.toStringAsFixed(1)}",
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                "Avg GP Full Defense: ${data.avgGamePiecesFullDefense.toStringAsFixed(1)}",
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
                   "Aim",
                   style: TextStyle(fontSize: 18),
                 ),

@@ -25,7 +25,8 @@ void main() async {
     "drivemotor",
     "robot_match_status",
     "fault_status",
-    "_2023_starting_position"
+    "_2023_starting_position",
+    "defense"
   ], <String>[
     "match_type"
   ]);
@@ -38,6 +39,7 @@ void main() async {
   final Map<String, int> faultStatus = enums["fault_status"]!;
   final Map<String, int> startingPositionIds =
       enums["_2023_starting_position"]!;
+  final Map<String, int> defense = enums["defense"]!;
   final List<ScheduleMatch> matches = await fetchMatches();
   final List<LightTeam> teams = await fetchTeams();
 
@@ -52,6 +54,7 @@ void main() async {
       driveMotorIds: driveMotors,
       robotMatchStatusIds: robotMatchStatuses,
       startingPositionIds: startingPositionIds,
+      defense: defense,
     ),
   );
 }

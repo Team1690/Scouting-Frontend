@@ -25,6 +25,9 @@ class CompareClimbLineChart extends StatelessWidget {
               top: 40,
             ),
             child: DashboardClimbLineChart(
+              defenseAmounts: data
+                  .map((final CompareLineChartData e) => e.defenseAmounts)
+                  .toList(),
               robotMatchStatuses: data
                   .map(
                     (final CompareLineChartData chartData) =>

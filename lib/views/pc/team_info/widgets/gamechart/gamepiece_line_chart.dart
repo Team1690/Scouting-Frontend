@@ -12,10 +12,26 @@ class GamepiecesLineChart extends StatelessWidget {
             children: <Widget>[
               const Spacer(),
               Align(
-                alignment: const Alignment(0.7, -1),
+                alignment: const Alignment(-0.4, -1),
                 child: RichText(
                   text: const TextSpan(
                     children: <InlineSpan>[
+                      TextSpan(
+                        text: " Full Defense ",
+                        style: TextStyle(color: Colors.green),
+                      ),
+                      TextSpan(
+                        text: " Half Defense ",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      TextSpan(
+                        text: " Didnt Come ",
+                        style: TextStyle(color: Colors.purple),
+                      ),
+                      TextSpan(
+                        text: " Didnt Work ",
+                        style: TextStyle(color: Colors.red),
+                      ),
                       TextSpan(
                         text: " Top ",
                         style: TextStyle(color: Colors.green),
@@ -50,10 +66,10 @@ class GamepiecesLineChart extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(
-              bottom: 20.0,
+              bottom: 30.0,
               left: 20.0,
               right: 20.0,
-              top: 40,
+              top: 30,
             ),
             child: DashboardLineChart(
               showShadow: false,
@@ -68,6 +84,7 @@ class GamepiecesLineChart extends StatelessWidget {
               distanceFromHighest: 4,
               dataSet: data.points,
               robotMatchStatuses: data.robotMatchStatuses,
+              defenseAmounts: data.defenseAmounts,
             ),
           ),
         ],
