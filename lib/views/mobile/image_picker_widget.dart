@@ -14,32 +14,67 @@ class ImagePickerWidget extends FormField<XFile> {
           validator: validate,
           builder: (final FormFieldState<XFile> state) => Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: defaultPadding),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final ImagePicker picker = ImagePicker();
-                    final XFile? image = await picker.pickImage(
-                      source: ImageSource.camera,
-                      imageQuality: 30,
-                    );
-                    state.didChange(image);
-                    await image.mapNullable((final XFile p0) async {
-                      controller.value = true;
-                      onImagePicked(p0);
-                    });
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
-                      Icon(Icons.camera_alt),
-                      Text(
-                        " Take picture",
-                        style: TextStyle(fontSize: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: defaultPadding),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image = await picker.pickImage(
+                          source: ImageSource.camera,
+                          imageQuality: 30,
+                        );
+                        state.didChange(image);
+                        await image.mapNullable((final XFile p0) async {
+                          controller.value = true;
+                          onImagePicked(p0);
+                        });
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const <Widget>[
+                          Icon(Icons.camera_alt),
+                          Text(
+                            " Take picture",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 15),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: defaultPadding),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image = await picker.pickImage(
+                          source: ImageSource.gallery,
+                          imageQuality: 30,
+                        );
+                        state.didChange(image);
+                        await image.mapNullable((final XFile p0) async {
+                          controller.value = true;
+                          onImagePicked(p0);
+                        });
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const <Widget>[
+                          Icon(Icons.photo),
+                          Text(
+                            " Select picture",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
               AdvancedSwitch(
                 width: 110,
