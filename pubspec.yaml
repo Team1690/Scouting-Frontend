@@ -35,6 +35,7 @@ dependencies:
   flutter_keyboard_visibility: ^5.0.2
   flutter_launcher_icons: ^0.11.0
   flutter_radar_chart: ^0.2.0
+  flutter_rating_bar: ^4.0.1
   flutter_switch: ^0.3.2
   flutter_typeahead: ^4.0.0
   google_fonts: ^3.0.1

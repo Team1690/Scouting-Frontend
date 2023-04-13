@@ -8,12 +8,14 @@ class DropdownLine<T> extends StatelessWidget {
     required this.label,
     required this.value,
     required this.onTap,
+    this.ratingBar,
   });
   final String label;
   final T? value;
   final void Function() onTap;
   final void Function(String) onChange;
   final TextEditingController controller;
+  final Widget? ratingBar;
 
   @override
   Widget build(final BuildContext context) => Column(
@@ -28,11 +30,21 @@ class DropdownLine<T> extends StatelessWidget {
                 ? CrossFadeState.showFirst
                 : CrossFadeState.showSecond,
             firstChild: Container(),
-            secondChild: TextField(
-              controller: controller,
-              textDirection: TextDirection.rtl,
-              onChanged: onChange,
-              decoration: InputDecoration(hintText: label),
+            secondChild: Column(
+              children: <Widget>[
+                TextField(
+                  controller: controller,
+                  textDirection: TextDirection.rtl,
+                  onChanged: onChange,
+                  decoration: InputDecoration(hintText: label),
+                ),
+                if (ratingBar != null) ...<Widget>[
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  ratingBar!
+                ]
+              ],
             ),
           ),
         ],

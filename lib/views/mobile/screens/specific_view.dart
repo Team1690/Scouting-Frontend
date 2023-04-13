@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_rating_bar/flutter_rating_bar.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
@@ -120,6 +121,31 @@ class _SpecificState extends State<Specific> {
                           vars.drivetrainAndDriving = p0,
                       controller: controllers[3], //index of drivingController
                       label: "Driving & Drivetrain",
+                      ratingBar: RatingBar(
+                        allowHalfRating: true,
+                        ratingWidget: RatingWidget(
+                          full: const Icon(
+                            Icons.drive_eta,
+                            color: Colors.green,
+                            size: 25,
+                          ),
+                          half: const Icon(
+                            Icons.drive_eta_outlined,
+                            color: Colors.amber,
+                            size: 25,
+                          ),
+                          empty: const Icon(
+                            Icons.drive_eta_outlined,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        ),
+                        onRatingUpdate: (final double rating) =>
+                            vars.driveRating = rating,
+                        initialRating: 0,
+                        maxRating: 7,
+                        itemCount: 7,
+                      ),
                     ),
                     const SizedBox(height: 15.0),
                     DropdownLine<String>(
@@ -134,6 +160,63 @@ class _SpecificState extends State<Specific> {
                       onChange: (final String p0) => vars.intake = p0,
                       controller: controllers[4], //index of intakeController
                       label: "Intake",
+                      ratingBar: Column(
+                        children: <Widget>[
+                          RatingBar(
+                            ratingWidget: RatingWidget(
+                              full: const Icon(
+                                Icons.table_bar,
+                                color: Colors.green,
+                                size: 35,
+                              ),
+                              half: const Icon(
+                                Icons.table_bar_outlined,
+                                color: Colors.amber,
+                                size: 35,
+                              ),
+                              empty: const Icon(
+                                Icons.table_bar_outlined,
+                                color: Colors.white,
+                                size: 35,
+                              ),
+                            ),
+                            onRatingUpdate: (final double rating) =>
+                                vars.feederRating = rating,
+                            allowHalfRating: true,
+                            initialRating: 0,
+                            maxRating: 7,
+                            itemCount: 7,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          RatingBar(
+                            ratingWidget: RatingWidget(
+                              full: const Icon(
+                                Icons.grass,
+                                color: Colors.green,
+                                size: 25,
+                              ),
+                              half: const Icon(
+                                Icons.grass,
+                                color: Colors.amber,
+                                size: 25,
+                              ),
+                              empty: const Icon(
+                                Icons.grass,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                            ),
+                            onRatingUpdate: (final double rating) =>
+                                vars.groundRating = rating,
+                            allowHalfRating: true,
+                            initialRating: 0,
+                            maxRating: 7,
+                            itemCount: 7,
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 15.0),
                     DropdownLine<String>(
@@ -145,6 +228,7 @@ class _SpecificState extends State<Specific> {
                           ); //index of shooterController
                         });
                       },
+
                       onChange: (final String p0) => vars.placement = p0,
                       controller: controllers[5], //index of shooterController
                       label: "Placement",
@@ -162,6 +246,31 @@ class _SpecificState extends State<Specific> {
                       onChange: (final String p0) => vars.defense = p0,
                       controller: controllers[6], //index of defenseController
                       label: "Defense",
+                      ratingBar: RatingBar(
+                        ratingWidget: RatingWidget(
+                          full: const Icon(
+                            Icons.shield,
+                            color: Colors.green,
+                            size: 25,
+                          ),
+                          half: const Icon(
+                            Icons.shield_outlined,
+                            color: Colors.amber,
+                            size: 25,
+                          ),
+                          empty: const Icon(
+                            Icons.shield_outlined,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        ),
+                        onRatingUpdate: (final double rating) =>
+                            vars.defenseRating = rating,
+                        allowHalfRating: true,
+                        initialRating: 0,
+                        maxRating: 7,
+                        itemCount: 7,
+                      ),
                     ),
                     const SizedBox(height: 15.0),
                     DropdownLine<String>(
@@ -276,8 +385,8 @@ class _SpecificState extends State<Specific> {
                           });
                         },
                         mutation: """
-mutation A(\$defense_amount_id: Int, \$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int, \$fault_message:String ${vars.faultMessage == null ? "" : ",\$match_type_id:Int,\$match_number:Int "} ){
-  insert__2023_specific(objects: {defense_amount_id: \$defense_amount_id, defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id}) {
+mutation A(\$defense_amount_id: Int, \$defense: String, \$drivetrain_and_driving: String, \$general_notes: String, \$intake: String, \$is_rematch: Boolean, \$placement: String, \$scouter_name: String, \$team_id: Int, \$schedule_match_id: Int,\$drive_rating:Float,\$defense_rating:Float,\$feeder_rating:Float,\$ground_rating:Float, \$fault_message:String ${vars.faultMessage == null ? "" : ",\$match_type_id:Int,\$match_number:Int "} ){
+  insert__2023_specific(objects: {defense_amount_id: \$defense_amount_id, defense: \$defense, drivetrain_and_driving: \$drivetrain_and_driving, general_notes: \$general_notes, intake: \$intake, is_rematch: \$is_rematch, placement: \$placement, scouter_name: \$scouter_name, team_id: \$team_id, schedule_match_id: \$schedule_match_id,drive_rating:\$drive_rating,defense_rating:\$defense_rating,feeder_rating:\$feeder_rating,ground_rating:\$ground_rating}) {
     affected_rows
   }
                   ${vars.faultMessage == null ? "" : """
