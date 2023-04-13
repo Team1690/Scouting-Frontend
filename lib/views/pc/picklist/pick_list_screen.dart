@@ -69,7 +69,7 @@ void save(
   final GraphQLClient client = getClient();
   const String query = """
   mutation UpdatePicklist(\$objects: [team_insert_input!]!) {
-  insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index]}) {
+  insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index,third_picklist_index]}) {
     affected_rows
     returning {
       id
