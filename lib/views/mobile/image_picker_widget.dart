@@ -38,7 +38,7 @@ class ImagePickerWidget extends FormField<XFile> {
                         children: const <Widget>[
                           Icon(Icons.camera_alt),
                           Text(
-                            " Take picture",
+                            "Camera",
                             style: TextStyle(fontSize: 20),
                           ),
                         ],
@@ -67,7 +67,7 @@ class ImagePickerWidget extends FormField<XFile> {
                         children: const <Widget>[
                           Icon(Icons.photo),
                           Text(
-                            " Select picture",
+                            "Gallery",
                             style: TextStyle(fontSize: 20),
                           ),
                         ],
