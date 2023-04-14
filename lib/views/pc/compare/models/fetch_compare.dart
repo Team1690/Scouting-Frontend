@@ -125,14 +125,9 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
               .toList();
           final List<int> gamepieces = matches
               .map(
-                (final dynamic technicalMatch) =>
-                    getPieces(
-                      parseMatch(technicalMatch),
-                    ).toInt() -
-                    (((technicalMatch["auto_cones_delivered"] as int) +
-                        (technicalMatch["auto_cubes_delivered"] as int) +
-                        (technicalMatch["tele_cones_delivered"] as int) +
-                        (technicalMatch["tele_cubes_delivered"] as int))),
+                (final dynamic technicalMatch) => getPieces(
+                  parseMatch(technicalMatch),
+                ).toInt(),
               )
               .toList();
           final List<int> gamepiecePoints = matches
