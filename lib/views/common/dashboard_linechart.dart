@@ -248,14 +248,25 @@ class DashboardLineChart extends StatelessWidget {
         inputedColors: inputedColors,
         dataSet: dataSet,
         gameNumbers: gameNumbers,
-        getToolipItems: (final List<LineBarSpot> touchedSpots) => touchedSpots
-            .map(
-              (final LineBarSpot e) => LineTooltipItem(
-                e.y.toInt().toString(),
-                TextStyle(color: e.bar.color),
-              ),
-            )
-            .toList(),
+        getToolipItems: (final List<LineBarSpot> touchedSpots) {
+          touchedSpots.sort(
+            (final LineBarSpot a, final LineBarSpot b) =>
+                inputedColors.indexOf(b.bar.color ?? Colors.white) >
+                        inputedColors.indexOf(b.bar.color ?? Colors.white)
+                    ? inputedColors.indexOf(b.bar.color ?? Colors.white)
+                    : inputedColors.indexOf(b.bar.color ?? Colors.white),
+          );
+          return touchedSpots.reversed
+              .map(
+                (final LineBarSpot e) => LineTooltipItem(
+                  e.y.toInt().toString(),
+                  TextStyle(
+                    color: e.bar.color,
+                  ),
+                ),
+              )
+              .toList();
+        },
         rightTitles: SideTitles(
           interval: sideTitlesInterval,
           getTitlesWidget: (final double value, final TitleMeta a) => Padding(
