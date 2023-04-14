@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/common/dashboard_linechart.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 class GamepiecesLineChart extends StatelessWidget {
@@ -14,41 +15,43 @@ class GamepiecesLineChart extends StatelessWidget {
               Align(
                 alignment: const Alignment(-0.4, -1),
                 child: RichText(
-                  text: const TextSpan(
+                  text: TextSpan(
                     children: <InlineSpan>[
-                      TextSpan(
-                        text: " Full Defense ",
-                        style: TextStyle(color: Colors.green),
-                      ),
-                      TextSpan(
-                        text: " Half Defense ",
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      TextSpan(
-                        text: " Didnt Come ",
-                        style: TextStyle(color: Colors.purple),
-                      ),
-                      TextSpan(
-                        text: " Didnt Work ",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                      TextSpan(
+                      if (isPC(context)) ...<TextSpan>[
+                        const TextSpan(
+                          text: " Full Defense ",
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        const TextSpan(
+                          text: " Half Defense ",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        const TextSpan(
+                          text: " Didnt Come ",
+                          style: TextStyle(color: Colors.purple),
+                        ),
+                        const TextSpan(
+                          text: " Didnt Work ",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
+                      const TextSpan(
                         text: " Top ",
                         style: TextStyle(color: Colors.green),
                       ),
-                      TextSpan(
+                      const TextSpan(
                         text: " Mid ",
                         style: TextStyle(color: Colors.yellow),
                       ),
-                      TextSpan(
+                      const TextSpan(
                         text: " Low ",
                         style: TextStyle(color: Colors.orange),
                       ),
-                      TextSpan(
+                      const TextSpan(
                         text: " Delivered ",
                         style: TextStyle(color: Colors.blue),
                       ),
-                      TextSpan(
+                      const TextSpan(
                         text: " Failed ",
                         style: TextStyle(color: Colors.red),
                       ),
