@@ -109,6 +109,10 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
         enableInfininteScroll: true,
         widgets: <Widget>[
           CoachTeamInfoLineChart(
+            GamepiecesLineChart(data.allData),
+            "Gamepieces",
+          ),
+          CoachTeamInfoLineChart(
             GamepiecesLineChart(data.autoConesData),
             "Auto Cones",
           ),
@@ -123,10 +127,6 @@ class CoachTeamInfoLineCharts extends StatelessWidget {
           CoachTeamInfoLineChart(
             GamepiecesLineChart(data.teleCubesData),
             "Tele Cubes",
-          ),
-          CoachTeamInfoLineChart(
-            GamepiecesLineChart(data.allData),
-            "Gamepieces",
           ),
           CoachTeamInfoLineChart(
             PointsLineChart(data.gamepiecePointsData),
