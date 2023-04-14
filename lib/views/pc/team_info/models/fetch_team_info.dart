@@ -179,7 +179,6 @@ Future<Team> fetchTeamInfo(
             team: teamForQuery,
           ),
         );
-
         final dynamic avg =
             teamByPk["technical_matches_aggregate"]["aggregate"]["avg"];
         double avgNullToZero(
@@ -352,7 +351,7 @@ Future<Team> fetchTeamInfo(
             .where((final dynamic match) => (match["auto_mobility"] as bool))
             .length;
         final bool specificNullValidator =
-            teamByPk["_2023_specifics"][0]["defense_amount"] == null;
+            (teamByPk["_2023_specifics"] as List<dynamic>).isEmpty;
         final List<int> scheduleMatchesNoDefense = specificNullValidator
             ? <int>[]
             : (teamByPk["_2023_specifics"] as List<dynamic>)
@@ -545,7 +544,6 @@ Future<Team> fetchTeamInfo(
               ),
             )
             .toList();
-
         LineChartData getBalanceChartData(final bool isAuto) => LineChartData(
               gameNumbers: matchNumbers,
               points: <List<int>>[
@@ -576,26 +574,28 @@ Future<Team> fetchTeamInfo(
             );
         final LineChartData autoBalanceData = getBalanceChartData(true);
         final LineChartData endgameBalanceData = getBalanceChartData(false);
-        final List<List<DefenseAmount>> defenseAmountBeforeAdding =
-            List<List<DefenseAmount>>.filled(
-          5,
-          (teamByPk["_2023_specifics"] as List<dynamic>)
-              .map(
-                (final dynamic match) => defenseAmountTitleToEnum(
-                  match["defense_amount"]["title"] as String,
-                ),
-              )
-              .toList(),
-        );
+        final List<DefenseAmount> defenseAmountBeforeAdding =
+            (teamByPk["_2023_specifics"] as List<dynamic>).isEmpty
+                ? <DefenseAmount>[]
+                : (teamByPk["_2023_specifics"] as List<dynamic>)
+                    .map(
+                      (final dynamic match) => specificNullValidator
+                          ? DefenseAmount.noDefense
+                          : defenseAmountTitleToEnum(
+                              match["defense_amount"]["title"] as String,
+                            ),
+                    )
+                    .toList();
         final List<List<DefenseAmount>> defenseAmount =
             List<List<DefenseAmount>>.filled(5, <DefenseAmount>[
           for (int i = 0;
               i < (teamByPk["technical_matches"] as List<dynamic>).length;
               i++)
-            if (i >= defenseAmountBeforeAdding[0].length)
+            if (defenseAmountBeforeAdding.isEmpty ||
+                i >= defenseAmountBeforeAdding.length)
               DefenseAmount.noDefense
             else
-              defenseAmountBeforeAdding[0][i]
+              defenseAmountBeforeAdding[i]
         ]);
         LineChartData getGamepieceChartData(
           final MatchMode mode,
