@@ -1,4 +1,7 @@
+import "dart:math";
+
 import "package:carousel_slider/carousel_slider.dart";
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/average_or_null.dart";
@@ -89,46 +92,101 @@ class CoachView extends StatelessWidget {
   }
 }
 
-Widget matchScreen(final BuildContext context, final CoachData data) => Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("${data.matchType}: ${data.matchNumber}"),
+Widget matchScreen(final BuildContext context, final CoachData data) {
+  int getPointsEstimation(final bool isBlue) {
+    final double avgLow = !isBlue ? data.avgRedLow : data.avgBlueLow;
+    final double avgMid = !isBlue ? data.avgRedMid : data.avgBlueMid;
+    final double avgTop = !isBlue ? data.avgRedTop : data.avgBlueTop;
+    final double avgSupercharged =
+        !isBlue ? data.avgRedSupercharged : data.avgBlueSupercharged;
+    return (avgLow * 2 +
+            avgMid * 3 +
+            avgTop * 5 + //basic points
+            (avgTop / 3) * 5 +
+            (avgMid / 3) * 5 +
+            (avgLow / 3) * 5 + //links estimation
+            (avgMid + avgTop + avgMid == 27 && avgSupercharged != 0
+                ? avgSupercharged * 3
+                : 0) //superCharges
+        )
+        .round();
+  }
+
+  return Column(
+    children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("${data.matchType}: ${data.matchNumber}"),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              style: const TextStyle(color: Colors.blue),
+              "${data.avgBlueTop.toStringAsFixed(1)} | ${data.avgBlueMid.toStringAsFixed(1)} | ${data.avgBlueLow.toStringAsFixed(1)} ${data.avgBlueLow + data.avgBlueMid + data.avgBlueTop == 27 && data.avgBlueSupercharged != 0 ? "(${data.avgBlueSupercharged.toStringAsFixed(1)})" : ""}",
+            ),
+            const Text(" vs "),
+            Text(
+              style: const TextStyle(color: Colors.red),
+              "${data.avgRedTop.toStringAsFixed(1)} | ${data.avgRedMid.toStringAsFixed(1)} | ${data.avgRedLow.toStringAsFixed(1)} ${data.avgRedLow + data.avgRedMid + data.avgRedTop == 27 && data.avgRedSupercharged != 0 ? "(${data.avgRedSupercharged.toStringAsFixed(1)})" : ""}",
+            ),
+          ],
         ),
-        Expanded(
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(0.625),
-                  child: Column(
-                    children: data.blueAlliance
-                        .map(
-                          (final CoachViewLightTeam e) =>
-                              Expanded(child: teamData(e, context, true)),
-                        )
-                        .toList(),
-                  ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              style: const TextStyle(color: Colors.blue),
+              "${getPointsEstimation(true)}",
+            ),
+            const Text(" vs "),
+            Text(
+              style: const TextStyle(color: Colors.red),
+              "${getPointsEstimation(false)}",
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(0.625),
+                child: Column(
+                  children: data.blueAlliance
+                      .map(
+                        (final CoachViewLightTeam e) =>
+                            Expanded(child: teamData(e, context, true)),
+                      )
+                      .toList(),
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(0.625),
-                  child: Column(
-                    children: data.redAlliance
-                        .map(
-                          (final CoachViewLightTeam e) =>
-                              Expanded(child: teamData(e, context, false)),
-                        )
-                        .toList(),
-                  ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(0.625),
+                child: Column(
+                  children: data.redAlliance
+                      .map(
+                        (final CoachViewLightTeam e) =>
+                            Expanded(child: teamData(e, context, false)),
+                      )
+                      .toList(),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
-      ],
-    );
+      ),
+    ],
+  );
+}
 
 final String query = """
 query FetchCoach {
@@ -326,6 +384,12 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                           (match["balanced_with"] as int?) == 2,
                     )
                     .length;
+                double getAvgPerLevel(final GridLevel level) => avgNullValidator
+                    ? 0
+                    : (avg["tele_cones_${level.title}"] as double) +
+                        (avg["tele_cubes_${level.title}"] as double) +
+                        (avg["auto_cones_${level.title}"] as double) +
+                        (avg["auto_cubes_${level.title}"] as double);
                 return CoachViewLightTeam(
                   avgGamepiecePoints: avgGamepiecePoints,
                   amountOfMatches: amountOfMatches,
@@ -340,10 +404,86 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   avgAutoBalancePoints: avgAutoBalancePoints,
                   autoBalancePercentage: autoBalancePercentage,
                   isBlue: e.startsWith("blue"),
+                  avgLowPieces: getAvgPerLevel(GridLevel.low),
+                  avgMidPieces: getAvgPerLevel(GridLevel.mid),
+                  avgTopPieces: getAvgPerLevel(GridLevel.top),
                 );
               })
               .whereType<CoachViewLightTeam>()
               .toList();
+          Map<GridLevel, double> getRealisticAvgAlliancePerLevel(
+            final bool isBlue,
+          ) {
+            double avgLow = teams
+                .where(
+                  (final CoachViewLightTeam element) =>
+                      element.isBlue == isBlue,
+                )
+                .map((final CoachViewLightTeam team) => team.avgLowPieces)
+                .toList()
+                .sum;
+            double avgMid = teams
+                .where(
+                  (final CoachViewLightTeam element) =>
+                      element.isBlue == isBlue,
+                )
+                .map((final CoachViewLightTeam team) => team.avgMidPieces)
+                .toList()
+                .sum;
+            double avgTop = teams
+                .where(
+                  (final CoachViewLightTeam element) =>
+                      element.isBlue == isBlue,
+                )
+                .map((final CoachViewLightTeam team) => team.avgTopPieces)
+                .toList()
+                .sum;
+            //TODO this is an abomintaion
+            if (avgTop > 9) {
+              avgMid += (avgTop - 9);
+              avgTop = 9;
+            }
+            if (avgMid > 9) {
+              if (avgTop > 0) {
+                avgTop += (avgMid - 9);
+                if (avgTop > 9) {
+                  avgLow += (avgTop - 9);
+                  avgTop = 9;
+                }
+              } else {
+                avgLow += (avgMid - 9);
+              }
+              avgMid = 9;
+            }
+            if (avgLow > 9) {
+              if (avgMid == 9) {
+                if (avgTop == 9) {
+                } else if (avgTop > 0) {
+                  avgTop == min(avgTop + (avgLow - 9), 9);
+                }
+              } else if (avgMid > 0) {
+                avgMid += (avgLow - 9);
+                if (avgMid > 9) {
+                  if (avgTop == 9) {
+                  } else if (avgTop > 0) {
+                    avgTop == min(avgTop + (avgMid - 9), 9);
+                  }
+                  avgMid = 9;
+                }
+              }
+              avgLow = 9;
+            }
+            return <GridLevel, double>{
+              GridLevel.low: avgLow,
+              GridLevel.mid: avgMid,
+              GridLevel.top: avgTop,
+            };
+          }
+
+          final Map<GridLevel, double> avgBlue =
+              getRealisticAvgAlliancePerLevel(true);
+          final Map<GridLevel, double> avgRed =
+              getRealisticAvgAlliancePerLevel(false);
 
           return CoachData(
             happened: happened,
@@ -355,6 +495,38 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                 .toList(),
             matchNumber: number,
             matchType: matchType,
+            avgBlueLow: avgBlue[GridLevel.low]!,
+            avgBlueMid: avgBlue[GridLevel.mid]!,
+            avgBlueTop: avgBlue[GridLevel.top]!,
+            avgRedLow: avgRed[GridLevel.low]!,
+            avgRedMid: avgRed[GridLevel.mid]!,
+            avgRedTop: avgRed[GridLevel.top]!,
+            avgBlueSupercharged: teams
+                    .where((final CoachViewLightTeam element) => element.isBlue)
+                    .map(
+                      (final CoachViewLightTeam team) =>
+                          team.avgLowPieces +
+                          team.avgMidPieces +
+                          team.avgTopPieces,
+                    )
+                    .sum -
+                (avgBlue[GridLevel.top]! +
+                    avgBlue[GridLevel.mid]! +
+                    avgBlue[GridLevel.low]!),
+            avgRedSupercharged: teams
+                    .where(
+                      (final CoachViewLightTeam element) => !element.isBlue,
+                    )
+                    .map(
+                      (final CoachViewLightTeam team) =>
+                          team.avgLowPieces +
+                          team.avgMidPieces +
+                          team.avgTopPieces,
+                    )
+                    .sum -
+                (avgRed[GridLevel.top]! +
+                    avgRed[GridLevel.mid]! +
+                    avgRed[GridLevel.low]!),
           );
         }).toList();
       },
@@ -389,6 +561,9 @@ class CoachViewLightTeam {
     required this.isBlue,
     required this.avgDelivered,
     required this.avgGamepiecePoints,
+    required this.avgLowPieces,
+    required this.avgMidPieces,
+    required this.avgTopPieces,
   });
   final int amountOfMatches;
   final double avgEndgameBalancePoints;
@@ -403,6 +578,9 @@ class CoachViewLightTeam {
   final double avgGamepiecePoints;
   final LightTeam team;
   final bool isBlue;
+  final double avgTopPieces;
+  final double avgMidPieces;
+  final double avgLowPieces;
 }
 
 class CoachData {
@@ -412,12 +590,28 @@ class CoachData {
     required this.redAlliance,
     required this.matchNumber,
     required this.matchType,
+    required this.avgBlueLow,
+    required this.avgBlueMid,
+    required this.avgBlueTop,
+    required this.avgRedLow,
+    required this.avgRedMid,
+    required this.avgRedTop,
+    required this.avgBlueSupercharged,
+    required this.avgRedSupercharged,
   });
   final int matchNumber;
   final bool happened;
   final List<CoachViewLightTeam> blueAlliance;
   final List<CoachViewLightTeam> redAlliance;
   final String matchType;
+  final double avgBlueTop;
+  final double avgBlueMid;
+  final double avgBlueLow;
+  final double avgBlueSupercharged;
+  final double avgRedTop;
+  final double avgRedMid;
+  final double avgRedLow;
+  final double avgRedSupercharged;
 }
 
 Widget teamData(
