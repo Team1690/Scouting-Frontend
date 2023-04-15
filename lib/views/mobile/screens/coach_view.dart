@@ -368,7 +368,13 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                                       : false,
                             )
                             .length /
-                        nodes.length;
+                        nodes
+                            .where(
+                              (final dynamic element) =>
+                                  element["endgame_balance"]["title"] !=
+                                  "No attempt",
+                            )
+                            .length;
                 final List<dynamic> matches =
                     match[e]["technical_matches"] as List<dynamic>;
                 final int matchesBalancedSingle = matches
