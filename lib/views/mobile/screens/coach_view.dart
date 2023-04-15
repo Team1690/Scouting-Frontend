@@ -297,7 +297,6 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                         avgTeleDelivered;
                 final double avgGamepiecePoints =
                     avgNullValidator ? double.nan : getPoints(parseMatch(avg));
-                final int amountOfMatches = nodes.length;
                 final double avgAutoBalancePoints = nodeNullValidator
                     ? double.nan
                     : nodes
@@ -348,7 +347,13 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                                       : false,
                             )
                             .length /
-                        amountOfMatches;
+                        nodes
+                            .where(
+                              (final dynamic match) =>
+                                  match["auto_balance"]["title"] !=
+                                  "No attempt",
+                            )
+                            .length;
                 final double endgameBalancePercentage = nodeNullValidator
                     ? double.nan
                     : nodes
@@ -363,7 +368,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                                       : false,
                             )
                             .length /
-                        amountOfMatches;
+                        nodes.length;
                 final List<dynamic> matches =
                     match[e]["technical_matches"] as List<dynamic>;
                 final int matchesBalancedSingle = matches
@@ -392,7 +397,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                         (avg["auto_cubes_${level.title}"] as double);
                 return CoachViewLightTeam(
                   avgGamepiecePoints: avgGamepiecePoints,
-                  amountOfMatches: amountOfMatches,
+                  amountOfMatches: nodes.length,
                   team: team,
                   avgDelivered: avgAutoDelivered + avgTeleDelivered,
                   avgGamepiecesPlaced: avgAutoGamepieces + avgTeleGamepieces,
