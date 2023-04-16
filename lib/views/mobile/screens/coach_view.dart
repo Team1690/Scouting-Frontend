@@ -110,7 +110,7 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
                       color: Colors.blue,
                       fontSize: 12,
                     ),
-                    "${getAllianceBreakdown(data.avgBlue)} => ${getPointsEstimation(data.avgBlue)}",
+                    "${getAllianceBreakdown(data.avgBlue)} => ${data.avgBlue[null]!.toInt()}",
                   ),
                   if (data.blueAlliance.length == 4)
                     Text(
@@ -118,7 +118,7 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
                         color: Colors.blue,
                         fontSize: 12,
                       ),
-                      "${data.blueAlliance.last.team.number}: ${getAllianceBreakdown(data.avgBlueWithFourth!)} => ${getPointsEstimation(data.avgBlueWithFourth!)}",
+                      "${data.blueAlliance.last.team.number}: ${getAllianceBreakdown(data.avgBlueWithFourth!)} => ${data.avgBlueWithFourth![null]!.toInt()}",
                     )
                   else if (data.redAlliance.length == 4)
                     const Text(""),
@@ -138,7 +138,7 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
                       color: Colors.red,
                       fontSize: 12,
                     ),
-                    "${getAllianceBreakdown(data.avgRed)} => ${getPointsEstimation(data.avgRed)}",
+                    "${getAllianceBreakdown(data.avgRed)} => ${data.avgRed[null]!.toInt()}",
                   ),
                   if (data.redAlliance.length == 4)
                     Text(
@@ -146,7 +146,7 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
                         color: Colors.red,
                         fontSize: 12,
                       ),
-                      "${data.redAlliance.last.team.number}: ${getAllianceBreakdown(data.avgRedWithFourth!)} => ${getPointsEstimation(data.avgRedWithFourth!)}",
+                      "${data.redAlliance.last.team.number}: ${getAllianceBreakdown(data.avgRedWithFourth!)} => ${data.avgRedWithFourth![null]!.toInt()}",
                     )
                   else if (data.blueAlliance.length == 4)
                     const Text(""),
@@ -307,7 +307,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                                   element["robot_match_status"] !=
                                           "Didn't come to field"
                                       ? element["auto_balance"]["title"] !=
-                                          "No Attempt"
+                                          "No attempt"
                                       : false,
                             )
                             .map(
@@ -361,13 +361,8 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                     : nodes
                             .where(
                               (final dynamic element) =>
-                                  element["robot_match_status"] !=
-                                          "Didn't come to field"
-                                      ? element["endgame_balance"]["title"] !=
-                                              "No attempt" &&
-                                          element["endgame_balance"]["title"] !=
-                                              "Failed"
-                                      : false,
+                                  element["endgame_balance"]["title"] ==
+                                  "Balanced",
                             )
                             .length /
                         nodes
@@ -424,7 +419,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
               })
               .whereType<CoachViewLightTeam>()
               .toList();
-          Map<GridLevel, double> getRealisticAvgAlliancePerLevel(
+          Map<GridLevel?, double> getRealisticAvgAlliancePerLevel(
             final List<CoachViewLightTeam> teams,
           ) {
             double avgLow = teams
@@ -442,7 +437,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                 .map((final CoachViewLightTeam team) => team.avgTopPieces)
                 .toList()
                 .sum;
-            final double avgSuperchared = avgLow + avgMid + avgTop - 27;
+            final double avgSupercharged = avgLow + avgMid + avgTop - 27;
             //TODO this is an abomintaion
             if (avgTop > 9) {
               avgMid += (avgTop - 9);
@@ -478,11 +473,19 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
               }
               avgLow = 9;
             }
-            return <GridLevel, double>{
+            final double estematedScore = avgLow.floor() * 2 +
+                avgMid.floor() * 3 +
+                avgTop.floor() * 5 +
+                (avgTop / 3).floor() * 5 +
+                (avgMid / 3).floor() * 5 +
+                (avgLow / 3).floor() * 5 +
+                (avgSupercharged > 0 ? avgSupercharged * 3 : 0);
+            return <GridLevel?, double>{
               GridLevel.low: avgLow,
               GridLevel.mid: avgMid,
               GridLevel.top: avgTop,
-              GridLevel.none: avgSuperchared,
+              GridLevel.none: avgSupercharged,
+              null: estematedScore,
             };
           }
 
@@ -492,7 +495,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
           final List<CoachViewLightTeam> blueAlliance = teams
               .where((final CoachViewLightTeam element) => element.isBlue)
               .toList();
-          final Map<GridLevel, double> avgBlue =
+          final Map<GridLevel?, double> avgBlue =
               getRealisticAvgAlliancePerLevel(
             blueAlliance
                 .whereNotIndexed(
@@ -501,7 +504,8 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                 )
                 .toList(),
           );
-          final Map<GridLevel, double> avgRed = getRealisticAvgAlliancePerLevel(
+          final Map<GridLevel?, double> avgRed =
+              getRealisticAvgAlliancePerLevel(
             redAlliance
                 .whereNotIndexed(
                   (final int index, final CoachViewLightTeam element) =>
@@ -509,7 +513,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                 )
                 .toList(),
           );
-          final Map<GridLevel, double>? avgBlueWithFourth =
+          final Map<GridLevel?, double>? avgBlueWithFourth =
               blueAlliance.length == 4
                   ? getRealisticAvgAlliancePerLevel(
                       blueAlliance
@@ -524,7 +528,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                     )
                   : null;
 
-          final Map<GridLevel, double>? avgRedWithFourth =
+          final Map<GridLevel?, double>? avgRedWithFourth =
               redAlliance.length == 4
                   ? getRealisticAvgAlliancePerLevel(
                       redAlliance
@@ -621,10 +625,10 @@ class CoachData {
   final List<CoachViewLightTeam> blueAlliance;
   final List<CoachViewLightTeam> redAlliance;
   final String matchType;
-  final Map<GridLevel, double>? avgBlueWithFourth;
-  final Map<GridLevel, double>? avgRedWithFourth;
-  final Map<GridLevel, double> avgBlue;
-  final Map<GridLevel, double> avgRed;
+  final Map<GridLevel?, double>? avgBlueWithFourth;
+  final Map<GridLevel?, double>? avgRedWithFourth;
+  final Map<GridLevel?, double> avgBlue;
+  final Map<GridLevel?, double> avgRed;
 }
 
 Widget teamData(
@@ -746,23 +750,5 @@ Widget teamData(
 String getTeamText(final CoachViewLightTeam team) =>
     "${team.avgTopPieces.toStringAsFixed(1)} | ${team.avgMidPieces.toStringAsFixed(1)} | ${(team.avgLowPieces + team.avgDelivered).toStringAsFixed(1)} | ${(team.avgGamepiecesPlaced + team.avgDelivered).toStringAsFixed(1)}";
 
-int getPointsEstimation(final Map<GridLevel, double> allianceData) {
-  final double avgLow = allianceData[GridLevel.top]!;
-  final double avgMid = allianceData[GridLevel.mid]!;
-  final double avgTop = allianceData[GridLevel.low]!;
-  final double avgSupercharged = allianceData[GridLevel.none]!;
-  return (avgLow * 2 +
-          avgMid * 3 +
-          avgTop * 5 + //basic points
-          (avgTop / 3) * 5 +
-          (avgMid / 3) * 5 +
-          (avgLow / 3) * 5 + //links estimation
-          (avgMid + avgTop + avgMid == 27 && avgSupercharged != 0
-              ? avgSupercharged * 3
-              : 0) //superCharges
-      )
-      .round();
-}
-
-String getAllianceBreakdown(final Map<GridLevel, double> allianceData) =>
+String getAllianceBreakdown(final Map<GridLevel?, double> allianceData) =>
     "${allianceData[GridLevel.top]!.toStringAsFixed(1)} | ${allianceData[GridLevel.mid]!.toStringAsFixed(1)} | ${allianceData[GridLevel.low]!.toStringAsFixed(1)} ${allianceData[GridLevel.top]! + allianceData[GridLevel.mid]! + allianceData[GridLevel.low]! == 27 && allianceData[GridLevel.none]! > 0 ? "(${allianceData[GridLevel.none]!.toStringAsFixed(1)})" : ""}";
