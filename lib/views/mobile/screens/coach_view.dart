@@ -428,7 +428,10 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
             final List<CoachViewLightTeam> teams,
           ) {
             double avgLow = teams
-                .map((final CoachViewLightTeam team) => team.avgLowPieces)
+                .map(
+                  (final CoachViewLightTeam team) =>
+                      team.avgLowPieces + team.avgDelivered,
+                )
                 .toList()
                 .sum;
             double avgMid = teams
@@ -741,7 +744,7 @@ Widget teamData(
     );
 
 String getTeamText(final CoachViewLightTeam team) =>
-    "${team.avgTopPieces.toStringAsFixed(1)} | ${team.avgMidPieces.toStringAsFixed(1)} | ${team.avgLowPieces.toStringAsFixed(1)} | ${team.avgGamepiecesPlaced.toStringAsFixed(1)}";
+    "${team.avgTopPieces.toStringAsFixed(1)} | ${team.avgMidPieces.toStringAsFixed(1)} | ${(team.avgLowPieces + team.avgDelivered).toStringAsFixed(1)} | ${(team.avgGamepiecesPlaced + team.avgDelivered).toStringAsFixed(1)}";
 
 int getPointsEstimation(final Map<GridLevel, double> allianceData) {
   final double avgLow = allianceData[GridLevel.top]!;
