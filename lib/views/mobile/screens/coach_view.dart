@@ -204,6 +204,9 @@ query FetchCoach {
       id
       name
       number
+      faults {
+      message
+    }
     technical_matches(where: {ignored: {_eq: false}}){
         balanced_with
       }
@@ -392,6 +395,11 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                           (match["balanced_with"] as int?) == 2,
                     )
                     .length;
+
+                final List<String> faultMessages = (match[e]["faults"]
+                        as List<dynamic>)
+                    .map((final dynamic fault) => fault["message"] as String)
+                    .toList();
                 double getAvgPerLevel(final GridLevel level) => avgNullValidator
                     ? 0
                     : (avg["tele_cones_${level.title}"] as double) +
@@ -412,6 +420,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                   avgAutoBalancePoints: avgAutoBalancePoints,
                   autoBalancePercentage: autoBalancePercentage,
                   isBlue: e.startsWith("blue"),
+                  faults: faultMessages,
                   avgLowPieces: getAvgPerLevel(GridLevel.low),
                   avgMidPieces: getAvgPerLevel(GridLevel.mid),
                   avgTopPieces: getAvgPerLevel(GridLevel.top),
@@ -589,6 +598,7 @@ class CoachViewLightTeam {
     required this.avgLowPieces,
     required this.avgMidPieces,
     required this.avgTopPieces,
+    required this.faults,
   });
   final int amountOfMatches;
   final double avgEndgameBalancePoints;
@@ -603,6 +613,7 @@ class CoachViewLightTeam {
   final double avgGamepiecePoints;
   final LightTeam team;
   final bool isBlue;
+  final List<String>? faults;
   final double avgTopPieces;
   final double avgMidPieces;
   final double avgLowPieces;
@@ -663,6 +674,9 @@ Widget teamData(
                 child: Text(
                   team.team.number.toString(),
                   style: TextStyle(
+                    color: team.faults == null || team.faults!.isEmpty
+                        ? Colors.white
+                        : Colors.amber,
                     fontSize: 20,
                     fontWeight: team.team.number == 1690
                         ? FontWeight.w900
@@ -741,7 +755,7 @@ Widget teamData(
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
