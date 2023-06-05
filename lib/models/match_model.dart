@@ -4,7 +4,7 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
-import "map_nullable.dart";
+import "package:scouting_frontend/models/map_nullable.dart";
 
 class Match implements HasuraVars {
   Match({
@@ -207,7 +207,6 @@ List<EffectiveScore> allLevel(final MatchMode mode) => <EffectiveScore>[
       ...GridLevel.values
           .map((final GridLevel level) => coneAndCube(level, mode))
           .expand(identity)
-          .toList()
     ];
 
 final Map<EffectiveScore, int> score = <EffectiveScore, int>{

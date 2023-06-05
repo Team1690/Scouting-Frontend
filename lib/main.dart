@@ -9,8 +9,8 @@ import "package:scouting_frontend/net/fetch_matches.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/app.dart";
 
-import "firebase_options.dart";
-import "models/id_helpers.dart";
+import "package:scouting_frontend/firebase_options.dart";
+import "package:scouting_frontend/models/id_helpers.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

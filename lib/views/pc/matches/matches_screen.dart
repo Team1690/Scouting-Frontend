@@ -64,38 +64,36 @@ class MatchesScreen extends StatelessWidget {
                                     "${IdProvider.of(context).matchType.idToName[e.matchTypeId]} ${e.matchNumber}",
                                   ),
                                 ),
-                                ...e.blueAlliance
-                                    .map(
-                                      (final LightTeam currentTeam) => Expanded(
-                                        child: ElevatedButton(
-                                          onPressed: () =>
-                                              Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute<TeamInfoScreen>(
-                                              builder: (
-                                                final BuildContext context,
-                                              ) =>
-                                                  TeamInfoScreen(
-                                                initalTeam: currentTeam,
-                                              ),
-                                            ),
-                                          ),
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                              secondaryColor,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            currentTeam.number.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.blue,
-                                            ),
+                                ...e.blueAlliance.map(
+                                  (final LightTeam currentTeam) => Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () =>
+                                          Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute<TeamInfoScreen>(
+                                          builder: (
+                                            final BuildContext context,
+                                          ) =>
+                                              TeamInfoScreen(
+                                            initalTeam: currentTeam,
                                           ),
                                         ),
                                       ),
-                                    )
-                                    .toList(),
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                          secondaryColor,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        currentTeam.number.toString(),
+                                        style: const TextStyle(
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 ...e.redAlliance.map(
                                   (final LightTeam currentTeam) => Expanded(
                                     child: ElevatedButton(
@@ -140,12 +138,12 @@ class MatchesScreen extends StatelessWidget {
                                 IconButton(
                                   onPressed: () async {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        duration: const Duration(seconds: 5),
+                                      const SnackBar(
+                                        duration: Duration(seconds: 5),
                                         content: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: const <Widget>[
+                                          children: <Widget>[
                                             Text(
                                               "Deleting",
                                               style: TextStyle(
@@ -184,12 +182,12 @@ class MatchesScreen extends StatelessWidget {
                                           .clearSnackBars();
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        SnackBar(
-                                          duration: const Duration(seconds: 2),
+                                        const SnackBar(
+                                          duration: Duration(seconds: 2),
                                           content: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const <Widget>[
+                                            children: <Widget>[
                                               Text(
                                                 "Saved",
                                                 style: TextStyle(

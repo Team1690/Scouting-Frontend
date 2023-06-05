@@ -54,11 +54,11 @@ void save(
 ]) async {
   if (context != null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 5),
+      const SnackBar(
+        duration: Duration(seconds: 5),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
+          children: <Widget>[
             Text("Saving", style: TextStyle(color: Colors.white))
           ],
         ),
@@ -110,11 +110,11 @@ void save(
     } else {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: const Duration(seconds: 2),
+        const SnackBar(
+          duration: Duration(seconds: 2),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
+            children: <Widget>[
               Text(
                 "Saved",
                 style: TextStyle(color: Colors.white),

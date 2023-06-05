@@ -33,9 +33,9 @@ class ImagePickerWidget extends FormField<XFile> {
                           onImagePicked(p0);
                         });
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
+                        children: <Widget>[
                           Icon(Icons.camera_alt),
                           Text(
                             "Camera",
@@ -62,9 +62,9 @@ class ImagePickerWidget extends FormField<XFile> {
                           onImagePicked(p0);
                         });
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
+                        children: <Widget>[
                           Icon(Icons.photo),
                           Text(
                             "Gallery",
