@@ -445,13 +445,17 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
                 .map((final CoachViewLightTeam team) => team.avgTopPieces)
                 .toList()
                 .sum;
-            final double avgSupercharged = avgLow + avgMid + avgTop - 27;
-            //TODO this is an abomintaion
+            final double avgSupercharged = avgLow +
+                avgMid +
+                avgTop -
+                27; //calculate avg supercharged gamepieces by subtracting a full grid from the total avarage
             if (avgTop > 9) {
+              //if the avarage top row gamepieces is grater than 9 (impossible), move them to the middle row.
               avgMid += (avgTop - 9);
               avgTop = 9;
             }
             if (avgMid > 9) {
+              //if the avarage mid row gamepieces is grater than 9 (impossible), move them to the top row, but if the top row is greater than 9, move it to the low row, and if the alliance is unable to score top, move it to low.
               if (avgTop > 0) {
                 avgTop += (avgMid - 9);
                 if (avgTop > 9) {
@@ -464,6 +468,7 @@ Future<List<CoachData>> fetchMatches(final BuildContext context) async {
               avgMid = 9;
             }
             if (avgLow > 9) {
+              //pretty much the same thing but with the low row, then the same thing with the middle row in order to make sure nothing is (again) above 9 gamepieces.
               if (avgMid == 9) {
                 if (avgTop == 9) {
                 } else if (avgTop > 0) {
