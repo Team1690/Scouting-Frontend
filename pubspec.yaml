@@ -28,17 +28,17 @@ dependencies:
   faker: ^2.0.0
   firebase_core: ^2.4.1
   firebase_storage: ^11.0.10
-  fl_chart: ^0.55.1
+  fl_chart: ^0.62.0
   flutter:
     sdk: flutter
   flutter_advanced_switch: ^3.0.0
   flutter_keyboard_visibility: ^5.0.2
-  flutter_launcher_icons: ^0.11.0
+  flutter_launcher_icons: ^0.13.1
   flutter_radar_chart: ^0.2.0
   flutter_rating_bar: ^4.0.1
   flutter_switch: ^0.3.2
   flutter_typeahead: ^4.0.0
-  google_fonts: ^3.0.1
+  google_fonts: ^4.0.4
   graphql: ^5.1.1
   http: ^0.13.1
   image_picker: ^0.8.4+5
