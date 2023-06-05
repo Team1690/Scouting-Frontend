@@ -3,17 +3,53 @@ import "dart:math";
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/pc/scatter/fetch_scatter.dart";
 
-class Scatter extends StatelessWidget {
+class Scatter extends StatefulWidget {
+  @override
+  State<Scatter> createState() => _ScatterState();
+}
+
+class _ScatterState extends State<Scatter> {
+  bool isPoints = true;
   @override
   Widget build(final BuildContext context) {
     String? tooltip;
-    return Container(
-      color: secondaryColor,
-      child: Column(
+    return DashboardCard(
+      title: "",
+      titleWidgets: <Widget>[
+        ToggleButtons(
+          children: <Widget>[
+            const Text("Points"),
+            const Text("Sum"),
+          ]
+              .map(
+                (final Widget text) => Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                  ),
+                  child: text,
+                ),
+              )
+              .toList(),
+          isSelected: <bool>[isPoints, !isPoints],
+          onPressed: (final int pressedIndex) {
+            if (pressedIndex == 0) {
+              setState(() {
+                isPoints = true;
+              });
+            } else if (pressedIndex == 1) {
+              setState(() {
+                isPoints = false;
+              });
+            }
+          },
+        ),
+      ],
+      body: Column(
         children: <Widget>[
           Expanded(
             flex: 1,
@@ -47,11 +83,17 @@ class Scatter extends StatelessWidget {
                           ScatterChartData(
                             scatterSpots: report
                                 .map(
-                                  (final ScatterData e) => ScatterSpot(
-                                    e.gamepiecePointsAvg,
-                                    e.yGamepiecePointsStddev,
-                                    color: e.team.color,
-                                  ),
+                                  (final ScatterData e) => isPoints
+                                      ? ScatterSpot(
+                                          e.gamepiecePointsAvg,
+                                          e.yGamepiecePointsStddev,
+                                          color: e.team.color,
+                                        )
+                                      : ScatterSpot(
+                                          e.avgGamepieces,
+                                          e.gamepiecesStddev,
+                                          color: e.team.color,
+                                        ),
                                 )
                                 .toList(),
                             scatterTouchData: ScatterTouchData(
@@ -90,9 +132,11 @@ class Scatter extends StatelessWidget {
                               ),
                               bottomTitles: AxisTitles(
                                 axisNameSize: 26,
-                                axisNameWidget: const Text(
-                                  "Average gamepiece points",
-                                ),
+                                axisNameWidget: isPoints
+                                    ? const Text(
+                                        "Average gamepiece points",
+                                      )
+                                    : const Text("Average gamepieces"),
                                 sideTitles: SideTitles(
                                   getTitlesWidget: (
                                     final double title,
@@ -105,9 +149,13 @@ class Scatter extends StatelessWidget {
                               ),
                               leftTitles: AxisTitles(
                                 axisNameSize: 26,
-                                axisNameWidget: const Text(
-                                  "Gamepiece points standard deviation",
-                                ),
+                                axisNameWidget: isPoints
+                                    ? const Text(
+                                        "Gamepiece points standard deviation",
+                                      )
+                                    : const Text(
+                                        "Gamepieces standard deviation",
+                                      ),
                                 sideTitles: SideTitles(
                                   getTitlesWidget: (
                                     final double title,
@@ -142,15 +190,18 @@ class Scatter extends StatelessWidget {
                             minY: 0,
                             maxX: report
                                 .map(
-                                  (final ScatterData e) =>
-                                      (e.gamepiecePointsAvg + 1)
-                                          .roundToDouble(),
+                                  (final ScatterData e) => isPoints
+                                      ? (e.gamepiecePointsAvg + 1)
+                                          .roundToDouble()
+                                      : (e.avgGamepieces + 1).roundToDouble(),
                                 )
                                 .reduce(max),
                             maxY: report
                                 .map(
-                                  (final ScatterData e) =>
-                                      (e.yGamepiecePointsStddev + 1)
+                                  (final ScatterData e) => isPoints
+                                      ? (e.yGamepiecePointsStddev + 1)
+                                          .roundToDouble()
+                                      : (e.gamepiecesStddev + 1)
                                           .roundToDouble(),
                                 )
                                 .fold<double>(25.0, max),
@@ -173,8 +224,12 @@ class ScatterData {
     this.gamepiecePointsAvg,
     this.yGamepiecePointsStddev,
     this.team,
+    this.avgGamepieces,
+    this.gamepiecesStddev,
   );
   final LightTeam team;
   final double gamepiecePointsAvg;
   final double yGamepiecePointsStddev;
+  final double avgGamepieces;
+  final double gamepiecesStddev;
 }

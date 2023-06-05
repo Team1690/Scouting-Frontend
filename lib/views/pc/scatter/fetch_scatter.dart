@@ -14,6 +14,24 @@ query Scatter {
     name
     technical_matches_aggregate(where: {ignored: {_eq: false}}) {
     aggregate {
+      stddev{
+        auto_cones_low
+        auto_cones_mid
+        auto_cones_top
+        auto_cubes_low
+        auto_cubes_mid
+        auto_cubes_top
+        tele_cones_low
+        tele_cones_mid
+        tele_cones_top
+        tele_cubes_low
+        tele_cubes_mid
+        tele_cubes_top
+        auto_cones_delivered
+        auto_cubes_delivered
+        tele_cones_delivered
+        tele_cubes_delivered
+      }
       avg {
         auto_cones_low
         auto_cones_mid
@@ -72,6 +90,9 @@ Future<List<ScatterData>> fetchScatterData() async {
                 );
                 final dynamic avg = scatterTeam["technical_matches_aggregate"]
                     ["aggregate"]["avg"];
+                final dynamic stddev =
+                    scatterTeam["technical_matches_aggregate"]["aggregate"]
+                        ["stddev"];
                 final List<dynamic> matches =
                     scatterTeam["technical_matches"] as List<dynamic>;
                 if (avg["auto_cones_top"] == null) {
@@ -87,10 +108,16 @@ Future<List<ScatterData>> fetchScatterData() async {
                           (matchPoints - avgGamepiecePoints).abs(),
                     )
                     .average;
+                final double gamepiecesStddev = stddev["auto_cones_top"] == null
+                    ? 0
+                    : getPieces(parseMatch(stddev));
+                final double avgGamepieces = getPieces(parseMatch(avg));
                 return ScatterData(
                   avgGamepiecePoints,
                   yStddevGamepiecePoints,
                   team,
+                  avgGamepieces,
+                  gamepiecesStddev,
                 );
               })
               .whereType<ScatterData>()

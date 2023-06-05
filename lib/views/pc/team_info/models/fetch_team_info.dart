@@ -397,14 +397,9 @@ Future<Team> fetchTeamInfo(
                 ? double.nan
                 : technicalMatches
                         .map(
-                          (final dynamic match) =>
-                              getPieces(
-                                parseMatch(match),
-                              ) -
-                              ((match["auto_cones_delivered"] as int) +
-                                  (match["auto_cubes_delivered"] as int) +
-                                  (match["tele_cones_delivered"] as int) +
-                                  (match["tele_cubes_delivered"] as int)),
+                          (final dynamic match) => getPieces(
+                            parseMatch(match),
+                          ),
                         )
                         .toList()
                         .averageOrNull ??

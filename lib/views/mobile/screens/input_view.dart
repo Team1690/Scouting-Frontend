@@ -332,8 +332,8 @@ class _UserInputState extends State<UserInput> {
                       visible: match.robotMatchStatusId != notOnFieldId,
                       child: ToggleButtons(
                         fillColor: const Color.fromARGB(10, 244, 67, 54),
-                        selectedColor: Colors.red,
-                        selectedBorderColor: Colors.red,
+                        selectedColor: Colors.green,
+                        selectedBorderColor: Colors.green,
                         children: const <Widget>[
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10),

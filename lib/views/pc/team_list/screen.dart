@@ -350,7 +350,7 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
                   )
                   .length,
               autoGamepieceAvg: autoGamepieceAvg - autoGamepieceDelivered,
-              teleGamepieceAvg: teleGamepieceAvg - teleGamepieceDelivered,
+              teleGamepieceAvg: teleGamepieceAvg,
               gamepieceAvg: gamepieceSum -
                   autoGamepieceDelivered -
                   teleGamepieceDelivered,
