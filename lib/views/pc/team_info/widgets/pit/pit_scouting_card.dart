@@ -21,8 +21,8 @@ class PitScoutingCard extends StatelessWidget {
             children: <Widget>[
               if (data.faultMessages == null ||
                   data.faultMessages!.isEmpty) ...<Widget>[
-                Row(
-                  children: const <Widget>[
+                const Row(
+                  children: <Widget>[
                     Spacer(
                       flex: 5,
                     ),

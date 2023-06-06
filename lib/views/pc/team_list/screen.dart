@@ -203,7 +203,7 @@ class TeamList extends StatelessWidget {
 
 DataCell show(final double value, [final bool isPercent = false]) => DataCell(
       Text(
-        value == double.nan
+        value.isNaN
             ? "No data"
             : "${value.toStringAsFixed(2)}${isPercent ? "%" : ""}",
       ),

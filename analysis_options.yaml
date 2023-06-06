@@ -4,17 +4,17 @@ analyzer:
   exclude: [build/**, lib/generated_plugin_registrant.dart]
   language:
     strict-raw-types: true
+    strict-casts: true
   strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
 
 linter:
   # Documentation on https://dart-lang.github.io/linter/lints/
   # TODO: add more rules
   rules:
+    - prefer_expression_function_bodies
+    - prefer_if_null_operators
     - always_declare_return_types
     - always_specify_types
-    - avoid_returning_null
     - avoid_shadowing_type_parameters
     - avoid_web_libraries_in_flutter
     - await_only_futures
@@ -29,27 +29,32 @@ linter:
     - prefer_double_quotes
     - prefer_final_in_for_each
     - prefer_final_locals
+    - prefer_const_declarations
     - prefer_final_parameters
     - prefer_foreach
     - prefer_is_not_operator
     - prefer_null_aware_method_calls
     - prefer_null_aware_operators
     - require_trailing_commas
-      # TODO: not recognized (?)
-      # - secure_pubspec_urls
+    - secure_pubspec_urls
     - sort_constructors_first
-    - sort_pub_dependencies
     - sort_unnamed_constructors_first
     - tighten_type_of_initializing_formals
+    - always_use_package_imports
+    - prefer_const_literals_to_create_immutables
+    - prefer_is_empty
+    - prefer_is_not_empty
     - type_annotate_public_apis
     - unnecessary_await_in_return
     - unnecessary_lambdas
     - unnecessary_this
-      # TODO: not recognized (?)
     - unawaited_futures
     - use_named_constants
+    - sort_pub_dependencies
     - avoid_print
     - prefer_const_constructors
-    - prefer_const_declarations
-    - prefer_const_literals_to_create_immutables
-    - prefer_expression_function_bodies
+    - unnecessary_late
+    - prefer_conditional_assignment
+    - unnecessary_to_list_in_spreads
+    - collection_methods_unrelated_type
+    - use_enums

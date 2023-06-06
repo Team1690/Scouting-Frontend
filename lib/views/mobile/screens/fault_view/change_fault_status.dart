@@ -34,8 +34,7 @@ class ChangeFaultStatus extends StatelessWidget {
                   final BuildContext context,
                   final void Function(
                     void Function(),
-                  )
-                      alertDialogSetState,
+                  ) alertDialogSetState,
                 ) =>
                     AlertDialog(
                   actions: <Widget>[

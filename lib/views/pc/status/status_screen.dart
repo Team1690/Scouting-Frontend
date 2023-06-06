@@ -302,20 +302,18 @@ class StatusList<T, V> extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           getTitle(statusItem),
-                          ...statusItem.values
-                              .map(
-                                (
-                                  final V identifier,
-                                ) =>
-                                    StatusBox(
-                                  child: getValueBox(identifier, statusItem),
-                                  backgroundColor: validateSpecificValue(
-                                    identifier,
-                                    statusItem,
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                          ...statusItem.values.map(
+                            (
+                              final V identifier,
+                            ) =>
+                                StatusBox(
+                              child: getValueBox(identifier, statusItem),
+                              backgroundColor: validateSpecificValue(
+                                identifier,
+                                statusItem,
+                              ),
+                            ),
+                          ),
                           if (missingBuilder != null)
                             ...statusItem.missingValues.map(
                               (final V match) => StatusBox(
