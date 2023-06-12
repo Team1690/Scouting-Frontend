@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/id_providers.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/fault_view.dart";
-import "package:scouting_frontend/views/mobile/switcher.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 
 class ChangeFaultStatus extends StatelessWidget {
   const ChangeFaultStatus({required this.faultId, required this.onFinished});
@@ -67,6 +67,7 @@ class ChangeFaultStatus extends StatelessWidget {
                     "Change fault status",
                   ),
                   content: Switcher(
+                    borderRadiusGeometry: defaultBorderRadius,
                     selected: <int?, int>{
                       for (final MapEntry<int, int?> entry in indexToId.entries)
                         entry.value: entry.key
@@ -116,7 +117,8 @@ Future<QueryResult<void>> updateFaultStatus(
       ),
     );
 
-const String _updateFaultStatusMutation = r"""
+const String _updateFaultStatusMutation =
+    r"""
 mutation UpdateFaultStatus($id: Int!, $fault_status_id: Int!) {
   update_faults_by_pk(pk_columns: {id: $id}, _set: {fault_status_id: $fault_status_id}) {
     id

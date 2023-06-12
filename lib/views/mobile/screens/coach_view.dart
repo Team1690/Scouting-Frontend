@@ -4,8 +4,7 @@ import "package:carousel_slider/carousel_slider.dart";
 import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/average_or_null.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -190,7 +189,8 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
       ],
     );
 
-final String query = """
+final String query =
+    """
 query FetchCoach {
   matches(order_by: {match_type: {order: asc}, match_number: asc}) {
     happened
@@ -199,7 +199,8 @@ query FetchCoach {
       title
     }
     ${teamValues.map(
-          (final String e) => """$e{
+          (final String e) =>
+              """$e{
       colors_index
       id
       name

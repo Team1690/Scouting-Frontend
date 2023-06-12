@@ -1,12 +1,11 @@
-import "package:scouting_frontend/models/average_or_null.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 
 Stream<List<PickListTeam>> fetchPicklist() {
   final GraphQLClient client = getClient();
@@ -171,15 +170,14 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
       thirdListIndex: team["third_picklist_index"] as int,
       taken: team["taken"] as bool,
       maxBalanceTitle:
-          ((team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
-                  .reduceSafe(
-                (final dynamic maxNode, final dynamic newNode) =>
-                    (maxNode["auto_balance"]["auto_points"] as int) >
-                            (newNode["auto_balance"]["auto_points"] as int)
-                        ? maxNode
-                        : newNode,
-              )?["auto_balance"]?["title"] as String?) ??
-              "No data",
+          (team["technical_matches_aggregate"]["nodes"] as List<dynamic>).fold(
+        "No data",
+        (final dynamic maxNode, final dynamic newNode) =>
+            (maxNode["auto_balance"]["auto_points"] as int) >
+                    (newNode["auto_balance"]["auto_points"] as int)
+                ? maxNode
+                : newNode,
+      )["auto_balance"]["title"] as String,
       avgGamepiecePoints: avgGamepiecePoints,
       avgAutoBalancePoints: autoBalanceAvg,
       faultMessages: faultMessages.isEmpty ? null : faultMessages,

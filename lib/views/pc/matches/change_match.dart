@@ -1,14 +1,13 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:scouting_frontend/models/id_providers.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
-import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
 import "package:scouting_frontend/views/pc/matches/matches_vars.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 
 class ChangeMatch extends StatefulWidget {
   const ChangeMatch([this.initialVars]);
@@ -215,7 +214,8 @@ class _ChangeMatchState extends State<ChangeMatch> {
       );
 }
 
-const String mutation = r"""
+const String mutation =
+    r"""
 mutation InsertMatch($match: matches_insert_input!){
   insert_matches_one(object: $match){
     id
@@ -223,7 +223,8 @@ mutation InsertMatch($match: matches_insert_input!){
 }
 """;
 
-const String update = """
+const String update =
+    """
 mutation UpdateMatch(\$id: Int!,\$match:matches_set_input!){
   update_matches_by_pk(_set:\$match, pk_columns:{id:\$id}){
   	id

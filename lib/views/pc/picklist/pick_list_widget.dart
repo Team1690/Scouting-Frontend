@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/coach_team_info_data.dart";
@@ -7,6 +6,7 @@ import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
 import "package:flutter_switch/flutter_switch.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 
 class PickList extends StatefulWidget {
   PickList({

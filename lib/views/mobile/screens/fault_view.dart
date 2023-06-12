@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
@@ -162,7 +162,8 @@ Color faultTitleToColor(final String title) {
   throw Exception("$title not a known title");
 }
 
-const String query = """
+const String query =
+    """
 subscription MyQuery {
   faults(order_by: {fault_status: {order: asc}, team: {number: asc} }) {
     fault_status{

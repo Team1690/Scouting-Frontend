@@ -6,7 +6,7 @@ import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.da
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/gamechart_card.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/pit/pit_scouting.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/quick_data/quick_data.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/specific/specific_card.dart";
 
 class TeamInfoData extends StatelessWidget {

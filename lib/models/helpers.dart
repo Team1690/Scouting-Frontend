@@ -23,11 +23,3 @@ DefenseAmount defenseAmountTitleToEnum(final String title) {
   }
   throw Exception("Isn't a valid title");
 }
-
-extension ReduceSafe<A> on Iterable<A> {
-  A? reduceSafe(final A Function(A, A) combine) => isEmpty
-      ? null
-      : length == 1
-          ? single
-          : reduce(combine);
-}

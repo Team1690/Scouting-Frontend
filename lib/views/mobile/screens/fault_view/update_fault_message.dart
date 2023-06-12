@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/mobile/screens/fault_view.dart";
 
@@ -83,7 +83,8 @@ Future<QueryResult<void>> updateFaultMessage(
       ),
     );
 
-const String updateMessage = """
+const String updateMessage =
+    """
 mutation UpdateFaultMessage(\$id: Int, \$message: String) {
   update_faults(where: {id: {_eq: \$id}}, _set: {message: \$message}) {
     affected_rows

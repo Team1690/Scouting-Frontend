@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_advanced_switch/flutter_advanced_switch.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:image_picker/image_picker.dart";
 
 class ImagePickerWidget extends FormField<XFile> {
