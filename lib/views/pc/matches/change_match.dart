@@ -214,8 +214,7 @@ class _ChangeMatchState extends State<ChangeMatch> {
       );
 }
 
-const String mutation =
-    r"""
+const String mutation = r"""
 mutation InsertMatch($match: matches_insert_input!){
   insert_matches_one(object: $match){
     id
@@ -223,8 +222,7 @@ mutation InsertMatch($match: matches_insert_input!){
 }
 """;
 
-const String update =
-    """
+const String update = """
 mutation UpdateMatch(\$id: Int!,\$match:matches_set_input!){
   update_matches_by_pk(_set:\$match, pk_columns:{id:\$id}){
   	id

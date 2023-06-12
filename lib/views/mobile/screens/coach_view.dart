@@ -189,8 +189,7 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
       ],
     );
 
-final String query =
-    """
+final String query = """
 query FetchCoach {
   matches(order_by: {match_type: {order: asc}, match_number: asc}) {
     happened
@@ -199,8 +198,7 @@ query FetchCoach {
       title
     }
     ${teamValues.map(
-          (final String e) =>
-              """$e{
+          (final String e) => """$e{
       colors_index
       id
       name

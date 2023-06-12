@@ -117,8 +117,7 @@ Future<QueryResult<void>> _addFault(
       ),
     );
 
-const String _addFaultMutation =
-    """
+const String _addFaultMutation = """
 mutation AddFault(\$team_id:Int,\$fault_message:String \$match_number:Int \$match_type_id:Int){
   insert_faults(objects: {team_id: \$team_id, message: \$fault_message, match_number: \$match_number , match_type_id: \$match_type_id}) {
     affected_rows

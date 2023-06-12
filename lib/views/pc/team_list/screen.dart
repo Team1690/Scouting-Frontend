@@ -367,8 +367,7 @@ Stream<List<_Team>> _fetchTeamList() => getClient()
       (final QueryResult<List<_Team>> event) => event.mapQueryResult(),
     );
 
-const String query =
-    """
+const String query = """
 subscription MySubscription {
   team {
     id

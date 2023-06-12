@@ -162,8 +162,7 @@ Color faultTitleToColor(final String title) {
   throw Exception("$title not a known title");
 }
 
-const String query =
-    """
+const String query = """
 subscription MyQuery {
   faults(order_by: {fault_status: {order: asc}, team: {number: asc} }) {
     fault_status{

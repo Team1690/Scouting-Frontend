@@ -83,8 +83,7 @@ Future<QueryResult<void>> updateFaultMessage(
       ),
     );
 
-const String updateMessage =
-    """
+const String updateMessage = """
 mutation UpdateFaultMessage(\$id: Int, \$message: String) {
   update_faults(where: {id: {_eq: \$id}}, _set: {message: \$message}) {
     affected_rows

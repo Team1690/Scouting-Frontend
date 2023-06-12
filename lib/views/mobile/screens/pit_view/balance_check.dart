@@ -271,8 +271,7 @@ Future<Map<String, dynamic>> fetchPit(
   return result.mapQueryResult();
 }
 
-const String pitTeamsQuery =
-    """
+const String pitTeamsQuery = """
 query TeamInfo(\$ids: [Int!]) {
   team(where: {id: {_in: \$ids}}) {
     _2023_pit {
