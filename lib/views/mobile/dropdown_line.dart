@@ -8,14 +8,12 @@ class DropdownLine<T> extends StatelessWidget {
     required this.label,
     required this.value,
     required this.onTap,
-    this.ratingBar,
   });
   final String label;
   final T? value;
   final void Function() onTap;
   final void Function(String) onChange;
   final TextEditingController controller;
-  final Widget? ratingBar;
 
   @override
   Widget build(final BuildContext context) => Column(
@@ -38,12 +36,6 @@ class DropdownLine<T> extends StatelessWidget {
                   onChanged: onChange,
                   decoration: InputDecoration(hintText: label),
                 ),
-                if (ratingBar != null) ...<Widget>[
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  ratingBar!
-                ]
               ],
             ),
           ),

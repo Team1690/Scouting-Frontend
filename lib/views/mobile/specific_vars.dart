@@ -15,10 +15,6 @@ class SpecificVars implements HasuraVars {
   String name = "";
   bool isRematch = false;
   int defenseAmount = 1;
-  double? defenseRating;
-  double? driveRating;
-  double? feederRating;
-  double? groundRating;
   String? faultMessage;
   @override
   Map<String, dynamic> toHasuraVars() => <String, dynamic>{
@@ -32,10 +28,6 @@ class SpecificVars implements HasuraVars {
         "schedule_match_id": scheduleMatch?.id,
         "scouter_name": name,
         "defense_amount_id": defenseAmount,
-        "defense_rating": defenseRating,
-        "drive_rating": driveRating,
-        "feeder_rating": feederRating,
-        "ground_rating": groundRating,
         if (faultMessage != null) "match_number": scheduleMatch?.matchNumber,
         if (faultMessage != null) "fault_message": faultMessage,
         if (faultMessage != null) "match_type_id": scheduleMatch?.matchTypeId,
@@ -52,9 +44,5 @@ class SpecificVars implements HasuraVars {
     defense = null;
     generalNotes = null;
     defenseAmount = IdProvider.of(context).defense.nameToId["No Defense"]!;
-    groundRating = null;
-    feederRating = null;
-    driveRating = null;
-    defenseRating = null;
   }
 }
