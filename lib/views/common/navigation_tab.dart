@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/screens/auto_picklist/auto_picklist_screen.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view/balance_check.dart";
 import "package:scouting_frontend/views/pc/matches/matches_screen.dart";
 import "package:scouting_frontend/views/pc/scatter/scatters_screen.dart";
@@ -44,6 +45,19 @@ class NavigationTab extends StatelessWidget {
                   context,
                   MaterialPageRoute<PickListScreen>(
                     builder: (final BuildContext context) => PickListScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text("Auto Pick List"),
+              leading: const Icon(Icons.calculate_outlined),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute<AutoPickListScreen>(
+                    builder: (final BuildContext context) =>
+                        const AutoPickListScreen(),
                   ),
                 );
               },
