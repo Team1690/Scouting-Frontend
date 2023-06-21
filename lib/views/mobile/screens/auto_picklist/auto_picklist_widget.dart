@@ -13,9 +13,11 @@ class AutoPickList extends StatefulWidget {
   }) {
     uiList.sort(
       (final AutoPickListTeam a, final AutoPickListTeam b) =>
-          (a.balancePointsValue + a.gamepiecePointsValue + a.gamepieceSumValue)
+          (a.autoBalancePointsValue +
+                  a.gamepiecePointsValue +
+                  a.gamepieceSumValue)
               .compareTo(
-        b.balancePointsValue + b.gamepiecePointsValue + b.gamepieceSumValue,
+        b.autoBalancePointsValue + b.gamepiecePointsValue + b.gamepieceSumValue,
       ),
     );
   }
@@ -303,14 +305,14 @@ class AutoPickListTeam {
   AutoPickListTeam({
     required this.gamepiecePointsValue,
     required this.gamepieceSumValue,
-    required this.balancePointsValue,
+    required this.autoBalancePointsValue,
     required this.picklistTeam,
   });
 
   final PickListTeam picklistTeam;
-  final int gamepiecePointsValue;
-  final int gamepieceSumValue;
-  final int balancePointsValue;
+  final double gamepiecePointsValue;
+  final double gamepieceSumValue;
+  final double autoBalancePointsValue;
 
   @override
   String toString() => "${picklistTeam.team.name} ${picklistTeam.team.number}";
