@@ -2,8 +2,8 @@ import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/views/mobile/screens/auto_picklist/auto_picklist_widget.dart";
-import "package:scouting_frontend/views/mobile/screens/auto_picklist/value_sliders.dart";
+import "package:scouting_frontend/views/pc/auto_picklist/auto_picklist_widget.dart";
+import "package:scouting_frontend/views/pc/auto_picklist/value_sliders.dart";
 import "package:scouting_frontend/views/pc/picklist/fetch_picklist.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_widget.dart";
 

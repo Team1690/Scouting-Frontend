@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/views/mobile/screens/auto_picklist/auto_picklist_screen.dart";
+import "package:scouting_frontend/views/pc/auto_picklist/auto_picklist_screen.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view/balance_check.dart";
 import "package:scouting_frontend/views/pc/matches/matches_screen.dart";
 import "package:scouting_frontend/views/pc/scatter/scatters_screen.dart";
