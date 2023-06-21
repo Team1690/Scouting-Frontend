@@ -11,7 +11,13 @@ class AutoPickList extends StatefulWidget {
   AutoPickList({
     required this.uiList,
   }) {
-    //TODO sort
+    uiList.sort(
+      (final AutoPickListTeam a, final AutoPickListTeam b) =>
+          (a.balancePointsValue + a.gamepiecePointsValue + a.gamepieceSumValue)
+              .compareTo(
+        b.balancePointsValue + b.gamepiecePointsValue + b.gamepieceSumValue,
+      ),
+    );
   }
 
   @override
