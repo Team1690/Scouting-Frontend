@@ -5,8 +5,13 @@ import "package:scouting_frontend/views/mobile/section_divider.dart";
 class ValueSliders extends StatefulWidget {
   const ValueSliders({required this.onButtonPress});
 
-  final Function(double slider0, double slider1, double slider2, bool swerve)
-      onButtonPress;
+  final Function(
+    double slider0,
+    double slider1,
+    double slider2,
+    bool swerve,
+    bool taken,
+  ) onButtonPress;
 
   @override
   State<ValueSliders> createState() => _ValueSlidersState();
@@ -17,6 +22,7 @@ class _ValueSlidersState extends State<ValueSliders> {
   double gamepiecesPointsValue = 0.5;
   double autoBalancePointsValue = 0.5;
   bool filterSwerve = false;
+  bool filterTaken = false;
   @override
   Widget build(final BuildContext context) => Column(
         mainAxisSize: MainAxisSize.min,
@@ -54,12 +60,28 @@ class _ValueSlidersState extends State<ValueSliders> {
           const SizedBox(
             height: 10,
           ),
-          ToggleButtons(
-            children: const <Text>[Text("Filter Swerve")],
-            isSelected: <bool>[filterSwerve],
-            onPressed: (final int unused) => setState(() {
-              filterSwerve = !filterSwerve;
-            }),
+          SectionDivider(label: "Filters"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ToggleButtons(
+                children: const <Text>[Text("Filter Taken")],
+                isSelected: <bool>[filterTaken],
+                onPressed: (final int unused) => setState(() {
+                  filterTaken = !filterTaken;
+                }),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              ToggleButtons(
+                children: const <Text>[Text("Filter Swerve")],
+                isSelected: <bool>[filterSwerve],
+                onPressed: (final int unused) => setState(() {
+                  filterSwerve = !filterSwerve;
+                }),
+              ),
+            ],
           ),
           const SizedBox(
             height: 10,
@@ -71,6 +93,7 @@ class _ValueSlidersState extends State<ValueSliders> {
               gamepiecesSumValue,
               autoBalancePointsValue,
               filterSwerve,
+              filterTaken,
             ),
             icon: Icons.calculate_outlined,
             onLongPress: () => widget.onButtonPress(
@@ -78,6 +101,7 @@ class _ValueSlidersState extends State<ValueSliders> {
               gamepiecesSumValue,
               autoBalancePointsValue,
               filterSwerve,
+              filterTaken,
             ),
           ),
         ],

@@ -1,7 +1,6 @@
 import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/constants.dart";
@@ -49,6 +48,7 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                     final double slider1,
                     final double slider2,
                     final bool swerve,
+                    final bool taken,
                   ) =>
                       setState(() {
                     hasValues = true;
@@ -56,6 +56,7 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                     gamepiecesSumValue = slider1;
                     autoBalancePointsValue = slider2;
                     filterSwerve = swerve;
+                    filterTaken = taken;
                   }),
                 ),
                 const SizedBox(
@@ -100,13 +101,6 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                 ),
                 const SizedBox(
                   height: 10,
-                ),
-                ToggleButtons(
-                  children: const <Text>[Text("Filter Taken")],
-                  isSelected: <bool>[filterTaken],
-                  onPressed: (final int unused) => setState(() {
-                    filterTaken = !filterTaken;
-                  }),
                 ),
                 hasValues
                     ? Padding(
