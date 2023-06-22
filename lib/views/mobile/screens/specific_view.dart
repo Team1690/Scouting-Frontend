@@ -1,17 +1,15 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/dropdown_line.dart";
-
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/specific_vars.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
-import "package:scouting_frontend/views/mobile/switcher.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 
 class Specific extends StatefulWidget {
@@ -183,6 +181,7 @@ class _SpecificState extends State<Specific> {
                     ),
                     SectionDivider(label: "Defense Amount"),
                     Switcher(
+                      borderRadiusGeometry: defaultBorderRadius,
                       labels: const <String>["Half Defense", "Full Defense"],
                       colors: const <Color>[Colors.blue, Colors.green],
                       onChange: (final int i) {

@@ -5,8 +5,8 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/constants.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/views/pc/scatter/fetch_scatter.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 
 class Scatter extends StatefulWidget {
   @override

@@ -1,9 +1,9 @@
 import "dart:collection";
 
 import "package:flutter/material.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/common/card.dart";
-import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/common/no_team_selected.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/pc/compare/models/compare_classes.dart";

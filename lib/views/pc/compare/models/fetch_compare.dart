@@ -1,7 +1,7 @@
 import "dart:collection";
 
 import "package:graphql/client.dart";
-import "package:scouting_frontend/models/average_or_null.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:scouting_frontend/models/helpers.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";

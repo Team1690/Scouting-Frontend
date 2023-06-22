@@ -3,7 +3,7 @@ import "package:flutter/services.dart";
 import "package:graphql/client.dart";
 import "package:image_picker/image_picker.dart";
 import "package:scouting_frontend/models/id_providers.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/constants.dart";
@@ -11,12 +11,10 @@ import "package:scouting_frontend/views/mobile/image_picker_widget.dart";
 import "package:scouting_frontend/views/mobile/firebase_submit_button.dart";
 import "package:scouting_frontend/views/mobile/pit_vars.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
-import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
-import "package:scouting_frontend/views/mobile/switcher.dart";
 
 class PitView extends StatefulWidget {
   const PitView([this.initialVars]);
@@ -194,6 +192,7 @@ class _PitViewState extends State<PitView> {
                       height: 20,
                     ),
                     Switcher(
+                      borderRadiusGeometry: defaultBorderRadius,
                       selected: vars.hasShifter.mapNullable(
                             (final bool hasShifter) => hasShifter ? 0 : 1,
                           ) ??
@@ -217,6 +216,7 @@ class _PitViewState extends State<PitView> {
                       height: 20,
                     ),
                     Switcher(
+                      borderRadiusGeometry: defaultBorderRadius,
                       selected: vars.gearboxPurchased.mapNullable(
                             (final bool gearboxPurchased) =>
                                 gearboxPurchased ? 0 : 1,

@@ -2,19 +2,18 @@ import "dart:async";
 
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
+import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
-import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
 import "package:scouting_frontend/views/mobile/submit_button.dart";
-import "package:scouting_frontend/views/mobile/switcher.dart";
 import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 
 class UserInput extends StatefulWidget {
   @override
@@ -200,7 +199,7 @@ class _UserInputState extends State<UserInput> {
                       ),
                     ),
                     SectionDivider(label: "Autonomous"),
-                    IntrinsicHeight(
+                    SingleChildScrollView(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -375,7 +374,7 @@ class _UserInputState extends State<UserInput> {
                       height: 20,
                     ),
                     SectionDivider(label: "Teleoperated"),
-                    IntrinsicHeight(
+                    SingleChildScrollView(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -560,6 +559,7 @@ class _UserInputState extends State<UserInput> {
                     ),
                     SectionDivider(label: "Robot fault"),
                     Switcher(
+                      borderRadiusGeometry: defaultBorderRadius,
                       labels: const <String>[
                         "Not on field",
                         "Didn't work on field"
