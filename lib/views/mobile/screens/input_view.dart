@@ -199,7 +199,7 @@ class _UserInputState extends State<UserInput> {
                       ),
                     ),
                     SectionDivider(label: "Autonomous"),
-                    IntrinsicHeight(
+                    SingleChildScrollView(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -374,7 +374,7 @@ class _UserInputState extends State<UserInput> {
                       height: 20,
                     ),
                     SectionDivider(label: "Teleoperated"),
-                    IntrinsicHeight(
+                    SingleChildScrollView(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
