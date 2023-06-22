@@ -1,6 +1,7 @@
 import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:graphql/client.dart";
+import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/constants.dart";
@@ -25,7 +26,7 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
   double gamepiecesSumValue = 0.5;
   double gamepiecesPointsValue = 0.5;
   double autoBalancePointsValue = 0.5;
-
+  bool filterSwerve = false;
   bool filterTaken = false;
   Picklists? saveAs;
 
@@ -47,12 +48,14 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                     final double slider0,
                     final double slider1,
                     final double slider2,
+                    final bool swerve,
                   ) =>
                       setState(() {
                     hasValues = true;
                     gamepiecesPointsValue = slider0;
                     gamepiecesSumValue = slider1;
                     autoBalancePointsValue = slider2;
+                    filterSwerve = swerve;
                   }),
                 ),
                 const SizedBox(
@@ -190,19 +193,37 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                                     a.gamepieceSumValue * gamepiecesSumValue,
                               ),
                             );
-                            localList = teamsList
-                                .where(
-                                  (final AutoPickListTeam element) =>
-                                      element.picklistTeam.taken,
-                                )
-                                .toList();
+                            if (filterSwerve) {
+                              localList = teamsList
+                                  .where(
+                                    (final AutoPickListTeam element) =>
+                                        element.picklistTeam.drivetrain !=
+                                        "Swerve",
+                                  )
+                                  .toList();
+                              teamsList.removeWhere(
+                                (final AutoPickListTeam element) =>
+                                    element.picklistTeam.drivetrain != "Swerve",
+                              );
+                              localList.insertAll(0, teamsList);
+                              teamsList.clear();
+                              teamsList.addAll(localList);
+                            }
                             if (filterTaken) {
+                              localList = teamsList
+                                  .where(
+                                    (final AutoPickListTeam element) =>
+                                        element.picklistTeam.taken,
+                                  )
+                                  .toList();
                               teamsList.removeWhere(
                                 (final AutoPickListTeam element) =>
                                     element.picklistTeam.taken,
                               );
+                              localList.insertAll(0, teamsList);
+                            } else {
+                              localList = teamsList;
                             }
-                            localList.insertAll(0, teamsList);
                             return AutoPickList(uiList: localList);
                           },
                         ),
