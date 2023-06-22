@@ -1,7 +1,12 @@
 import "package:collection/collection.dart";
 import "package:flutter/material.dart";
+import "package:graphql/client.dart";
+import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/counter.dart";
+import "package:scouting_frontend/views/mobile/section_divider.dart";
+import "package:scouting_frontend/views/mobile/selector.dart";
 import "package:scouting_frontend/views/pc/auto_picklist/auto_picklist_widget.dart";
 import "package:scouting_frontend/views/pc/auto_picklist/value_sliders.dart";
 import "package:scouting_frontend/views/pc/picklist/fetch_picklist.dart";
@@ -20,6 +25,11 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
   double gamepiecesSumValue = 0.5;
   double gamepiecesPointsValue = 0.5;
   double autoBalancePointsValue = 0.5;
+
+  bool filterTaken = false;
+  Picklists? saveAs;
+
+  List<AutoPickListTeam> localList = <AutoPickListTeam>[];
 
   @override
   Widget build(final BuildContext context) => DashboardScaffold(
@@ -43,6 +53,49 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                     gamepiecesPointsValue = slider0;
                     gamepiecesSumValue = slider1;
                     autoBalancePointsValue = slider2;
+                  }),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SectionDivider(label: "Actions"),
+                const SizedBox(
+                  height: 10,
+                ),
+                Selector<String>(
+                  options: Picklists.values
+                      .map((final Picklists e) => e.title)
+                      .toList(),
+                  placeholder: "Save as:",
+                  value: saveAs == null ? null : saveAs!.title,
+                  makeItem: (final String picklist) => picklist,
+                  onChange: (final String newTitle) => setState(() {
+                    saveAs = Picklists.values.firstWhere(
+                      (final Picklists picklists) =>
+                          picklists.title == newTitle,
+                    );
+                  }),
+                  validate: (final String unused) => null,
+                ),
+                RoundedIconButton(
+                  color: Colors.green,
+                  onPress: () => save(
+                      saveAs,
+                      List<PickListTeam>.from(localList.map(
+                          (final AutoPickListTeam autoTeam) =>
+                              autoTeam.picklistTeam)),
+                      context),
+                  icon: Icons.save_as,
+                  onLongPress: () {},
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ToggleButtons(
+                  children: const <Text>[Text("Filter Taken")],
+                  isSelected: <bool>[filterTaken],
+                  onPressed: (final int unused) => setState(() {
+                    filterTaken = !filterTaken;
                   }),
                 ),
                 hasValues
@@ -130,7 +183,18 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                                     a.gamepieceSumValue * gamepiecesSumValue,
                               ),
                             );
-                            return AutoPickList(uiList: teamsList);
+                            localList = teamsList
+                                .where((final AutoPickListTeam element) =>
+                                    element.picklistTeam.taken)
+                                .toList();
+                            if (filterTaken) {
+                              teamsList.removeWhere(
+                                (final AutoPickListTeam element) =>
+                                    element.picklistTeam.taken,
+                              );
+                            }
+                            localList.insertAll(0, teamsList);
+                            return AutoPickList(uiList: localList);
                           },
                         ),
                       )
@@ -140,4 +204,121 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
           ),
         ),
       );
+}
+
+enum Picklists {
+  first("First"),
+  second("Second"),
+  third("Third");
+
+  const Picklists(this.title);
+  final String title;
+}
+
+void save(
+  final Picklists? picklist,
+  final List<PickListTeam> teams, [
+  final BuildContext? context,
+]) async {
+  if (teams.isNotEmpty && picklist != null) {
+    if (context != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 5),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("Saving", style: TextStyle(color: Colors.white))
+            ],
+          ),
+          backgroundColor: Colors.blue,
+        ),
+      );
+    }
+    final GraphQLClient client = getClient();
+    const String query = """
+  mutation UpdatePicklist(\$objects: [team_insert_input!]!) {
+  insert_team(objects: \$objects, on_conflict: {constraint: team_pkey, update_columns: [taken, first_picklist_index, second_picklist_index,third_picklist_index]}) {
+    affected_rows
+    returning {
+      id
+    }
+  }
+}
+
+  """;
+
+    final Map<String, dynamic> vars = <String, dynamic>{
+      "objects": teams
+          .map((final PickListTeam e) => PickListTeam(
+                firstListIndex: picklist == Picklists.first
+                    ? teams.indexOf(e)
+                    : e.firstListIndex,
+                secondListIndex: picklist == Picklists.second
+                    ? teams.indexOf(e)
+                    : e.secondListIndex,
+                thirdListIndex: picklist == Picklists.third
+                    ? teams.indexOf(e)
+                    : e.thirdListIndex,
+                amountOfMatches: e.amountOfMatches,
+                autoGamepieceAvg: e.autoGamepieceAvg,
+                avgAutoBalancePoints: e.avgAutoBalancePoints,
+                avgBalancePartners: e.avgBalancePartners,
+                avgDelivered: e.avgDelivered,
+                avgGamepiecePoints: e.avgGamepiecePoints,
+                avgGamepieces: e.avgGamepieces,
+                drivetrain: e.drivetrain,
+                faultMessages: e.faultMessages,
+                matchesBalanced: e.matchesBalanced,
+                maxBalanceTitle: e.maxBalanceTitle,
+                robotMatchStatusToAmount: e.robotMatchStatusToAmount,
+                taken: e.taken,
+                team: e.team,
+              ))
+          .map(
+            (final PickListTeam e) => <String, dynamic>{
+              "id": e.team.id,
+              "name": e.team.name,
+              "number": e.team.number,
+              "colors_index": e.team.colorsIndex,
+              "first_picklist_index": e.firstListIndex,
+              "second_picklist_index": e.secondListIndex,
+              "third_picklist_index": e.thirdListIndex,
+              "taken": e.taken
+            },
+          )
+          .toList()
+    };
+
+    final QueryResult<void> result = await client
+        .mutate(MutationOptions<void>(document: gql(query), variables: vars));
+    if (context != null) {
+      if (result.hasException) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 5),
+            content: Text("Error: ${result.exception}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 2),
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Saved",
+                  style: TextStyle(color: Colors.white),
+                )
+              ],
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    }
+  }
 }
