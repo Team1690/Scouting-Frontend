@@ -1,7 +1,6 @@
-import "package:scouting_frontend/models/average_or_null.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/helpers.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
@@ -196,15 +195,14 @@ List<RatingPickListTeam> parse(final Map<String, dynamic> pickListTeams) {
               ["ground_rating"] as double?) ??
           0,
       maxBalanceTitle:
-          ((team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
-                  .reduceSafe(
-                (final dynamic maxNode, final dynamic newNode) =>
-                    (maxNode["auto_balance"]["auto_points"] as int) >
-                            (newNode["auto_balance"]["auto_points"] as int)
-                        ? maxNode
-                        : newNode,
-              )?["auto_balance"]?["title"] as String?) ??
-              "No data",
+          ((team["technical_matches_aggregate"]["nodes"] as List<dynamic>).fold(
+        "No data",
+        (final dynamic maxNode, final dynamic newNode) =>
+            (maxNode["auto_balance"]["auto_points"] as int) >
+                    (newNode["auto_balance"]["auto_points"] as int)
+                ? maxNode
+                : newNode,
+      )["auto_balance"]["title"] as String),
       avgGamepiecePoints: avgGamepiecePoints,
       avgAutoBalancePoints: autoBalanceAvg,
       faultMessages: faultMessages.isEmpty ? null : faultMessages,

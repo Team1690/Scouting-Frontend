@@ -6,7 +6,7 @@ import "package:scouting_frontend/views/common/team_selection_future.dart";
 import "package:scouting_frontend/views/common/no_team_selected.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_data.dart";
-import "package:scouting_frontend/models/map_nullable.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 
 class TeamInfoScreen extends StatefulWidget {
   TeamInfoScreen({this.initalTeam});

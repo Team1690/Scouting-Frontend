@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 import "package:scouting_frontend/views/common/card.dart";
-import "package:scouting_frontend/views/common/carousel_with_indicator.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/gamepiece_line_chart.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/balance_line_chart.dart";
 import "package:scouting_frontend/views/pc/team_info/widgets/gamechart/points_linechart.dart";
+import "package:orbit_standard_library/orbit_standard_library.dart";
 
 class Gamechart extends StatelessWidget {
   const Gamechart(this.data);
