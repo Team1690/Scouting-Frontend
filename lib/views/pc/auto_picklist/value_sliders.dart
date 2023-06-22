@@ -53,6 +53,7 @@ class _ValueSlidersState extends State<ValueSliders> {
             height: 10,
           ),
           RoundedIconButton(
+            color: Colors.green,
             onPress: () => widget.onButtonPress(
               gamepiecesPointsValue,
               gamepiecesSumValue,

@@ -77,14 +77,21 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                   }),
                   validate: (final String unused) => null,
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
                 RoundedIconButton(
-                  color: Colors.green,
+                  color: Colors.blue,
                   onPress: () => save(
-                      saveAs,
-                      List<PickListTeam>.from(localList.map(
-                          (final AutoPickListTeam autoTeam) =>
-                              autoTeam.picklistTeam)),
-                      context),
+                    saveAs,
+                    List<PickListTeam>.from(
+                      localList.map(
+                        (final AutoPickListTeam autoTeam) =>
+                            autoTeam.picklistTeam,
+                      ),
+                    ),
+                    context,
+                  ),
                   icon: Icons.save_as,
                   onLongPress: () {},
                 ),
@@ -184,8 +191,10 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                               ),
                             );
                             localList = teamsList
-                                .where((final AutoPickListTeam element) =>
-                                    element.picklistTeam.taken)
+                                .where(
+                                  (final AutoPickListTeam element) =>
+                                      element.picklistTeam.taken,
+                                )
                                 .toList();
                             if (filterTaken) {
                               teamsList.removeWhere(
@@ -250,31 +259,33 @@ void save(
 
     final Map<String, dynamic> vars = <String, dynamic>{
       "objects": teams
-          .map((final PickListTeam e) => PickListTeam(
-                firstListIndex: picklist == Picklists.first
-                    ? teams.indexOf(e)
-                    : e.firstListIndex,
-                secondListIndex: picklist == Picklists.second
-                    ? teams.indexOf(e)
-                    : e.secondListIndex,
-                thirdListIndex: picklist == Picklists.third
-                    ? teams.indexOf(e)
-                    : e.thirdListIndex,
-                amountOfMatches: e.amountOfMatches,
-                autoGamepieceAvg: e.autoGamepieceAvg,
-                avgAutoBalancePoints: e.avgAutoBalancePoints,
-                avgBalancePartners: e.avgBalancePartners,
-                avgDelivered: e.avgDelivered,
-                avgGamepiecePoints: e.avgGamepiecePoints,
-                avgGamepieces: e.avgGamepieces,
-                drivetrain: e.drivetrain,
-                faultMessages: e.faultMessages,
-                matchesBalanced: e.matchesBalanced,
-                maxBalanceTitle: e.maxBalanceTitle,
-                robotMatchStatusToAmount: e.robotMatchStatusToAmount,
-                taken: e.taken,
-                team: e.team,
-              ))
+          .map(
+            (final PickListTeam e) => PickListTeam(
+              firstListIndex: picklist == Picklists.first
+                  ? teams.indexOf(e)
+                  : e.firstListIndex,
+              secondListIndex: picklist == Picklists.second
+                  ? teams.indexOf(e)
+                  : e.secondListIndex,
+              thirdListIndex: picklist == Picklists.third
+                  ? teams.indexOf(e)
+                  : e.thirdListIndex,
+              amountOfMatches: e.amountOfMatches,
+              autoGamepieceAvg: e.autoGamepieceAvg,
+              avgAutoBalancePoints: e.avgAutoBalancePoints,
+              avgBalancePartners: e.avgBalancePartners,
+              avgDelivered: e.avgDelivered,
+              avgGamepiecePoints: e.avgGamepiecePoints,
+              avgGamepieces: e.avgGamepieces,
+              drivetrain: e.drivetrain,
+              faultMessages: e.faultMessages,
+              matchesBalanced: e.matchesBalanced,
+              maxBalanceTitle: e.maxBalanceTitle,
+              robotMatchStatusToAmount: e.robotMatchStatusToAmount,
+              taken: e.taken,
+              team: e.team,
+            ),
+          )
           .map(
             (final PickListTeam e) => <String, dynamic>{
               "id": e.team.id,
