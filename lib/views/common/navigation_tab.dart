@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view/balance_check.dart";
 import "package:scouting_frontend/views/pc/matches/matches_screen.dart";
-import "package:scouting_frontend/views/pc/rating_picklist/rating_pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/scatter/scatters_screen.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 import "package:scouting_frontend/views/pc/status/status_screen.dart";
@@ -45,19 +44,6 @@ class NavigationTab extends StatelessWidget {
                   context,
                   MaterialPageRoute<PickListScreen>(
                     builder: (final BuildContext context) => PickListScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text("Rating Pick List"),
-              leading: const Icon(Icons.star_rate),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute<PickListScreen>(
-                    builder: (final BuildContext context) =>
-                        RatingPickListScreen(),
                   ),
                 );
               },

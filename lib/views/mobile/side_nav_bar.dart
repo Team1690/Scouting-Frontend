@@ -11,7 +11,6 @@ import "package:scouting_frontend/views/mobile/screens/pit_view/pit_view.dart";
 import "package:scouting_frontend/views/mobile/screens/specific_view.dart";
 import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
-import "package:scouting_frontend/views/pc/rating_picklist/rating_pick_list_screen.dart";
 
 class SideNavBar extends StatelessWidget {
   SideNavBar();
@@ -81,11 +80,6 @@ class SideNavBar extends StatelessWidget {
               icon: Icons.list,
               title: "Picklist",
               widget: PickListScreen.new,
-            ),
-            const NavbarTile(
-              icon: Icons.star_rate,
-              title: "Rating Picklist",
-              widget: RatingPickListScreen.new,
             ),
             const NavbarTile(
               icon: Icons.compare_arrows_rounded,
