@@ -170,18 +170,19 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
       thirdListIndex: team["third_picklist_index"] as int,
       taken: team["taken"] as bool,
       maxBalanceTitle: () {
-        final values =
+        final List<dynamic> values =
             (team["technical_matches_aggregate"]["nodes"] as List<dynamic>);
         if (values.isEmpty) {
           return "No data";
         }
         values.fold(
-            values[0],
-            (final dynamic maxNode, final dynamic newNode) =>
-                (maxNode["auto_balance"]["auto_points"] as int) >
-                        (newNode["auto_balance"]["auto_points"] as int)
-                    ? maxNode
-                    : newNode)["auto_balance"]["title"] as String;
+          values[0],
+          (final dynamic maxNode, final dynamic newNode) =>
+              (maxNode["auto_balance"]["auto_points"] as int) >
+                      (newNode["auto_balance"]["auto_points"] as int)
+                  ? maxNode
+                  : newNode,
+        )["auto_balance"]["title"] as String;
         return "";
       }(),
       avgGamepiecePoints: avgGamepiecePoints,
