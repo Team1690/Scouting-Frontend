@@ -251,7 +251,7 @@ class PitData {
     required this.weight,
     required this.width,
     required this.length,
-    required this.hasGroundIntake,
+    required this.tippedConesIntake,
     required this.canScoreTop,
     required this.spaceBetweenWheels,
     required this.team,
@@ -269,7 +269,7 @@ class PitData {
   final int length;
   final String url;
   final List<String>? faultMessages;
-  final bool hasGroundIntake;
+  final bool tippedConesIntake;
   final bool canScoreTop;
   final LightTeam team;
 }

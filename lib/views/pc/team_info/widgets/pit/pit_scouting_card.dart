@@ -100,7 +100,7 @@ class PitScoutingCard extends StatelessWidget {
                     Text("Length: ${data.length}cm"),
                     Text("Space Between Wheels: ${data.spaceBetweenWheels}cm"),
                     Text(
-                      "${data.hasGroundIntake ? "CAN" : "CAN'T"} intake ground",
+                      "${data.tippedConesIntake ? "CAN" : "CAN'T"} intake tipped cones",
                     ),
                     Text("${data.canScoreTop ? "CAN" : "CAN'T"} score top"),
                   ],

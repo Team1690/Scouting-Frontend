@@ -31,7 +31,7 @@ class _EditPitState extends State<EditPit> {
         IdProvider.of(context).driveTrain.nameToId[pit.driveTrainType];
     vars.driveWheelType = pit.driveWheelType;
     vars.gearboxPurchased = pit.gearboxPurchased;
-    vars.hasGroundIntake = pit.hasGroundIntake;
+    vars.tippedConesIntake = pit.tippedConesIntake;
     vars.hasShifter = pit.hasShifer;
     vars.length = pit.length.toString();
     vars.notes = pit.notes;
