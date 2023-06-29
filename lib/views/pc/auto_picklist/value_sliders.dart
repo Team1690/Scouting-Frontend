@@ -11,6 +11,7 @@ class ValueSliders extends StatefulWidget {
     double slider2,
     bool swerve,
     bool taken,
+    bool feeder,
   ) onButtonPress;
 
   @override
@@ -23,6 +24,7 @@ class _ValueSlidersState extends State<ValueSliders> {
   double autoBalancePointsValue = 0.5;
   bool filterSwerve = false;
   bool filterTaken = false;
+  bool filterFeeder = false;
   @override
   Widget build(final BuildContext context) => Column(
         mainAxisSize: MainAxisSize.min,
@@ -81,6 +83,16 @@ class _ValueSlidersState extends State<ValueSliders> {
                   filterSwerve = !filterSwerve;
                 }),
               ),
+              const SizedBox(
+                width: 20,
+              ),
+              ToggleButtons(
+                children: const <Text>[Text("Filter Feeder")],
+                isSelected: <bool>[filterFeeder],
+                onPressed: (final int unused) => setState(() {
+                  filterFeeder = !filterFeeder;
+                }),
+              ),
             ],
           ),
           const SizedBox(
@@ -94,6 +106,7 @@ class _ValueSlidersState extends State<ValueSliders> {
               autoBalancePointsValue,
               filterSwerve,
               filterTaken,
+              filterFeeder,
             ),
             icon: Icons.calculate_outlined,
             onLongPress: () => widget.onButtonPress(
@@ -102,6 +115,7 @@ class _ValueSlidersState extends State<ValueSliders> {
               autoBalancePointsValue,
               filterSwerve,
               filterTaken,
+              filterFeeder,
             ),
           ),
         ],
