@@ -155,6 +155,10 @@ class _PickListState extends State<PickList> {
                                   const Spacer(),
                                   Expanded(
                                     child: Text(
+                                        "Intake: ${pickListTeam.typicalGroundIntake ?? false ? "Ground, " : ""}${pickListTeam.typicalSingleIntake ?? false ? "Single Substation, " : ""}${pickListTeam.typicalDoubleIntake ?? false ? "Double Substation, " : ""} "),
+                                  ),
+                                  Expanded(
+                                    child: Text(
                                       "Avg Balancing Robots: ${pickListTeam.avgBalancePartners.toStringAsFixed(1)}",
                                     ),
                                   ),
@@ -378,6 +382,9 @@ class PickListTeam {
     required this.matchesBalanced,
     required this.maxBalanceTitle,
     required this.drivetrain,
+    required this.typicalGroundIntake,
+    required this.typicalSingleIntake,
+    required this.typicalDoubleIntake,
   });
   final String? drivetrain;
   final String maxBalanceTitle;
@@ -388,6 +395,10 @@ class PickListTeam {
   final double avgGamepieces;
   final double avgDelivered;
   final double avgBalancePartners;
+
+  final bool? typicalGroundIntake;
+  final bool? typicalSingleIntake;
+  final bool? typicalDoubleIntake;
 
   final LightTeam team;
   final List<String>? faultMessages;
