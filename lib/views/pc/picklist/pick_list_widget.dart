@@ -155,7 +155,8 @@ class _PickListState extends State<PickList> {
                                   const Spacer(),
                                   Expanded(
                                     child: Text(
-                                        "Intake: ${pickListTeam.typicalGroundIntake ?? false ? "Ground, " : ""}${pickListTeam.typicalSingleIntake ?? false ? "Single Substation, " : ""}${pickListTeam.typicalDoubleIntake ?? false ? "Double Substation, " : ""} "),
+                                      "Intake: ${pickListTeam.typicalGroundIntake ?? false ? "Ground, " : ""}${pickListTeam.typicalSingleIntake ?? false ? "Single Substation, " : ""}${pickListTeam.typicalDoubleIntake ?? false ? "Double Substation, " : ""} ",
+                                    ),
                                   ),
                                   Expanded(
                                     child: Text(
