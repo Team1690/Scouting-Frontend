@@ -255,6 +255,9 @@ class PitData {
     required this.canScoreTop,
     required this.spaceBetweenWheels,
     required this.team,
+    required this.groundIntake,
+    required this.singleSubIntake,
+    required this.doubleSubIntake,
   });
   final int spaceBetweenWheels;
   final String driveTrainType;
@@ -272,6 +275,9 @@ class PitData {
   final bool tippedConesIntake;
   final bool canScoreTop;
   final LightTeam team;
+  final bool groundIntake;
+  final bool singleSubIntake;
+  final bool doubleSubIntake;
 }
 
 class Team {

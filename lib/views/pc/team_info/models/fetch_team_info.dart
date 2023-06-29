@@ -29,6 +29,9 @@ query TeamInfo(\$id: Int!) {
       has_shifter
       url
       tipped_cones_intake
+      typical_ground_intake
+      typical_single_intake
+      typical_double_intake
       can_score_top
       drivetrain {
         title
@@ -175,6 +178,9 @@ Future<Team> fetchTeamInfo(
             faultMessages: faultMessages,
             tippedConesIntake: pitTable["tipped_cones_intake"] as bool,
             canScoreTop: pitTable["can_score_top"] as bool,
+            groundIntake: pitTable["typical_ground_intake"] as bool,
+            singleSubIntake: pitTable["typical_single_intake"] as bool,
+            doubleSubIntake: pitTable["typical_double_intake"] as bool,
             team: teamForQuery,
           ),
         );

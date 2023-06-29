@@ -79,30 +79,53 @@ class PitScoutingCard extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     const Text(
+                      textAlign: TextAlign.center,
                       "Drivetrain",
                       style: TextStyle(fontSize: 18),
                     ),
-                    Text("Drivetrain: ${data.driveTrainType}"),
-                    Text("Drive motor: ${data.driveMotorType}"),
-                    Text("Drive motor amount: ${data.driveMotorAmount}"),
-                    Text("Drive wheel: ${data.driveWheelType}"),
+                    Text(
+                        textAlign: TextAlign.center,
+                        "Drivetrain: ${data.driveTrainType}"),
+                    Text(
+                        textAlign: TextAlign.center,
+                        "Drive motor: ${data.driveMotorType}"),
+                    Text(
+                        textAlign: TextAlign.center,
+                        "Drive motor amount: ${data.driveMotorAmount}"),
+                    Text(
+                        textAlign: TextAlign.center,
+                        "Drive wheel: ${data.driveWheelType}"),
                     HasSomething(
                       title: "Has shifter:",
                       value: data.hasShifer,
                     ),
                     Text(
+                      textAlign: TextAlign.center,
                       "Gearbox: ${data.gearboxPurchased.mapNullable((final bool p0) => p0 ? "purchased" : "custom") ?? "Not answered"}",
                     ),
-                    Text("Weight: ${data.weight}Kg"),
-                    Text("Width: ${data.width}cm"),
-                    Text("Length: ${data.length}cm"),
-                    Text("Space Between Wheels: ${data.spaceBetweenWheels}cm"),
                     Text(
+                        textAlign: TextAlign.center,
+                        "Weight: ${data.weight}Kg"),
+                    Text(textAlign: TextAlign.center, "Width: ${data.width}cm"),
+                    Text(
+                        textAlign: TextAlign.center,
+                        "Length: ${data.length}cm"),
+                    Text(
+                        textAlign: TextAlign.center,
+                        "Space Between Wheels: ${data.spaceBetweenWheels}cm"),
+                    Text(
+                      textAlign: TextAlign.center,
                       "${data.tippedConesIntake ? "CAN" : "CAN'T"} intake tipped cones",
                     ),
-                    Text("${data.canScoreTop ? "CAN" : "CAN'T"} score top"),
+                    Text(
+                        textAlign: TextAlign.center,
+                        "${data.canScoreTop ? "CAN" : "CAN'T"} score top"),
+                    Text(
+                        textAlign: TextAlign.center,
+                        "Typically Intakes From: ${data.groundIntake ? "Ground, " : ""}${data.singleSubIntake ? "Single Substation, " : ""}${data.doubleSubIntake ? "Double Substation, " : ""} "),
                   ],
                 ),
               ),
@@ -209,7 +232,7 @@ class HasSomething extends StatelessWidget {
   Widget build(final BuildContext context) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(title),
+          Text(textAlign: TextAlign.center, title),
           value.mapNullable(
                 (final bool hasShifter) => hasShifter
                     ? const Icon(
@@ -221,7 +244,7 @@ class HasSomething extends StatelessWidget {
                         color: Colors.red,
                       ),
               ) ??
-              const Text(" Not answered"),
+              const Text(textAlign: TextAlign.center, " Not answered"),
         ],
       );
 }
