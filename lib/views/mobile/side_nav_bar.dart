@@ -9,6 +9,7 @@ import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view/balance_check.dart";
 import "package:scouting_frontend/views/mobile/screens/pit_view/pit_view.dart";
 import "package:scouting_frontend/views/mobile/screens/specific_view.dart";
+import "package:scouting_frontend/views/pc/auto_picklist/auto_picklist_screen.dart";
 import "package:scouting_frontend/views/pc/compare/compare_screen.dart";
 import "package:scouting_frontend/views/pc/picklist/pick_list_screen.dart";
 
@@ -80,6 +81,11 @@ class SideNavBar extends StatelessWidget {
               icon: Icons.list,
               title: "Picklist",
               widget: PickListScreen.new,
+            ),
+            const NavbarTile(
+              icon: Icons.calculate_outlined,
+              title: "Auto Picklist",
+              widget: AutoPickListScreen.new,
             ),
             const NavbarTile(
               icon: Icons.compare_arrows_rounded,
