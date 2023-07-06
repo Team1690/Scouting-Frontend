@@ -384,10 +384,10 @@ class _PitViewState extends State<PitView> {
                           child: Text("Tipped Cones Intake"),
                         )
                       ],
-                      isSelected: <bool>[vars.hasGroundIntake],
+                      isSelected: <bool>[vars.tippedConesIntake],
                       onPressed: (final int i) {
                         setState(() {
-                          vars.hasGroundIntake = !vars.hasGroundIntake;
+                          vars.tippedConesIntake = !vars.tippedConesIntake;
                         });
                       },
                     ),
@@ -410,6 +410,42 @@ class _PitViewState extends State<PitView> {
                           vars.canScoreTop = !vars.canScoreTop;
                         });
                       },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SectionDivider(label: "Typical Feeder Intake"),
+                    CheckBoxFormField(
+                      validate: (final void p0) => vars.doubleSubIntake ||
+                              vars.groundIntake ||
+                              vars.singleSubIntake
+                          ? null
+                          : "Please Select a Typical Feeder",
+                      widget: Column(
+                        children: <Widget>[
+                          CheckboxListTile(
+                            title: const Text("Ground"),
+                            value: vars.groundIntake,
+                            onChanged: (final bool? value) => setState(() {
+                              vars.groundIntake = value ?? false;
+                            }),
+                          ),
+                          CheckboxListTile(
+                            title: const Text("Single Substation"),
+                            value: vars.singleSubIntake,
+                            onChanged: (final bool? value) => setState(() {
+                              vars.singleSubIntake = value ?? false;
+                            }),
+                          ),
+                          CheckboxListTile(
+                            title: const Text("Double Substation"),
+                            value: vars.doubleSubIntake,
+                            onChanged: (final bool? value) => setState(() {
+                              vars.doubleSubIntake = value ?? false;
+                            }),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
@@ -497,7 +533,10 @@ const String insertMutation = """
               \$width:Int,
               \$length:Int,
               \$can_score_top:Boolean,
-              \$has_ground_intake:Boolean,
+              \$tipped_cones_intake:Boolean,
+              \$typical_ground_intake:Boolean,
+              \$typical_single_intake:Boolean,
+              \$typical_double_intake:Boolean,
               ) {
           insert__2023_pit(objects: {
           space_between_wheels: \$space_between_wheels,
@@ -513,8 +552,11 @@ const String insertMutation = """
           weight:  \$weight,
           width:  \$width,
           length:  \$length,
-          has_ground_intake: \$has_ground_intake,
+          tipped_cones_intake: \$tipped_cones_intake,
           can_score_top: \$can_score_top,
+          typical_ground_intake: \$typical_ground_intake,
+          typical_single_intake: \$typical_single_intake,
+          typical_double_intake: \$typical_double_intake,
           }) {
               returning {
                 url
@@ -538,7 +580,10 @@ const String updateMutation = """
               \$width:Int,
               \$length:Int,
               \$can_score_top:Boolean,
-              \$has_ground_intake:Boolean,
+              \$tipped_cones_intake:Boolean,
+              \$typical_ground_intake:Boolean,
+              \$typical_single_intake:Boolean,
+              \$typical_double_intake:Boolean,
               ) {
           update__2023_pit(where: {team_id: {_eq: \$team_id}}, _set: {
             space_between_wheels: \$space_between_wheels,
@@ -553,8 +598,11 @@ const String updateMutation = """
           weight:  \$weight,
           width:  \$width,
           length:  \$length,
-          has_ground_intake: \$has_ground_intake,
+          tipped_cones_intake: \$tipped_cones_intake,
           can_score_top: \$can_score_top,
+          typical_ground_intake: \$typical_ground_intake,
+          typical_single_intake: \$typical_single_intake,
+          typical_double_intake: \$typical_double_intake,
           }) {
     affected_rows
   }
@@ -625,3 +673,23 @@ query NoPit {
     .map(
       queryResultToParsed,
     );
+
+class CheckBoxFormField extends FormField<void> {
+  CheckBoxFormField({
+    required final Widget widget,
+    required final String? Function(void) validate,
+  }) : super(
+          enabled: true,
+          validator: validate,
+          builder: (final FormFieldState<void> state) => Column(
+            children: <Widget>[
+              widget,
+              if (state.hasError)
+                Text(
+                  state.errorText!,
+                  style: const TextStyle(color: Colors.red),
+                )
+            ],
+          ),
+        );
+}

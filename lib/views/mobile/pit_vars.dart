@@ -13,8 +13,11 @@ class PitVars implements HasuraVars {
   String width = "";
   String spaceBetweenWheels = "";
   String weight = "";
-  bool hasGroundIntake = false;
+  bool tippedConesIntake = false;
   bool canScoreTop = false;
+  bool groundIntake = false;
+  bool singleSubIntake = false;
+  bool doubleSubIntake = false;
   @override
   Map<String, dynamic> toHasuraVars() => <String, dynamic>{
         "drivetrain_id": driveTrainType,
@@ -29,8 +32,11 @@ class PitVars implements HasuraVars {
         "length": int.parse(length),
         "space_between_wheels": int.parse(spaceBetweenWheels),
         "weight": int.parse(weight),
-        "has_ground_intake": hasGroundIntake,
+        "tipped_cones_intake": tippedConesIntake,
         "can_score_top": canScoreTop,
+        "typical_ground_intake": groundIntake,
+        "typical_single_intake": singleSubIntake,
+        "typical_double_intake": doubleSubIntake,
       };
 
   void reset() {
@@ -46,7 +52,10 @@ class PitVars implements HasuraVars {
     width = "";
     spaceBetweenWheels = "";
     length = "";
-    hasGroundIntake = false;
+    tippedConesIntake = false;
     canScoreTop = false;
+    groundIntake = false;
+    singleSubIntake = false;
+    doubleSubIntake = false;
   }
 }

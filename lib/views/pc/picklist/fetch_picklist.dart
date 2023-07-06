@@ -24,6 +24,9 @@ Stream<List<PickListTeam>> fetchPicklist() {
       drivetrain{
         title
       }
+      typical_ground_intake
+      typical_single_intake
+      typical_double_intake
     }
       faults{
       message
@@ -135,6 +138,9 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
     return PickListTeam(
       avgBalancePartners: avgBalancePartners,
       drivetrain: team["_2023_pit"]?["drivetrain"]["title"] as String?,
+      typicalGroundIntake: team["_2023_pit"]?["typical_ground_intake"] as bool?,
+      typicalSingleIntake: team["_2023_pit"]?["typical_single_intake"] as bool?,
+      typicalDoubleIntake: team["_2023_pit"]?["typical_double_intake"] as bool?,
       matchesBalanced:
           (team["technical_matches_aggregate"]["nodes"] as List<dynamic>)
               .where(

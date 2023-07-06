@@ -251,10 +251,13 @@ class PitData {
     required this.weight,
     required this.width,
     required this.length,
-    required this.hasGroundIntake,
+    required this.tippedConesIntake,
     required this.canScoreTop,
     required this.spaceBetweenWheels,
     required this.team,
+    required this.groundIntake,
+    required this.singleSubIntake,
+    required this.doubleSubIntake,
   });
   final int spaceBetweenWheels;
   final String driveTrainType;
@@ -269,9 +272,12 @@ class PitData {
   final int length;
   final String url;
   final List<String>? faultMessages;
-  final bool hasGroundIntake;
+  final bool tippedConesIntake;
   final bool canScoreTop;
   final LightTeam team;
+  final bool groundIntake;
+  final bool singleSubIntake;
+  final bool doubleSubIntake;
 }
 
 class Team {

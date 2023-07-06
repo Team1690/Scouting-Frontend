@@ -28,6 +28,7 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
   double autoBalancePointsValue = 0.5;
   bool filterSwerve = false;
   bool filterTaken = false;
+  bool filterFeeder = false;
   Picklists? saveAs;
 
   List<AutoPickListTeam> localList = <AutoPickListTeam>[];
@@ -62,6 +63,7 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                   final double slider2,
                   final bool swerve,
                   final bool taken,
+                  final bool feeder,
                 ) =>
                     setState(() {
                   hasValues = true;
@@ -70,6 +72,7 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                   autoBalancePointsValue = slider2;
                   filterSwerve = swerve;
                   filterTaken = taken;
+                  filterFeeder = feeder;
                 }),
               ),
               const SizedBox(
@@ -200,6 +203,24 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                                   a.gamepieceSumValue * gamepiecesSumValue,
                             ),
                           );
+                          if (filterFeeder) {
+                            localList = teamsList
+                                .where(
+                                  (final AutoPickListTeam element) =>
+                                      element
+                                          .picklistTeam.typicalDoubleIntake !=
+                                      true,
+                                )
+                                .toList();
+                            teamsList.removeWhere(
+                              (final AutoPickListTeam element) =>
+                                  element.picklistTeam.typicalDoubleIntake !=
+                                  true,
+                            );
+                            localList.insertAll(0, teamsList);
+                            teamsList.clear();
+                            teamsList.addAll(localList);
+                          }
                           if (filterSwerve) {
                             localList = teamsList
                                 .where(
@@ -311,6 +332,9 @@ void save(
               robotMatchStatusToAmount: e.robotMatchStatusToAmount,
               taken: e.taken,
               team: e.team,
+              typicalDoubleIntake: e.typicalDoubleIntake,
+              typicalGroundIntake: e.typicalGroundIntake,
+              typicalSingleIntake: e.typicalSingleIntake,
             ),
           )
           .map(
