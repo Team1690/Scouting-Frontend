@@ -99,6 +99,14 @@ class _UserInputState extends State<UserInput> {
             },
             renderBorder: false,
           ),
+          IconButton(
+              onPressed: () async {
+                (await showDialog(
+                    context: context,
+                    builder: (final BuildContext dialogContext) =>
+                        SubmitJson(mutation: mutation)));
+              },
+              icon: Icon(Icons.file_upload_outlined))
         ],
         centerTitle: true,
         elevation: 5,
