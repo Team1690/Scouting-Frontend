@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_double_quotes
+
 import "dart:async";
 import "dart:convert";
 import "package:flutter/material.dart";
@@ -100,13 +102,15 @@ class _UserInputState extends State<UserInput> {
             renderBorder: false,
           ),
           IconButton(
-              onPressed: () async {
-                (await showDialog(
-                    context: context,
-                    builder: (final BuildContext dialogContext) =>
-                        SubmitJson(mutation: mutation)));
-              },
-              icon: Icon(Icons.file_upload_outlined))
+            onPressed: () async {
+              (await showDialog(
+                context: context,
+                builder: (final BuildContext dialogContext) =>
+                    SubmitJson(mutation: mutation),
+              ));
+            },
+            icon: const Icon(Icons.file_upload_outlined),
+          )
         ],
         centerTitle: true,
         elevation: 5,
@@ -618,15 +622,17 @@ class _UserInputState extends State<UserInput> {
                       height: 20,
                     ),
                     ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            (await showDialog(
-                                context: context,
-                                builder: (final BuildContext dialogContext) =>
-                                    QRGenerator(jsonData: jsonEncode(match))));
-                          }
-                        },
-                        child: Text("Convert To QR")),
+                      onPressed: () async {
+                        if (formKey.currentState!.validate()) {
+                          (await showDialog(
+                            context: context,
+                            builder: (final BuildContext dialogContext) =>
+                                QRGenerator(jsonData: jsonEncode(match)),
+                          ));
+                        }
+                      },
+                      child: const Text("Convert To QR"),
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
