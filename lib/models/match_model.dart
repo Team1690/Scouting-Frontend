@@ -134,6 +134,39 @@ class Match implements HasuraVars {
         "balanced_with": balancedWith,
         "auto_mobility": mobility
       };
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        "auto_cones_mid": autoConesMid,
+        "auto_cones_top": autoConesTop,
+        "auto_cones_low": autoConesLow,
+        "auto_cones_delivered": autoConesDelivered,
+        "auto_cones_failed": autoConesFailed,
+        "auto_cubes_mid": autoCubesMid,
+        "auto_cubes_top": autoCubesTop,
+        "auto_cubes_low": autoCubesLow,
+        "auto_cubes_delivered": autoCubesDelivered,
+        "auto_cubes_failed": autoCubesFailed,
+        "auto_balance_id": autoBalanceStatus,
+        "endgame_balance_id": endgameBalanceStatus,
+        "team_id": scoutedTeam?.id,
+        "tele_cones_mid": teleConesMid,
+        "tele_cones_top": teleConesTop,
+        "tele_cones_low": teleConesLow,
+        "tele_cones_delivered": teleConesDelivered,
+        "tele_cones_failed": teleConesFailed,
+        "tele_cubes_mid": teleCubesMid,
+        "tele_cubes_top": teleCubesTop,
+        "tele_cubes_low": teleCubesLow,
+        "tele_cubes_delivered": teleCubesDelivered,
+        "tele_cubes_failed": teleCubesFailed,
+        "scouter_name": name,
+        "schedule_match_id": scheduleMatch?.id,
+        "robot_match_status_id": robotMatchStatusId,
+        "is_rematch": isRematch,
+        "starting_position_id": startingPositionId,
+        "balanced_with": balancedWith,
+        "auto_mobility": mobility
+      };
 }
 
 enum MatchMode {

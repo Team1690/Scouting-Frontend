@@ -1,5 +1,5 @@
 import "dart:async";
-
+import "dart:convert";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 
@@ -7,6 +7,8 @@ import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
+import 'package:scouting_frontend/views/mobile/submit_json.dart';
+import "package:scouting_frontend/views/mobile/qr_generator.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
@@ -71,6 +73,7 @@ class _UserInputState extends State<UserInput> {
         .nameToId["Didn't come to field"]!,
     1: IdProvider.of(context).robotMatchStatus.nameToId["Didn't work on field"]!
   };
+
   @override
   Widget build(final BuildContext context) {
     final Map<int, String> balanceProvider =
@@ -95,7 +98,7 @@ class _UserInputState extends State<UserInput> {
               });
             },
             renderBorder: false,
-          )
+          ),
         ],
         centerTitle: true,
         elevation: 5,
@@ -602,7 +605,23 @@ class _UserInputState extends State<UserInput> {
                       validate: () => formKey.currentState!.validate(),
                       vars: match,
                       mutation: mutation,
-                    )
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            (await showDialog(
+                                context: context,
+                                builder: (final BuildContext dialogContext) =>
+                                    QRGenerator(jsonData: jsonEncode(match))));
+                          }
+                        },
+                        child: Text("Convert To QR")),
+                    const SizedBox(
+                      height: 20,
+                    ),
                   ],
                 ),
               ),
