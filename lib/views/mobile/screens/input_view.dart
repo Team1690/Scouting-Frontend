@@ -7,6 +7,8 @@ import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/local_save_button.dart";
+import "package:scouting_frontend/views/mobile/manage_local_data.dart";
 import 'package:scouting_frontend/views/mobile/submit_json.dart';
 import "package:scouting_frontend/views/mobile/qr_generator.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
@@ -104,7 +106,7 @@ class _UserInputState extends State<UserInput> {
                 (await showDialog(
                     context: context,
                     builder: (final BuildContext dialogContext) =>
-                        SubmitJson(mutation: mutation)));
+                        ManageLocalData()));
               },
               icon: Icon(Icons.file_upload_outlined))
         ],
@@ -630,6 +632,17 @@ class _UserInputState extends State<UserInput> {
                     const SizedBox(
                       height: 20,
                     ),
+                    LocalSaveButton(
+                        vars: match,
+                        mutation: mutation,
+                        resetForm: () {
+                          setState(() {
+                            match.clear(context);
+                            teamNumberController.clear();
+                            matchController.clear();
+                          });
+                        },
+                        validate: () => formKey.currentState!.validate())
                   ],
                 ),
               ),
