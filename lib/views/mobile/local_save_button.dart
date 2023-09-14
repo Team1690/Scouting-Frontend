@@ -29,8 +29,8 @@ class _LocalSaveButtonState extends State<LocalSaveButton> {
   Widget build(final BuildContext context) => ProgressButton.icon(
         iconedButtons: <ButtonState, IconedButton>{
           ButtonState.idle: IconedButton(
-            text: "Submit",
-            icon: const Icon(Icons.send, color: Colors.white),
+            text: "Save",
+            icon: const Icon(Icons.save, color: Colors.white),
             color: Colors.blue[400]!,
           ),
           ButtonState.loading: IconedButton(
@@ -49,7 +49,7 @@ class _LocalSaveButtonState extends State<LocalSaveButton> {
               color: Colors.white,
             ),
             color: Colors.green.shade400,
-          )
+          ),
         },
         onPressed: () async {
           if (_state == ButtonState.fail) {
@@ -87,8 +87,9 @@ class _LocalSaveButtonState extends State<LocalSaveButton> {
           });
           final SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString(
-              "SM${widget.vars.scheduleMatch}_RM${widget.vars.isRematch}_T${widget.vars.scoutedTeam}",
-              jsonEncode(widget.vars));
+            "SM${widget.vars.scheduleMatch!.matchNumber}_RM${widget.vars.isRematch}_T${widget.vars.scoutedTeam!.number}",
+            jsonEncode(widget.vars),
+          );
           widget.resetForm();
           setState(() {
             _state = ButtonState.success;
