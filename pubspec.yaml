@@ -46,6 +46,7 @@ dependencies:
   percent_indicator: ^4.2.2
   progress_state_button: ^1.0.2
   qr_flutter: ^4.1.0
+  shared_preferences: ^2.2.0
   toggle_switch: ^2.0.1
 
 dev_dependencies:
