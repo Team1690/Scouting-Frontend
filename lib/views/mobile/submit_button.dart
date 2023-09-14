@@ -48,7 +48,7 @@ class _SubmitButtonState extends State<SubmitButton> {
               color: Colors.white,
             ),
             color: Colors.green.shade400,
-          )
+          ),
         },
         onPressed: () async {
           if (_state == ButtonState.fail) {

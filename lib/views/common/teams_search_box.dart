@@ -44,7 +44,7 @@ class TeamsSearchBox extends StatelessWidget {
             onTap: typeAheadController.clear,
             controller: typeAheadController,
             inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
+              FilteringTextInputFormatter.digitsOnly,
             ],
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(

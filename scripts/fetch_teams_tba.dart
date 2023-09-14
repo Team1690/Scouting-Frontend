@@ -80,10 +80,10 @@ Future<QueryResult<void>> sendTeams(
               (final dynamic e) => <String, dynamic>{
                 "name": e["nickname"],
                 "number": e["team_number"],
-                "colors_index": index++
+                "colors_index": index++,
               },
             )
-            .toList()
+            .toList(),
       },
     ),
   );
@@ -93,7 +93,7 @@ GraphQLClient getClient(final DotEnv env) {
   final HttpLink link = HttpLink(
     "https://orbitdb2023.hasura.app/v1/graphql",
     defaultHeaders: <String, String>{
-      "x-hasura-admin-secret": env["HASURA_ADMIN_SECRET"]!
+      "x-hasura-admin-secret": env["HASURA_ADMIN_SECRET"]!,
     },
   );
   return GraphQLClient(link: link, cache: GraphQLCache());

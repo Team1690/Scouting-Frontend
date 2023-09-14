@@ -159,10 +159,10 @@ class _AutoPickListState extends State<AutoPickList> {
                                           ),
                                         ),
                                       ),
-                                      const Spacer()
+                                      const Spacer(),
                                     ],
                                   ),
-                                )
+                                ),
                               ],
                               title: Row(
                                 children: <Widget>[
@@ -203,7 +203,7 @@ class _AutoPickListState extends State<AutoPickList> {
                                         "Auto Balance: ${autoPickListTeam.picklistTeam.avgAutoBalancePoints.toStringAsFixed(1)}/${autoPickListTeam.picklistTeam.matchesBalanced}/${autoPickListTeam.picklistTeam.amountOfMatches}",
                                       ),
                                     ),
-                                  ]
+                                  ],
                                 ]
                                     .expand(
                                       (final Widget element) => <Widget>[

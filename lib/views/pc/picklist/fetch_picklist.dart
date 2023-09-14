@@ -201,7 +201,7 @@ List<PickListTeam> parse(final Map<String, dynamic> pickListTeams) {
                 (final RobotMatchStatus robotMatchStatus) =>
                     robotMatchStatus == status,
               )
-              .length
+              .length,
       },
     );
   }).toList();

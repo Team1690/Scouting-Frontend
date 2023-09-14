@@ -77,7 +77,7 @@ class CompareSpiderChart extends StatelessWidget {
                   "Endgame Balance Score%",
                   "Auto Balance Score%",
                   "Tele Gamepieces",
-                  "Auto Gamepieces"
+                  "Auto Gamepieces",
                 ],
               );
             },

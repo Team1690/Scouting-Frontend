@@ -69,7 +69,9 @@ class _UserInputState extends State<UserInput> {
     0: IdProvider.of(context)
         .robotMatchStatus
         .nameToId["Didn't come to field"]!,
-    1: IdProvider.of(context).robotMatchStatus.nameToId["Didn't work on field"]!
+    1: IdProvider.of(context)
+        .robotMatchStatus
+        .nameToId["Didn't work on field"]!,
   };
   @override
   Widget build(final BuildContext context) {
@@ -95,7 +97,7 @@ class _UserInputState extends State<UserInput> {
               });
             },
             renderBorder: false,
-          )
+          ),
         ],
         centerTitle: true,
         elevation: 5,
@@ -157,7 +159,7 @@ class _UserInputState extends State<UserInput> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Text("Rematch"),
-                        )
+                        ),
                       ],
                       isSelected: <bool>[match.isRematch],
                       onPressed: (final int i) {
@@ -320,7 +322,7 @@ class _UserInputState extends State<UserInput> {
                                   )
                                   .toList(),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -337,7 +339,7 @@ class _UserInputState extends State<UserInput> {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             child: Text("Mobility"),
-                          )
+                          ),
                         ],
                         isSelected: <bool>[match.mobility],
                         onPressed: (final int i) {
@@ -495,7 +497,7 @@ class _UserInputState extends State<UserInput> {
                                   )
                                   .toList(),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -562,11 +564,11 @@ class _UserInputState extends State<UserInput> {
                       borderRadiusGeometry: defaultBorderRadius,
                       labels: const <String>[
                         "Not on field",
-                        "Didn't work on field"
+                        "Didn't work on field",
                       ],
                       colors: const <Color>[
                         Colors.red,
-                        Color.fromARGB(255, 198, 29, 228)
+                        Color.fromARGB(255, 198, 29, 228),
                       ],
                       onChange: (final int i) {
                         setState(() {
@@ -585,7 +587,7 @@ class _UserInputState extends State<UserInput> {
                       selected: <int, int>{
                         for (final MapEntry<int, int> i
                             in robotMatchStatusIndexToId.entries)
-                          i.value: i.key
+                          i.value: i.key,
                       }[match.robotMatchStatusId]!,
                     ),
                     const SizedBox(
@@ -602,7 +604,7 @@ class _UserInputState extends State<UserInput> {
                       validate: () => formKey.currentState!.validate(),
                       vars: match,
                       mutation: mutation,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -611,7 +613,7 @@ class _UserInputState extends State<UserInput> {
           if (screenColor != null)
             Container(
               color: screenColor,
-            )
+            ),
         ],
       ),
     );

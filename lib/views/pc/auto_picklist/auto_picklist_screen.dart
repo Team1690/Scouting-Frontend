@@ -256,7 +256,7 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                         },
                       ),
                     )
-                  : Container()
+                  : Container(),
             ],
           ),
         ),
@@ -285,7 +285,7 @@ void save(
           content: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Saving", style: TextStyle(color: Colors.white))
+              Text("Saving", style: TextStyle(color: Colors.white)),
             ],
           ),
           backgroundColor: Colors.blue,
@@ -346,10 +346,10 @@ void save(
               "first_picklist_index": e.firstListIndex,
               "second_picklist_index": e.secondListIndex,
               "third_picklist_index": e.thirdListIndex,
-              "taken": e.taken
+              "taken": e.taken,
             },
           )
-          .toList()
+          .toList(),
     };
 
     final QueryResult<void> result = await client
@@ -374,7 +374,7 @@ void save(
                 Text(
                   "Saved",
                   style: TextStyle(color: Colors.white),
-                )
+                ),
               ],
             ),
             backgroundColor: Colors.green,

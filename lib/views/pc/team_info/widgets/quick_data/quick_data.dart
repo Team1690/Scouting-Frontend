@@ -46,7 +46,7 @@ class QuickDataCard extends StatelessWidget {
                           data.avgAutoConesFailed,
                           data.avgAutoCubesFailed,
                         ),
-                        const Spacer()
+                        const Spacer(),
                       ],
                     ),
                     Column(
@@ -81,7 +81,7 @@ class QuickDataCard extends StatelessWidget {
                           data.avgTeleConesFailed,
                           data.avgTeleCubesFailed,
                         ),
-                        const Spacer()
+                        const Spacer(),
                       ],
                     ),
                     Column(
@@ -105,7 +105,7 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         const Spacer(
                           flex: 2,
-                        )
+                        ),
                       ],
                     ),
                     Column(
@@ -126,7 +126,7 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         const Spacer(
                           flex: 2,
-                        )
+                        ),
                       ],
                     ),
                     Column(
@@ -174,7 +174,7 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         const Spacer(
                           flex: 2,
-                        )
+                        ),
                       ],
                     ),
                     Column(
@@ -206,7 +206,7 @@ class QuickDataCard extends StatelessWidget {
                         ),
                         const Spacer(
                           flex: 2,
-                        )
+                        ),
                       ],
                     ),
                   ]

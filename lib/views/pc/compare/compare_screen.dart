@@ -145,7 +145,7 @@ class _CompareScreenState extends State<CompareScreen> {
                                 title: "Spiderchart",
                                 body: Container(),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       );
@@ -197,7 +197,7 @@ class _CompareScreenState extends State<CompareScreen> {
                       (throw Exception("No data"));
                 },
               ),
-            )
+            ),
           ],
         ),
       );

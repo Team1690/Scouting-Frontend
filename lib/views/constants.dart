@@ -15,7 +15,7 @@ final ThemeData darkModeTheme = ThemeData.dark().copyWith(
   pageTransitionsTheme: PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
       for (final TargetPlatform platform in TargetPlatform.values)
-        platform: const FadeUpwardsPageTransitionsBuilder()
+        platform: const FadeUpwardsPageTransitionsBuilder(),
     },
   ),
   scaffoldBackgroundColor: bgColor,

@@ -278,7 +278,7 @@ Future<SplayTreeSet<CompareTeam>> fetchData(
                 defenseAmountTitleToEnum(
                   (specificMatches[i] as dynamic)["defense_amount"]["title"]
                       as String,
-                )
+                ),
           ];
           final CompareLineChartData endgameBalanceLineChartVals =
               CompareLineChartData(

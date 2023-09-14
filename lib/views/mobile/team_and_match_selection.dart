@@ -49,7 +49,7 @@ class TeamAndMatchSelectionState extends State<TeamAndMatchSelection> {
                       ? TeamProvider.of(context).teams
                       : <LightTeam>[
                           ...selectedMatch.blueAlliance,
-                          ...selectedMatch.redAlliance
+                          ...selectedMatch.redAlliance,
                         ];
                   widget.teamNumberController.clear();
                   widget.onChange(selectedMatch, null);

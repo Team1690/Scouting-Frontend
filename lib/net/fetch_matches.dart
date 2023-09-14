@@ -11,7 +11,7 @@ const List<String> allianceMembers = <String>[
   "blue_0",
   "blue_1",
   "blue_2",
-  "blue_3"
+  "blue_3",
 ];
 String graphqlSyntax(final bool isSubscription) => """
 ${isSubscription ? "subscription" : "query"} FetchMatches{
@@ -37,7 +37,7 @@ List<LightTeam> fromJson(final dynamic json, final String color) {
   return <LightTeam>[
     ...(<int>[0, 1, 2]
         .map((final int index) => LightTeam.fromJson(json["${color}_$index"]))),
-    if (json[optional] != null) LightTeam.fromJson(json[optional])
+    if (json[optional] != null) LightTeam.fromJson(json[optional]),
   ];
 }
 
