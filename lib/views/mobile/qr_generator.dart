@@ -6,7 +6,7 @@ class QRGenerator extends StatelessWidget {
   final String jsonData;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(final BuildContext context) => SizedBox(
         height: 500,
         child: AlertDialog(
           title: const Text("Generated QR Code"),
