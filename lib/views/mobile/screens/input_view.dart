@@ -8,10 +8,10 @@ import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/mobile/local_save_button.dart";
-import "package:scouting_frontend/views/mobile/manage_local_data.dart";
-import 'package:scouting_frontend/views/mobile/submit_json.dart';
+import "package:scouting_frontend/views/mobile/manage_preferences.dart";
 import "package:scouting_frontend/views/mobile/qr_generator.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
+import "package:scouting_frontend/views/mobile/send_prefrences.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
@@ -60,6 +60,7 @@ class _UserInputState extends State<UserInput> {
 
   final TextEditingController matchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
+  final GlobalKey<FormState> jsonFormKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
   bool toggleLightsState = false;
@@ -73,8 +74,11 @@ class _UserInputState extends State<UserInput> {
     0: IdProvider.of(context)
         .robotMatchStatus
         .nameToId["Didn't come to field"]!,
-    1: IdProvider.of(context).robotMatchStatus.nameToId["Didn't work on field"]!
+    1: IdProvider.of(context)
+        .robotMatchStatus
+        .nameToId["Didn't work on field"]!,
   };
+  String json = "";
 
   @override
   Widget build(final BuildContext context) {
@@ -102,13 +106,17 @@ class _UserInputState extends State<UserInput> {
             renderBorder: false,
           ),
           IconButton(
-              onPressed: () async {
-                (await showDialog(
-                    context: context,
-                    builder: (final BuildContext dialogContext) =>
-                        ManageLocalData()));
-              },
-              icon: Icon(Icons.file_upload_outlined))
+            onPressed: () async {
+              (await showDialog(
+                context: context,
+                builder: (final BuildContext dialogContext) =>
+                    const ManagePreferences(
+                  mutation: mutation,
+                ),
+              ));
+            },
+            icon: const Icon(Icons.storage_rounded),
+          ),
         ],
         centerTitle: true,
         elevation: 5,
@@ -170,7 +178,7 @@ class _UserInputState extends State<UserInput> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Text("Rematch"),
-                        )
+                        ),
                       ],
                       isSelected: <bool>[match.isRematch],
                       onPressed: (final int i) {
@@ -333,7 +341,7 @@ class _UserInputState extends State<UserInput> {
                                   )
                                   .toList(),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -350,7 +358,7 @@ class _UserInputState extends State<UserInput> {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             child: Text("Mobility"),
-                          )
+                          ),
                         ],
                         isSelected: <bool>[match.mobility],
                         onPressed: (final int i) {
@@ -508,7 +516,7 @@ class _UserInputState extends State<UserInput> {
                                   )
                                   .toList(),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -575,11 +583,11 @@ class _UserInputState extends State<UserInput> {
                       borderRadiusGeometry: defaultBorderRadius,
                       labels: const <String>[
                         "Not on field",
-                        "Didn't work on field"
+                        "Didn't work on field",
                       ],
                       colors: const <Color>[
                         Colors.red,
-                        Color.fromARGB(255, 198, 29, 228)
+                        Color.fromARGB(255, 198, 29, 228),
                       ],
                       onChange: (final int i) {
                         setState(() {
@@ -598,7 +606,7 @@ class _UserInputState extends State<UserInput> {
                       selected: <int, int>{
                         for (final MapEntry<int, int> i
                             in robotMatchStatusIndexToId.entries)
-                          i.value: i.key
+                          i.value: i.key,
                       }[match.robotMatchStatusId]!,
                     ),
                     const SizedBox(
@@ -612,37 +620,104 @@ class _UserInputState extends State<UserInput> {
                           matchController.clear();
                         });
                       },
+                      onSubmissionSuccess: () =>
+                          sendPrefrences(mutation, context),
                       validate: () => formKey.currentState!.validate(),
-                      vars: match,
+                      getJson: match.toHasuraVars,
                       mutation: mutation,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            (await showDialog(
-                                context: context,
-                                builder: (final BuildContext dialogContext) =>
-                                    QRGenerator(jsonData: jsonEncode(match))));
-                          }
-                        },
-                        child: Text("Convert To QR")),
+                    RoundedIconButton(
+                      color: Colors.green,
+                      onPress: () async {
+                        if (formKey.currentState!.validate()) {
+                          (await showDialog(
+                            context: context,
+                            builder: (final BuildContext dialogContext) =>
+                                QRGenerator(jsonData: jsonEncode(match)),
+                          ));
+                        }
+                      },
+                      onLongPress: () async {
+                        (await showDialog(
+                          context: context,
+                          builder: (final BuildContext dialogContext) =>
+                              SizedBox(
+                            width: 100,
+                            child: AlertDialog(
+                              content: Form(
+                                key: jsonFormKey,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    TextFormField(
+                                      validator: (final String? pastedString) =>
+                                          pastedString == null ||
+                                                  pastedString.isEmpty
+                                              ? "Please paste a code"
+                                              : null,
+                                      onChanged: (final String pastedString) =>
+                                          setState(() {
+                                        json = pastedString;
+                                      }),
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: "Enter Match Data",
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    SubmitButton(
+                                      getJson: () {
+                                        try {
+                                          return jsonDecode(json)
+                                              as Map<String, dynamic>;
+                                        } on Exception {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Center(
+                                                child: Text(
+                                                  "Invalid Code",
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                          return {};
+                                        }
+                                      },
+                                      mutation: mutation,
+                                      resetForm: () => json = "",
+                                      validate: () =>
+                                          jsonFormKey.currentState!.validate(),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ));
+                      },
+                      icon: Icons.qr_code_2,
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
                     LocalSaveButton(
-                        vars: match,
-                        mutation: mutation,
-                        resetForm: () {
-                          setState(() {
-                            match.clear(context);
-                            teamNumberController.clear();
-                            matchController.clear();
-                          });
-                        },
-                        validate: () => formKey.currentState!.validate())
+                      vars: match,
+                      mutation: mutation,
+                      resetForm: () {
+                        setState(() {
+                          match.clear(context);
+                          teamNumberController.clear();
+                          matchController.clear();
+                        });
+                      },
+                      validate: () => formKey.currentState!.validate(),
+                    ),
                   ],
                 ),
               ),
@@ -651,7 +726,7 @@ class _UserInputState extends State<UserInput> {
           if (screenColor != null)
             Container(
               color: screenColor,
-            )
+            ),
         ],
       ),
     );
