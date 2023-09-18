@@ -20,7 +20,7 @@ query FetchEnum{
       document: gql(query),
       parserFn: (final Map<String, dynamic> result) => <String, int>{
         for (final dynamic entry in (result[table] as List<dynamic>))
-          entry["title"] as String: entry["id"] as int
+          entry["title"] as String: entry["id"] as int,
       },
     ),
   ))
@@ -262,7 +262,7 @@ GraphQLClient getClient(final DotEnv env) {
   final HttpLink link = HttpLink(
     "https://orbitdb2023.hasura.app/v1/graphql",
     defaultHeaders: <String, String>{
-      "x-hasura-admin-secret": env["HASURA_ADMIN_SECRET"]!
+      "x-hasura-admin-secret": env["HASURA_ADMIN_SECRET"]!,
     },
   );
   return GraphQLClient(link: link, cache: GraphQLCache());

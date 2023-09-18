@@ -149,7 +149,7 @@ class MatchesScreen extends StatelessWidget {
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                         backgroundColor: Colors.blue,
@@ -162,7 +162,7 @@ class MatchesScreen extends StatelessWidget {
                                       MutationOptions<void>(
                                         document: gql(mutation),
                                         variables: <String, dynamic>{
-                                          "id": e.id
+                                          "id": e.id,
                                         },
                                       ),
                                     );
@@ -193,7 +193,7 @@ class MatchesScreen extends StatelessWidget {
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                           backgroundColor: Colors.green,

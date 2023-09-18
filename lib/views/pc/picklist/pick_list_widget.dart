@@ -44,7 +44,7 @@ class _PickListState extends State<PickList> {
   Widget build(final BuildContext context) {
     final List<TextEditingController> controllers = <TextEditingController>[
       for (int i = 0; i < widget.uiList.length; i++)
-        TextEditingController(text: "${i + 1}")
+        TextEditingController(text: "${i + 1}"),
     ];
     return Container(
       child: ReorderableListView(
@@ -184,10 +184,10 @@ class _PickListState extends State<PickList> {
                                       ),
                                     ),
                                   ),
-                                  const Spacer()
+                                  const Spacer(),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                           title: Row(
                             children: <Widget>[
@@ -225,7 +225,7 @@ class _PickListState extends State<PickList> {
                                     "Auto Balance: ${pickListTeam.avgAutoBalancePoints.toStringAsFixed(1)}/${pickListTeam.matchesBalanced}/${pickListTeam.amountOfMatches}",
                                   ),
                                 ),
-                              ]
+                              ],
                             ]
                                 .expand(
                                   (final Widget element) => <Widget>[

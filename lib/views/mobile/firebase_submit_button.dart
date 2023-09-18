@@ -54,7 +54,7 @@ class _FireBaseSubmitButtonState extends State<FireBaseSubmitButton> {
               color: Colors.white,
             ),
             color: Colors.green.shade400,
-          )
+          ),
         },
         state: _state,
         onPressed: () {

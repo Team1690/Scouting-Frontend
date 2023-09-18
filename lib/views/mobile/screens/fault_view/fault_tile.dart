@@ -67,7 +67,7 @@ class FaultTile extends StatelessWidget {
                   title: Text(
                     e.faultMessage,
                   ),
-                )
+                ),
         ],
       );
 }

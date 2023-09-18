@@ -20,7 +20,7 @@ class _SpecificCardState extends State<SpecificCard> {
     "Intake",
     "Placement",
     "Defense",
-    "General Notes"
+    "General Notes",
   ];
 
   @override

@@ -68,7 +68,7 @@ class DashboardScaffold extends StatelessWidget {
                 Expanded(
                   child: NavigationTab(),
                 ),
-                Expanded(flex: 5, child: body)
+                Expanded(flex: 5, child: body),
               ],
             ),
           ),

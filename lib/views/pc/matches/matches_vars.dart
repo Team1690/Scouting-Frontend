@@ -61,7 +61,7 @@ class MatchesVars implements HasuraVars {
           "red_2_id": red2?.id,
           "red_3_id": red3?.id,
           "happened": happened,
-        }
+        },
       };
 
   void reset() {

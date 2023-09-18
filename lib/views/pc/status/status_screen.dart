@@ -30,7 +30,7 @@ class _StatusScreenState extends State<StatusScreen> {
                   children: <Widget>[
                     const Text("Technic"),
                     const Text("Specific"),
-                    const Text("Pre")
+                    const Text("Pre"),
                   ]
                       .map(
                         (final Widget text) => Padding(
@@ -173,9 +173,9 @@ class RegularStatus extends StatelessWidget {
                       Text(
                         style: const TextStyle(color: Colors.red),
                         "${statusItem.values.where((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.allianceColor == Colors.red).map((final StatusMatch scoutedMatch) => scoutedMatch.scoutedTeam.points).fold<int>(0, (final int sumUntilNow, final int currentValue) => sumUntilNow + currentValue)}",
-                      )
+                      ),
                     ],
-                  )
+                  ),
               ],
             ),
             getValueBox: (
@@ -320,7 +320,7 @@ class StatusList<T, V> extends StatelessWidget {
                                 child: missingBuilder!(match),
                                 backgroundColor: Colors.red,
                               ),
-                            )
+                            ),
                         ],
                       ),
                     ),

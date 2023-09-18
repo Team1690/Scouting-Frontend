@@ -30,7 +30,7 @@ class _SpecificState extends State<Specific> {
   late final Map<int, int> defenseAmountIndexToId = <int, int>{
     -1: IdProvider.of(context).defense.nameToId["No Defense"]!,
     0: IdProvider.of(context).defense.nameToId["Half Defense"]!,
-    1: IdProvider.of(context).defense.nameToId["Full Defense"]!
+    1: IdProvider.of(context).defense.nameToId["Full Defense"]!,
   };
 
   @override
@@ -94,7 +94,7 @@ class _SpecificState extends State<Specific> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Text("Rematch"),
-                        )
+                        ),
                       ],
                       isSelected: <bool>[vars.isRematch],
                       onPressed: (final int i) {
@@ -192,7 +192,7 @@ class _SpecificState extends State<Specific> {
                       selected: <int, int>{
                         for (final MapEntry<int, int> i
                             in defenseAmountIndexToId.entries)
-                          i.value: i.key
+                          i.value: i.key,
                       }[vars.defenseAmount]!,
                     ),
                     const SizedBox(
@@ -223,7 +223,7 @@ class _SpecificState extends State<Specific> {
                               children: const <Widget>[
                                 Icon(
                                   Icons.cancel,
-                                )
+                                ),
                               ],
                               isSelected: <bool>[vars.faultMessage != null],
                               onPressed: (final int index) {

@@ -29,7 +29,7 @@ class DashboardCard extends StatelessWidget {
                     title,
                     // style: TextStyle(fontSize: 10),
                   ),
-                  ...titleWidgets
+                  ...titleWidgets,
                 ],
               ),
               const SizedBox(

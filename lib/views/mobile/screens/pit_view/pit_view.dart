@@ -47,7 +47,7 @@ class _PitViewState extends State<PitView> {
     "Hi-grip",
     "Mecanum",
     "Omni",
-    "Other"
+    "Other",
   ];
   bool otherWheelSelected = false;
   FormFieldValidator<String> _numericValidator(final String error) =>
@@ -102,7 +102,7 @@ class _PitViewState extends State<PitView> {
                   );
                 },
                 icon: const Icon(Icons.build),
-              )
+              ),
             ],
             centerTitle: true,
             title: const Text("Pit"),
@@ -252,7 +252,7 @@ class _PitViewState extends State<PitView> {
                             },
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
+                              FilteringTextInputFormatter.digitsOnly,
                             ],
                             decoration: const InputDecoration(
                               labelText: "Width",
@@ -272,7 +272,7 @@ class _PitViewState extends State<PitView> {
                             },
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
+                              FilteringTextInputFormatter.digitsOnly,
                             ],
                             decoration: const InputDecoration(
                               labelText: "Length",
@@ -295,7 +295,7 @@ class _PitViewState extends State<PitView> {
                       },
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
+                        FilteringTextInputFormatter.digitsOnly,
                       ],
                       decoration: const InputDecoration(
                         labelText: "Space Between Wheels",
@@ -315,7 +315,7 @@ class _PitViewState extends State<PitView> {
                       },
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
+                        FilteringTextInputFormatter.digitsOnly,
                       ],
                       decoration: const InputDecoration(
                         labelText: "Weight",
@@ -382,7 +382,7 @@ class _PitViewState extends State<PitView> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Text("Tipped Cones Intake"),
-                        )
+                        ),
                       ],
                       isSelected: <bool>[vars.tippedConesIntake],
                       onPressed: (final int i) {
@@ -402,7 +402,7 @@ class _PitViewState extends State<PitView> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Text("High Cones Scoring"),
-                        )
+                        ),
                       ],
                       isSelected: <bool>[vars.canScoreTop],
                       onPressed: (final int i) {
@@ -506,8 +506,8 @@ class _PitViewState extends State<PitView> {
                               mutation: updateMutation,
                               resetForm: resetFrame,
                               validate: () => formKey.currentState!.validate(),
-                            )
-                    ]
+                            ),
+                    ],
                   ],
                 ),
               ),
@@ -688,7 +688,7 @@ class CheckBoxFormField extends FormField<void> {
                 Text(
                   state.errorText!,
                   style: const TextStyle(color: Colors.red),
-                )
+                ),
             ],
           ),
         );

@@ -46,7 +46,7 @@ class PitViewSlider extends StatelessWidget {
               value: value,
               label: value.round().toString(),
               onChanged: onChange,
-            )
+            ),
           ],
         ),
       );
