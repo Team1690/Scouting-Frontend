@@ -26,13 +26,11 @@ class _ManagePreferencesState extends State<ManagePreferences> {
               onNoData: () => const Text("No data"),
               onError: (final Object error) => Text("$error"),
               onWaiting: CircularProgressIndicator.new,
-              onSuccess: (SharedPreferences prefs) => ManageLocalData(
+              onSuccess: (final SharedPreferences prefs) => ManageLocalData(
                 mutation: widget.mutation,
                 prefs: prefs,
-                onChange: (final SharedPreferences preferences) {
-                  setState(() {
-                    prefs = preferences;
-                  });
+                onChange: () {
+                  setState(() {});
                 },
               ),
             ),

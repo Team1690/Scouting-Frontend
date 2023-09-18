@@ -78,7 +78,7 @@ class _UserInputState extends State<UserInput> {
         .robotMatchStatus
         .nameToId["Didn't work on field"]!,
   };
-  String json = "";
+  String qrCodeJson = "";
 
   @override
   Widget build(final BuildContext context) {
@@ -660,7 +660,7 @@ class _UserInputState extends State<UserInput> {
                                               : null,
                                       onChanged: (final String pastedString) =>
                                           setState(() {
-                                        json = pastedString;
+                                        qrCodeJson = pastedString;
                                       }),
                                       decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
@@ -673,7 +673,7 @@ class _UserInputState extends State<UserInput> {
                                     SubmitButton(
                                       getJson: () {
                                         try {
-                                          return jsonDecode(json)
+                                          return jsonDecode(qrCodeJson)
                                               as Map<String, dynamic>;
                                         } on Exception {
                                           ScaffoldMessenger.of(context)
@@ -690,7 +690,7 @@ class _UserInputState extends State<UserInput> {
                                         }
                                       },
                                       mutation: mutation,
-                                      resetForm: () => json = "",
+                                      resetForm: () => qrCodeJson = "",
                                       validate: () =>
                                           jsonFormKey.currentState!.validate(),
                                     ),

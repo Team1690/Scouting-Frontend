@@ -14,7 +14,7 @@ class ManageLocalData extends StatefulWidget {
   });
   final String mutation;
   final SharedPreferences prefs;
-  final Function(SharedPreferences prefs) onChange;
+  final Function() onChange;
 
   @override
   State<ManageLocalData> createState() => _ManageLocalDataState();
@@ -87,7 +87,7 @@ class _ManageLocalDataState extends State<ManageLocalData> {
                                   ),
                                 ),
                               );
-                              widget.onChange;
+                              widget.onChange();
                             }
                           },
                           icon: const Icon(Icons.send),
@@ -96,7 +96,7 @@ class _ManageLocalDataState extends State<ManageLocalData> {
                           onPressed: () {
                             setState(() {
                               widget.prefs.remove(e);
-                              widget.onChange;
+                              widget.onChange();
                             });
                           },
                           icon: const Icon(Icons.delete),

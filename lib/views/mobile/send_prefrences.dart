@@ -41,13 +41,11 @@ Future<void> sendPrefrences(
           ),
         );
       } else {
-        <Future<bool>>{
-          prefs.remove(
-            prefs.getKeys().firstWhere(
-                  (final String element) => prefs.getString(element) == json,
-                ),
-          ),
-        };
+        await prefs.remove(
+          prefs.getKeys().firstWhere(
+                (final String element) => prefs.getString(element) == json,
+              ),
+        );
       }
     }
   }
