@@ -29,7 +29,7 @@ class _ManagePreferencesState extends State<ManagePreferences> {
               onSuccess: (SharedPreferences prefs) => ManageLocalData(
                 mutation: widget.mutation,
                 prefs: prefs,
-                onChange: (preferences) {
+                onChange: (final SharedPreferences preferences) {
                   setState(() {
                     prefs = preferences;
                   });

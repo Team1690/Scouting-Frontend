@@ -686,14 +686,14 @@ class _UserInputState extends State<UserInput> {
                                               ),
                                             ),
                                           );
-                                          return {};
+                                          return <String, dynamic>{};
                                         }
                                       },
                                       mutation: mutation,
                                       resetForm: () => json = "",
                                       validate: () =>
                                           jsonFormKey.currentState!.validate(),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),

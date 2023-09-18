@@ -165,7 +165,7 @@ class Match implements HasuraVars {
         "is_rematch": isRematch,
         "starting_position_id": startingPositionId,
         "balanced_with": balancedWith,
-        "auto_mobility": mobility
+        "auto_mobility": mobility,
       };
 }
 

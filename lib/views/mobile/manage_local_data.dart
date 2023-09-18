@@ -7,8 +7,11 @@ import "package:shared_preferences/shared_preferences.dart";
 import "package:scouting_frontend/views/constants.dart";
 
 class ManageLocalData extends StatefulWidget {
-  ManageLocalData(
-      {required this.mutation, required this.prefs, required this.onChange});
+  ManageLocalData({
+    required this.mutation,
+    required this.prefs,
+    required this.onChange,
+  });
   final String mutation;
   final SharedPreferences prefs;
   final Function(SharedPreferences prefs) onChange;
