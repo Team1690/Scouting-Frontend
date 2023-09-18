@@ -18,7 +18,7 @@ class FaultView extends StatelessWidget {
           actions: <Widget>[
             AddFault(
               onFinished: handleQueryResult(context),
-            )
+            ),
           ],
         ),
         body: StreamBuilder<List<FaultEntry>>(

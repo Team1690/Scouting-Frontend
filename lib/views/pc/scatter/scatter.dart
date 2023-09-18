@@ -212,7 +212,7 @@ class _ScatterState extends State<Scatter> {
                 }
               },
             ),
-          )
+          ),
         ],
       ),
     );

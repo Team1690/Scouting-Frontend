@@ -41,7 +41,7 @@ class _PicklistCardState extends State<PicklistCard> {
             children: <Widget>[
               const Text("First"),
               const Text("Second"),
-              const Text("Third")
+              const Text("Third"),
             ]
                 .map(
                   (final Widget text) => Padding(
@@ -55,7 +55,7 @@ class _PicklistCardState extends State<PicklistCard> {
             isSelected: <bool>[
               currentPickList == CurrentPickList.first,
               currentPickList == CurrentPickList.second,
-              currentPickList == CurrentPickList.third
+              currentPickList == CurrentPickList.third,
             ],
             onPressed: (final int pressedIndex) {
               if (pressedIndex == 0) {
@@ -96,7 +96,7 @@ class _PicklistCardState extends State<PicklistCard> {
               });
             },
             icon: const Icon(Icons.sort),
-          )
+          ),
         ],
         title: "",
         body: PickList(

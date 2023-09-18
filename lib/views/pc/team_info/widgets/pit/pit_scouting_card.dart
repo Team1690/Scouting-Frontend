@@ -37,7 +37,7 @@ class PitScoutingCard extends StatelessWidget {
                     ),
                     Spacer(
                       flex: 5,
-                    )
+                    ),
                   ],
                 ),
               ] else ...<Widget>[
@@ -51,7 +51,7 @@ class PitScoutingCard extends StatelessWidget {
                     Icon(
                       Icons.warning,
                       color: Colors.yellow[700],
-                    )
+                    ),
                   ],
                 ),
                 Align(
@@ -69,12 +69,12 @@ class PitScoutingCard extends StatelessWidget {
                             element,
                             const SizedBox(
                               height: 20,
-                            )
+                            ),
                           ],
                         )
                         .toList(),
                   ),
-                )
+                ),
               ],
               Align(
                 alignment: Alignment.center,
@@ -202,7 +202,7 @@ class PitScoutingCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
               if (!isPC(context)) ...<Widget>[
                 const SizedBox(
@@ -225,8 +225,8 @@ class PitScoutingCard extends StatelessWidget {
                       child: const Text("Edit"),
                     ),
                   ),
-                )
-              ]
+                ),
+              ],
             ],
           ),
         ),

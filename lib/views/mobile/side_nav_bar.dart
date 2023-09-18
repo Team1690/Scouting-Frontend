@@ -96,7 +96,7 @@ class SideNavBar extends StatelessWidget {
               icon: Icons.balance,
               title: "Triple Balance",
               widget: BalanceCheck.new,
-            )
+            ),
           ],
         ),
       );

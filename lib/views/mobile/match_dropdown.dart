@@ -30,7 +30,7 @@ class _MatchTextBoxState extends State<MatchTextBox> {
               : widget.onChange(100);
         },
         inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly
+          FilteringTextInputFormatter.digitsOnly,
         ],
         decoration: InputDecoration(
           prefixIcon: const Icon(Icons.tag),

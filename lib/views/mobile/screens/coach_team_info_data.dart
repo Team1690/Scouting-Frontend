@@ -88,7 +88,7 @@ class CoachTeamData extends StatelessWidget {
                                   child: Text("No data"),
                                 ),
                               ),
-                        )
+                        ),
                       ],
                     ),
                   ) ??
@@ -165,7 +165,7 @@ class CoachTeamInfoLineChart extends StatelessWidget {
               child: linechart,
             ),
           ),
-          const Spacer()
+          const Spacer(),
         ],
       );
 }

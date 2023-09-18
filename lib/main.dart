@@ -26,9 +26,9 @@ void main() async {
     "robot_match_status",
     "fault_status",
     "_2023_starting_position",
-    "defense"
+    "defense",
   ], <String>[
-    "match_type"
+    "match_type",
   ]);
 
   final Map<String, int> balances = enums["_2023_balance"]!;

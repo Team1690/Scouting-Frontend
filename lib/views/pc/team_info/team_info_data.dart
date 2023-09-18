@@ -42,7 +42,7 @@ class TeamInfoData extends StatelessWidget {
                           Expanded(
                             flex: 6,
                             child: Gamechart(data),
-                          )
+                          ),
                         ],
                       ),
                     ),

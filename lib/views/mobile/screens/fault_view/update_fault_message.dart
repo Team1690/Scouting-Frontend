@@ -54,7 +54,7 @@ class EditFault extends StatelessWidget {
                       color: Colors.red,
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ))

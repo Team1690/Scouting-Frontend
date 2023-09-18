@@ -223,7 +223,7 @@ class BalanceCheckResults extends StatelessWidget {
                     ),
                     Text(
                       "Total Width: ${secondTeamWidthInSide + firstTeamWidthInSide + thirdTeamWidthInMid}",
-                    )
+                    ),
                   ],
                 );
               }) ??

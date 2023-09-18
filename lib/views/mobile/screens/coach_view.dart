@@ -37,14 +37,14 @@ class CoachView extends StatelessWidget {
                       ...p0.blueAlliance
                           .map((final CoachViewLightTeam e) => e.team),
                       ...p0.redAlliance
-                          .map((final CoachViewLightTeam e) => e.team)
+                          .map((final CoachViewLightTeam e) => e.team),
                     ]),
                   ),
                 ),
               );
             },
             icon: const Icon(Icons.compare_arrows),
-          )
+          ),
         ],
       ),
       body: FutureBuilder<List<CoachData>>(
@@ -150,7 +150,7 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
                   else if (data.blueAlliance.length == 4)
                     const Text(""),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -182,7 +182,7 @@ Widget matchScreen(final BuildContext context, final CoachData data) => Column(
                         .toList(),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -753,12 +753,12 @@ Widget teamData(
                       ),
                       const Spacer(
                         flex: 1,
-                      )
-                    ]
+                      ),
+                    ],
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

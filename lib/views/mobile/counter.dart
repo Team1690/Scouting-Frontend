@@ -56,7 +56,7 @@ class Counter extends StatelessWidget {
               ),
               const Spacer(
                 flex: 2,
-              )
+              ),
             ],
           ),
           Padding(

@@ -83,7 +83,7 @@ class _ChangeMatchState extends State<ChangeMatch> {
                   controller: numberController,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+                    FilteringTextInputFormatter.digitsOnly,
                   ],
                   decoration: const InputDecoration(
                     labelText: "Enter match number",
@@ -189,7 +189,7 @@ class _ChangeMatchState extends State<ChangeMatch> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Text("Happened"),
-                    )
+                    ),
                   ],
                   isSelected: <bool>[vars.happened],
                   onPressed: (final int i) {

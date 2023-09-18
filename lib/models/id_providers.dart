@@ -8,7 +8,7 @@ class IdTable {
           idToName: Map<int, String>.unmodifiable(
             <int, String>{
               for (final MapEntry<String, int> e in nameToId.entries)
-                e.value: e.key
+                e.value: e.key,
             },
           ),
         );

@@ -132,7 +132,7 @@ class Match implements HasuraVars {
         "is_rematch": isRematch,
         "starting_position_id": startingPositionId,
         "balanced_with": balancedWith,
-        "auto_mobility": mobility
+        "auto_mobility": mobility,
       };
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -239,7 +239,7 @@ List<EffectiveScore> coneAndCube(final GridLevel level, final MatchMode mode) =>
 List<EffectiveScore> allLevel(final MatchMode mode) => <EffectiveScore>[
       ...GridLevel.values
           .map((final GridLevel level) => coneAndCube(level, mode))
-          .expand(identity)
+          .expand(identity),
     ];
 
 final Map<EffectiveScore, int> score = <EffectiveScore, int>{
@@ -252,7 +252,7 @@ final Map<EffectiveScore, int> score = <EffectiveScore, int>{
                   ? effectiveScore.mode.pointAddition
                   : 0), //this can be null since we define each EffectiveScore here to have a level (aka not missed)
         ),
-      )
+      ),
 };
 
 double getPoints(final Map<EffectiveScore, double> countedValues) =>
@@ -287,5 +287,5 @@ Map<EffectiveScore, double> parseMatch(
 ) =>
     <EffectiveScore, double>{
       ...parseByMode(MatchMode.auto, data),
-      ...parseByMode(MatchMode.tele, data)
+      ...parseByMode(MatchMode.tele, data),
     };

@@ -89,7 +89,7 @@ class ImagePickerWidget extends FormField<XFile> {
                 Text(
                   state.errorText!,
                   style: const TextStyle(color: Colors.red),
-                )
+                ),
             ],
           ),
         );

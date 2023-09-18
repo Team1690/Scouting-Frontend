@@ -61,7 +61,7 @@ class ChangeFaultStatus extends StatelessWidget {
                           color: Colors.red,
                         ),
                       ),
-                    )
+                    ),
                   ],
                   title: const Text(
                     "Change fault status",
@@ -70,7 +70,7 @@ class ChangeFaultStatus extends StatelessWidget {
                     borderRadiusGeometry: defaultBorderRadius,
                     selected: <int?, int>{
                       for (final MapEntry<int, int?> entry in indexToId.entries)
-                        entry.value: entry.key
+                        entry.value: entry.key,
                     }[statusIdState]!,
                     onChange: (final int index) {
                       alertDialogSetState(() {
@@ -85,7 +85,7 @@ class ChangeFaultStatus extends StatelessWidget {
                     labels: const <String>[
                       "Fixed",
                       "In progress",
-                      "No progress"
+                      "No progress",
                     ],
                   ),
                 ),
@@ -112,7 +112,7 @@ Future<QueryResult<void>> updateFaultStatus(
         document: gql(_updateFaultStatusMutation),
         variables: <String, dynamic>{
           "id": id,
-          "fault_status_id": faultStatusId
+          "fault_status_id": faultStatusId,
         },
       ),
     );

@@ -56,7 +56,7 @@ class AddFault extends StatelessWidget {
                       hintText: "Error message",
                       border: OutlineInputBorder(),
                     ),
-                  )
+                  ),
                 ],
               ),
               actions: <Widget>[

@@ -549,7 +549,7 @@ Future<Team> fetchTeamInfo(
               points: <List<int>>[
                 isAuto
                     ? autoBalanceLineChart.toList()
-                    : endgameBalanceLineChart.toList()
+                    : endgameBalanceLineChart.toList(),
               ],
               title: "${isAuto ? "Auto" : "Endgame"} Balance",
               robotMatchStatuses: List<List<RobotMatchStatus>>.filled(
@@ -595,7 +595,7 @@ Future<Team> fetchTeamInfo(
                 i >= defenseAmountBeforeAdding.length)
               DefenseAmount.noDefense
             else
-              defenseAmountBeforeAdding[i]
+              defenseAmountBeforeAdding[i],
         ]);
         LineChartData getGamepieceChartData(
           final MatchMode mode,
@@ -763,7 +763,7 @@ Future<Team> fetchTeamInfo(
                 .map(
                   (final dynamic match) => getPoints(parseMatch(match)) as int,
                 )
-                .toList()
+                .toList(),
           ],
           title: "Gamepieces Points",
           gameNumbers: matchNumbers,
@@ -774,7 +774,7 @@ Future<Team> fetchTeamInfo(
                     match["robot_match_status"]["title"] as String,
                   ),
                 )
-                .toList()
+                .toList(),
           ],
           defenseAmounts: <List<DefenseAmount>>[defenseAmount[0]],
         );
@@ -802,7 +802,7 @@ Future<Team> fetchTeamInfo(
                       .fold(
                       <String, dynamic>{
                         "auto_points": 0,
-                        "title": "No attempt"
+                        "title": "No attempt",
                       },
                       (
                         final Map<String, dynamic> value,
