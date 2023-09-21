@@ -6,6 +6,7 @@ import "package:scouting_frontend/net/hasura_helper.dart";
 import "package:scouting_frontend/views/common/card.dart";
 import "package:scouting_frontend/views/constants.dart";
 import "package:scouting_frontend/views/common/dashboard_scaffold.dart";
+import "package:scouting_frontend/views/pc/status/edit_technical_match.dart";
 import "package:scouting_frontend/views/pc/status/fetch_status.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 import "package:scouting_frontend/views/pc/team_info/team_info_screen.dart";
@@ -183,6 +184,14 @@ class RegularStatus extends StatelessWidget {
               final StatusItem<MatchIdentifier, StatusMatch> item,
             ) =>
                 GestureDetector(
+              onLongPress: () => Navigator.push(
+                context,
+                MaterialPageRoute<TeamInfoScreen>(
+                  builder: (final BuildContext context) => EditTechnicalMatch(
+                      matchIdentifier: item.identifier,
+                      teamForQuery: scoutedMatch.scoutedTeam.team),
+                ),
+              ),
               onTap: (() => Navigator.pushReplacement(
                     context,
                     MaterialPageRoute<TeamInfoScreen>(
