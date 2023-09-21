@@ -20,6 +20,8 @@ import "package:scouting_frontend/views/mobile/team_and_match_selection.dart";
 import "package:orbit_standard_library/orbit_standard_library.dart";
 
 class UserInput extends StatefulWidget {
+  const UserInput([this.initialVars]);
+  final Match? initialVars;
   @override
   State<UserInput> createState() => _UserInputState();
 }
@@ -64,7 +66,7 @@ class _UserInputState extends State<UserInput> {
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
   bool toggleLightsState = false;
-  late final Match match = Match(
+  late Match match = Match(
     robotMatchStatusId:
         IdProvider.of(context).robotMatchStatus.nameToId["Worked"] as int,
   );
@@ -82,6 +84,18 @@ class _UserInputState extends State<UserInput> {
 
   @override
   Widget build(final BuildContext context) {
+    if (widget.initialVars != null) {
+      match = widget.initialVars!;
+      matchController.text =
+          "${match.scheduleMatch!.matchTypeId} ${match.scheduleMatch!.matchNumber}";
+      teamNumberController.text = [
+        IdProvider.of(context).matchType.nameToId["Practice"],
+        IdProvider.of(context).matchType.nameToId["Pre scouting"]
+      ].contains(match.scheduleMatch!.matchTypeId)
+          ? "${match.scoutedTeam!.number} ${match.scoutedTeam!.name}"
+          : match.scheduleMatch!.getTeamStation(match.scoutedTeam!) ?? "";
+      scouterNameController.text = match.name!;
+    }
     final Map<int, String> balanceProvider =
         IdProvider.of(context).balance.idToName;
     final Map<int, String> startingPosProvider =
@@ -110,8 +124,9 @@ class _UserInputState extends State<UserInput> {
               (await showDialog(
                 context: context,
                 builder: (final BuildContext dialogContext) =>
-                    const ManagePreferences(
-                  mutation: mutation,
+                    ManagePreferences(
+                  mutation:
+                      widget.initialVars == null ? mutation : updateMutation,
                 ),
               ));
             },
@@ -624,7 +639,9 @@ class _UserInputState extends State<UserInput> {
                           sendPrefrences(mutation, context),
                       validate: () => formKey.currentState!.validate(),
                       getJson: match.toHasuraVars,
-                      mutation: mutation,
+                      mutation: widget.initialVars == null
+                          ? mutation
+                          : updateMutation,
                     ),
                     const SizedBox(
                       height: 20,
@@ -689,7 +706,9 @@ class _UserInputState extends State<UserInput> {
                                           return <String, dynamic>{};
                                         }
                                       },
-                                      mutation: mutation,
+                                      mutation: widget.initialVars == null
+                                          ? mutation
+                                          : updateMutation,
                                       resetForm: () => qrCodeJson = "",
                                       validate: () =>
                                           jsonFormKey.currentState!.validate(),
@@ -708,7 +727,9 @@ class _UserInputState extends State<UserInput> {
                     ),
                     LocalSaveButton(
                       vars: match,
-                      mutation: mutation,
+                      mutation: widget.initialVars == null
+                          ? mutation
+                          : updateMutation,
                       resetForm: () {
                         setState(() {
                           match.clear(context);
@@ -736,6 +757,16 @@ class _UserInputState extends State<UserInput> {
 const String mutation = r"""
 mutation InsertTechnicalMatch($auto_mobility: Boolean,$balanced_with: Int, $starting_position_id: Int, $tele_cubes_delivered: Int, $tele_cones_delivered: Int, $auto_cubes_delivered: Int, $auto_cones_delivered: Int, $auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int) {
   insert__2023_technical_match(objects: {auto_mobility: $auto_mobility, balanced_with: $balanced_with, starting_position_id: $starting_position_id, auto_balance_id: $auto_balance_id, tele_cubes_delivered: $tele_cubes_delivered, tele_cones_delivered: $tele_cones_delivered, auto_cubes_delivered: $auto_cubes_delivered, auto_cones_delivered: $auto_cones_delivered, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
+    returning {
+      id
+    }
+  }
+}
+""";
+
+const String updateMutation = r"""
+mutation UpdateTechnicalMatch($auto_mobility: Boolean,$balanced_with: Int, $starting_position_id: Int, $tele_cubes_delivered: Int, $tele_cones_delivered: Int, $auto_cubes_delivered: Int, $auto_cones_delivered: Int, $auto_cones_mid: Int, $auto_balance_id: Int, $auto_cones_failed: Int, $auto_cones_low: Int, $auto_cones_top: Int, $auto_cubes_failed: Int, $auto_cubes_low: Int, $auto_cubes_mid: Int, $auto_cubes_top: Int, $endgame_balance_id: Int, $robot_match_status_id: Int, $scouter_name: String, $team_id: Int, $tele_cones_failed: Int, $tele_cones_low: Int, $tele_cubes_top: Int, $tele_cubes_mid: Int, $tele_cubes_low: Int, $tele_cubes_failed: Int, $tele_cones_top: Int, $tele_cones_mid: Int, $is_rematch: Boolean, $schedule_match_id: Int) {
+  update__2023_technical_match(where: {team_id: {_eq: $team_id}, is_rematch: {_eq: $is_rematch}, schedule_match_id: {_eq: $schedule_match_id}}, _set: {auto_mobility: $auto_mobility, balanced_with: $balanced_with, starting_position_id: $starting_position_id, auto_balance_id: $auto_balance_id, tele_cubes_delivered: $tele_cubes_delivered, tele_cones_delivered: $tele_cones_delivered, auto_cubes_delivered: $auto_cubes_delivered, auto_cones_delivered: $auto_cones_delivered, auto_cones_failed: $auto_cones_failed, auto_cones_low: $auto_cones_low, auto_cones_mid: $auto_cones_mid, auto_cones_top: $auto_cones_top, auto_cubes_failed: $auto_cubes_failed, auto_cubes_low: $auto_cubes_low, auto_cubes_mid: $auto_cubes_mid, auto_cubes_top: $auto_cubes_top, endgame_balance_id: $endgame_balance_id, robot_match_status_id: $robot_match_status_id, scouter_name: $scouter_name, team_id: $team_id, tele_cones_failed: $tele_cones_failed, tele_cones_low: $tele_cones_low, tele_cones_mid: $tele_cones_mid, tele_cones_top: $tele_cones_top, tele_cubes_failed: $tele_cubes_failed, tele_cubes_low: $tele_cubes_low, tele_cubes_top: $tele_cubes_top, tele_cubes_mid: $tele_cubes_mid, is_rematch: $is_rematch, schedule_match_id: $schedule_match_id}) {
     returning {
       id
     }
