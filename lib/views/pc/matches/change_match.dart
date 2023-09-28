@@ -202,7 +202,7 @@ class _ChangeMatchState extends State<ChangeMatch> {
                   height: 15,
                 ),
                 SubmitButton(
-                  vars: vars,
+                  getJson: vars.toHasuraVars,
                   mutation: widget.initialVars == null ? mutation : update,
                   resetForm: () {},
                   validate: () => formKey.currentState!.validate(),

@@ -3,19 +3,20 @@ import "package:graphql/client.dart";
 import "package:progress_state_button/iconed_button.dart";
 import "package:progress_state_button/progress_button.dart";
 import "package:scouting_frontend/net/hasura_helper.dart";
-import "package:scouting_frontend/views/mobile/hasura_vars.dart";
 
 class SubmitButton extends StatefulWidget {
   SubmitButton({
-    required this.vars,
+    required this.getJson,
     required this.mutation,
     required this.resetForm,
     required this.validate,
+    this.onSubmissionSuccess,
   });
   final bool Function() validate;
-  final HasuraVars vars;
+  final Map<String, dynamic> Function() getJson;
   final String mutation;
   final void Function() resetForm;
+  final void Function()? onSubmissionSuccess;
 
   @override
   State<SubmitButton> createState() => _SubmitButtonState();
@@ -72,9 +73,11 @@ class _SubmitButtonState extends State<SubmitButton> {
               _errorMessage = "You forgot to enter some fields";
             });
             Future<void>.delayed(const Duration(seconds: 5), () {
-              setState(() {
-                _state = ButtonState.idle;
-              });
+              if (mounted) {
+                setState(() {
+                  _state = ButtonState.idle;
+                });
+              }
             });
             return;
           }
@@ -88,7 +91,7 @@ class _SubmitButtonState extends State<SubmitButton> {
           final QueryResult<void> queryResult = await client.mutate(
             MutationOptions<void>(
               document: gql(widget.mutation),
-              variables: widget.vars.toHasuraVars(),
+              variables: widget.getJson(),
             ),
           );
           final OperationException? exception = queryResult.exception;
@@ -107,6 +110,7 @@ class _SubmitButtonState extends State<SubmitButton> {
               _errorMessage = errors.join(", ");
             }
           } else {
+            widget.onSubmissionSuccess?.call();
             widget.resetForm();
             setState(() {
               _state = ButtonState.success;

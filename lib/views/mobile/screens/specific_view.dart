@@ -287,7 +287,7 @@ mutation A(\$defense_amount_id: Int, \$defense: String, \$drivetrain_and_driving
                   }
 
                       """,
-                        vars: vars,
+                        getJson: vars.toHasuraVars,
                       ),
                     ),
                   ],

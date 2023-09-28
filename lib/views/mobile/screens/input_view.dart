@@ -1,5 +1,5 @@
 import "dart:async";
-
+import "dart:convert";
 import "package:flutter/material.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 
@@ -7,7 +7,11 @@ import "package:scouting_frontend/models/match_model.dart";
 import "package:scouting_frontend/models/matches_model.dart";
 import "package:scouting_frontend/models/team_model.dart";
 import "package:scouting_frontend/views/constants.dart";
+import "package:scouting_frontend/views/mobile/local_save_button.dart";
+import "package:scouting_frontend/views/mobile/manage_preferences.dart";
+import "package:scouting_frontend/views/mobile/qr_generator.dart";
 import "package:scouting_frontend/views/mobile/screens/robot_image.dart";
+import "package:scouting_frontend/views/mobile/send_prefrences.dart";
 import "package:scouting_frontend/views/mobile/side_nav_bar.dart";
 import "package:scouting_frontend/views/mobile/counter.dart";
 import "package:scouting_frontend/views/mobile/section_divider.dart";
@@ -56,6 +60,7 @@ class _UserInputState extends State<UserInput> {
 
   final TextEditingController matchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
+  final GlobalKey<FormState> jsonFormKey = GlobalKey();
   final TextEditingController teamNumberController = TextEditingController();
   final TextEditingController scouterNameController = TextEditingController();
   bool toggleLightsState = false;
@@ -73,6 +78,8 @@ class _UserInputState extends State<UserInput> {
         .robotMatchStatus
         .nameToId["Didn't work on field"]!,
   };
+  String qrCodeJson = "";
+
   @override
   Widget build(final BuildContext context) {
     final Map<int, String> balanceProvider =
@@ -97,6 +104,18 @@ class _UserInputState extends State<UserInput> {
               });
             },
             renderBorder: false,
+          ),
+          IconButton(
+            onPressed: () async {
+              (await showDialog(
+                context: context,
+                builder: (final BuildContext dialogContext) =>
+                    const ManagePreferences(
+                  mutation: mutation,
+                ),
+              ));
+            },
+            icon: const Icon(Icons.storage_rounded),
           ),
         ],
         centerTitle: true,
@@ -601,9 +620,103 @@ class _UserInputState extends State<UserInput> {
                           matchController.clear();
                         });
                       },
+                      onSubmissionSuccess: () =>
+                          sendPrefrences(mutation, context),
                       validate: () => formKey.currentState!.validate(),
+                      getJson: match.toHasuraVars,
+                      mutation: mutation,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    RoundedIconButton(
+                      color: Colors.green,
+                      onPress: () async {
+                        if (formKey.currentState!.validate()) {
+                          (await showDialog(
+                            context: context,
+                            builder: (final BuildContext dialogContext) =>
+                                QRGenerator(jsonData: jsonEncode(match)),
+                          ));
+                        }
+                      },
+                      onLongPress: () async {
+                        (await showDialog(
+                          context: context,
+                          builder: (final BuildContext dialogContext) =>
+                              SizedBox(
+                            width: 100,
+                            child: AlertDialog(
+                              content: Form(
+                                key: jsonFormKey,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    TextFormField(
+                                      validator: (final String? pastedString) =>
+                                          pastedString == null ||
+                                                  pastedString.isEmpty
+                                              ? "Please paste a code"
+                                              : null,
+                                      onChanged: (final String pastedString) =>
+                                          setState(() {
+                                        qrCodeJson = pastedString;
+                                      }),
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: "Enter Match Data",
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    SubmitButton(
+                                      getJson: () {
+                                        try {
+                                          return jsonDecode(qrCodeJson)
+                                              as Map<String, dynamic>;
+                                        } on Exception {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Center(
+                                                child: Text(
+                                                  "Invalid Code",
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                          return <String, dynamic>{};
+                                        }
+                                      },
+                                      mutation: mutation,
+                                      resetForm: () => qrCodeJson = "",
+                                      validate: () =>
+                                          jsonFormKey.currentState!.validate(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ));
+                      },
+                      icon: Icons.qr_code_2,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    LocalSaveButton(
                       vars: match,
                       mutation: mutation,
+                      resetForm: () {
+                        setState(() {
+                          match.clear(context);
+                          teamNumberController.clear();
+                          matchController.clear();
+                        });
+                      },
+                      validate: () => formKey.currentState!.validate(),
                     ),
                   ],
                 ),

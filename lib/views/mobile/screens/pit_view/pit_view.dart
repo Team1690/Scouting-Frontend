@@ -502,7 +502,7 @@ class _PitViewState extends State<PitView> {
                               resetForm: resetFrame,
                             )
                           : SubmitButton(
-                              vars: vars,
+                              getJson: vars.toHasuraVars,
                               mutation: updateMutation,
                               resetForm: resetFrame,
                               validate: () => formKey.currentState!.validate(),
