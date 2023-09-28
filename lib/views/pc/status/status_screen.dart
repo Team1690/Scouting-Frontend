@@ -184,14 +184,20 @@ class RegularStatus extends StatelessWidget {
               final StatusItem<MatchIdentifier, StatusMatch> item,
             ) =>
                 GestureDetector(
-              onLongPress: () => Navigator.push(
-                context,
-                MaterialPageRoute<TeamInfoScreen>(
-                  builder: (final BuildContext context) => EditTechnicalMatch(
-                      matchIdentifier: item.identifier,
-                      teamForQuery: scoutedMatch.scoutedTeam.team),
-                ),
-              ),
+              onLongPress: () {
+                if (!isSpecific) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<TeamInfoScreen>(
+                      builder: (final BuildContext context) =>
+                          EditTechnicalMatch(
+                        matchIdentifier: item.identifier,
+                        teamForQuery: scoutedMatch.scoutedTeam.team,
+                      ),
+                    ),
+                  );
+                }
+              },
               onTap: (() => Navigator.pushReplacement(
                     context,
                     MaterialPageRoute<TeamInfoScreen>(

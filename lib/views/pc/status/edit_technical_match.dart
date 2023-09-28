@@ -11,8 +11,10 @@ import "package:scouting_frontend/views/mobile/screens/input_view.dart";
 import "package:scouting_frontend/views/pc/team_info/models/team_info_classes.dart";
 
 class EditTechnicalMatch extends StatelessWidget {
-  const EditTechnicalMatch(
-      {required this.matchIdentifier, required this.teamForQuery});
+  const EditTechnicalMatch({
+    required this.matchIdentifier,
+    required this.teamForQuery,
+  });
   final MatchIdentifier matchIdentifier;
   final LightTeam teamForQuery;
 
@@ -26,8 +28,10 @@ class EditTechnicalMatch extends StatelessWidget {
         ),
         body: FutureBuilder<Match>(
           future: fetchTechnicalMatch(matchIdentifier, teamForQuery, context),
-          builder: (final BuildContext context,
-              final AsyncSnapshot<Match> snapshot) {
+          builder: (
+            final BuildContext context,
+            final AsyncSnapshot<Match> snapshot,
+          ) {
             if (snapshot.hasError) {
               return Text(snapshot.error.toString());
             }
@@ -99,7 +103,6 @@ Future<Match> fetchTechnicalMatch(
                 ? technicalMatch["_2023_technical_match"][0]
                     as Map<String, dynamic>
                 : throw Exception("that match doesnt exist");
-
         final int robotMatchStatusId = match["robot_match_status_id"] as int;
 
         final int autoConesDelivered = match["auto_cones_delivered"] as int;
@@ -126,14 +129,14 @@ Future<Match> fetchTechnicalMatch(
         final int teleCubesMid = match["tele_cubes_mid"] as int;
         final int teleCubesTop = match["tele_cubes_top"] as int;
 
-        final int balancedWith = match["balanced_with"] as int;
+        final int? balancedWith = match["balanced_with"] as int?;
 
         final bool isRematch = match["is_rematch"] as bool;
 
         final bool mobility = match["auto_mobility"] as bool;
 
         final int startingPositionId = match["starting_position_id"] as int;
-        Match matchData = Match(
+        final Match matchData = Match(
           robotMatchStatusId: robotMatchStatusId,
           autoConesDelivered: autoConesDelivered,
           autoConesFailed: autoConesFailed,

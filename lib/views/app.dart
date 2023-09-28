@@ -46,7 +46,7 @@ class App extends StatelessWidget {
             defense: defense,
             child: MaterialApp(
               title: "Orbit Scouting",
-              home: isPC(context) ? TeamInfoScreen() : UserInput(),
+              home: isPC(context) ? TeamInfoScreen() : const UserInput(),
               theme: darkModeTheme,
               debugShowCheckedModeBanner: false,
             ),

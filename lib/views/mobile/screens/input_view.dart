@@ -82,19 +82,24 @@ class _UserInputState extends State<UserInput> {
   };
   String qrCodeJson = "";
 
+  bool initialFlag = false;
+
   @override
   Widget build(final BuildContext context) {
-    if (widget.initialVars != null) {
-      match = widget.initialVars!;
-      matchController.text =
-          "${match.scheduleMatch!.matchTypeId} ${match.scheduleMatch!.matchNumber}";
-      teamNumberController.text = [
-        IdProvider.of(context).matchType.nameToId["Practice"],
-        IdProvider.of(context).matchType.nameToId["Pre scouting"]
-      ].contains(match.scheduleMatch!.matchTypeId)
-          ? "${match.scoutedTeam!.number} ${match.scoutedTeam!.name}"
-          : match.scheduleMatch!.getTeamStation(match.scoutedTeam!) ?? "";
-      scouterNameController.text = match.name!;
+    if (widget.initialVars != null && initialFlag == false) {
+      setState(() {
+        match = widget.initialVars!;
+        matchController.text =
+            "${IdProvider.of(context).matchType.idToName[match.scheduleMatch!.matchTypeId]} ${match.scheduleMatch!.matchNumber}";
+        teamNumberController.text = <int?>[
+          IdProvider.of(context).matchType.nameToId["Practice"],
+          IdProvider.of(context).matchType.nameToId["Pre scouting"],
+        ].contains(match.scheduleMatch!.matchTypeId)
+            ? "${match.scoutedTeam!.number} ${match.scoutedTeam!.name}"
+            : match.scheduleMatch!.getTeamStation(match.scoutedTeam!) ?? "";
+        scouterNameController.text = match.name!;
+        initialFlag = true;
+      });
     }
     final Map<int, String> balanceProvider =
         IdProvider.of(context).balance.idToName;
@@ -178,7 +183,7 @@ class _UserInputState extends State<UserInput> {
                       ) {
                         setState(() {
                           match.scheduleMatch = selectedMatch;
-                          match.scoutedTeam = team;
+                          match.scoutedTeam = team ?? match.scoutedTeam;
                         });
                       },
                     ),
