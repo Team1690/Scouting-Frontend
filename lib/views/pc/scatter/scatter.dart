@@ -87,12 +87,18 @@ class _ScatterState extends State<Scatter> {
                                       ? ScatterSpot(
                                           e.gamepiecePointsAvg,
                                           e.yGamepiecePointsStddev,
-                                          color: e.team.color,
+                                          dotPainter: FlDotCirclePainter(
+                                            radius: 5,
+                                            color: e.team.color,
+                                          ),
                                         )
                                       : ScatterSpot(
                                           e.avgGamepieces,
                                           e.gamepiecesStddev,
-                                          color: e.team.color,
+                                          dotPainter: FlDotCirclePainter(
+                                            radius: 5,
+                                            color: e.team.color,
+                                          ),
                                         ),
                                 )
                                 .toList(),
@@ -124,10 +130,10 @@ class _ScatterState extends State<Scatter> {
                             ),
                             titlesData: FlTitlesData(
                               show: true,
-                              topTitles: AxisTitles(
+                              topTitles: const AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
-                              rightTitles: AxisTitles(
+                              rightTitles: const AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
                               bottomTitles: AxisTitles(

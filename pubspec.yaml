@@ -28,7 +28,7 @@ dependencies:
   faker: ^2.0.0
   firebase_core: ^2.4.1
   firebase_storage: ^11.0.10
-  fl_chart: ^0.62.0
+  fl_chart: ^0.66.0
   flutter:
     sdk: flutter
   flutter_advanced_switch: ^3.0.0
@@ -38,11 +38,11 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   flutter_switch: ^0.3.2
   flutter_typeahead: ^4.0.0
-  google_fonts: ^4.0.4
+  google_fonts: ^6.1.0
   graphql: ^5.1.1
-  http: ^0.13.1
-  image_picker: ^0.8.4+5
-  orbit_standard_library: ^0.0.2
+  http: ^1.1.2
+  image_picker: ^1.0.7
+  orbit_standard_library: ^0.1.1
   percent_indicator: ^4.2.2
   progress_state_button: ^1.0.2
   qr_flutter: ^4.1.0
@@ -54,7 +54,7 @@ dev_dependencies:
   dotenv: ^4.0.1
   flutter_test:
     sdk: flutter
-  lints: ^2.0.0
+  lints: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
