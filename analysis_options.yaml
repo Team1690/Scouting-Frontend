@@ -5,7 +5,6 @@ analyzer:
   language:
     strict-raw-types: true
     strict-casts: true
-  strong-mode:
 
 linter:
   # Documentation on https://dart-lang.github.io/linter/lints/

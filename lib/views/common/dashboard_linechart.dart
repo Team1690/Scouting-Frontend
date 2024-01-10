@@ -106,19 +106,19 @@ class _BaseLineChart extends StatelessWidget {
             horizontalInterval: 1,
             show: true,
             drawVerticalLine: true,
-            getDrawingHorizontalLine: (final double value) => FlLine(
-              color: const Color(0xff37434d),
+            getDrawingHorizontalLine: (final double value) => const FlLine(
+              color: Color(0xff37434d),
               strokeWidth: 1,
             ),
-            getDrawingVerticalLine: (final double value) => FlLine(
-              color: const Color(0xff37434d),
+            getDrawingVerticalLine: (final double value) => const FlLine(
+              color: Color(0xff37434d),
               strokeWidth: 1,
             ),
           ),
           titlesData: FlTitlesData(
             show: true,
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            bottomTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             rightTitles: AxisTitles(sideTitles: rightTitles),
             topTitles: AxisTitles(
               sideTitles: SideTitles(

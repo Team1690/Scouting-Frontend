@@ -48,7 +48,6 @@ class Counter extends StatelessWidget {
                     child: Text(
                       label,
                       maxLines: 1,
-                      textScaleFactor: 1.5,
                       textAlign: TextAlign.center,
                     ),
                   ),

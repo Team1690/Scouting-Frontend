@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-
 import "package:graphql/client.dart";
 import "package:scouting_frontend/models/id_providers.dart";
 import "package:scouting_frontend/models/match_model.dart";

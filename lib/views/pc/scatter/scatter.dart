@@ -124,10 +124,10 @@ class _ScatterState extends State<Scatter> {
                             ),
                             titlesData: FlTitlesData(
                               show: true,
-                              topTitles: AxisTitles(
+                              topTitles: const AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
-                              rightTitles: AxisTitles(
+                              rightTitles: const AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
                               bottomTitles: AxisTitles(

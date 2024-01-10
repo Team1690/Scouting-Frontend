@@ -87,7 +87,7 @@ class _AutoPickListScreenState extends State<AutoPickListScreen> {
                     .map((final Picklists e) => e.title)
                     .toList(),
                 placeholder: "Save as:",
-                value: saveAs == null ? null : saveAs!.title,
+                value: saveAs?.title,
                 makeItem: (final String picklist) => picklist,
                 onChange: (final String newTitle) => setState(() {
                   saveAs = Picklists.values.firstWhere(
