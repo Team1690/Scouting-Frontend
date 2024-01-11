@@ -21,9 +21,10 @@ environment:
   sdk: ">=3.0.2 <4.0.0"
 
 dependencies:
-  cached_network_image: ^3.2.0
+  cached_network_image: ^3.3.0
   carousel_slider: ^4.0.0
   collection: ^1.15.0
+  connectivity_plus: ^5.0.2
   cupertino_icons: ^1.0.0
   faker: ^2.0.0
   firebase_core: ^2.4.1

@@ -108,6 +108,7 @@ class _UserInputState extends State<UserInput> {
     final int notOnFieldId = IdProvider.of(context)
         .robotMatchStatus
         .nameToId["Didn't come to field"]!;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: SideNavBar(),
@@ -647,6 +648,7 @@ class _UserInputState extends State<UserInput> {
                       mutation: widget.initialVars == null
                           ? mutation
                           : updateMutation,
+                      vars: match,
                     ),
                     const SizedBox(
                       height: 20,

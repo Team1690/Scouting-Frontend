@@ -31,15 +31,5 @@ final ThemeData darkModeTheme = ThemeData.dark().copyWith(
 );
 
 bool isPC(final BuildContext context) {
-  switch (Theme.of(context).platform) {
-    case TargetPlatform.android:
-    case TargetPlatform.iOS:
-      return false;
-
-    case TargetPlatform.windows:
-    case TargetPlatform.macOS:
-    case TargetPlatform.linux:
-    case TargetPlatform.fuchsia:
-      return true;
-  }
+  return false;
 }
