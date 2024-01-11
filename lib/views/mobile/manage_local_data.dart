@@ -1,6 +1,5 @@
 import "dart:convert";
 import "package:connectivity_plus/connectivity_plus.dart";
-import "package:flutter/services.dart";
 import "package:scouting_frontend/models/match_model.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter/material.dart";
