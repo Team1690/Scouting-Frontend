@@ -37,7 +37,7 @@ dependencies:
   flutter_radar_chart: ^0.2.0
   flutter_rating_bar: ^4.0.1
   flutter_switch: ^0.3.2
-  flutter_typeahead: ^5.0.1
+  flutter_typeahead: ^4.0.1
   google_fonts: ^6.1.0
   graphql: ^5.1.1
   http: ^1.1.2

@@ -87,12 +87,12 @@ class _ScatterState extends State<Scatter> {
                                       ? ScatterSpot(
                                           e.gamepiecePointsAvg,
                                           e.yGamepiecePointsStddev,
-                                          color: e.team.color,
+                                          dotPainter: FlDotCirclePainter(color: e.team.color,),
                                         )
                                       : ScatterSpot(
                                           e.avgGamepieces,
                                           e.gamepiecesStddev,
-                                          color: e.team.color,
+                                          dotPainter: FlDotCirclePainter(color: e.team.color,),
                                         ),
                                 )
                                 .toList(),
